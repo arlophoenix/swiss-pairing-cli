@@ -11,10 +11,6 @@ npm-debug.log*
 # Environment variables
 .env
 
-# IDE-specific files
-.vscode/
-.idea/
-
 # OS-specific files
 .DS_Store
 Thumbs.db
