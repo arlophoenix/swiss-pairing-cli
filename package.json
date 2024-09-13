@@ -22,8 +22,8 @@
     "lint:fix": "npm run eslint:fix && npm run prettier:fix",
     "eslint": "eslint .",
     "eslint:fix": "eslint . --fix",
-    "prettier": "prettier --check \"src/**/*.{js,mjs,cjs,ts}\"",
-    "prettier:fix": "prettier --write \"src/**/*.{js,mjs,cjs,ts}\""
+    "prettier": "prettier --check \"src/**/*.{js,mjs,cjs,ts,test.ts}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{js,mjs,cjs,ts,test.ts}\""
   },
   "keywords": [],
   "devDependencies": {
