@@ -26,11 +26,11 @@ export function createCLI(): Command {
     .description('A CLI tool for generating Swiss-style tournament pairings')
     .option(
       '-p, --players <names...>',
-      'player names in order from top standing to bottom e.g. player1 player2 player3 player4'
+      'List of player names in order from top standing to bottom e.g. player1 player2 player3 player4'
     )
     .option(
       '-r, --rounds <number>',
-      'number of rounds to generate',
+      'Number of rounds to generate',
       (value) => {
         const parsed = parseInt(value, 10);
         if (isNaN(parsed)) {
@@ -40,7 +40,10 @@ export function createCLI(): Command {
       },
       1 // default to 1 round
     )
-    .option('-m, --matches <matches...>', 'matches already played e.g. "player1,player3" "player2,player4"')
+    .option(
+      '-m, --matches <matches...>',
+      'List of pairs of player names that have already played against each other e.g. "player1,player3" "player2,player4"'
+    )
     .action((options) => {
       const result = handleCLIAction(options);
       switch (result.type) {

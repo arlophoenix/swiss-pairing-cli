@@ -21,7 +21,7 @@ npm install -g swiss-pairing
 After installation, you can use the tool from the command line:
 
 ```bash
-swiss-pairing --players "Player1" "Player2" "Player3" "Player4" --rounds 3
+swiss-pairing --players "Player1" "Player2" "Player3" "Player4" --rounds 2 --matches "Player1,Player2"
 ```
 
 ### Using npx
@@ -29,13 +29,14 @@ swiss-pairing --players "Player1" "Player2" "Player3" "Player4" --rounds 3
 If you don't want to install the package globally, you can use npx to run it directly:
 
 ```bash
-npx swiss-pairing --players "Player1" "Player2" "Player3" "Player4" --rounds 3
+npx swiss-pairing --players "Player1" "Player2" "Player3" "Player4"
 ```
 
 ### Options
 
-- `-p, --players <names...>`: List of player names (required)
-- `-r, --rounds <number>`: Number of rounds (default: 3)
+- `-p, --players <names...>`: List of player names in order from top standing to bottom (required)
+- `-r, --rounds <number>`: Number of rounds (default: 1)
+- `-m, --matches <names...>`: List of pairs of player names that have already played against each other (optional)
 - `-h, --help`: Display help information
 - `-v, --version`: Display version information
 
