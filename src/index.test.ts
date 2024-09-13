@@ -10,6 +10,6 @@ describe('Swiss Pairing CLI', () => {
     const { stdout } = await execAsync('node dist/index.js --help');
     expect(stdout).toContain('A simple CLI tool for generating Swiss pairings');
     expect(stdout).toContain('-p, --players <names...>');
-    expect(stdout).toContain('-r, --rounds <number>');
+    expect(stdout).toContain('-r, --rounds <integer>');
   });
 });
