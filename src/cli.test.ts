@@ -1,7 +1,7 @@
 import * as swissPairing from './swissPairing';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { buildPlayedMatches, createCLI, generateSwissPairings, handleCLIAction } from './cli';
+import { buildPlayedMatches, createCLI, handleCLIAction } from './cli';
 
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
@@ -13,7 +13,6 @@ describe('Swiss Pairing CLI', () => {
   let mockGeneratePairings: SpyInstance<typeof swissPairing.generatePairings>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
-  // eslint-disable-next-line no-unused-vars
   let mockProcessExit: SpyInstance;
 
   beforeEach(() => {
@@ -30,45 +29,12 @@ describe('Swiss Pairing CLI', () => {
     jest.restoreAllMocks();
   });
 
-  describe('generateSwissPairings', () => {
-    it('should generate pairings when given valid input', () => {
-      const input = {
-        players: ['Player1', 'Player2', 'Player3', 'Player4'],
-        rounds: 2,
-        playedMatches: {},
-      };
-      const expectedPairings = [
-        ['Player1', 'Player2'],
-        ['Player3', 'Player4'],
-      ];
-      mockGeneratePairings.mockReturnValue(expectedPairings);
-
-      const result = generateSwissPairings(input);
-
-      expect(mockValidateInput).toHaveBeenCalledWith(input);
-      expect(mockGeneratePairings).toHaveBeenCalledWith(input);
-      expect(result).toEqual(expectedPairings);
-    });
-
-    it('should throw an error when given invalid input', () => {
-      mockValidateInput.mockReturnValue(false);
-
-      expect(() => {
-        generateSwissPairings({
-          players: ['Player1'],
-          rounds: 1,
-          playedMatches: {},
-        });
-      }).toThrow('Invalid input. Please check your player list and number of rounds.');
-    });
-  });
-
   describe('createCLI', () => {
     let program: Command;
 
     beforeEach(() => {
       program = createCLI();
-      program.exitOverride;
+      program.exitOverride();
     });
 
     it('should create a Command with the correct name and description', () => {
@@ -145,6 +111,27 @@ describe('Swiss Pairing CLI', () => {
       expect(options.rounds).toBe(3);
       expect(options.matches).toEqual(['Alice,Bob', 'Charlie,David', 'Alice,Charlie']);
     });
+
+    it('should handle successful result', () => {
+      mockGeneratePairings.mockReturnValue([['Player1', 'Player2']]);
+      program.parse(['node', 'swiss-pairing', '--players', 'Player1', 'Player2']);
+
+      expect(mockConsoleLog).toHaveBeenCalledWith('Pairings generated successfully: [["Player1","Player2"]]');
+      expect(mockProcessExit).not.toHaveBeenCalled();
+    });
+
+    it('should handle failure result', () => {
+      mockValidateInput.mockReturnValue(false);
+
+      expect(() => {
+        program.parse(['node', 'swiss-pairing', '--players', 'Player1']);
+      }).toThrow('Process exited with code 1');
+
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Invalid input. Please check your player list and number of rounds.'
+      );
+      expect(mockProcessExit).toHaveBeenCalledWith(1);
+    });
   });
 
   describe('handleCLIAction', () => {
@@ -155,28 +142,34 @@ describe('Swiss Pairing CLI', () => {
         matches: ['Player1,Player2'],
       };
 
-      handleCLIAction(options);
+      mockGeneratePairings.mockReturnValue([['Player1', 'Player2']]);
+
+      const result = handleCLIAction(options);
 
       expect(mockGeneratePairings).toHaveBeenCalledWith({
         players: ['Player1', 'Player2'],
         rounds: 2,
         playedMatches: { Player1: ['Player2'], Player2: ['Player1'] },
       });
-      expect(mockConsoleLog).toHaveBeenCalled();
+      expect(result).toEqual({
+        type: 'success',
+        message: 'Pairings generated successfully: [["Player1","Player2"]]',
+      });
     });
 
-    it('should handle errors and exit', () => {
+    it('should handle invalid input', () => {
       mockValidateInput.mockReturnValue(false);
 
-      expect(() => {
-        handleCLIAction({
-          players: ['Player1'],
-          rounds: 1,
-          matches: [],
-        });
-      }).toThrow('Process exited with code 1');
+      const result = handleCLIAction({
+        players: ['Player1'],
+        rounds: 1,
+        matches: [],
+      });
 
-      expect(mockConsoleError).toHaveBeenCalled();
+      expect(result).toEqual({
+        type: 'failure',
+        message: 'Invalid input. Please check your player list and number of rounds.',
+      });
     });
   });
 });

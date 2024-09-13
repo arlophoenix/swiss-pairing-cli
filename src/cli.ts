@@ -3,11 +3,9 @@ import { generatePairings, validateInput } from './swissPairing';
 import { Command } from 'commander';
 import { SwissPairingInput } from './types';
 
-export function generateSwissPairings(input: SwissPairingInput): string[][] {
-  if (!validateInput(input)) {
-    throw new Error('Invalid input. Please check your player list and number of rounds.');
-  }
-  return generatePairings(input);
+interface CLIResult {
+  type: 'success' | 'failure';
+  message: string;
 }
 
 export function buildPlayedMatches(matches: [string, string][] = []): Record<string, string[]> {
@@ -43,7 +41,17 @@ export function createCLI(): Command {
       1 // default to 1 round
     )
     .option('-m, --matches <matches...>', 'matches already played e.g. "player1,player3" "player2,player4"')
-    .action(handleCLIAction);
+    .action((options) => {
+      const result = handleCLIAction(options);
+      switch (result.type) {
+        case 'success':
+          console.log(result.message);
+          break;
+        case 'failure':
+          console.error(result.message);
+          process.exit(1);
+      }
+    });
 
   return program;
 }
@@ -56,18 +64,23 @@ export function handleCLIAction({
   players?: string[];
   rounds?: number;
   matches?: string[];
-}) {
-  try {
-    const playedMatches = buildPlayedMatches(matches.map((m) => m.split(',') as [string, string]));
-    const input: SwissPairingInput = {
-      players: players,
-      rounds: rounds,
-      playedMatches,
+}): CLIResult {
+  const playedMatches = buildPlayedMatches(matches.map((m) => m.split(',') as [string, string]));
+  const input: SwissPairingInput = {
+    players: players,
+    rounds: rounds,
+    playedMatches,
+  };
+  if (!validateInput(input)) {
+    return {
+      type: 'failure',
+      message: 'Invalid input. Please check your player list and number of rounds.',
     };
-    const pairings = generateSwissPairings(input);
-    console.log('Generated pairings:', pairings);
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : 'An unknown error occurred');
-    process.exit(1);
   }
+
+  const pairings = generatePairings(input);
+  return {
+    type: 'success',
+    message: 'Pairings generated successfully: ' + JSON.stringify(pairings),
+  };
 }
