@@ -1,5 +1,5 @@
 // src/swissPairing.ts
-import { SwissPairingInput } from './types';
+import { SwissPairingInput } from './types.js';
 
 export interface ValidationResult {
   isValid: boolean;

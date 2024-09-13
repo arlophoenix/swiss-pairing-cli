@@ -1,7 +1,7 @@
-import { generatePairings, validateInput } from './swissPairing';
+import { generatePairings, validateInput } from './swissPairing.js';
 
 import { Command } from 'commander';
-import { SwissPairingInput } from './types';
+import { SwissPairingInput } from './types.js';
 
 interface CLIResult {
   type: 'success' | 'failure';

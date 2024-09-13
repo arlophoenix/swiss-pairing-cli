@@ -96,6 +96,12 @@ To automatically fix linting issues:
 npm run lint:fix
 ```
 
+#### Run locally
+
+```bash
+npm start -- --players "Player1" "Player2" "Player3" "Player4" --rounds 2 --matches "Player1,Player2"
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
