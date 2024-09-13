@@ -16,7 +16,7 @@ describe('Swiss Pairing CLI', () => {
   let mockProcessExit: SpyInstance;
 
   beforeEach(() => {
-    mockValidateInput = jest.spyOn(swissPairing, 'validateInput').mockReturnValue(true);
+    mockValidateInput = jest.spyOn(swissPairing, 'validateInput').mockReturnValue({ isValid: true });
     mockGeneratePairings = jest.spyOn(swissPairing, 'generatePairings').mockReturnValue([]);
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
     mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -121,15 +121,13 @@ describe('Swiss Pairing CLI', () => {
     });
 
     it('should handle failure result', () => {
-      mockValidateInput.mockReturnValue(false);
+      mockValidateInput.mockReturnValue({ isValid: false, errorMessage: 'Invalid input' });
 
       expect(() => {
         program.parse(['node', 'swiss-pairing', '--players', 'Player1']);
       }).toThrow('Process exited with code 1');
 
-      expect(mockConsoleError).toHaveBeenCalledWith(
-        'Invalid input. Please check your player list and number of rounds.'
-      );
+      expect(mockConsoleError).toHaveBeenCalledWith('Invalid input');
       expect(mockProcessExit).toHaveBeenCalledWith(1);
     });
   });
@@ -158,7 +156,7 @@ describe('Swiss Pairing CLI', () => {
     });
 
     it('should handle invalid input', () => {
-      mockValidateInput.mockReturnValue(false);
+      mockValidateInput.mockReturnValue({ isValid: false, errorMessage: 'Invalid input' });
 
       const result = handleCLIAction({
         players: ['Player1'],
@@ -168,7 +166,7 @@ describe('Swiss Pairing CLI', () => {
 
       expect(result).toEqual({
         type: 'failure',
-        message: 'Invalid input. Please check your player list and number of rounds.',
+        message: 'Invalid input',
       });
     });
   });

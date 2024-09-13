@@ -71,10 +71,11 @@ export function handleCLIAction({
     rounds: rounds,
     playedMatches,
   };
-  if (!validateInput(input)) {
+  const validationResult = validateInput(input);
+  if (!validationResult.isValid) {
     return {
       type: 'failure',
-      message: 'Invalid input. Please check your player list and number of rounds.',
+      message: validationResult.errorMessage || 'Invalid input.',
     };
   }
 
