@@ -1,15 +1,36 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, jest } from '@jest/globals';
 
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { Command } from 'commander';
 
-const execAsync = promisify(exec);
+// Define the shape of the mocked module
+interface MockedCli {
+  createCLI: jest.MockedFunction<() => Command>;
+}
 
-describe('Swiss Pairing CLI', () => {
-  it('should display help information when run without arguments', async () => {
-    const { stdout } = await execAsync('node dist/index.js --help');
-    expect(stdout).toContain('A simple CLI tool for generating Swiss pairings');
-    expect(stdout).toContain('-p, --players <names...>');
-    expect(stdout).toContain('-r, --rounds <integer>');
+jest.mock('./cli', () => ({
+  createCLI: jest.fn().mockReturnValue({
+    parse: jest.fn().mockReturnThis(),
+  }),
+}));
+
+describe('Swiss Pairing CLI Entry Point', () => {
+  it('should create and parse CLI', () => {
+    const mockParse = jest.fn().mockReturnThis();
+    // Cast the mocked module to the correct type
+    const mockedCli = jest.requireMock('./cli') as MockedCli;
+    mockedCli.createCLI.mockReturnValue({
+      parse: mockParse,
+      // Add other necessary properties to match Command interface
+      opts: jest.fn(),
+      args: [],
+      // ... other properties as needed
+    } as unknown as Command);
+
+    jest.isolateModules(() => {
+      require('./index');
+    });
+
+    expect(mockedCli.createCLI).toHaveBeenCalled();
+    expect(mockParse).toHaveBeenCalledWith(process.argv);
   });
 });
