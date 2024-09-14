@@ -6,7 +6,7 @@ export interface ValidationResult {
   errorMessage?: string;
 }
 
-export function generatePairings({ players, rounds, playedMatches }: SwissPairingInput): string[][] {
+export function generatePairings({ players, rounds, playedMatches }: SwissPairingInput): Record<number, string[][]> {
   // Implement your Swiss pairing logic here
   // Return an array of pairings
   return [];

@@ -113,7 +113,7 @@ describe('Swiss Pairing CLI', () => {
     });
 
     it('should handle successful result', () => {
-      mockGeneratePairings.mockReturnValue([['Player1', 'Player2']]);
+      mockGeneratePairings.mockReturnValue({ 1: [['Player1', 'Player2']] });
       program.parse(['node', 'swiss-pairing', '--players', 'Player1', 'Player2']);
 
       expect(mockConsoleLog).toHaveBeenCalledWith('Pairings generated successfully: [["Player1","Player2"]]');
@@ -140,7 +140,7 @@ describe('Swiss Pairing CLI', () => {
         matches: ['Player1,Player2'],
       };
 
-      mockGeneratePairings.mockReturnValue([['Player1', 'Player2']]);
+      mockGeneratePairings.mockReturnValue({ 1: [['Player1', 'Player2']] });
 
       const result = handleCLIAction(options);
 
