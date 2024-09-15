@@ -1,15 +1,23 @@
-// src/swissPairing.ts
-import { SwissPairingInput } from './types.js';
+import { SwissPairingInput, ValidationResult } from './types.js';
 
-export interface ValidationResult {
-  isValid: boolean;
-  errorMessage?: string;
-}
+export function generatePairings({
+  players,
+  rounds,
+  playedMatches,
+}: SwissPairingInput): Record<number, string[][]> | Error {
+  const inputValidation = validateInput({ players, rounds, playedMatches });
+  if (!inputValidation.isValid) {
+    return new Error(inputValidation.errorMessage);
+  }
 
-export function generatePairings({ players, rounds, playedMatches }: SwissPairingInput): Record<number, string[][]> {
-  // Implement your Swiss pairing logic here
-  // Return an array of pairings
-  return [];
+  const result: { [round: number]: string[][] } = {};
+
+  const resultValidation = validateResult(result, players, rounds, playedMatches);
+  if (!resultValidation.isValid) {
+    return new Error(resultValidation.errorMessage);
+  }
+
+  return result;
 }
 
 export function validateInput({ players, rounds, playedMatches }: SwissPairingInput): ValidationResult {
@@ -21,6 +29,12 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
   // Check for duplicate players
   if (new Set(players).size !== players.length) {
     return { isValid: false, errorMessage: 'Duplicate players are not allowed.' };
+  }
+
+  // Check if number of players is even
+  // TODO: Support uneven number of players with a bye
+  if (players.length % 2 !== 0) {
+    return { isValid: false, errorMessage: 'Number of players must be even.' };
   }
 
   // Check if rounds is at least 1
@@ -49,5 +63,56 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
   }
 
   // If all checks pass, return true
+  return { isValid: true };
+}
+
+export function validateResult(
+  pairings: { [round: number]: string[][] },
+  players: string[],
+  rounds: number,
+  playedMatches: Record<string, string[]>
+): ValidationResult {
+  const numGamesPerRound = players.length / 2;
+
+  // 1. There is one key per round in the record
+  if (Object.keys(pairings).length !== rounds) {
+    return {
+      isValid: false,
+      errorMessage: `Invalid number of rounds in the result. Expected ${rounds}, got ${Object.keys(pairings).length}.`,
+    };
+  }
+
+  for (const [round, roundPairings] of Object.entries(pairings)) {
+    // 2. There are num players / 2 values per round
+    if (roundPairings.length !== numGamesPerRound) {
+      return {
+        isValid: false,
+        errorMessage: `Invalid number of pairings in round ${round}. Expected ${numGamesPerRound}, got ${roundPairings.length}.`,
+      };
+    }
+
+    const playersInRound = new Set<string>();
+
+    for (const [player1, player2] of roundPairings) {
+      // 3. No round contains a pairing of players who are already listed in playedMatches
+      if (playedMatches[player1]?.includes(player2)) {
+        return {
+          isValid: false,
+          errorMessage: `Invalid pairing in round ${round}: ${player1} and ${player2} have already played.`,
+        };
+      }
+
+      // 4. No player appears more than once in the values for a round
+      if (playersInRound.has(player1) || playersInRound.has(player2)) {
+        return {
+          isValid: false,
+          errorMessage: `Invalid pairing in round ${round}: ${player1} or ${player2} appears more than once.`,
+        };
+      }
+      playersInRound.add(player1);
+      playersInRound.add(player2);
+    }
+  }
+
   return { isValid: true };
 }

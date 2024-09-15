@@ -9,14 +9,12 @@ import type { SpyInstance } from 'jest-mock';
 jest.mock('./swissPairing');
 
 describe('Swiss Pairing CLI', () => {
-  let mockValidateInput: SpyInstance<typeof swissPairing.validateInput>;
   let mockGeneratePairings: SpyInstance<typeof swissPairing.generatePairings>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   let mockProcessExit: SpyInstance;
 
   beforeEach(() => {
-    mockValidateInput = jest.spyOn(swissPairing, 'validateInput').mockReturnValue({ isValid: true });
     mockGeneratePairings = jest.spyOn(swissPairing, 'generatePairings').mockReturnValue([]);
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
     mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -116,18 +114,19 @@ describe('Swiss Pairing CLI', () => {
       mockGeneratePairings.mockReturnValue({ 1: [['Player1', 'Player2']] });
       program.parse(['node', 'swiss-pairing', '--players', 'Player1', 'Player2']);
 
-      expect(mockConsoleLog).toHaveBeenCalledWith('Pairings generated successfully: [["Player1","Player2"]]');
+      expect(mockConsoleLog).toHaveBeenCalledWith('Pairings generated successfully: {"1":[["Player1","Player2"]]}');
       expect(mockProcessExit).not.toHaveBeenCalled();
     });
 
     it('should handle failure result', () => {
-      mockValidateInput.mockReturnValue({ isValid: false, errorMessage: 'Invalid input' });
+      const errorMessage = 'Invalid input';
+      mockGeneratePairings.mockReturnValue(new Error(errorMessage));
 
       expect(() => {
         program.parse(['node', 'swiss-pairing', '--players', 'Player1']);
       }).toThrow('Process exited with code 1');
 
-      expect(mockConsoleError).toHaveBeenCalledWith('Invalid input');
+      expect(mockConsoleError).toHaveBeenCalledWith(errorMessage);
       expect(mockProcessExit).toHaveBeenCalledWith(1);
     });
   });
@@ -151,12 +150,13 @@ describe('Swiss Pairing CLI', () => {
       });
       expect(result).toEqual({
         type: 'success',
-        message: 'Pairings generated successfully: [["Player1","Player2"]]',
+        message: 'Pairings generated successfully: {"1":[["Player1","Player2"]]}',
       });
     });
 
     it('should handle invalid input', () => {
-      mockValidateInput.mockReturnValue({ isValid: false, errorMessage: 'Invalid input' });
+      const errorMessage = 'Invalid input';
+      mockGeneratePairings.mockReturnValue(new Error(errorMessage));
 
       const result = handleCLIAction({
         players: ['Player1'],
@@ -166,7 +166,7 @@ describe('Swiss Pairing CLI', () => {
 
       expect(result).toEqual({
         type: 'failure',
-        message: 'Invalid input',
+        message: errorMessage,
       });
     });
   });

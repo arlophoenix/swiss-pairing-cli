@@ -1,7 +1,5 @@
-import { generatePairings, validateInput } from './swissPairing.js';
-
 import { Command } from 'commander';
-import { SwissPairingInput } from './types.js';
+import { generatePairings } from './swissPairing.js';
 
 interface CLIResult {
   type: 'success' | 'failure';
@@ -69,20 +67,14 @@ export function handleCLIAction({
   matches?: string[];
 }): CLIResult {
   const playedMatches = buildPlayedMatches(matches.map((m) => m.split(',') as [string, string]));
-  const input: SwissPairingInput = {
-    players: players,
-    rounds: rounds,
-    playedMatches,
-  };
-  const validationResult = validateInput(input);
-  if (!validationResult.isValid) {
+
+  const pairings = generatePairings({ players, rounds, playedMatches });
+  if (pairings instanceof Error) {
     return {
       type: 'failure',
-      message: validationResult.errorMessage || 'Invalid input.',
+      message: pairings.message,
     };
   }
-
-  const pairings = generatePairings(input);
   return {
     type: 'success',
     message: 'Pairings generated successfully: ' + JSON.stringify(pairings),
