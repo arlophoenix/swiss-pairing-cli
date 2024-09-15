@@ -12,6 +12,28 @@ export function generatePairings({
 
   const result: { [round: number]: string[][] } = {};
 
+  // TODO: backtrack and try another pairing if this one is not valid
+  for (let round = 1; round <= rounds; round++) {
+    const availablePlayers = [...players];
+    const roundPairings: string[][] = [];
+
+    while (availablePlayers.length > 0) {
+      const player1 = availablePlayers.shift()!;
+      const opponent = availablePlayers.find(
+        (player2) => !playedMatches[player1]?.includes(player2) && !playedMatches[player2]?.includes(player1)
+      );
+
+      if (!opponent) {
+        return new Error(`Unable to generate pairings: ${player1} has already played all other available players.`);
+      }
+
+      availablePlayers.splice(availablePlayers.indexOf(opponent), 1);
+      roundPairings.push([player1, opponent]);
+    }
+
+    result[round] = roundPairings;
+  }
+
   const resultValidation = validateResult(result, players, rounds, playedMatches);
   if (!resultValidation.isValid) {
     return new Error(resultValidation.errorMessage);
