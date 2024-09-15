@@ -123,7 +123,7 @@ describe('Swiss Pairing', () => {
       };
       const pairings = generatePairings(input);
       expect(pairings).toEqual({
-        1: [
+        'Round 1': [
           ['p1', 'p2'],
           ['p3', 'p4'],
         ],
@@ -138,11 +138,11 @@ describe('Swiss Pairing', () => {
       };
       const pairings = generatePairings(input);
       expect(pairings).toEqual({
-        1: [
+        'Round 1': [
           ['p1', 'p2'],
           ['p3', 'p4'],
         ],
-        2: [
+        'Round 2': [
           ['p1', 'p3'],
           ['p2', 'p4'],
         ],
@@ -157,15 +157,15 @@ describe('Swiss Pairing', () => {
       };
       const pairings = generatePairings(input);
       expect(pairings).toEqual({
-        1: [
+        'Round 1': [
           ['p1', 'p2'],
           ['p3', 'p4'],
         ],
-        2: [
+        'Round 2': [
           ['p1', 'p3'],
           ['p2', 'p4'],
         ],
-        3: [
+        'Round 3': [
           ['p1', 'p4'],
           ['p2', 'p3'],
         ],
@@ -196,7 +196,7 @@ describe('Swiss Pairing', () => {
       };
       const pairings = generatePairings(input);
       expect(pairings).toEqual({
-        1: [
+        'Round 1': [
           ['p1', 'p3'],
           ['p2', 'p4'],
         ],
@@ -216,7 +216,7 @@ describe('Swiss Pairing', () => {
       };
       const pairings = generatePairings(input);
       expect(pairings).toEqual({
-        1: [
+        'Round 1': [
           ['p1', 'p2'],
           ['p3', 'p4'],
         ],
@@ -235,7 +235,7 @@ describe('Swiss Pairing', () => {
       };
       const pairings = generatePairings(input);
       expect(pairings).toEqual({
-        1: [
+        'Round 1': [
           ['p1', 'p4'],
           ['p2', 'p3'],
         ],

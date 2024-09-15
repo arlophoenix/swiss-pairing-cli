@@ -15,7 +15,7 @@ describe('Swiss Pairing CLI', () => {
   let mockProcessExit: SpyInstance;
 
   beforeEach(() => {
-    mockGeneratePairings = jest.spyOn(swissPairing, 'generatePairings').mockReturnValue([]);
+    mockGeneratePairings = jest.spyOn(swissPairing, 'generatePairings').mockReturnValue({});
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
     mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {

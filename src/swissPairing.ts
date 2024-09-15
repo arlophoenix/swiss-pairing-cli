@@ -4,13 +4,13 @@ export function generatePairings({
   players,
   rounds,
   playedMatches,
-}: SwissPairingInput): Record<number, string[][]> | Error {
+}: SwissPairingInput): Record<string, string[][]> | Error {
   const inputValidation = validateInput({ players, rounds, playedMatches });
   if (!inputValidation.isValid) {
     return new Error(inputValidation.errorMessage);
   }
 
-  const result: { [round: number]: string[][] } = {};
+  const result: { [round: string]: string[][] } = {};
 
   // TODO: backtrack and try another pairing if this one is not valid
   for (let round = 1; round <= rounds; round++) {
@@ -31,7 +31,7 @@ export function generatePairings({
       roundPairings.push([player1, opponent]);
     }
 
-    result[round] = roundPairings;
+    result[`Round ${round}`] = roundPairings;
   }
 
   const resultValidation = validateResult(result, players, rounds, playedMatches);
@@ -89,7 +89,7 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
 }
 
 export function validateResult(
-  pairings: { [round: number]: string[][] },
+  pairings: { [round: string]: string[][] },
   players: string[],
   rounds: number,
   playedMatches: Record<string, string[]>
