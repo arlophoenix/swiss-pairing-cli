@@ -255,17 +255,21 @@ describe('Swiss Pairing', () => {
       };
       const result = generatePairings(input);
       expect(result).toBeInstanceOf(Error);
-      expect((result as Error).message).toBe(
-        'Unable to generate pairings: p1 has already played all other available players.'
-      );
+      expect((result as Error).message).toBe('Unable to generate valid pairings for Round 1');
     });
   });
 });
 
 describe('validateResult', () => {
-  const players = ['p1', 'p2', 'p3', 'p4'];
-  const rounds = 2;
-  const playedMatches: Record<string, string[]> = {};
+  let players: string[];
+  let rounds: number;
+  let playedMatches: Record<string, string[]>;
+
+  beforeEach(() => {
+    players = ['p1', 'p2', 'p3', 'p4'];
+    rounds = 2;
+    playedMatches = {};
+  });
 
   it('should return valid for correct pairings', () => {
     const pairings = {
@@ -317,16 +321,31 @@ describe('validateResult', () => {
         ['p1', 'p2'],
         ['p3', 'p4'],
       ],
-      2: [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
     };
+    const rounds = 1;
     const playedMatches = {
       p1: ['p2'],
       p2: ['p1'],
     };
     const result = validateResult(pairings, players, rounds, playedMatches);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid) {
+      expect(result.errorMessage).toBe('Invalid pairing in round 1: p1 and p2 have already played.');
+    }
+  });
+
+  it('should return invalid if a pairing includes players who have played in a previous round', () => {
+    const pairings = {
+      1: [
+        ['p1', 'p2'],
+        ['p3', 'p4'],
+      ],
+      2: [
+        ['p1', 'p2'],
+        ['p3', 'p4'],
+      ],
+    };
+    const result = validateResult({ pairings, players, rounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
       expect(result.errorMessage).toBe('Invalid pairing in round 2: p1 and p2 have already played.');

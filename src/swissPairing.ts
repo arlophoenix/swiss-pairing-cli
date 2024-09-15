@@ -11,27 +11,20 @@ export function generatePairings({
   }
 
   const result: { [round: string]: string[][] } = {};
+  let currentPlayedMatches = { ...playedMatches };
 
-  // TODO: backtrack and try another pairing if this one is not valid
   for (let round = 1; round <= rounds; round++) {
-    const availablePlayers = [...players];
-    const roundPairings: string[][] = [];
-
-    while (availablePlayers.length > 0) {
-      const player1 = availablePlayers.shift()!;
-      const opponent = availablePlayers.find(
-        (player2) => !playedMatches[player1]?.includes(player2) && !playedMatches[player2]?.includes(player1)
-      );
-
-      if (!opponent) {
-        return new Error(`Unable to generate pairings: ${player1} has already played all other available players.`);
-      }
-
-      availablePlayers.splice(availablePlayers.indexOf(opponent), 1);
-      roundPairings.push([player1, opponent]);
+    const roundPairings = generateRoundPairings(players, currentPlayedMatches);
+    if (!roundPairings) {
+      return new Error(`Unable to generate valid pairings for Round ${round}`);
     }
-
     result[`Round ${round}`] = roundPairings;
+
+    // Update currentPlayedMatches for the next round, if necessary
+    roundPairings.forEach(([player1, player2]) => {
+      currentPlayedMatches[player1] = [...(currentPlayedMatches[player1] || []), player2];
+      currentPlayedMatches[player2] = [...(currentPlayedMatches[player2] || []), player1];
+    });
   }
 
   const resultValidation = validateResult(result, players, rounds, playedMatches);
@@ -40,6 +33,30 @@ export function generatePairings({
   }
 
   return result;
+}
+
+function generateRoundPairings(players: string[], playedMatches: Record<string, string[]>): string[][] | null {
+  if (players.length === 0) {
+    return [];
+  }
+
+  const currentPlayer = players[0];
+  const remainingPlayers = players.slice(1);
+
+  for (const opponent of remainingPlayers) {
+    if (!playedMatches[currentPlayer]?.includes(opponent)) {
+      const subPairings = generateRoundPairings(
+        remainingPlayers.filter((p) => p !== opponent),
+        playedMatches
+      );
+
+      if (subPairings !== null) {
+        return [[currentPlayer, opponent], ...subPairings];
+      }
+    }
+  }
+
+  return null;
 }
 
 export function validateInput({ players, rounds, playedMatches }: SwissPairingInput): ValidationResult {
@@ -104,6 +121,8 @@ export function validateResult(
     };
   }
 
+  const currentPlayedMatches = { ...playedMatches };
+
   for (const [round, roundPairings] of Object.entries(pairings)) {
     // 2. There are num players / 2 values per round
     if (roundPairings.length !== numGamesPerRound) {
@@ -117,12 +136,14 @@ export function validateResult(
 
     for (const [player1, player2] of roundPairings) {
       // 3. No round contains a pairing of players who are already listed in playedMatches
-      if (playedMatches[player1]?.includes(player2)) {
+      if (currentPlayedMatches[player1]?.includes(player2)) {
         return {
           isValid: false,
           errorMessage: `Invalid pairing in round ${round}: ${player1} and ${player2} have already played.`,
         };
       }
+      currentPlayedMatches[player1] = [...(currentPlayedMatches[player1] || []), player2];
+      currentPlayedMatches[player2] = [...(currentPlayedMatches[player2] || []), player1];
 
       // 4. No player appears more than once in the values for a round
       if (playersInRound.has(player1) || playersInRound.has(player2)) {
