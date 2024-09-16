@@ -55,7 +55,7 @@ export default [
     },
   },
   {
-    files: ["**/*.test.{js,ts}", "**/__tests__/**/*.{js,ts}"],
+    files: ['**/*.test.ts', '**/__tests__/**/*.ts'],
     plugins: {
       "jest": eslintPluginJest,
     },

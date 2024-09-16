@@ -6,15 +6,16 @@ export default {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {
-    '^.+\\.tsx?$': [
+    '^.+\\.ts$': [
       'ts-jest',
       {
+        tsconfig: 'tsconfig.test.json',
         useESM: true,
       },
     ],
   },
-  roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  roots: ['<rootDir>/src', '<rootDir>/scripts', '<rootDir>/test'], 
+  testMatch: ['**/__tests__/**/*.ts', '**/*.test.ts'],
   collectCoverage: true,
   coverageReporters: ['text', 'lcov'],
   coverageDirectory: 'coverage',
@@ -23,7 +24,9 @@ export default {
       branches: 90,
       functions: 100,
       lines: 90,
-      statements: 90
-    }
-  }
+      statements: 90,
+    },
+  },
+  // Make sure Jest can find and process test fixture files
+  moduleFileExtensions: ['ts', 'js', 'json', 'txt'],
 };
