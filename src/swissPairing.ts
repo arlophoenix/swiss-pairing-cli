@@ -12,6 +12,9 @@ export function generatePairings({
 
   const result: { [round: string]: string[][] } = {};
   let currentPlayedMatches = { ...playedMatches };
+  if (players.length % 2 === 1) {
+    players.push('BYE');
+  }
 
   for (let round = 1; round <= rounds; round++) {
     const roundPairings = generateRoundPairings({ players, playedMatches: currentPlayedMatches });
@@ -74,12 +77,6 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
   // Check for duplicate players
   if (new Set(players).size !== players.length) {
     return { isValid: false, errorMessage: 'Duplicate players are not allowed.' };
-  }
-
-  // Check if number of players is even
-  // TODO: Support uneven number of players with a bye
-  if (players.length % 2 !== 0) {
-    return { isValid: false, errorMessage: 'Number of players must be even.' };
   }
 
   // Check if rounds is at least 1

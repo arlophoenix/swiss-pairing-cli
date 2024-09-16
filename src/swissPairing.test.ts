@@ -258,6 +258,21 @@ describe('Swiss Pairing', () => {
       expect((result as Error).message).toBe('Unable to generate valid pairings for Round 1');
     });
   });
+
+  it('should add a BYE round if provided with an uneven number of players', () => {
+    const input: SwissPairingInput = {
+      players: ['p1', 'p2', 'p3'],
+      rounds: 1,
+      playedMatches: {},
+    };
+    const pairings = generatePairings(input);
+    expect(pairings).toEqual({
+      'Round 1': [
+        ['p1', 'p2'],
+        ['p3', 'BYE'],
+      ],
+    });
+  });
 });
 
 describe('validateResult', () => {
