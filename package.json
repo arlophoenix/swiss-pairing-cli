@@ -18,10 +18,11 @@
   "scripts": {
     "prepare": "husky install && npm run build",
     "prepublishOnly": "npm run lint && npm test",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
     "pretest": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "node dist/index.js",
     "build": "tsc",
     "lint": "npm run eslint && npm run prettier && npm run todo",
     "lint:fix": "npm run eslint:fix && npm run prettier:fix",
