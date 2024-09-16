@@ -23,13 +23,15 @@
     "test:watch": "jest --watch",
     "start": "node dist/index.js",
     "build": "tsc",
-    "lint": "npm run eslint && npm run prettier",
+    "lint": "npm run eslint && npm run prettier && npm run todo",
     "lint:fix": "npm run eslint:fix && npm run prettier:fix",
     "lint-staged": "lint-staged",
     "eslint": "eslint \"$npm_package_config_sourceGlob\"",
     "eslint:fix": "eslint \"$npm_package_config_sourceGlob\" --fix",
     "prettier": "prettier --check \"$npm_package_config_sourceGlob\"",
-    "prettier:fix": "prettier --write \"$npm_package_config_sourceGlob\""
+    "prettier:fix": "prettier --write \"$npm_package_config_sourceGlob\"",
+    "todo": "leasot \"$npm_package_config_sourceGlob\"",
+    "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md"
   },
   "lint-staged": {
     "$npm_package_config_sourceGlob": "npm run lint:fix"
@@ -50,6 +52,7 @@
     "globals": "^15.9.0",
     "husky": "^8.0.0",
     "jest": "^29.7.0",
+    "leasot": "^14.4.0",
     "lint-staged": "^13.0.0",
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.5",
