@@ -30,7 +30,7 @@ describe('Swiss Pairing CLI Entry Point', () => {
       require('./index');
     });
 
-    expect(mockedCli.createCLI).toHaveBeenCalled();
+    expect(mockedCli.createCLI).toHaveBeenCalledWith();
     expect(mockParse).toHaveBeenCalledWith(process.argv);
   });
 });

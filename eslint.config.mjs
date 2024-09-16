@@ -1,5 +1,6 @@
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginFunctional from "eslint-plugin-functional";
+import eslintPluginJest from "eslint-plugin-jest"
 import globals from "globals";
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
@@ -51,6 +52,50 @@ export default [
     rules: {
       ...tseslint.configs.recommendedTypeChecked.rules,
       ...tseslint.configs.strictTypeChecked.rules,
+    },
+  },
+  {
+    files: ["**/*.test.{js,ts}", "**/__tests__/**/*.{js,ts}"],
+    plugins: {
+      "jest": eslintPluginJest,
+    },
+    ...eslintPluginJest.configs['flat/recommended'],
+    ...eslintPluginJest.configs['flat/style'],
+    rules: {
+      // Custom rule to disallow .only and .skip due to a dependency conflict in eslint-plugin-testing-library
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "describe",
+          property: "only",
+          message: "describe.only is not allowed. Remove .only to run all tests.",
+        },
+        {
+          object: "it",
+          property: "only",
+          message: "it.only is not allowed. Remove .only to run all tests.",
+        },
+        {
+          object: "test",
+          property: "only",
+          message: "test.only is not allowed. Remove .only to run all tests.",
+        },
+        {
+          object: "describe",
+          property: "skip",
+          message: "describe.skip is not allowed. Use xdescribe instead.",
+        },
+        {
+          object: "it",
+          property: "skip",
+          message: "it.skip is not allowed. Use xit instead.",
+        },
+        {
+          object: "test",
+          property: "skip",
+          message: "test.skip is not allowed. Use xtest instead.",
+        },
+      ],
     },
   },
 ];
