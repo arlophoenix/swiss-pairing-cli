@@ -22,6 +22,7 @@
     "start": "node dist/index.js",
     "pretest": "npm run build:test",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "build": "tsc",
     "build:test": "tsc -p tsconfig.test.json",
