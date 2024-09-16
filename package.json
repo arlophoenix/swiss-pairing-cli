@@ -13,7 +13,7 @@
     "swiss-pairing": "./dist/index.js"
   },
   "config": {
-    "sourceGlob": "src/**/*.{js,mjs,cjs,ts,test.ts}"
+    "sourceGlob": "{*.{js,mjs},{scripts,src,test}/**/*.{ts,test.ts}}"
   },
   "scripts": {
     "prepare": "husky install && npm run build",
