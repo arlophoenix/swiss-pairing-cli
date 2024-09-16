@@ -1,0 +1,8 @@
+npm start -- \
+-p Morgath Nzdaemon Saravock lilme GreyGhost Pauldog Arlo armydan Colain iso.evil Clin LCYig \
+-r 1 \
+-m 'lilme,Nzdaemon' 'iso.evil,armydan' 'LCYig,GreyGhost' 'Clin,Arlo' 'Pauldog,Colain' 'Saravock,Morgath' \
+-m 'Colain,LCYig' 'Clin,lilme' 'Saravock,armydan' 'iso.evil,Nzdaemon' 'GreyGhost,Morgath' 'Arlo,Pauldog' \
+-m 'Nzdaemon,Morgath' 'Arlo,Saravock' 'lilme,Colain' 'GreyGhost,Pauldog' 'iso.evil,LCYig' 'armydan,Clin' \
+-m 'Saravock,Nzdaemon' 'Morgath,Arlo' 'Pauldog,lilme' 'GreyGhost,iso.evil' 'Colain,armydan' 'LCYig,Clin' \
+-m 'Nzdaemon,Arlo' 'GreyGhost,armydan' 'Colain,Clin' 'Saravock,iso.evil' 'Pauldog,LCYig' 'Morgath,lilme'
