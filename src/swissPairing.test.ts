@@ -282,7 +282,7 @@ describe('validateResult', () => {
         ['p2', 'p4'],
       ],
     };
-    const result = validateResult(pairings, players, rounds, playedMatches);
+    const result = validateResult({ pairings, players, rounds, playedMatches });
     expect(result.isValid).toBe(true);
   });
 
@@ -293,7 +293,7 @@ describe('validateResult', () => {
         ['p3', 'p4'],
       ],
     };
-    const result = validateResult(pairings, players, rounds, playedMatches);
+    const result = validateResult({ pairings, players, rounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
       expect(result.errorMessage).toBe('Invalid number of rounds in the result. Expected 2, got 1.');
@@ -308,7 +308,7 @@ describe('validateResult', () => {
       ],
       2: [['p1', 'p3']],
     };
-    const result = validateResult(pairings, players, rounds, playedMatches);
+    const result = validateResult({ pairings, players, rounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
       expect(result.errorMessage).toBe('Invalid number of pairings in round 2. Expected 2, got 1.');
@@ -327,7 +327,7 @@ describe('validateResult', () => {
       p1: ['p2'],
       p2: ['p1'],
     };
-    const result = validateResult(pairings, players, rounds, playedMatches);
+    const result = validateResult({ pairings, players, rounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
       expect(result.errorMessage).toBe('Invalid pairing in round 1: p1 and p2 have already played.');
@@ -363,7 +363,7 @@ describe('validateResult', () => {
         ['p1', 'p4'],
       ],
     };
-    const result = validateResult(pairings, players, rounds, playedMatches);
+    const result = validateResult({ pairings, players, rounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
       expect(result.errorMessage).toBe('Invalid pairing in round 2: p1 or p4 appears more than once.');

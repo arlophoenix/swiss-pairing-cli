@@ -14,7 +14,7 @@ export function generatePairings({
   let currentPlayedMatches = { ...playedMatches };
 
   for (let round = 1; round <= rounds; round++) {
-    const roundPairings = generateRoundPairings(players, currentPlayedMatches);
+    const roundPairings = generateRoundPairings({ players, playedMatches: currentPlayedMatches });
     if (!roundPairings) {
       return new Error(`Unable to generate valid pairings for Round ${round}`);
     }
@@ -27,7 +27,7 @@ export function generatePairings({
     });
   }
 
-  const resultValidation = validateResult(result, players, rounds, playedMatches);
+  const resultValidation = validateResult({ pairings: result, players, rounds, playedMatches });
   if (!resultValidation.isValid) {
     return new Error(resultValidation.errorMessage);
   }
@@ -35,7 +35,13 @@ export function generatePairings({
   return result;
 }
 
-function generateRoundPairings(players: string[], playedMatches: Record<string, string[]>): string[][] | null {
+function generateRoundPairings({
+  players,
+  playedMatches,
+}: {
+  players: string[];
+  playedMatches: Record<string, string[]>;
+}): string[][] | null {
   if (players.length === 0) {
     return [];
   }
@@ -45,10 +51,10 @@ function generateRoundPairings(players: string[], playedMatches: Record<string, 
 
   for (const opponent of remainingPlayers) {
     if (!playedMatches[currentPlayer]?.includes(opponent)) {
-      const subPairings = generateRoundPairings(
-        remainingPlayers.filter((p) => p !== opponent),
-        playedMatches
-      );
+      const subPairings = generateRoundPairings({
+        players: remainingPlayers.filter((p) => p !== opponent),
+        playedMatches,
+      });
 
       if (subPairings !== null) {
         return [[currentPlayer, opponent], ...subPairings];
@@ -105,12 +111,17 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
   return { isValid: true };
 }
 
-export function validateResult(
-  pairings: { [round: string]: string[][] },
-  players: string[],
-  rounds: number,
-  playedMatches: Record<string, string[]>
-): ValidationResult {
+export function validateResult({
+  pairings,
+  players,
+  rounds,
+  playedMatches,
+}: {
+  pairings: { [round: string]: string[][] };
+  players: string[];
+  rounds: number;
+  playedMatches: Record<string, string[]>;
+}): ValidationResult {
   const numGamesPerRound = players.length / 2;
 
   // 1. There is one key per round in the record
