@@ -1,6 +1,7 @@
 export interface SwissPairingInput {
   players: string[];
-  rounds: number;
+  numRounds: number;
+  startRound: number;
   playedMatches: Record<string, string[]>;
 }
 

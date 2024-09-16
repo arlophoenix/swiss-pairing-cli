@@ -2,10 +2,11 @@ import { SwissPairingInput, ValidationResult } from './types.js';
 
 export function generatePairings({
   players,
-  rounds,
+  numRounds,
+  startRound,
   playedMatches,
 }: SwissPairingInput): Record<string, string[][]> | Error {
-  const inputValidation = validateInput({ players, rounds, playedMatches });
+  const inputValidation = validateInput({ players, numRounds, playedMatches });
   if (!inputValidation.isValid) {
     return new Error(inputValidation.errorMessage);
   }
@@ -16,12 +17,13 @@ export function generatePairings({
     players.push('BYE');
   }
 
-  for (let round = 1; round <= rounds; round++) {
+  for (let round = 1; round <= numRounds; round++) {
+    const roundLabel = `Round ${startRound + round - 1}`;
     const roundPairings = generateRoundPairings({ players, playedMatches: currentPlayedMatches });
     if (!roundPairings) {
-      return new Error(`Unable to generate valid pairings for Round ${round}`);
+      return new Error(`Unable to generate valid pairings for ${roundLabel}`);
     }
-    result[`Round ${round}`] = roundPairings;
+    result[roundLabel] = roundPairings;
 
     // Update currentPlayedMatches for the next round, if necessary
     roundPairings.forEach(([player1, player2]) => {
@@ -30,7 +32,7 @@ export function generatePairings({
     });
   }
 
-  const resultValidation = validateResult({ pairings: result, players, rounds, playedMatches });
+  const resultValidation = validateResult({ pairings: result, players, numRounds, playedMatches });
   if (!resultValidation.isValid) {
     return new Error(resultValidation.errorMessage);
   }
@@ -68,7 +70,15 @@ function generateRoundPairings({
   return null;
 }
 
-export function validateInput({ players, rounds, playedMatches }: SwissPairingInput): ValidationResult {
+export function validateInput({
+  players,
+  numRounds,
+  playedMatches,
+}: {
+  players: string[];
+  numRounds: number;
+  playedMatches: Record<string, string[]>;
+}): ValidationResult {
   // Check if there are at least two players
   if (players.length < 2) {
     return { isValid: false, errorMessage: 'There must be at least two players.' };
@@ -80,13 +90,16 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
   }
 
   // Check if rounds is at least 1
-  if (rounds < 1) {
-    return { isValid: false, errorMessage: 'Number of rounds must be at least 1.' };
+  if (numRounds < 1) {
+    return { isValid: false, errorMessage: 'Number of rounds to generate must be at least 1.' };
   }
 
   // Check if rounds is not greater than players minus 1
-  if (rounds > players.length - 1) {
-    return { isValid: false, errorMessage: 'Number of rounds cannot be greater than the number of players minus 1.' };
+  if (numRounds > players.length - 1) {
+    return {
+      isValid: false,
+      errorMessage: 'Number of rounds to generate cannot be greater than the number of players minus 1.',
+    };
   }
 
   // Check if all players in playedMatches are valid
@@ -111,32 +124,32 @@ export function validateInput({ players, rounds, playedMatches }: SwissPairingIn
 export function validateResult({
   pairings,
   players,
-  rounds,
+  numRounds,
   playedMatches,
 }: {
   pairings: { [round: string]: string[][] };
   players: string[];
-  rounds: number;
+  numRounds: number;
   playedMatches: Record<string, string[]>;
 }): ValidationResult {
   const numGamesPerRound = players.length / 2;
 
   // 1. There is one key per round in the record
-  if (Object.keys(pairings).length !== rounds) {
+  if (Object.keys(pairings).length !== numRounds) {
     return {
       isValid: false,
-      errorMessage: `Invalid number of rounds in the result. Expected ${rounds}, got ${Object.keys(pairings).length}.`,
+      errorMessage: `Invalid number of rounds in the result. Expected ${numRounds}, got ${Object.keys(pairings).length}.`,
     };
   }
 
   const currentPlayedMatches = { ...playedMatches };
 
-  for (const [round, roundPairings] of Object.entries(pairings)) {
+  for (const [roundLabel, roundPairings] of Object.entries(pairings)) {
     // 2. There are num players / 2 values per round
     if (roundPairings.length !== numGamesPerRound) {
       return {
         isValid: false,
-        errorMessage: `Invalid number of pairings in round ${round}. Expected ${numGamesPerRound}, got ${roundPairings.length}.`,
+        errorMessage: `Invalid number of pairings in ${roundLabel}. Expected ${numGamesPerRound}, got ${roundPairings.length}.`,
       };
     }
 
@@ -147,7 +160,7 @@ export function validateResult({
       if (currentPlayedMatches[player1]?.includes(player2)) {
         return {
           isValid: false,
-          errorMessage: `Invalid pairing in round ${round}: ${player1} and ${player2} have already played.`,
+          errorMessage: `Invalid pairing in ${roundLabel}: ${player1} and ${player2} have already played.`,
         };
       }
       currentPlayedMatches[player1] = [...(currentPlayedMatches[player1] || []), player2];
@@ -157,7 +170,7 @@ export function validateResult({
       if (playersInRound.has(player1) || playersInRound.has(player2)) {
         return {
           isValid: false,
-          errorMessage: `Invalid pairing in round ${round}: ${player1} or ${player2} appears more than once.`,
+          errorMessage: `Invalid pairing in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
         };
       }
       playersInRound.add(player1);

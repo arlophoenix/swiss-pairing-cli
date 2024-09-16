@@ -27,16 +27,28 @@ export function createCLI(): Command {
       'List of player names in order from top standing to bottom e.g. player1 player2 player3 player4'
     )
     .option(
-      '-r, --rounds <number>',
+      '-n, --num-rounds <number>',
       'Number of rounds to generate',
       (value) => {
         const parsed = parseInt(value, 10);
         if (isNaN(parsed)) {
-          throw new Error('Rounds must be a valid number');
+          throw new Error('num-rounds must be a valid number');
         }
         return parsed;
       },
       1 // default to 1 round
+    )
+    .option(
+      '-s, --start-round <number>',
+      'Used to name the generated rounds',
+      (value) => {
+        const parsed = parseInt(value, 10);
+        if (isNaN(parsed)) {
+          throw new Error('start-round must be a valid number');
+        }
+        return parsed;
+      },
+      1 // default to calling the first Round 1
     )
     .option(
       '-m, --matches <matches...>',
@@ -59,16 +71,18 @@ export function createCLI(): Command {
 
 export function handleCLIAction({
   players = [],
-  rounds = 1,
+  numRounds = 1,
+  startRound = 1,
   matches = [],
 }: {
   players?: string[];
-  rounds?: number;
+  numRounds?: number;
+  startRound?: number;
   matches?: string[];
 }): CLIResult {
   const playedMatches = buildPlayedMatches(matches.map((m) => m.split(',') as [string, string]));
 
-  const pairings = generatePairings({ players, rounds, playedMatches });
+  const pairings = generatePairings({ players, numRounds, startRound, playedMatches });
   if (pairings instanceof Error) {
     return {
       type: 'failure',

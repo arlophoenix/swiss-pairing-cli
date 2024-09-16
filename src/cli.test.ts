@@ -1,7 +1,7 @@
-import * as swissPairing from './swissPairing';
+import * as swissPairing from './swissPairing.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { buildPlayedMatches, createCLI, handleCLIAction } from './cli';
+import { buildPlayedMatches, createCLI, handleCLIAction } from './cli.js';
 
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
@@ -48,43 +48,80 @@ describe('Swiss Pairing CLI', () => {
         'Alice',
         'Bob',
         'Charlie',
-        '--rounds',
+        '--num-rounds',
         '2',
+        '--start-round',
+        '0',
         '--matches',
         'Alice,Bob',
       ]);
       const options = program.opts();
 
       expect(options.players).toEqual(['Alice', 'Bob', 'Charlie']);
-      expect(options.rounds).toBe(2);
+      expect(options.numRounds).toBe(2);
+      expect(options.startRound).toBe(0);
       expect(options.matches).toEqual(['Alice,Bob']);
-    });
-
-    it('should parse command line arguments without rounds', () => {
-      program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--matches', 'Alice,Bob']);
-      const options = program.opts();
-
-      expect(options.players).toEqual(['Alice', 'Bob', 'Charlie']);
-      expect(options.rounds).toBe(1);
-      expect(options.matches).toEqual(['Alice,Bob']);
-    });
-
-    it('should parse command line arguments without matches', () => {
-      program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--rounds', '2']);
-      const options = program.opts();
-
-      expect(options.players).toEqual(['Alice', 'Bob', 'Charlie']);
-      expect(options.rounds).toBe(2);
-      expect(options.matches).toBeUndefined();
     });
 
     it('should parse command line arguments without players', () => {
-      program.parse(['node', 'swiss-pairing', '--rounds', '2', '--matches', 'Alice,Bob']);
+      program.parse(['node', 'swiss-pairing', '--num-rounds', '2', '--start-round', '0', '--matches', 'Alice,Bob']);
       const options = program.opts();
 
       expect(options.players).toBeUndefined();
-      expect(options.rounds).toBe(2);
-      expect(options.matches).toEqual(['Alice,Bob']);
+    });
+
+    it('should parse command line arguments without num-rounds', () => {
+      program.parse([
+        'node',
+        'swiss-pairing',
+        '--players',
+        'Alice',
+        'Bob',
+        'Charlie',
+        '--start-round',
+        '0',
+        '--matches',
+        'Alice,Bob',
+      ]);
+      const options = program.opts();
+
+      expect(options.numRounds).toBe(1);
+    });
+
+    it('should parse command line arguments without start-rounds', () => {
+      program.parse([
+        'node',
+        'swiss-pairing',
+        '--players',
+        'Alice',
+        'Bob',
+        'Charlie',
+        '--num-rounds',
+        '2',
+        '--matches',
+        'Alice,Bob',
+      ]);
+      const options = program.opts();
+
+      expect(options.startRound).toBe(1);
+    });
+
+    it('should parse command line arguments without matches', () => {
+      program.parse([
+        'node',
+        'swiss-pairing',
+        '--players',
+        'Alice',
+        'Bob',
+        'Charlie',
+        '--num-rounds',
+        '2',
+        '--start-round',
+        '0',
+      ]);
+      const options = program.opts();
+
+      expect(options.matches).toBeUndefined();
     });
 
     it('should parse command line arguments with multiple matches', () => {
@@ -96,8 +133,10 @@ describe('Swiss Pairing CLI', () => {
         'Bob',
         'Charlie',
         'David',
-        '--rounds',
+        '--num-rounds',
         '3',
+        '--start-round',
+        '0',
         '--matches',
         'Alice,Bob',
         'Charlie,David',
@@ -106,7 +145,8 @@ describe('Swiss Pairing CLI', () => {
       const options = program.opts();
 
       expect(options.players).toEqual(['Alice', 'Bob', 'Charlie', 'David']);
-      expect(options.rounds).toBe(3);
+      expect(options.numRounds).toBe(3);
+      expect(options.startRound).toBe(0);
       expect(options.matches).toEqual(['Alice,Bob', 'Charlie,David', 'Alice,Charlie']);
     });
 
@@ -133,24 +173,57 @@ describe('Swiss Pairing CLI', () => {
 
   describe('handleCLIAction', () => {
     it('should process input and generate pairings', () => {
+      const players = ['Player1', 'Player2', 'Player 3'];
+      const numRounds = 2;
+      const startRound = 0;
       const options = {
-        players: ['Player1', 'Player2'],
-        rounds: 2,
+        players,
+        numRounds,
+        startRound,
         matches: ['Player1,Player2'],
       };
 
-      mockGeneratePairings.mockReturnValue({ 1: [['Player1', 'Player2']] });
+      const generatePairingsResult = {
+        'Round 0': [
+          ['Player1', 'Player3'],
+          ['Player2', 'BYE'],
+        ],
+      };
+      mockGeneratePairings.mockReturnValue(generatePairingsResult);
 
       const result = handleCLIAction(options);
 
       expect(mockGeneratePairings).toHaveBeenCalledWith({
-        players: ['Player1', 'Player2'],
-        rounds: 2,
+        players,
+        numRounds,
+        startRound,
         playedMatches: { Player1: ['Player2'], Player2: ['Player1'] },
       });
       expect(result).toEqual({
         type: 'success',
-        message: 'Pairings generated successfully: {"1":[["Player1","Player2"]]}',
+        message: `Pairings generated successfully: ${JSON.stringify(generatePairingsResult)}`,
+      });
+    });
+
+    it('should process default the missing values correctly', () => {
+      const options = {
+        players: ['Player1', 'Player2'],
+      };
+
+      const generatePairingsResult = { 'Round 1': [['Player1', 'Player2']] };
+      mockGeneratePairings.mockReturnValue(generatePairingsResult);
+
+      const result = handleCLIAction(options);
+
+      expect(mockGeneratePairings).toHaveBeenCalledWith({
+        players: options.players,
+        numRounds: 1,
+        startRound: 1,
+        playedMatches: {},
+      });
+      expect(result).toEqual({
+        type: 'success',
+        message: `Pairings generated successfully: ${JSON.stringify(generatePairingsResult)}`,
       });
     });
 
@@ -160,7 +233,8 @@ describe('Swiss Pairing CLI', () => {
 
       const result = handleCLIAction({
         players: ['Player1'],
-        rounds: 1,
+        numRounds: 1,
+        startRound: 1,
         matches: [],
       });
 

@@ -21,7 +21,7 @@ npm install -g swiss-pairing
 After installation, you can use the tool from the command line:
 
 ```bash
-swiss-pairing --players "Player1" "Player2" "Player3" "Player4" --rounds 2 --matches "Player1,Player2"
+swiss-pairing --players "Player1" "Player2" "Player3" "Player4" --num-rounds 2 --matches "Player1,Player2"
 ```
 
 ### Using npx
@@ -32,13 +32,22 @@ If you don't want to install the package globally, you can use npx to run it dir
 npx swiss-pairing --players "Player1" "Player2" "Player3" "Player4"
 ```
 
-### Options
+### Options & Help
 
-- `-p, --players <names...>`: List of player names in order from top standing to bottom (required)
-- `-r, --rounds <number>`: Number of rounds (default: 1)
-- `-m, --matches <names...>`: List of pairs of player names that have already played against each other (optional)
-- `-h, --help`: Display help information
-- `-v, --version`: Display version information
+```
+Usage: swiss-pairing [options]
+
+A CLI tool for generating Swiss-style tournament pairings
+
+Options:
+  -p, --players <names...>    List of player names in order from top standing to bottom e.g.
+                              player1 player2 player3 player4
+  -n, --num-rounds <number>   Number of rounds to generate (default: 1)
+  -s, --start-round <number>  Used to name the generated rounds (default: 1)
+  -m, --matches <matches...>  List of pairs of player names that have already played against each
+                              other e.g. "player1,player3" "player2,player4"
+  -h, --help                  display help for command
+```
 
 ## Development
 
@@ -99,7 +108,7 @@ npm run lint:fix
 #### Run locally
 
 ```bash
-npm start -- --players "Player1" "Player2" "Player3" "Player4" --rounds 2 --matches "Player1,Player2"
+npm start -- --players "Player1" "Player2" "Player3" "Player4" --num-rounds 2 --matches "Player1,Player2"
 ```
 
 ## Contributing
