@@ -63,11 +63,10 @@ describe('Swiss Pairing CLI', () => {
       expect(options.matches).toEqual(['Alice,Bob']);
     });
 
-    it('should parse command line arguments without players', () => {
-      program.parse(['node', 'swiss-pairing', '--num-rounds', '2', '--start-round', '0', '--matches', 'Alice,Bob']);
-      const options = program.opts();
-
-      expect(options.players).toBeUndefined();
+    it('should fail to parse command line arguments without players', () => {
+      expect(() => {
+        program.parse(['node', 'swiss-pairing', '--num-rounds', '2', '--start-round', '0', '--matches', 'Alice,Bob']);
+      }).toThrow("required option '-p, --players <names...>' not specified");
     });
 
     it('should parse command line arguments without num-rounds', () => {

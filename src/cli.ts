@@ -22,7 +22,7 @@ export function createCLI(): Command {
   program
     .name('swiss-pairing')
     .description('A CLI tool for generating Swiss-style tournament pairings')
-    .option(
+    .requiredOption(
       '-p, --players <names...>',
       'List of player names in order from top standing to bottom e.g. player1 player2 player3 player4'
     )
@@ -64,7 +64,8 @@ export function createCLI(): Command {
           console.error(result.message);
           process.exit(1);
       }
-    });
+    })
+    .addHelpText('afterAll', 'Examples:\n  swiss-pairing -p player1 player2 player3 player4');
 
   return program;
 }
