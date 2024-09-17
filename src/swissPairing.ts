@@ -1,14 +1,18 @@
-import { SwissPairingInput, ValidationResult } from './types.js';
+import { GeneratePairingsResult, SwissPairingInput, ValidationResult } from './types.js';
 
 export function generatePairings({
   players,
   numRounds,
   startRound,
   playedMatches,
-}: SwissPairingInput): Record<string, string[][]> | Error {
+}: SwissPairingInput): GeneratePairingsResult {
   const inputValidation = validateInput({ players, numRounds, playedMatches });
   if (!inputValidation.isValid) {
-    return new Error(inputValidation.errorMessage);
+    return {
+      success: false,
+      errorType: 'InvalidInput',
+      errorMessage: inputValidation.errorMessage,
+    };
   }
 
   const result: { [round: string]: string[][] } = {};
@@ -21,7 +25,11 @@ export function generatePairings({
     const roundLabel = `Round ${startRound + round - 1}`;
     const roundPairings = generateRoundPairings({ players, playedMatches: currentPlayedMatches });
     if (!roundPairings) {
-      return new Error(`Unable to generate valid pairings for ${roundLabel}`);
+      return {
+        success: false,
+        errorType: 'NoValidSolution',
+        errorMessage: `Unable to generate valid pairings for ${roundLabel}`,
+      };
     }
     result[roundLabel] = roundPairings;
 
@@ -34,10 +42,14 @@ export function generatePairings({
 
   const resultValidation = validateResult({ pairings: result, players, numRounds, playedMatches });
   if (!resultValidation.isValid) {
-    return new Error(resultValidation.errorMessage);
+    return {
+      success: false,
+      errorType: 'InvalidOutput',
+      errorMessage: resultValidation.errorMessage,
+    };
   }
 
-  return result;
+  return { success: true, roundPairings: result };
 }
 
 function generateRoundPairings({
@@ -81,38 +93,38 @@ export function validateInput({
 }): ValidationResult {
   // Check if there are at least two players
   if (players.length < 2) {
-    return { isValid: false, errorMessage: 'There must be at least two players.' };
+    return { isValid: false, errorMessage: 'there must be at least two players.' };
   }
 
   // Check for duplicate players
   if (new Set(players).size !== players.length) {
-    return { isValid: false, errorMessage: 'Duplicate players are not allowed.' };
+    return { isValid: false, errorMessage: 'duplicate players are not allowed.' };
   }
 
   // Check if rounds is at least 1
   if (numRounds < 1) {
-    return { isValid: false, errorMessage: 'Number of rounds to generate must be at least 1.' };
+    return { isValid: false, errorMessage: 'num-rounds to generate must be at least 1.' };
   }
 
   // Check if rounds is not greater than players minus 1
   if (numRounds > players.length - 1) {
     return {
       isValid: false,
-      errorMessage: 'Number of rounds to generate cannot be greater than the number of players minus 1.',
+      errorMessage: 'num-rounds to generate cannot be greater than the number of players minus 1.',
     };
   }
 
   // Check if all players in playedMatches are valid
   const playedMatchesPlayers = new Set([...Object.keys(playedMatches), ...Object.values(playedMatches).flat()]);
   if (!Array.from(playedMatchesPlayers).every((player) => players.includes(player))) {
-    return { isValid: false, errorMessage: 'Played matches contain invalid player names.' };
+    return { isValid: false, errorMessage: 'matches contains invalid player names.' };
   }
 
   // Check if playedMatches is symmetrical
   for (const [player, opponents] of Object.entries(playedMatches)) {
     for (const opponent of opponents) {
       if (!playedMatches[opponent] || !playedMatches[opponent].includes(player)) {
-        return { isValid: false, errorMessage: 'Played matches are not symmetrical.' };
+        return { isValid: false, errorMessage: 'matches are not symmetrical.' };
       }
     }
   }

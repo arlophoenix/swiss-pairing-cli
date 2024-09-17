@@ -15,7 +15,9 @@ describe('Swiss Pairing CLI', () => {
   let mockProcessExit: SpyInstance;
 
   beforeEach(() => {
-    mockGeneratePairings = jest.spyOn(swissPairing, 'generatePairings').mockReturnValue({});
+    mockGeneratePairings = jest
+      .spyOn(swissPairing, 'generatePairings')
+      .mockReturnValue({ success: true, roundPairings: {} });
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
     mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
@@ -87,6 +89,23 @@ describe('Swiss Pairing CLI', () => {
       expect(options.numRounds).toBe(1);
     });
 
+    it('should exit for invalid num-rounds', () => {
+      expect(() => {
+        program.parse([
+          'node',
+          'swiss-pairing',
+          '--players',
+          'Alice',
+          'Bob',
+          'Charlie',
+          '--num-rounds',
+          'a',
+          '--matches',
+          'Alice,Bob',
+        ]);
+      }).toThrow('Process exited with code 1');
+    });
+
     it('should parse command line arguments without start-rounds', () => {
       program.parse([
         'node',
@@ -105,6 +124,23 @@ describe('Swiss Pairing CLI', () => {
       expect(options.startRound).toBe(1);
     });
 
+    it('should exit for invalid start-rounds', () => {
+      expect(() => {
+        program.parse([
+          'node',
+          'swiss-pairing',
+          '--players',
+          'Alice',
+          'Bob',
+          'Charlie',
+          '--start-round',
+          'a',
+          '--matches',
+          'Alice,Bob',
+        ]);
+      }).toThrow('Process exited with code 1');
+    });
+
     it('should parse command line arguments without matches', () => {
       program.parse([
         'node',
@@ -121,6 +157,12 @@ describe('Swiss Pairing CLI', () => {
       const options = program.opts();
 
       expect(options.matches).toBeUndefined();
+    });
+
+    it('should exit for invalid matches', () => {
+      expect(() => {
+        program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--matches', 'Alice']);
+      }).toThrow('Process exited with code 1');
     });
 
     it('should parse command line arguments with multiple matches', () => {
@@ -150,7 +192,7 @@ describe('Swiss Pairing CLI', () => {
     });
 
     it('should handle successful result', () => {
-      mockGeneratePairings.mockReturnValue({ 1: [['Player1', 'Player2']] });
+      mockGeneratePairings.mockReturnValue({ success: true, roundPairings: { 1: [['Player1', 'Player2']] } });
       program.parse(['node', 'swiss-pairing', '--players', 'Player1', 'Player2']);
 
       expect(mockConsoleLog).toHaveBeenCalledWith('Pairings generated successfully: {"1":[["Player1","Player2"]]}');
@@ -159,7 +201,7 @@ describe('Swiss Pairing CLI', () => {
 
     it('should handle failure result', () => {
       const errorMessage = 'Invalid input';
-      mockGeneratePairings.mockReturnValue(new Error(errorMessage));
+      mockGeneratePairings.mockReturnValue({ success: false, errorType: 'InvalidInput', errorMessage });
 
       expect(() => {
         program.parse(['node', 'swiss-pairing', '--players', 'Player1']);
@@ -182,13 +224,13 @@ describe('Swiss Pairing CLI', () => {
         matches: ['Player1,Player2'],
       };
 
-      const generatePairingsResult = {
+      const roundPairings = {
         'Round 0': [
           ['Player1', 'Player3'],
           ['Player2', 'BYE'],
         ],
       };
-      mockGeneratePairings.mockReturnValue(generatePairingsResult);
+      mockGeneratePairings.mockReturnValue({ success: true, roundPairings });
 
       const result = handleCLIAction(options);
 
@@ -200,7 +242,7 @@ describe('Swiss Pairing CLI', () => {
       });
       expect(result).toEqual({
         type: 'success',
-        message: `Pairings generated successfully: ${JSON.stringify(generatePairingsResult)}`,
+        message: `Pairings generated successfully: ${JSON.stringify(roundPairings)}`,
       });
     });
 
@@ -209,8 +251,8 @@ describe('Swiss Pairing CLI', () => {
         players: ['Player1', 'Player2'],
       };
 
-      const generatePairingsResult = { 'Round 1': [['Player1', 'Player2']] };
-      mockGeneratePairings.mockReturnValue(generatePairingsResult);
+      const roundPairings = { 'Round 1': [['Player1', 'Player2']] };
+      mockGeneratePairings.mockReturnValue({ success: true, roundPairings });
 
       const result = handleCLIAction(options);
 
@@ -222,13 +264,13 @@ describe('Swiss Pairing CLI', () => {
       });
       expect(result).toEqual({
         type: 'success',
-        message: `Pairings generated successfully: ${JSON.stringify(generatePairingsResult)}`,
+        message: `Pairings generated successfully: ${JSON.stringify(roundPairings)}`,
       });
     });
 
     it('should handle invalid input', () => {
       const errorMessage = 'Invalid input';
-      mockGeneratePairings.mockReturnValue(new Error(errorMessage));
+      mockGeneratePairings.mockReturnValue({ success: false, errorType: 'InvalidInput', errorMessage });
 
       const result = handleCLIAction({
         players: ['Player1'],

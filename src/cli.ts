@@ -17,6 +17,11 @@ export function buildPlayedMatches(matches: [string, string][] = []): Record<str
   return playedMatches;
 }
 
+function exitWithError(message: string): never {
+  console.error(message);
+  process.exit(1);
+}
+
 export function createCLI(): Command {
   const program = new Command();
   const programName = 'swiss-pairing';
@@ -39,7 +44,7 @@ export function createCLI(): Command {
       (value) => {
         const parsed = parseInt(value, 10);
         if (isNaN(parsed)) {
-          throw new Error('num-rounds must be a valid number');
+          exitWithError('Invalid input: num-rounds must be a positive whole number');
         }
         return parsed;
       },
@@ -51,7 +56,7 @@ export function createCLI(): Command {
       (value) => {
         const parsed = parseInt(value, 10);
         if (isNaN(parsed)) {
-          throw new Error('start-round must be a valid number');
+          exitWithError('Invalid input: start-round must be a positive whole number');
         }
         return parsed;
       },
@@ -66,8 +71,7 @@ export function createCLI(): Command {
           console.log(result.message);
           break;
         case 'failure':
-          console.error(result.message);
-          process.exit(1);
+          exitWithError(result.message);
       }
     });
 
@@ -85,17 +89,41 @@ export function handleCLIAction({
   startRound?: number;
   matches?: string[];
 }): CLIResult {
-  const playedMatches = buildPlayedMatches(matches.map((m) => m.split(',') as [string, string]));
-
-  const pairings = generatePairings({ players, numRounds, startRound, playedMatches });
-  if (pairings instanceof Error) {
+  let playedMatches;
+  try {
+    playedMatches = buildPlayedMatches(
+      matches.map((m) => {
+        const parts = m.split(',');
+        if (parts.length !== 2) {
+          throw new Error(`match "${m}" is formatted incorrectly. Expect "player1,player2"`);
+        }
+        return parts as [string, string];
+      })
+    );
+  } catch (error) {
     return {
       type: 'failure',
-      message: pairings.message,
+      message: `Invalid input: ${(error as Error).message}`,
+    };
+  }
+
+  const pairingResult = generatePairings({ players, numRounds, startRound, playedMatches });
+  if (!pairingResult.success) {
+    switch (pairingResult.errorType) {
+      case 'InvalidInput':
+        break;
+      case 'InvalidOutput':
+        break;
+      case 'NoValidSolution':
+        break;
+    }
+    return {
+      type: 'failure',
+      message: pairingResult.errorMessage,
     };
   }
   return {
     type: 'success',
-    message: 'Pairings generated successfully: ' + JSON.stringify(pairings),
+    message: 'Pairings generated successfully: ' + JSON.stringify(pairingResult.roundPairings),
   };
 }

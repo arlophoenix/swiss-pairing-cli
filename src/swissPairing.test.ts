@@ -28,7 +28,7 @@ describe('Swiss Pairing', () => {
       const result: ValidationResult = validateInput(invalidInput);
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
-        expect(result.errorMessage).toBe('There must be at least two players.');
+        expect(result.errorMessage).toBe('there must be at least two players.');
       }
     });
 
@@ -42,7 +42,7 @@ describe('Swiss Pairing', () => {
       const result: ValidationResult = validateInput(invalidInput);
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
-        expect(result.errorMessage).toBe('Duplicate players are not allowed.');
+        expect(result.errorMessage).toBe('duplicate players are not allowed.');
       }
     });
 
@@ -56,7 +56,7 @@ describe('Swiss Pairing', () => {
       const result: ValidationResult = validateInput(invalidInput);
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
-        expect(result.errorMessage).toBe('Number of rounds to generate must be at least 1.');
+        expect(result.errorMessage).toBe('num-rounds to generate must be at least 1.');
       }
     });
 
@@ -71,7 +71,7 @@ describe('Swiss Pairing', () => {
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
         expect(result.errorMessage).toBe(
-          'Number of rounds to generate cannot be greater than the number of players minus 1.'
+          'num-rounds to generate cannot be greater than the number of players minus 1.'
         );
       }
     });
@@ -90,7 +90,7 @@ describe('Swiss Pairing', () => {
       const result: ValidationResult = validateInput(invalidInput);
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
-        expect(result.errorMessage).toBe('Played matches contain invalid player names.');
+        expect(result.errorMessage).toBe('matches contains invalid player names.');
       }
     });
 
@@ -107,7 +107,7 @@ describe('Swiss Pairing', () => {
       const result: ValidationResult = validateInput(invalidInput);
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
-        expect(result.errorMessage).toBe('Played matches are not symmetrical.');
+        expect(result.errorMessage).toBe('matches are not symmetrical.');
       }
     });
   });
@@ -121,8 +121,11 @@ describe('Swiss Pairing', () => {
         playedMatches: {},
       };
       const result = generatePairings(invalidInput);
-      expect(result).toBeInstanceOf(Error);
-      expect((result as Error).message).toBe('There must be at least two players.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.errorType).toBe('InvalidInput');
+        expect(result.errorMessage).toBe('there must be at least two players.');
+      }
     });
 
     it('should generate correct pairings for 4 players, 1 round, and no played matches', () => {
@@ -132,13 +135,16 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: {},
       };
-      const pairings = generatePairings(input);
-      expect(pairings).toEqual({
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-      });
+      const pairingResult = generatePairings(input);
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p2'],
+            ['p3', 'p4'],
+          ],
+        });
+      }
     });
 
     it('should generate correct pairings for 4 players and 2 rounds', () => {
@@ -148,17 +154,20 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: {},
       };
-      const pairings = generatePairings(input);
-      expect(pairings).toEqual({
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-        'Round 2': [
-          ['p1', 'p3'],
-          ['p2', 'p4'],
-        ],
-      });
+      const pairingResult = generatePairings(input);
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p2'],
+            ['p3', 'p4'],
+          ],
+          'Round 2': [
+            ['p1', 'p3'],
+            ['p2', 'p4'],
+          ],
+        });
+      }
     });
 
     it('should generate correct pairings for 4 players and 3 rounds', () => {
@@ -168,21 +177,24 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: {},
       };
-      const pairings = generatePairings(input);
-      expect(pairings).toEqual({
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-        'Round 2': [
-          ['p1', 'p3'],
-          ['p2', 'p4'],
-        ],
-        'Round 3': [
-          ['p1', 'p4'],
-          ['p2', 'p3'],
-        ],
-      });
+      const pairingResult = generatePairings(input);
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p2'],
+            ['p3', 'p4'],
+          ],
+          'Round 2': [
+            ['p1', 'p3'],
+            ['p2', 'p4'],
+          ],
+          'Round 3': [
+            ['p1', 'p4'],
+            ['p2', 'p3'],
+          ],
+        });
+      }
     });
 
     it('should return an error for 4 players and 4 rounds', () => {
@@ -193,10 +205,13 @@ describe('Swiss Pairing', () => {
         playedMatches: {},
       };
       const result = generatePairings(input);
-      expect(result).toBeInstanceOf(Error);
-      expect((result as Error).message).toBe(
-        'Number of rounds to generate cannot be greater than the number of players minus 1.'
-      );
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.errorType).toBe('InvalidInput');
+        expect(result.errorMessage).toBe(
+          'num-rounds to generate cannot be greater than the number of players minus 1.'
+        );
+      }
     });
 
     it('should generate correct pairings for 1 round with existing played matches (p1 vs p2, p3 vs p4)', () => {
@@ -211,13 +226,16 @@ describe('Swiss Pairing', () => {
           p4: ['p3'],
         },
       };
-      const pairings = generatePairings(input);
-      expect(pairings).toEqual({
-        'Round 1': [
-          ['p1', 'p3'],
-          ['p2', 'p4'],
-        ],
-      });
+      const pairingResult = generatePairings(input);
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p3'],
+            ['p2', 'p4'],
+          ],
+        });
+      }
     });
 
     it('should generate correct pairings for 1 round with existing played matches (p1 vs p3, p2 vs p4)', () => {
@@ -232,13 +250,16 @@ describe('Swiss Pairing', () => {
           p4: ['p2'],
         },
       };
-      const pairings = generatePairings(input);
-      expect(pairings).toEqual({
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-      });
+      const pairingResult = generatePairings(input);
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p2'],
+            ['p3', 'p4'],
+          ],
+        });
+      }
     });
 
     it('should generate correct pairings for 1 round with existing played matches (p1 vs p2, p1 vs p3)', () => {
@@ -252,13 +273,16 @@ describe('Swiss Pairing', () => {
           p3: ['p1'],
         },
       };
-      const pairings = generatePairings(input);
-      expect(pairings).toEqual({
-        'Round 1': [
-          ['p1', 'p4'],
-          ['p2', 'p3'],
-        ],
-      });
+      const pairingResult = generatePairings(input);
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p4'],
+            ['p2', 'p3'],
+          ],
+        });
+      }
     });
 
     it('should return an error when one player has played all others', () => {
@@ -274,8 +298,11 @@ describe('Swiss Pairing', () => {
         },
       };
       const result = generatePairings(input);
-      expect(result).toBeInstanceOf(Error);
-      expect((result as Error).message).toBe('Unable to generate valid pairings for Round 1');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.errorType).toBe('NoValidSolution');
+        expect(result.errorMessage).toBe('Unable to generate valid pairings for Round 1');
+      }
     });
   });
 
@@ -286,13 +313,16 @@ describe('Swiss Pairing', () => {
       startRound: 1,
       playedMatches: {},
     };
-    const pairings = generatePairings(input);
-    expect(pairings).toEqual({
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'BYE'],
-      ],
-    });
+    const pairingResult = generatePairings(input);
+    expect(pairingResult.success).toBe(true);
+    if (pairingResult.success) {
+      expect(pairingResult.roundPairings).toEqual({
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'BYE'],
+        ],
+      });
+    }
   });
 
   it('should start labelling rounds from the startRound', () => {
@@ -302,17 +332,20 @@ describe('Swiss Pairing', () => {
       startRound: 3,
       playedMatches: {},
     };
-    const pairings = generatePairings(input);
-    expect(pairings).toEqual({
-      'Round 3': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-      'Round 4': [
-        ['p1', 'p3'],
-        ['p2', 'p4'],
-      ],
-    });
+    const pairingResult = generatePairings(input);
+    expect(pairingResult.success).toBe(true);
+    if (pairingResult.success) {
+      expect(pairingResult.roundPairings).toEqual({
+        'Round 3': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+        'Round 4': [
+          ['p1', 'p3'],
+          ['p2', 'p4'],
+        ],
+      });
+    }
   });
 });
 
