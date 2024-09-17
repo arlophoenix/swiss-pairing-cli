@@ -19,12 +19,19 @@ export function buildPlayedMatches(matches: [string, string][] = []): Record<str
 
 export function createCLI(): Command {
   const program = new Command();
+  const programName = 'swiss-pairing';
+  const examplePlayers = 'player1 player2 player3 player4';
+  const exampleMatches = '"player1,player2" "player3,player4"';
   program
-    .name('swiss-pairing')
+    .name(programName)
     .description('A CLI tool for generating Swiss-style tournament pairings')
     .requiredOption(
       '-p, --players <names...>',
-      'List of player names in order from top standing to bottom e.g. player1 player2 player3 player4'
+      `List of player names in order from top standing to bottom [required] \ne.g. ${examplePlayers}`
+    )
+    .option(
+      '-m, --matches <matches...>',
+      `List of pairs of player names that have already played against each other \ne.g. ${exampleMatches}`
     )
     .option(
       '-n, --num-rounds <number>',
@@ -50,10 +57,8 @@ export function createCLI(): Command {
       },
       1 // default to calling the first Round 1
     )
-    .option(
-      '-m, --matches <matches...>',
-      'List of pairs of player names that have already played against each other e.g. "player1,player3" "player2,player4"'
-    )
+    .helpOption('-h, --help', 'Display this help information')
+    .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
     .action((options) => {
       const result = handleCLIAction(options);
       switch (result.type) {
@@ -64,8 +69,7 @@ export function createCLI(): Command {
           console.error(result.message);
           process.exit(1);
       }
-    })
-    .addHelpText('afterAll', 'Examples:\n  swiss-pairing -p player1 player2 player3 player4');
+    });
 
   return program;
 }

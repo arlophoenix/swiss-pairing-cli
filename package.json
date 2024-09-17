@@ -13,7 +13,7 @@
     "swiss-pairing": "./dist/index.js"
   },
   "config": {
-    "sourceGlob": "{*.{js,mjs},{scripts,src,test}/**/*.{ts,test.ts}}"
+    "sourceGlob": "{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}"
   },
   "scripts": {
     "prepare": "husky install && npm run build",
@@ -35,7 +35,9 @@
     "prettier": "prettier --check \"$npm_package_config_sourceGlob\"",
     "prettier:fix": "prettier --write \"$npm_package_config_sourceGlob\"",
     "todo": "leasot \"$npm_package_config_sourceGlob\"",
-    "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md"
+    "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md",
+    "usage": "tsx src/index.js --help",
+    "usage:update-readme": "tsx scripts/update-readme-usage.ts"
   },
   "lint-staged": {
     "$npm_package_config_sourceGlob": "npm run lint:fix"
@@ -61,8 +63,7 @@
     "lint-staged": "^13.0.0",
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.5",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.5.0"
   },

@@ -2,3 +2,9 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run lint-staged
+
+# Check if cli.ts (the file that defines the interface) has changed
+if git diff --cached --name-only | grep -qE "src/cli\.ts"; then
+  npm run usage:update-readme
+  git add README.md
+fi
