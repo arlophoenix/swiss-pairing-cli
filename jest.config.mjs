@@ -14,7 +14,7 @@ export default {
       },
     ],
   },
-  roots: ['<rootDir>/src', '<rootDir>/scripts', '<rootDir>/test'], 
+  roots: ['<rootDir>/src', '<rootDir>/scripts', '<rootDir>/test'],
   testMatch: ['**/__tests__/**/*.ts', '**/*.test.ts'],
   collectCoverage: true,
   coverageReporters: ['text', 'lcov'],

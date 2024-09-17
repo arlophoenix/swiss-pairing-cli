@@ -1,26 +1,26 @@
-import eslintConfigPrettier from "eslint-config-prettier";
-import eslintPluginFunctional from "eslint-plugin-functional";
-import eslintPluginJest from "eslint-plugin-jest"
-import globals from "globals";
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintPluginFunctional from 'eslint-plugin-functional';
+import eslintPluginJest from 'eslint-plugin-jest';
+import globals from 'globals';
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
 
 export default [
   {
-    files: ["**/*.{js,mjs,cjs,ts}"],
-    languageOptions: { 
+    files: ['**/*.{js,mjs,ts}'],
+    languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.es2021
+        ...globals.es2021,
       },
       parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
     },
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
-      "functional": eslintPluginFunctional,
+      '@typescript-eslint': tseslint.plugin,
+      functional: eslintPluginFunctional,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -28,25 +28,25 @@ export default [
       ...tseslint.configs.strict.rules,
       ...eslintConfigPrettier.rules,
       // Functional style rules
-      "functional/functional-parameters": ["error", { "allowRestParameter": true, "enforceParameterCount": false }],
-      "functional/no-expression-statement": "off",
+      'functional/functional-parameters': ['error', { allowRestParameter: true, enforceParameterCount: false }],
+      'functional/no-expression-statement': 'off',
       // TODO: enable these rules to enforce a more functional style
       // "functional/immutable-data": "error",
       // "functional/no-let": "error",
       // "functional/prefer-readonly-type": "error",
       // Prefer arrow functions
-      "prefer-arrow-callback": "error",
-      "arrow-body-style": ["error", "as-needed"],
+      'prefer-arrow-callback': 'error',
+      'arrow-body-style': ['error', 'as-needed'],
       // Enforce single object argument
-      "max-params": ["error", 1],
+      'max-params': ['error', 1],
     },
   },
   {
-    files: ["**/*.ts"],
+    files: ['**/*.ts'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: ["./tsconfig.json", "./tsconfig.test.json"],
+        project: ['./tsconfig.json', './tsconfig.test.json'],
       },
     },
     rules: {
@@ -57,43 +57,43 @@ export default [
   {
     files: ['**/*.test.ts', '**/__tests__/**/*.ts'],
     plugins: {
-      "jest": eslintPluginJest,
+      jest: eslintPluginJest,
     },
     ...eslintPluginJest.configs['flat/recommended'],
     ...eslintPluginJest.configs['flat/style'],
     rules: {
       // Custom rule to disallow .only and .skip due to a dependency conflict in eslint-plugin-testing-library
-      "no-restricted-properties": [
-        "error",
+      'no-restricted-properties': [
+        'error',
         {
-          object: "describe",
-          property: "only",
-          message: "describe.only is not allowed. Remove .only to run all tests.",
+          object: 'describe',
+          property: 'only',
+          message: 'describe.only is not allowed. Remove .only to run all tests.',
         },
         {
-          object: "it",
-          property: "only",
-          message: "it.only is not allowed. Remove .only to run all tests.",
+          object: 'it',
+          property: 'only',
+          message: 'it.only is not allowed. Remove .only to run all tests.',
         },
         {
-          object: "test",
-          property: "only",
-          message: "test.only is not allowed. Remove .only to run all tests.",
+          object: 'test',
+          property: 'only',
+          message: 'test.only is not allowed. Remove .only to run all tests.',
         },
         {
-          object: "describe",
-          property: "skip",
-          message: "describe.skip is not allowed. Use xdescribe instead.",
+          object: 'describe',
+          property: 'skip',
+          message: 'describe.skip is not allowed. Use xdescribe instead.',
         },
         {
-          object: "it",
-          property: "skip",
-          message: "it.skip is not allowed. Use xit instead.",
+          object: 'it',
+          property: 'skip',
+          message: 'it.skip is not allowed. Use xit instead.',
         },
         {
-          object: "test",
-          property: "skip",
-          message: "test.skip is not allowed. Use xtest instead.",
+          object: 'test',
+          property: 'skip',
+          message: 'test.skip is not allowed. Use xtest instead.',
         },
       ],
     },
