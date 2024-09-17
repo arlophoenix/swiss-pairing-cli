@@ -32,11 +32,9 @@ Usage: swiss-pairing [options]
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -p, --players <names...>    List of player names in order from top standing
-                              to bottom [required]
+  -p, --players <names...>    List of player names in order from top standing to bottom [required]
                               e.g. player1 player2 player3 player4
-  -m, --matches <matches...>  List of pairs of player names that have already
-                              played against each other
+  -m, --matches <matches...>  List of pairs of player names that have already played against each other
                               e.g. "player1,player2" "player3,player4"
   -n, --num-rounds <number>   Number of rounds to generate (default: 1)
   -s, --start-round <number>  Used to name the generated rounds (default: 1)

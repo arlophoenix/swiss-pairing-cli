@@ -1,7 +1,7 @@
 import * as swissPairing from './swissPairing.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { buildPlayedMatches, createCLI, handleCLIAction } from './cli.js';
+import { createBidirectionalMap, createCLI, handleCLIAction } from './cli.js';
 
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
@@ -287,7 +287,7 @@ describe('Swiss Pairing CLI', () => {
   });
 });
 
-describe('buildPlayedMatches', () => {
+describe('createBidirectionalMap', () => {
   it('should correctly build played matches object', () => {
     const matches: [string, string][] = [
       ['Player1', 'Player2'],
@@ -295,7 +295,7 @@ describe('buildPlayedMatches', () => {
       ['Player1', 'Player3'],
     ];
 
-    const result = buildPlayedMatches(matches);
+    const result = createBidirectionalMap(matches);
 
     expect(result).toEqual({
       Player1: ['Player2', 'Player3'],
@@ -307,7 +307,7 @@ describe('buildPlayedMatches', () => {
 
   it('should return an empty object for no matches', () => {
     const matches: [string, string][] = [];
-    const result = buildPlayedMatches(matches);
+    const result = createBidirectionalMap(matches);
     expect(result).toEqual({});
   });
 });

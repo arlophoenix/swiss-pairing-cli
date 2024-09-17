@@ -6,7 +6,7 @@ interface CLIResult {
   message: string;
 }
 
-export function buildPlayedMatches(matches: [string, string][] = []): Record<string, string[]> {
+export function createBidirectionalMap(matches: [string, string][] = []): Record<string, string[]> {
   const playedMatches: Record<string, string[]> = {};
   matches.forEach(([player, opponent]) => {
     if (!playedMatches[player]) playedMatches[player] = [];
@@ -91,7 +91,7 @@ export function handleCLIAction({
 }): CLIResult {
   let playedMatches;
   try {
-    playedMatches = buildPlayedMatches(
+    playedMatches = createBidirectionalMap(
       matches.map((m) => {
         const parts = m.split(',');
         if (parts.length !== 2) {
