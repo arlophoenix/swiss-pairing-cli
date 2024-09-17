@@ -5,6 +5,8 @@ export interface SwissPairingInput {
   playedMatches: Record<string, string[]>;
 }
 
+export type Result<T> = { success: true; value: T } | { success: false; errorMessage: string };
+
 export type ValidationResult = { isValid: true } | { isValid: false; errorMessage: string };
 
 export type GeneratePairingsResult =

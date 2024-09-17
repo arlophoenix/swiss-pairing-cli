@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { Result } from './types.js';
 import { createBidirectionalMap } from './utils.js';
 import { generatePairings } from './swissPairing.js';
 
@@ -79,23 +80,15 @@ export function handleCLIAction({
   startRound?: number;
   matches?: string[];
 }): CLIResult {
-  let playedMatches;
-  try {
-    playedMatches = createBidirectionalMap(
-      matches.map((m) => {
-        const parts = m.split(',');
-        if (parts.length !== 2) {
-          throw new Error(`match "${m}" is formatted incorrectly. Expect "player1,player2"`);
-        }
-        return parts as [string, string];
-      })
-    );
-  } catch (error) {
+  const parseResult = parseCommaSeperatedMatchStrings(matches);
+  if (!parseResult.success) {
     return {
       type: 'failure',
-      message: `Invalid input: ${(error as Error).message}`,
+      message: `Invalid input: ${parseResult.errorMessage}`,
     };
   }
+
+  const playedMatches = createBidirectionalMap(parseResult.value);
 
   const pairingResult = generatePairings({ players, numRounds, startRound, playedMatches });
   if (!pairingResult.success) {
@@ -116,4 +109,21 @@ export function handleCLIAction({
     type: 'success',
     message: 'Pairings generated successfully: ' + JSON.stringify(pairingResult.roundPairings),
   };
+}
+
+function parseCommaSeperatedMatchStrings(matches: string[]): Result<[string, string][]> {
+  const parsedMatches: [string, string][] = [];
+
+  for (const m of matches) {
+    const parts = m.split(',');
+    if (parts.length !== 2) {
+      return {
+        success: false,
+        errorMessage: `match "${m}" is formatted incorrectly; expected "player1,player2".`,
+      };
+    }
+    parsedMatches.push(parts as [string, string]);
+  }
+
+  return { success: true, value: parsedMatches };
 }
