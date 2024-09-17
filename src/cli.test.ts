@@ -1,7 +1,7 @@
 import * as swissPairing from './swissPairing.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { createBidirectionalMap, createCLI, handleCLIAction } from './cli.js';
+import { createCLI, handleCLIAction } from './cli.js';
 
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
@@ -284,30 +284,5 @@ describe('Swiss Pairing CLI', () => {
         message: errorMessage,
       });
     });
-  });
-});
-
-describe('createBidirectionalMap', () => {
-  it('should correctly build played matches object', () => {
-    const matches: [string, string][] = [
-      ['Player1', 'Player2'],
-      ['Player3', 'Player4'],
-      ['Player1', 'Player3'],
-    ];
-
-    const result = createBidirectionalMap(matches);
-
-    expect(result).toEqual({
-      Player1: ['Player2', 'Player3'],
-      Player2: ['Player1'],
-      Player3: ['Player4', 'Player1'],
-      Player4: ['Player3'],
-    });
-  });
-
-  it('should return an empty object for no matches', () => {
-    const matches: [string, string][] = [];
-    const result = createBidirectionalMap(matches);
-    expect(result).toEqual({});
   });
 });
