@@ -8,3 +8,9 @@ if git diff --cached --name-only | grep -qE "src/cli\.ts"; then
   npm run usage:update-readme
   git add README.md
 fi
+
+# Check if package.json or .nvmrc has changed
+if git diff --cached --name-only | grep -qE "package\.json|\.nvmrc"; then
+  npm run update-nvmrc
+  git add .nvmrc
+fi

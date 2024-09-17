@@ -12,11 +12,15 @@
   "bin": {
     "swiss-pairing": "./dist/index.js"
   },
+  "engines": {
+    "node": "^20.17.0"
+  },
   "config": {
     "sourceGlob": "{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}"
   },
   "scripts": {
     "prepare": "husky install && npm run build",
+    "preinstall": "npm run update-nvmrc",
     "prepublishOnly": "npm run lint && npm test",
     "prestart": "npm run build",
     "pretest": "npm run build",
@@ -36,6 +40,7 @@
     "prettier:fix": "prettier --write \"$npm_package_config_sourceGlob\"",
     "todo": "leasot \"$npm_package_config_sourceGlob\"",
     "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md",
+    "update-nvmrc": "tsx scripts/update-nvmrc.ts",
     "usage": "tsx src/index.js --help",
     "usage:update-readme": "tsx scripts/update-readme-usage.ts"
   },
