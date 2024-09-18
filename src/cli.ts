@@ -1,17 +1,5 @@
 import { Command } from 'commander';
-import { Result } from './types.js';
-import { createBidirectionalMap } from './utils.js';
-import { generatePairings } from './swissPairing.js';
-
-interface CLIResult {
-  type: 'success' | 'failure';
-  message: string;
-}
-
-function exitWithError(message: string): never {
-  console.error(message);
-  process.exit(1);
-}
+import { handleCLIAction } from './cliAction.js';
 
 export function createCLI(): Command {
   const program = new Command();
@@ -27,7 +15,16 @@ export function createCLI(): Command {
     )
     .option(
       '-m, --matches <matches...>',
-      `List of pairs of player names that have already played against each other \ne.g. ${exampleMatches}`
+      `List of pairs of player names that have already played against each other \ne.g. ${exampleMatches}`,
+      // eslint-disable-next-line max-params
+      (value: string, previous: string[][] = []) => {
+        const matchPlayers = value.split(',');
+        if (matchPlayers.length !== 2) {
+          exitWithError(`Invalid input: match "${value}" is formatted incorrectly; expected "player1,player2".`);
+        }
+        previous.push(matchPlayers);
+        return previous;
+      }
     )
     .option(
       '-n, --num-rounds <number>',
@@ -57,73 +54,16 @@ export function createCLI(): Command {
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
     .action((options) => {
       const result = handleCLIAction(options);
-      switch (result.type) {
-        case 'success':
-          console.log(result.message);
-          break;
-        case 'failure':
-          exitWithError(result.message);
+      if (!result.success) {
+        exitWithError(result.errorMessage);
       }
+      console.log(result.value);
     });
 
   return program;
 }
 
-export function handleCLIAction({
-  players = [],
-  numRounds = 1,
-  startRound = 1,
-  matches = [],
-}: {
-  players?: string[];
-  numRounds?: number;
-  startRound?: number;
-  matches?: string[];
-}): CLIResult {
-  const parseResult = parseCommaSeperatedMatchStrings(matches);
-  if (!parseResult.success) {
-    return {
-      type: 'failure',
-      message: `Invalid input: ${parseResult.errorMessage}`,
-    };
-  }
-
-  const playedMatches = createBidirectionalMap(parseResult.value);
-
-  const pairingResult = generatePairings({ players, numRounds, startRound, playedMatches });
-  if (!pairingResult.success) {
-    switch (pairingResult.errorType) {
-      case 'InvalidInput':
-        break;
-      case 'InvalidOutput':
-        break;
-      case 'NoValidSolution':
-        break;
-    }
-    return {
-      type: 'failure',
-      message: pairingResult.errorMessage,
-    };
-  }
-  return {
-    type: 'success',
-    message: 'Pairings generated successfully: ' + JSON.stringify(pairingResult.roundPairings),
-  };
-}
-
-function parseCommaSeperatedMatchStrings(matches: string[]): Result<[string, string][]> {
-  const parsedMatches: [string, string][] = [];
-
-  for (const m of matches) {
-    const parts = m.split(',');
-    if (parts.length !== 2) {
-      return {
-        success: false,
-        errorMessage: `match "${m}" is formatted incorrectly; expected "player1,player2".`,
-      };
-    }
-    parsedMatches.push(parts as [string, string]);
-  }
-
-  return { success: true, value: parsedMatches };
+function exitWithError(message: string): never {
+  console.error(message);
+  process.exit(1);
 }

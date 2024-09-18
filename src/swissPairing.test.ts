@@ -301,7 +301,7 @@ describe('Swiss Pairing', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.errorType).toBe('NoValidSolution');
-        expect(result.errorMessage).toBe('Unable to generate valid pairings for Round 1');
+        expect(result.errorMessage).toBe('unable to generate valid pairings for Round 1');
       }
     });
   });
@@ -385,7 +385,7 @@ describe('validateResult', () => {
     const result = validateResult({ pairings, players, numRounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
-      expect(result.errorMessage).toBe('Invalid number of rounds in the result. Expected 2, got 1.');
+      expect(result.errorMessage).toBe('invalid number of rounds in the result. Expected 2, got 1.');
     }
   });
 
@@ -400,7 +400,7 @@ describe('validateResult', () => {
     const result = validateResult({ pairings, players, numRounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
-      expect(result.errorMessage).toBe('Invalid number of pairings in Round 2. Expected 2, got 1.');
+      expect(result.errorMessage).toBe('invalid number of pairings in Round 2. Expected 2, got 1.');
     }
   });
 
@@ -419,7 +419,7 @@ describe('validateResult', () => {
     const result = validateResult({ pairings, players, numRounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
-      expect(result.errorMessage).toBe('Invalid pairing in Round 1: p1 and p2 have already played.');
+      expect(result.errorMessage).toBe('invalid pairing in Round 1: p1 and p2 have already played.');
     }
   });
 
@@ -437,7 +437,7 @@ describe('validateResult', () => {
     const result = validateResult({ pairings, players, numRounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
-      expect(result.errorMessage).toBe('Invalid pairing in Round 2: p1 and p2 have already played.');
+      expect(result.errorMessage).toBe('invalid pairing in Round 2: p1 and p2 have already played.');
     }
   });
 
@@ -455,7 +455,7 @@ describe('validateResult', () => {
     const result = validateResult({ pairings, players, numRounds, playedMatches });
     expect(result.isValid).toBe(false);
     if (!result.isValid) {
-      expect(result.errorMessage).toBe('Invalid pairing in Round 2: p1 or p4 appears more than once.');
+      expect(result.errorMessage).toBe('invalid pairing in Round 2: p1 or p4 appears more than once.');
     }
   });
 });

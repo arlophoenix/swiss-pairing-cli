@@ -28,7 +28,7 @@ export function generatePairings({
       return {
         success: false,
         errorType: 'NoValidSolution',
-        errorMessage: `Unable to generate valid pairings for ${roundLabel}`,
+        errorMessage: `unable to generate valid pairings for ${roundLabel}`,
       };
     }
     result[roundLabel] = roundPairings;
@@ -150,7 +150,7 @@ export function validateResult({
   if (Object.keys(pairings).length !== numRounds) {
     return {
       isValid: false,
-      errorMessage: `Invalid number of rounds in the result. Expected ${numRounds}, got ${Object.keys(pairings).length}.`,
+      errorMessage: `invalid number of rounds in the result. Expected ${numRounds}, got ${Object.keys(pairings).length}.`,
     };
   }
 
@@ -161,7 +161,7 @@ export function validateResult({
     if (roundPairings.length !== numGamesPerRound) {
       return {
         isValid: false,
-        errorMessage: `Invalid number of pairings in ${roundLabel}. Expected ${numGamesPerRound}, got ${roundPairings.length}.`,
+        errorMessage: `invalid number of pairings in ${roundLabel}. Expected ${numGamesPerRound}, got ${roundPairings.length}.`,
       };
     }
 
@@ -172,7 +172,7 @@ export function validateResult({
       if (currentPlayedMatches[player1]?.includes(player2)) {
         return {
           isValid: false,
-          errorMessage: `Invalid pairing in ${roundLabel}: ${player1} and ${player2} have already played.`,
+          errorMessage: `invalid pairing in ${roundLabel}: ${player1} and ${player2} have already played.`,
         };
       }
       currentPlayedMatches[player1] = [...(currentPlayedMatches[player1] || []), player2];
@@ -182,7 +182,7 @@ export function validateResult({
       if (playersInRound.has(player1) || playersInRound.has(player2)) {
         return {
           isValid: false,
-          errorMessage: `Invalid pairing in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
+          errorMessage: `invalid pairing in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
         };
       }
       playersInRound.add(player1);
