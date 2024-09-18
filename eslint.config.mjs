@@ -33,10 +33,7 @@ export default [
         { allowRestParameter: true, enforceParameterCount: false },
       ],
       'functional/no-expression-statement': 'off',
-      // TODO: enable these rules to enforce a more functional style
-      // "functional/immutable-data": "error",
-      // "functional/no-let": "error",
-      // "functional/prefer-readonly-type": "error",
+      'functional/prefer-readonly-type': 'error',
       // Prefer arrow functions
       'prefer-arrow-callback': 'error',
       'arrow-body-style': ['error', 'as-needed'],
