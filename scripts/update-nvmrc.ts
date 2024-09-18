@@ -15,6 +15,7 @@ let packageJson: { engines: { node: string } };
 
 try {
   const packageJsonStr = fs.readFileSync(packageJsonPath, 'utf8');
+
   packageJson = JSON.parse(packageJsonStr);
 } catch (error) {
   console.error(`Error reading package.json: ${(error as Error).message}`);
@@ -23,6 +24,7 @@ try {
 
 // Extract Node.js version from engines field
 const packageNodeVersion: string | undefined = packageJson.engines.node;
+
 if (!packageNodeVersion) {
   console.error('Node.js version not found in package.json');
   process.exit(1);
@@ -36,6 +38,7 @@ const nvmrcPath: string = path.join(rootPath, '.nvmrc');
 
 // Check if .nvmrc exists and read its content
 let currentNvmrcVersion: string = '';
+
 try {
   currentNvmrcVersion = fs.readFileSync(nvmrcPath, 'utf8').trim();
   // eslint-disable-next-line no-unused-vars

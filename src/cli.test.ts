@@ -199,6 +199,7 @@ describe('Swiss Pairing CLI', () => {
 
     it('should log the result of handleCLIAction on success', () => {
       const message = 'test';
+
       mockHandleCLIAction.mockReturnValue({ success: true, value: message });
       program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob']);
       expect(mockConsoleLog).toHaveBeenCalledWith(message);
@@ -207,6 +208,7 @@ describe('Swiss Pairing CLI', () => {
 
     it('should error the result of handleCLIAction on failure', () => {
       const message = 'test';
+
       mockHandleCLIAction.mockReturnValue({ success: false, errorMessage: message });
       expect(() => program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob'])).toThrow(
         'Process exited with code 1'

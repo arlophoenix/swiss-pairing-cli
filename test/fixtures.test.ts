@@ -14,6 +14,7 @@ describe('Fixtures', () => {
     test(`CLI Output - ${fixture}`, () => {
       const input = fs.readFileSync(path.join(fixturesDir, fixture), 'utf-8');
       const output = runCLI(input);
+
       expect(output).toMatchSnapshot();
     });
   });

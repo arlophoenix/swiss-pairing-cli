@@ -18,6 +18,7 @@ describe('Swiss Pairing CLI Entry Point', () => {
     const mockParse = jest.fn().mockReturnThis();
     // Cast the mocked module to the correct type
     const mockedCli = jest.requireMock('./cli') as MockedCli;
+
     mockedCli.createCLI.mockReturnValue({
       parse: mockParse,
       // Add other necessary properties to match Command interface

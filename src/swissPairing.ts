@@ -7,6 +7,7 @@ export function generatePairings({
   playedMatches,
 }: SwissPairingInput): GeneratePairingsResult {
   const inputValidation = validateInput({ players, numRounds, playedMatches });
+
   if (!inputValidation.isValid) {
     return {
       success: false,
@@ -17,6 +18,7 @@ export function generatePairings({
 
   const result: { [round: string]: string[][] } = {};
   let currentPlayedMatches = { ...playedMatches };
+
   if (players.length % 2 === 1) {
     players.push('BYE');
   }
@@ -24,6 +26,7 @@ export function generatePairings({
   for (let round = 1; round <= numRounds; round++) {
     const roundLabel = `Round ${startRound + round - 1}`;
     const roundPairings = generateRoundPairings({ players, playedMatches: currentPlayedMatches });
+
     if (!roundPairings) {
       return {
         success: false,
@@ -41,6 +44,7 @@ export function generatePairings({
   }
 
   const resultValidation = validateResult({ pairings: result, players, numRounds, playedMatches });
+
   if (!resultValidation.isValid) {
     return {
       success: false,
@@ -116,6 +120,7 @@ export function validateInput({
 
   // Check if all players in playedMatches are valid
   const playedMatchesPlayers = new Set([...Object.keys(playedMatches), ...Object.values(playedMatches).flat()]);
+
   if (!Array.from(playedMatchesPlayers).every((player) => players.includes(player))) {
     return { isValid: false, errorMessage: 'matches contains invalid player names.' };
   }

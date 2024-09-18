@@ -6,6 +6,7 @@ export function createCLI(): Command {
   const programName = 'swiss-pairing';
   const examplePlayers = 'player1 player2 player3 player4';
   const exampleMatches = '"player1,player2" "player3,player4"';
+
   program
     .name(programName)
     .description('A CLI tool for generating Swiss-style tournament pairings')
@@ -19,10 +20,12 @@ export function createCLI(): Command {
       // eslint-disable-next-line max-params
       (value: string, previous: string[][] = []) => {
         const matchPlayers = value.split(',');
+
         if (matchPlayers.length !== 2) {
           exitWithError(`Invalid input: match "${value}" is formatted incorrectly; expected "player1,player2".`);
         }
         previous.push(matchPlayers);
+
         return previous;
       }
     )
@@ -31,9 +34,11 @@ export function createCLI(): Command {
       'Number of rounds to generate',
       (value) => {
         const parsed = parseInt(value, 10);
+
         if (isNaN(parsed)) {
           exitWithError('Invalid input: num-rounds must be a positive whole number');
         }
+
         return parsed;
       },
       1 // default to 1 round
@@ -43,9 +48,11 @@ export function createCLI(): Command {
       'Used to name the generated rounds',
       (value) => {
         const parsed = parseInt(value, 10);
+
         if (isNaN(parsed)) {
           exitWithError('Invalid input: start-round must be a positive whole number');
         }
+
         return parsed;
       },
       1 // default to calling the first Round 1
@@ -54,6 +61,7 @@ export function createCLI(): Command {
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
     .action((options) => {
       const result = handleCLIAction(options);
+
       if (!result.success) {
         exitWithError(result.errorMessage);
       }

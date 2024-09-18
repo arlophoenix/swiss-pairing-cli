@@ -21,6 +21,7 @@ describe('createBidirectionalMap', () => {
   it('should return an empty object for no matches', () => {
     const matches: [string, string][] = [];
     const result = createBidirectionalMap(matches);
+
     expect(result).toEqual({});
   });
 });

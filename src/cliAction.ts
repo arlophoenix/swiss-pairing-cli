@@ -17,8 +17,10 @@ export function handleCLIAction({
   const playedMatches = createBidirectionalMap(matches);
 
   const pairingResult = generatePairings({ players, numRounds, startRound, playedMatches });
+
   if (!pairingResult.success) {
     let errorPrefix;
+
     switch (pairingResult.errorType) {
       case 'InvalidInput':
         errorPrefix = 'Invalid input: ';
@@ -28,11 +30,13 @@ export function handleCLIAction({
         errorPrefix = 'Pairing failed: ';
         break;
     }
+
     return {
       success: false,
       errorMessage: errorPrefix + pairingResult.errorMessage,
     };
   }
+
   return {
     success: true,
     value: 'Pairings generated successfully: ' + JSON.stringify(pairingResult.roundPairings),

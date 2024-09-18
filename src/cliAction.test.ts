@@ -7,6 +7,7 @@ import type { SpyInstance } from 'jest-mock';
 
 describe('handleCLIAction', () => {
   let mockGeneratePairings: SpyInstance<typeof swissPairing.generatePairings>;
+
   beforeEach(() => {
     mockGeneratePairings = jest
       .spyOn(swissPairing, 'generatePairings')
@@ -39,6 +40,7 @@ describe('handleCLIAction', () => {
         ['Player2', 'BYE'],
       ],
     };
+
     mockGeneratePairings.mockReturnValue({ success: true, roundPairings });
 
     const result = cliAction.handleCLIAction(options);
@@ -61,6 +63,7 @@ describe('handleCLIAction', () => {
     };
 
     const roundPairings = { 'Round 1': [['Player1', 'Player2']] };
+
     mockGeneratePairings.mockReturnValue({ success: true, roundPairings });
 
     const result = cliAction.handleCLIAction(options);
@@ -79,6 +82,7 @@ describe('handleCLIAction', () => {
 
   it('should handle failed input validation result', () => {
     const errorMessage = 'test error message';
+
     mockGeneratePairings.mockReturnValue({ success: false, errorType: 'InvalidInput', errorMessage });
 
     const result = cliAction.handleCLIAction({
@@ -96,6 +100,7 @@ describe('handleCLIAction', () => {
 
   it('should handle failure due to invalid output', () => {
     const errorMessage = 'test error message';
+
     mockGeneratePairings.mockReturnValue({ success: false, errorType: 'InvalidOutput', errorMessage });
 
     // valid input, but invalid output (though how it went wrong we don't know)
@@ -114,6 +119,7 @@ describe('handleCLIAction', () => {
 
   it('should handle failure due to no valid solution', () => {
     const errorMessage = 'test error message';
+
     mockGeneratePairings.mockReturnValue({ success: false, errorType: 'NoValidSolution', errorMessage });
 
     // valid input, but no solution
