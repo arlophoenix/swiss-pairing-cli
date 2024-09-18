@@ -54,19 +54,23 @@ export default [
       'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
     },
   },
-  {
-    files: ['**/*.ts'],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: ['./tsconfig.json', './tsconfig.test.json'],
+  ...tseslint.config(
+    {
+      files: ['**/*.ts'],
+      languageOptions: {
+        parserOptions: {
+          project: ['./tsconfig.json', './tsconfig.test.json'],
+        },
       },
+      plugins: {
+        '@typescript-eslint': tseslint.plugin,
+      },
+      extends: [
+        ...tseslint.configs.recommendedTypeChecked,
+        ...tseslint.configs.strictTypeChecked,
+      ],
     },
-    rules: {
-      ...tseslint.configs.recommendedTypeChecked.rules,
-      ...tseslint.configs.strictTypeChecked.rules,
-    },
-  },
+  ),
   {
     files: ['**/*.test.ts', '**/__tests__/**/*.ts'],
     plugins: {
