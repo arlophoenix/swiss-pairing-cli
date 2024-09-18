@@ -11,7 +11,7 @@ const rootPath: string = path.join(__dirname, '..');
 
 // Read package.json from the root
 const packageJsonPath: string = path.join(rootPath, 'package.json');
-let packageJson: { engines: { node: string } };
+let packageJson: { readonly engines: { readonly node: string } };
 
 try {
   const packageJsonStr = fs.readFileSync(packageJsonPath, 'utf8');

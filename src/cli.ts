@@ -17,7 +17,7 @@ export function createCLI(): Command {
     .option(
       '-m, --matches <matches...>',
       `List of pairs of player names that have already played against each other \ne.g. ${exampleMatches}`,
-      // eslint-disable-next-line max-params
+      // eslint-disable-next-line max-params, functional/prefer-readonly-type
       (value: string, previous: string[][] = []) => {
         const matchPlayers = value.split(',');
 

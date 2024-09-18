@@ -4,7 +4,7 @@ import { Command } from 'commander';
 
 // Define the shape of the mocked module
 interface MockedCli {
-  createCLI: jest.MockedFunction<() => Command>;
+  readonly createCLI: jest.MockedFunction<() => Command>;
 }
 
 jest.mock('./cli', () => ({

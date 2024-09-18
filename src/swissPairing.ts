@@ -16,11 +16,12 @@ export function generatePairings({
     };
   }
 
-  const result: { [round: string]: string[][] } = {};
+  // eslint-disable-next-line functional/prefer-readonly-type
+  const result: { [round: string]: readonly (readonly [string, string])[] } = {};
   let currentPlayedMatches = { ...playedMatches };
 
   if (players.length % 2 === 1) {
-    players.push('BYE');
+    players = [...players, 'BYE'];
   }
 
   for (let round = 1; round <= numRounds; round++) {
@@ -60,9 +61,9 @@ function generateRoundPairings({
   players,
   playedMatches,
 }: {
-  players: string[];
-  playedMatches: Record<string, string[]>;
-}): string[][] | null {
+  readonly players: readonly string[];
+  readonly playedMatches: Record<string, readonly string[]>;
+}): readonly (readonly [string, string])[] | null {
   if (players.length === 0) {
     return [];
   }
@@ -91,9 +92,9 @@ export function validateInput({
   numRounds,
   playedMatches,
 }: {
-  players: string[];
-  numRounds: number;
-  playedMatches: Record<string, string[]>;
+  readonly players: readonly string[];
+  readonly numRounds: number;
+  readonly playedMatches: Record<string, readonly string[]>;
 }): ValidationResult {
   // Check if there are at least two players
   if (players.length < 2) {
@@ -147,10 +148,10 @@ export function validateResult({
   numRounds,
   playedMatches,
 }: {
-  pairings: { [round: string]: string[][] };
-  players: string[];
-  numRounds: number;
-  playedMatches: Record<string, string[]>;
+  readonly pairings: { readonly [round: string]: readonly (readonly [string, string])[] };
+  readonly players: readonly string[];
+  readonly numRounds: number;
+  readonly playedMatches: Record<string, readonly string[]>;
 }): ValidationResult {
   const numGamesPerRound = players.length / 2;
 

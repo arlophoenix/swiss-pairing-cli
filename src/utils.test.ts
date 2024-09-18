@@ -2,7 +2,7 @@ import { createBidirectionalMap } from './utils';
 
 describe('createBidirectionalMap', () => {
   it('should correctly build played matches object', () => {
-    const matches: [string, string][] = [
+    const matches: readonly (readonly [string, string])[] = [
       ['Player1', 'Player2'],
       ['Player3', 'Player4'],
       ['Player1', 'Player3'],
@@ -19,7 +19,7 @@ describe('createBidirectionalMap', () => {
   });
 
   it('should return an empty object for no matches', () => {
-    const matches: [string, string][] = [];
+    const matches: readonly (readonly [string, string])[] = [];
     const result = createBidirectionalMap(matches);
 
     expect(result).toEqual({});

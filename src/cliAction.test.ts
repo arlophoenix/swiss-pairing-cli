@@ -23,10 +23,10 @@ describe('handleCLIAction', () => {
     const numRounds = 2;
     const startRound = 0;
     const options: {
-      players?: string[];
-      numRounds?: number;
-      startRound?: number;
-      matches?: [string, string][];
+      readonly players?: readonly string[];
+      readonly numRounds?: number;
+      readonly startRound?: number;
+      readonly matches?: readonly (readonly [string, string])[];
     } = {
       players,
       numRounds,

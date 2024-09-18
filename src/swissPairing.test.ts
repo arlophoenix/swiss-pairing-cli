@@ -368,9 +368,9 @@ describe('Swiss Pairing', () => {
 });
 
 describe('validateResult', () => {
-  let players: string[];
+  let players: readonly string[];
   let numRounds: number;
-  let playedMatches: Record<string, string[]>;
+  let playedMatches: Record<string, readonly string[]>;
 
   beforeEach(() => {
     players = ['p1', 'p2', 'p3', 'p4'];

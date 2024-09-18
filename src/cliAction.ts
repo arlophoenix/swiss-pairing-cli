@@ -9,10 +9,10 @@ export function handleCLIAction({
   startRound = 1,
   matches = [],
 }: {
-  players?: string[];
-  numRounds?: number;
-  startRound?: number;
-  matches?: [string, string][];
+  readonly players?: readonly string[];
+  readonly numRounds?: number;
+  readonly startRound?: number;
+  readonly matches?: readonly (readonly [string, string])[];
 }): Result<String> {
   const playedMatches = createBidirectionalMap(matches);
 
