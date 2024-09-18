@@ -69,7 +69,16 @@ describe('Swiss Pairing CLI', () => {
 
     it('should fail to parse command line arguments without players', () => {
       expect(() => {
-        program.parse(['node', 'swiss-pairing', '--num-rounds', '2', '--start-round', '0', '--matches', 'Alice,Bob']);
+        program.parse([
+          'node',
+          'swiss-pairing',
+          '--num-rounds',
+          '2',
+          '--start-round',
+          '0',
+          '--matches',
+          'Alice,Bob',
+        ]);
       }).toThrow("required option '-p, --players <names...>' not specified");
     });
 
@@ -163,7 +172,16 @@ describe('Swiss Pairing CLI', () => {
 
     it('should exit for invalid matches', () => {
       expect(() => {
-        program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--matches', 'Alice']);
+        program.parse([
+          'node',
+          'swiss-pairing',
+          '--players',
+          'Alice',
+          'Bob',
+          'Charlie',
+          '--matches',
+          'Alice',
+        ]);
       }).toThrow('Process exited with code 1');
     });
 

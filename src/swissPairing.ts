@@ -119,7 +119,10 @@ export function validateInput({
   }
 
   // Check if all players in playedMatches are valid
-  const playedMatchesPlayers = new Set([...Object.keys(playedMatches), ...Object.values(playedMatches).flat()]);
+  const playedMatchesPlayers = new Set([
+    ...Object.keys(playedMatches),
+    ...Object.values(playedMatches).flat(),
+  ]);
 
   if (!Array.from(playedMatchesPlayers).every((player) => players.includes(player))) {
     return { isValid: false, errorMessage: 'matches contains invalid player names.' };

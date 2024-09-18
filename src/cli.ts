@@ -22,7 +22,9 @@ export function createCLI(): Command {
         const matchPlayers = value.split(',');
 
         if (matchPlayers.length !== 2) {
-          exitWithError(`Invalid input: match "${value}" is formatted incorrectly; expected "player1,player2".`);
+          exitWithError(
+            `Invalid input: match "${value}" is formatted incorrectly; expected "player1,player2".`
+          );
         }
         previous.push(matchPlayers);
 

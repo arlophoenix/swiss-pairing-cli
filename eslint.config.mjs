@@ -28,7 +28,10 @@ export default [
       ...tseslint.configs.strict.rules,
       ...eslintConfigPrettier.rules,
       // Functional style rules
-      'functional/functional-parameters': ['error', { allowRestParameter: true, enforceParameterCount: false }],
+      'functional/functional-parameters': [
+        'error',
+        { allowRestParameter: true, enforceParameterCount: false },
+      ],
       'functional/no-expression-statement': 'off',
       // TODO: enable these rules to enforce a more functional style
       // "functional/immutable-data": "error",
