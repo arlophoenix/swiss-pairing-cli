@@ -39,6 +39,19 @@ export default [
       'arrow-body-style': ['error', 'as-needed'],
       // Enforce single object argument
       'max-params': ['error', 1],
+      // whitespace formatting rules
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+        { blankLine: 'always', prev: 'directive', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'function' },
+      ],
+      'lines-between-class-members': ['error', 'always'],
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
+      'object-curly-newline': ['error', { multiline: true, consistent: true }],
+      'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
     },
   },
   {
