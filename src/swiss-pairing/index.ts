@@ -5,7 +5,7 @@ import {
   ReadonlyPlayedMatches,
   ReadonlyRoundPairings,
 } from '../types.js';
-import { validateInput, validateResult } from './validation.js';
+import { validateResult, validateRoundPairingsInput } from './validation.js';
 
 import { createBidirectionalMap } from '../utils.js';
 import { mutableClonePlayedMatches } from './utils.js';
@@ -21,7 +21,7 @@ export function generateRoundPairings({
   startRound,
   playedMatches,
 }: GenerateRoundPairingsInput): GenerateRoundPairingsOutput {
-  const inputValidation = validateInput({ players, numRounds, playedMatches });
+  const inputValidation = validateRoundPairingsInput({ players, numRounds, playedMatches });
 
   if (!inputValidation.isValid) {
     return {

@@ -8,11 +8,13 @@ import { generateRoundPairings } from './index.js';
 
 describe('Swiss Pairing', () => {
   describe('generatePairings', () => {
-    let mockValidateInput: SpyInstance<typeof validation.validateInput>;
+    let mockValidateInput: SpyInstance<typeof validation.validateRoundPairingsInput>;
     let mockValidateResult: SpyInstance<typeof validation.validateResult>;
 
     beforeEach(() => {
-      mockValidateInput = jest.spyOn(validation, 'validateInput').mockReturnValue({ isValid: true });
+      mockValidateInput = jest
+        .spyOn(validation, 'validateRoundPairingsInput')
+        .mockReturnValue({ isValid: true });
       mockValidateResult = jest.spyOn(validation, 'validateResult').mockReturnValue({ isValid: true });
     });
 

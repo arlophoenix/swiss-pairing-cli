@@ -11,7 +11,7 @@ import { mutableClonePlayedMatches } from './utils.js';
  * @returns {ValidationResult} The result of the validation
  */
 
-export function validateInput({
+export function validateRoundPairingsInput({
   players,
   numRounds,
   playedMatches,

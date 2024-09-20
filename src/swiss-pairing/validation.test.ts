@@ -1,9 +1,9 @@
 import { GenerateRoundPairingsInput, RoundPairings, ValidationResult } from '../types.js';
 import { describe, expect, it } from '@jest/globals';
-import { validateInput, validateResult } from './validation.js';
+import { validateResult, validateRoundPairingsInput } from './validation.js';
 
-describe('Swiss Pairing', () => {
-  describe('validateInput', () => {
+describe('Validation', () => {
+  describe('validateRoundPairingsInput', () => {
     it('should return valid for valid input', () => {
       const validInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player3', 'Player4'],
@@ -14,7 +14,7 @@ describe('Swiss Pairing', () => {
           ['Player2', new Set(['Player1'])],
         ]),
       };
-      const result: ValidationResult = validateInput(validInput);
+      const result: ValidationResult = validateRoundPairingsInput(validInput);
 
       expect(result.isValid).toBe(true);
     });
@@ -26,7 +26,7 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: new Map(),
       };
-      const result: ValidationResult = validateInput(invalidInput);
+      const result: ValidationResult = validateRoundPairingsInput(invalidInput);
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -41,7 +41,7 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: new Map(),
       };
-      const result: ValidationResult = validateInput(invalidInput);
+      const result: ValidationResult = validateRoundPairingsInput(invalidInput);
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -56,7 +56,7 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: new Map(),
       };
-      const result: ValidationResult = validateInput(invalidInput);
+      const result: ValidationResult = validateRoundPairingsInput(invalidInput);
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -71,7 +71,7 @@ describe('Swiss Pairing', () => {
         startRound: 1,
         playedMatches: new Map(),
       };
-      const result: ValidationResult = validateInput(invalidInput);
+      const result: ValidationResult = validateRoundPairingsInput(invalidInput);
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -90,7 +90,7 @@ describe('Swiss Pairing', () => {
           ['InvalidPlayer', new Set(['Player3'])],
         ]),
       };
-      const result: ValidationResult = validateInput(invalidInput);
+      const result: ValidationResult = validateRoundPairingsInput(invalidInput);
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -108,7 +108,7 @@ describe('Swiss Pairing', () => {
           ['Player2', new Set(['Player3'])], // Should be ['Player1']
         ]),
       };
-      const result: ValidationResult = validateInput(invalidInput);
+      const result: ValidationResult = validateRoundPairingsInput(invalidInput);
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
