@@ -1,26 +1,30 @@
 /**
- * Creates a bidirectional map of played matches from an array of pairings
- * @param {readonly (readonly [string, string])[]} matches - Array of match pairings
- * @returns {ReadonlyMap<string, ReadonlySet<string>>} Bidirectional map of played matches
+ * Creates a bidirectional map from an array of pairs.
+ * Each element in a pair becomes a key in the map, with its partner added to its corresponding set of values.
+ *
+ * @template T The type of elements in the pairs
+ * @param {readonly (readonly [T, T])[]} pairs - An array of paired elements
+ * @returns {ReadonlyMap<T, ReadonlySet<T>>} A map where each element of a pair is a key,
+ *          and its value is a set containing all elements it was paired with
  */
-export function createBidirectionalMap(
-  matches: readonly (readonly [string, string])[] = []
-): ReadonlyMap<string, ReadonlySet<string>> {
+export function createBidirectionalMap<T>(
+  pairs: readonly (readonly [T, T])[] = []
+): ReadonlyMap<T, ReadonlySet<T>> {
   // eslint-disable-next-line functional/prefer-readonly-type
-  const playedMatches = new Map<string, Set<string>>();
+  const bidirectionalMap = new Map<T, Set<T>>();
 
-  matches.forEach(([player, opponent]) => {
-    if (!playedMatches.has(player)) {
-      playedMatches.set(player, new Set());
+  pairs.forEach(([a, b]) => {
+    if (!bidirectionalMap.has(a)) {
+      bidirectionalMap.set(a, new Set());
     }
-    if (!playedMatches.has(opponent)) {
-      playedMatches.set(opponent, new Set());
+    if (!bidirectionalMap.has(b)) {
+      bidirectionalMap.set(b, new Set());
     }
-    playedMatches.get(player)?.add(opponent);
-    playedMatches.get(opponent)?.add(player);
+    bidirectionalMap.get(a)?.add(b);
+    bidirectionalMap.get(b)?.add(a);
   });
 
-  return playedMatches;
+  return bidirectionalMap;
 }
 
 /**
