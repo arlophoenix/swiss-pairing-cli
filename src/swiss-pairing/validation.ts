@@ -27,10 +27,10 @@ export function validateInput({
   }
 
   // Check if rounds is not greater than players minus 1
-  if (numRounds > players.length - 1) {
+  if (numRounds >= players.length) {
     return {
       isValid: false,
-      errorMessage: 'num-rounds to generate cannot be greater than the number of players minus 1.',
+      errorMessage: 'num-rounds to generate must be fewer than the number of players.',
     };
   }
 

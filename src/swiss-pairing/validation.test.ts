@@ -75,9 +75,7 @@ describe('Swiss Pairing', () => {
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
-        expect(result.errorMessage).toBe(
-          'num-rounds to generate cannot be greater than the number of players minus 1.'
-        );
+        expect(result.errorMessage).toBe('num-rounds to generate must be fewer than the number of players.');
       }
     });
 
