@@ -78,7 +78,7 @@ export function validateRoundPairingsInput({
  * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
  * @returns {ValidationResult} The result of the validation
  */
-export function validateResult({
+export function validateRoundPairingsOutput({
   roundPairings,
   players,
   numRounds,

@@ -9,13 +9,15 @@ import { generateRoundPairings } from './index.js';
 describe('Swiss Pairing', () => {
   describe('generatePairings', () => {
     let mockValidateInput: SpyInstance<typeof validation.validateRoundPairingsInput>;
-    let mockValidateResult: SpyInstance<typeof validation.validateResult>;
+    let mockValidateOutput: SpyInstance<typeof validation.validateRoundPairingsOutput>;
 
     beforeEach(() => {
       mockValidateInput = jest
         .spyOn(validation, 'validateRoundPairingsInput')
         .mockReturnValue({ isValid: true });
-      mockValidateResult = jest.spyOn(validation, 'validateResult').mockReturnValue({ isValid: true });
+      mockValidateOutput = jest
+        .spyOn(validation, 'validateRoundPairingsOutput')
+        .mockReturnValue({ isValid: true });
     });
 
     afterEach(() => {
@@ -40,7 +42,7 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return an error if output validation fails', () => {
-      mockValidateResult.mockReturnValue({ isValid: false, errorMessage: 'output validation error' });
+      mockValidateOutput.mockReturnValue({ isValid: false, errorMessage: 'output validation error' });
       const invalidInput: GenerateRoundPairingsInput = {
         players: ['p1'],
         numRounds: 1,

@@ -1,6 +1,6 @@
 import { GenerateRoundPairingsInput, RoundPairings, ValidationResult } from '../types.js';
 import { describe, expect, it } from '@jest/globals';
-import { validateResult, validateRoundPairingsInput } from './validation.js';
+import { validateRoundPairingsInput, validateRoundPairingsOutput } from './validation.js';
 
 describe('Validation', () => {
   describe('validateRoundPairingsInput', () => {
@@ -139,7 +139,7 @@ describe('Validation', () => {
           ['p2', 'p4'],
         ],
       };
-      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
+      const result = validateRoundPairingsOutput({ roundPairings, players, numRounds, playedMatches });
 
       expect(result.isValid).toBe(true);
     });
@@ -151,7 +151,7 @@ describe('Validation', () => {
           ['p3', 'p4'],
         ],
       };
-      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
+      const result = validateRoundPairingsOutput({ roundPairings, players, numRounds, playedMatches });
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -167,7 +167,7 @@ describe('Validation', () => {
         ],
         'Round 2': [['p1', 'p3']],
       };
-      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
+      const result = validateRoundPairingsOutput({ roundPairings, players, numRounds, playedMatches });
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -187,7 +187,7 @@ describe('Validation', () => {
         ['p1', new Set(['p2'])],
         ['p2', new Set(['p1'])],
       ]);
-      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
+      const result = validateRoundPairingsOutput({ roundPairings, players, numRounds, playedMatches });
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -206,7 +206,7 @@ describe('Validation', () => {
           ['p3', 'p4'],
         ],
       };
-      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
+      const result = validateRoundPairingsOutput({ roundPairings, players, numRounds, playedMatches });
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
@@ -225,7 +225,7 @@ describe('Validation', () => {
           ['p1', 'p4'],
         ],
       };
-      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
+      const result = validateRoundPairingsOutput({ roundPairings, players, numRounds, playedMatches });
 
       expect(result.isValid).toBe(false);
       if (!result.isValid) {
