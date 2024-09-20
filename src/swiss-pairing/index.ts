@@ -124,24 +124,30 @@ function generateSingleRoundPairings({
   readonly players: readonly string[];
   readonly playedMatches: ReadonlyPlayedMatches;
 }): readonly ReadonlyPairing[] | null {
+  // Base case: if no players left, we've successfully paired everyone
   if (players.length === 0) {
     return [];
   }
 
   const [currentPlayer, ...remainingPlayers] = players;
 
+  // Try to pair the current player with each remaining player
   for (const opponent of remainingPlayers) {
+    // Skip if these players have already played each other
     if (!playedMatches.get(currentPlayer)?.has(opponent)) {
+      // Recursively generate pairings for the remaining players
       const subPairings = generateSingleRoundPairings({
         players: remainingPlayers.filter((p) => p !== opponent),
         playedMatches,
       });
 
+      // If we found valid pairings for the remaining players, we're done
       if (subPairings !== null) {
         return [[currentPlayer, opponent], ...subPairings];
       }
     }
   }
 
+  // If we couldn't pair the current player with anyone, backtrack
   return null;
 }
