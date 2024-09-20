@@ -6,8 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
 
-jest.mock('./swissPairing');
-
 describe('Swiss Pairing CLI', () => {
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;

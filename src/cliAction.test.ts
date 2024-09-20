@@ -1,5 +1,5 @@
 import * as cliAction from './cliAction.js';
-import * as swissPairing from './swissPairing.js';
+import * as swissPairing from './swiss-pairing/index.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 

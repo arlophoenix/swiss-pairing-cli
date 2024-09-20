@@ -1,7 +1,7 @@
 import { CLIOptions, Result } from './types.js';
 
 import { createBidirectionalMap } from './utils.js';
-import { generateRoundPairings } from './swissPairing.js';
+import { generateRoundPairings } from './swiss-pairing/index.js';
 
 // This exists in a seperate file mainly to enable mocking for test
 export function handleCLIAction({
