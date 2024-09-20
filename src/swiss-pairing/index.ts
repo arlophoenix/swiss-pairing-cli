@@ -1,6 +1,7 @@
 import {
   GenerateRoundPairingsInput,
   GenerateRoundPairingsOutput,
+  PlayedMatches,
   ReadonlyPairing,
   ReadonlyPlayedMatches,
   ReadonlyRoundPairings,
@@ -32,40 +33,26 @@ export function generateRoundPairings({
   }
 
   const roundPairings: ReadonlyRoundPairings = {};
+  const currentPlayers = preparePlayersForPairing(players);
+  let currentPlayedMatches = mutableClonePlayedMatches(playedMatches);
 
-  const currentPlayers = [...players];
-  const currentPlayedMatches = mutableClonePlayedMatches(playedMatches);
-
-  if (currentPlayers.length % 2 === 1) {
-    currentPlayers.push('BYE');
-  }
-
-  for (let round = 1; round <= numRounds; round++) {
-    const roundLabel = `Round ${String(startRound + round - 1)}`;
-    const pairings = generateSingleRoundPairings({
+  for (let roundNumber = 1; roundNumber <= numRounds; roundNumber++) {
+    const roundLabel = `Round ${String(startRound + roundNumber - 1)}`;
+    const newPairings = generateSingleRoundPairings({
       players: currentPlayers,
       playedMatches: currentPlayedMatches,
     });
 
-    if (!pairings) {
+    if (!newPairings) {
       return {
         success: false,
         errorType: 'NoValidSolution',
         errorMessage: `unable to generate valid pairings for ${roundLabel}.`,
       };
     }
-    roundPairings[roundLabel] = pairings;
+    roundPairings[roundLabel] = newPairings;
 
-    // Update currentPlayedMatches for the next round, if necessary
-    const newMatches = createBidirectionalMap(pairings);
-    for (const [player, newOpponents] of newMatches.entries()) {
-      if (!currentPlayedMatches.has(player)) {
-        currentPlayedMatches.set(player, new Set());
-      }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const currentOpponents = currentPlayedMatches.get(player)!;
-      newOpponents.forEach((opponent) => currentOpponents.add(opponent));
-    }
+    currentPlayedMatches = updatePlayedMatches({ currentPlayedMatches, newPairings });
   }
 
   const resultValidation = validateRoundPairingsOutput({
@@ -87,6 +74,43 @@ export function generateRoundPairings({
 }
 
 /**
+ * Prepares the list of players for pairing, adding a 'BYE' player if necessary
+ * @param {readonly string[]} players - The original list of players
+ * @returns {readonly string[]} The prepared list of players
+ */
+function preparePlayersForPairing(players: readonly string[]): readonly string[] {
+  return players.length % 2 === 1 ? [...players, 'BYE'] : players;
+}
+
+/**
+ * Updates the played matches with new pairings
+ * @param {ReadonlyPlayedMatches} currentMatches - The current played matches
+ * @param {readonly ReadonlyPairing[]} newPairings - The new pairings to add
+ * @returns {PlayedMatches} The updated played matches
+ */
+function updatePlayedMatches({
+  currentPlayedMatches,
+  newPairings,
+}: {
+  readonly currentPlayedMatches: ReadonlyPlayedMatches;
+  readonly newPairings: readonly ReadonlyPairing[];
+}): PlayedMatches {
+  const updatedMatches = mutableClonePlayedMatches(currentPlayedMatches);
+  const newMatches = createBidirectionalMap(newPairings);
+
+  for (const [player, newOpponents] of newMatches.entries()) {
+    if (!updatedMatches.has(player)) {
+      updatedMatches.set(player, new Set());
+    }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const currentOpponents = updatedMatches.get(player)!;
+    newOpponents.forEach((opponent) => currentOpponents.add(opponent));
+  }
+
+  return updatedMatches;
+}
+
+/**
  * Generates pairings for a single round
  * @param {Object} params - The parameters for generating pairings
  * @param {readonly string[]} params.players - The list of players
@@ -104,8 +128,7 @@ function generateSingleRoundPairings({
     return [];
   }
 
-  const currentPlayer = players[0];
-  const remainingPlayers = players.slice(1);
+  const [currentPlayer, ...remainingPlayers] = players;
 
   for (const opponent of remainingPlayers) {
     if (!playedMatches.get(currentPlayer)?.has(opponent)) {
