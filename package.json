@@ -31,13 +31,13 @@
     "build": "tsc",
     "build:clean": "npm run clean && npm run build",
     "clean": "rm -rf dist",
-    "lint": "npm run eslint && npm run prettier && npm run todo",
-    "lint:fix": "npm run eslint:fix && npm run prettier:fix",
+    "lint": "npm run eslint && npm run format && npm run todo",
+    "lint:fix": "npm run eslint:fix && npm run format:fix",
     "lint-staged": "lint-staged",
     "eslint": "eslint \"$npm_package_config_sourceGlob\"",
     "eslint:fix": "eslint \"$npm_package_config_sourceGlob\" --fix",
-    "prettier": "prettier --check \"$npm_package_config_sourceGlob\"",
-    "prettier:fix": "prettier --write \"$npm_package_config_sourceGlob\"",
+    "format": "prettier --check --ignore-unknown **/*",
+    "format:fix": "prettier --write --ignore-unknown **/*",
     "todo": "leasot \"$npm_package_config_sourceGlob\"",
     "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md",
     "update-nvmrc": "tsx scripts/update-nvmrc.ts",
@@ -45,7 +45,8 @@
     "usage:update-readme": "tsx scripts/update-readme-usage.ts"
   },
   "lint-staged": {
-    "$npm_package_config_sourceGlob": "npm run lint:fix"
+    "$npm_package_config_sourceGlob": "npm run eslint:fix",
+    "**/*": "npm run format:fix"
   },
   "keywords": [],
   "devDependencies": {
