@@ -40,6 +40,8 @@ Options:
                               e.g. "player1,player2" "player3,player4"
   -n, --num-rounds <number>   Number of rounds to generate (default: 1)
   -s, --start-round <number>  Used to name the generated rounds (default: 1)
+  -r --randomize              Use random pairing instead of swiss (default:
+                              false)
   -h, --help                  Display this help information
 ```
 

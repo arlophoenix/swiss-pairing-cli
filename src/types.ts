@@ -3,6 +3,7 @@ export interface CLIOptions {
   readonly numRounds?: number;
   readonly startRound?: number;
   readonly matches?: readonly ReadonlyPairing[];
+  readonly randomize?: boolean;
 }
 
 export interface GenerateRoundPairingsInput {

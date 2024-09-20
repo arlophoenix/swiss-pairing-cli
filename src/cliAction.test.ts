@@ -1,18 +1,23 @@
 import * as cliAction from './cliAction.js';
 import * as swissPairing from './swiss-pairing/index.js';
+import * as utils from './utils.js';
 
+import { CLIOptions, ReadonlyRoundPairings } from './types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { ReadonlyRoundPairings } from './types.js';
 import type { SpyInstance } from 'jest-mock';
 
 describe('handleCLIAction', () => {
   let mockGenerateRoundPairings: SpyInstance<typeof swissPairing.generateRoundPairings>;
+  let mockShuffle: jest.MockedFunction<typeof utils.shuffle>;
 
   beforeEach(() => {
     mockGenerateRoundPairings = jest
       .spyOn(swissPairing, 'generateRoundPairings')
       .mockReturnValue({ success: true, roundPairings: {} });
+    mockShuffle = jest.fn(utils.shuffle) as jest.MockedFunction<typeof utils.shuffle>;
+    mockShuffle.mockImplementation(<T>(arr: readonly T[]): readonly T[] => [...arr].reverse());
+    jest.spyOn(utils, 'shuffle').mockImplementation(mockShuffle);
   });
 
   afterEach(() => {
@@ -20,15 +25,10 @@ describe('handleCLIAction', () => {
   });
 
   it('should process valid input and generate pairings', () => {
-    const players = ['Player1', 'Player2', 'Player 3'];
+    const players = ['Player1', 'Player2', 'Player3'];
     const numRounds = 2;
     const startRound = 0;
-    const options: {
-      readonly players?: readonly string[];
-      readonly numRounds?: number;
-      readonly startRound?: number;
-      readonly matches?: readonly (readonly [string, string])[];
-    } = {
+    const options: CLIOptions = {
       players,
       numRounds,
       startRound,
@@ -59,6 +59,39 @@ describe('handleCLIAction', () => {
       success: true,
       value: `Pairings generated successfully: ${JSON.stringify(roundPairings)}`,
     });
+    expect(mockShuffle).not.toHaveBeenCalled();
+  });
+
+  it('should randomize the player order before pairing if randomize is true', () => {
+    const players = ['Player1', 'Player2', 'Player3', 'Player4'];
+    const randomize = true;
+    const options: CLIOptions = {
+      players,
+      randomize,
+    };
+
+    const roundPairings: ReadonlyRoundPairings = {
+      'Round 0': [
+        ['Player1', 'Player3'],
+        ['Player2', 'BYE'],
+      ],
+    };
+
+    mockGenerateRoundPairings.mockReturnValue({ success: true, roundPairings });
+
+    const result = cliAction.handleCLIAction(options);
+
+    expect(mockGenerateRoundPairings).toHaveBeenCalledWith({
+      players: players.reverse(),
+      numRounds: 1,
+      startRound: 1,
+      playedMatches: new Map(),
+    });
+    expect(result).toEqual({
+      success: true,
+      value: `Pairings generated successfully: ${JSON.stringify(roundPairings)}`,
+    });
+    expect(mockShuffle).toHaveBeenCalledWith(players);
   });
 
   it('should default the missing values correctly', () => {

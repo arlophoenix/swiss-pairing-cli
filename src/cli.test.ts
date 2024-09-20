@@ -60,6 +60,7 @@ describe('Swiss Pairing CLI', () => {
         '0',
         '--matches',
         'Alice,Bob',
+        '--randomize',
       ]);
       const options = program.opts();
 
@@ -67,6 +68,7 @@ describe('Swiss Pairing CLI', () => {
       expect(options.numRounds).toBe(2);
       expect(options.startRound).toBe(0);
       expect(options.matches).toEqual([['Alice', 'Bob']]);
+      expect(options.randomize).toBe(true);
     });
 
     it('should fail to parse command line arguments without players', () => {
@@ -215,6 +217,13 @@ describe('Swiss Pairing CLI', () => {
         ['Charlie', 'David'],
         ['Alice', 'Charlie'],
       ]);
+    });
+
+    it('should default randomize to false', () => {
+      program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
+      const options = program.opts();
+
+      expect(options.randomize).toBe(false);
     });
 
     it('should log the result of handleCLIAction on success', () => {

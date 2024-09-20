@@ -60,6 +60,7 @@ export function createCLI(): Command {
       },
       1 // default to calling the first Round 1
     )
+    .option('-r --randomize', 'Use random pairing instead of swiss', false)
     .helpOption('-h, --help', 'Display this help information')
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
     .action((options: CLIOptions) => {
