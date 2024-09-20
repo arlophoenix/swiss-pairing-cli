@@ -3,6 +3,10 @@ import { createBidirectionalMap, shuffle } from './utils.js';
 
 import { generateRoundPairings } from './swiss-pairing/index.js';
 
+/**
+ * Creates and configures the CLI command for Swiss pairing generation
+ * @returns {Command} Configured Command object
+ */
 // This exists in a seperate file mainly to enable mocking for test
 export function handleCLIAction({
   players = [],

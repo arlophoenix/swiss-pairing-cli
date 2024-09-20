@@ -1,3 +1,8 @@
+/**
+ * Creates a bidirectional map of played matches from an array of pairings
+ * @param {readonly (readonly [string, string])[]} matches - Array of match pairings
+ * @returns {ReadonlyMap<string, ReadonlySet<string>>} Bidirectional map of played matches
+ */
 export function createBidirectionalMap(
   matches: readonly (readonly [string, string])[] = []
 ): ReadonlyMap<string, ReadonlySet<string>> {
@@ -18,6 +23,11 @@ export function createBidirectionalMap(
   return playedMatches;
 }
 
+/**
+ * Shuffles an array using the Fisher-Yates algorithm
+ * @param {readonly T[]} array - The array to shuffle
+ * @returns {readonly T[]} A new shuffled array
+ */
 export function shuffle<T>(array: readonly T[]): readonly T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {

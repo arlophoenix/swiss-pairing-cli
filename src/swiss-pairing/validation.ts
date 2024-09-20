@@ -2,6 +2,15 @@ import { ReadonlyPlayedMatches, ReadonlyRoundPairings, ValidationResult } from '
 
 import { mutableClonePlayedMatches } from './utils.js';
 
+/**
+ * Validates the input for generating round pairings
+ * @param {Object} params - The parameters to validate
+ * @param {readonly string[]} params.players - The list of players
+ * @param {number} params.numRounds - The number of rounds to generate
+ * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
+ * @returns {ValidationResult} The result of the validation
+ */
+
 export function validateInput({
   players,
   numRounds,
@@ -60,6 +69,15 @@ export function validateInput({
   return { isValid: true };
 }
 
+/**
+ * Validates the result of generating round pairings
+ * @param {Object} params - The parameters to validate
+ * @param {ReadonlyRoundPairings} params.roundPairings - The generated round pairings
+ * @param {readonly string[]} params.players - The list of players
+ * @param {number} params.numRounds - The number of rounds generated
+ * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
+ * @returns {ValidationResult} The result of the validation
+ */
 export function validateResult({
   roundPairings,
   players,

@@ -2,6 +2,10 @@ import { CLIOptions } from './types.js';
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';
 
+/**
+ * Creates and configures the CLI command for Swiss pairing generation
+ * @returns {Command} Configured Command object
+ */
 export function createCLI(): Command {
   const program = new Command();
   const programName = 'swiss-pairing';

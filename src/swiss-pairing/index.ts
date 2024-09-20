@@ -10,6 +10,11 @@ import { validateInput, validateResult } from './validation.js';
 import { createBidirectionalMap } from '../utils.js';
 import { mutableClonePlayedMatches } from './utils.js';
 
+/**
+ * Generates round pairings for a Swiss-style tournament
+ * @param {GenerateRoundPairingsInput} input - The input parameters for generating pairings
+ * @returns {GenerateRoundPairingsOutput} The generated pairings or an error
+ */
 export function generateRoundPairings({
   players,
   numRounds,
@@ -78,6 +83,13 @@ export function generateRoundPairings({
   return { success: true, roundPairings };
 }
 
+/**
+ * Generates pairings for a single round
+ * @param {Object} params - The parameters for generating pairings
+ * @param {readonly string[]} params.players - The list of players
+ * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
+ * @returns {readonly ReadonlyPairing[] | null} The generated pairings or null if no valid pairings are possible
+ */
 function generatePairings({
   players,
   playedMatches,
