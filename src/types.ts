@@ -5,30 +5,43 @@ export interface CLIOptions {
   readonly players?: readonly string[];
   readonly numRounds?: number;
   readonly startRound?: number;
-  readonly matches?: readonly ReadonlyPairing[];
+  readonly matches?: readonly ReadonlyMatch[];
   readonly randomize?: boolean;
 }
 
 /**
- * Represents the input for generating round pairings
+ * Represents the input for generating matches over multiple rounds
  */
-export interface GenerateRoundPairingsInput {
+export interface GenerateRoundMatchesInput {
   readonly players: readonly string[];
   readonly numRounds: number;
   readonly startRound: number;
-  readonly playedMatches: ReadonlyPlayedMatches;
+  readonly playedOpponents: ReadonlyPlayedOpponents;
 }
 
 /**
- * Represents the output of the round pairing generation
+ * Represents the output for generating matches over multiple rounds
  */
-export type GenerateRoundPairingsOutput =
-  | { readonly success: true; readonly roundPairings: ReadonlyRoundPairings }
+export type GenerateRoundMatchesOutput =
+  | { readonly success: true; readonly roundMatches: ReadonlyRoundMatches }
   | {
       readonly success: false;
       readonly errorType: 'InvalidInput' | 'NoValidSolution' | 'InvalidOutput';
       readonly errorMessage: string;
     };
+
+export interface ValidateRoundMatchesInput {
+  readonly players: readonly string[];
+  readonly numRounds: number;
+  readonly playedOpponents: ReadonlyPlayedOpponents;
+}
+
+export interface ValidateRoundMatchesOutput {
+  readonly roundMatches: ReadonlyRoundMatches;
+  readonly players: readonly string[];
+  readonly numRounds: number;
+  readonly playedOpponents: ReadonlyPlayedOpponents;
+}
 
 /**
  * Represents a generic result type
@@ -45,33 +58,33 @@ export type ValidationResult =
   | { readonly isValid: false; readonly errorMessage: string };
 
 /**
- * Represents the pairings for multiple rounds
+ * Represents the matches for multiple rounds
  */
-export type RoundPairings = Record<string, readonly Pairing[]>;
+export type RoundMatches = Record<string, readonly Match[]>;
 
 /**
- * Represents the pairings for multiple rounds (readonly version)
+ * Represents the matches for multiple rounds (readonly version)
  */
-export type ReadonlyRoundPairings = Record<string, readonly ReadonlyPairing[]>;
+export type ReadonlyRoundMatches = Record<string, readonly ReadonlyMatch[]>;
 
 /**
- * Represents a pairing of two players
+ * Represents a match played between two players
  */
 // eslint-disable-next-line functional/prefer-readonly-type
-export type Pairing = [string, string];
+export type Match = [string, string];
 
 /**
- * Represents a pairing of two players (readonly version)
+ * Represents a match played between two players (readonly version)
  */
-export type ReadonlyPairing = readonly [string, string];
+export type ReadonlyMatch = readonly [string, string];
 
 /**
- * Represents the matches already played
+ * Represents the opponents already played
  */
 // eslint-disable-next-line functional/prefer-readonly-type
-export type PlayedMatches = Map<string, Set<string>>;
+export type PlayedOpponents = Map<string, Set<string>>;
 
 /**
- * Represents the matches already played (readonly version)
+ * Represents the opponents already played (readonly version)
  */
-export type ReadonlyPlayedMatches = ReadonlyMap<string, ReadonlySet<string>>;
+export type ReadonlyPlayedOpponents = ReadonlyMap<string, ReadonlySet<string>>;

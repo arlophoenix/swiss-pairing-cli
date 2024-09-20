@@ -1,25 +1,21 @@
-import { ReadonlyPlayedMatches, ReadonlyRoundPairings, ValidationResult } from '../types.js';
+import { ValidateRoundMatchesInput, ValidateRoundMatchesOutput, ValidationResult } from '../types.js';
 
-import { mutableClonePlayedMatches } from './utils.js';
+import { mutableClonePlayedOpponents } from './utils.js';
 
 /**
- * Validates the input for generating round pairings
+ * Validates the input for generating round matches
  * @param {Object} params - The parameters to validate
  * @param {readonly string[]} params.players - The list of players
  * @param {number} params.numRounds - The number of rounds to generate
- * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
+ * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
  * @returns {ValidationResult} The result of the validation
  */
 
-export function validateRoundPairingsInput({
+export function validateRoundMatchesInput({
   players,
   numRounds,
-  playedMatches,
-}: {
-  readonly players: readonly string[];
-  readonly numRounds: number;
-  readonly playedMatches: ReadonlyPlayedMatches;
-}): ValidationResult {
+  playedOpponents,
+}: ValidateRoundMatchesInput): ValidationResult {
   // Check if there are at least two players
   if (players.length < 2) {
     return { isValid: false, errorMessage: 'there must be at least two players.' };
@@ -45,7 +41,7 @@ export function validateRoundPairingsInput({
 
   // Check if all players in playedMatches are valid
   const allPlayersInPlayedMatches = new Set<string>();
-  for (const [player, opponents] of playedMatches.entries()) {
+  for (const [player, opponents] of playedOpponents.entries()) {
     allPlayersInPlayedMatches.add(player);
     for (const opponent of opponents) {
       allPlayersInPlayedMatches.add(opponent);
@@ -57,9 +53,9 @@ export function validateRoundPairingsInput({
   }
 
   // Check if playedMatches is symmetrical
-  for (const [player, opponents] of playedMatches.entries()) {
+  for (const [player, opponents] of playedOpponents.entries()) {
     for (const opponent of opponents) {
-      if (!playedMatches.get(opponent)?.has(player)) {
+      if (!playedOpponents.get(opponent)?.has(player)) {
         return { isValid: false, errorMessage: 'matches are not symmetrical.' };
       }
     }
@@ -70,29 +66,24 @@ export function validateRoundPairingsInput({
 }
 
 /**
- * Validates the result of generating round pairings
+ * Validates the result of generating round matches
  * @param {Object} params - The parameters to validate
- * @param {ReadonlyRoundPairings} params.roundPairings - The generated round pairings
+ * @param {ReadonlyRoundMatches} params.roundMatches - The generated round matches
  * @param {readonly string[]} params.players - The list of players
  * @param {number} params.numRounds - The number of rounds generated
- * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
+ * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
  * @returns {ValidationResult} The result of the validation
  */
-export function validateRoundPairingsOutput({
-  roundPairings,
+export function validateRoundMatchesOutput({
+  roundMatches,
   players,
   numRounds,
-  playedMatches,
-}: {
-  readonly roundPairings: ReadonlyRoundPairings;
-  readonly players: readonly string[];
-  readonly numRounds: number;
-  readonly playedMatches: ReadonlyPlayedMatches;
-}): ValidationResult {
+  playedOpponents,
+}: ValidateRoundMatchesOutput): ValidationResult {
   const numGamesPerRound = players.length / 2;
 
   // 1. There is one key per round in the record
-  const resultNumRounds = Object.keys(roundPairings).length;
+  const resultNumRounds = Object.keys(roundMatches).length;
   if (resultNumRounds !== numRounds) {
     return {
       isValid: false,
@@ -100,25 +91,25 @@ export function validateRoundPairingsOutput({
     };
   }
 
-  const currentPlayedMatches = mutableClonePlayedMatches(playedMatches);
+  const currentPlayedMatches = mutableClonePlayedOpponents(playedOpponents);
 
-  for (const [roundLabel, pairings] of Object.entries(roundPairings)) {
+  for (const [roundLabel, matches] of Object.entries(roundMatches)) {
     // 2. There are num players / 2 values per round
-    if (pairings.length !== numGamesPerRound) {
+    if (matches.length !== numGamesPerRound) {
       return {
         isValid: false,
-        errorMessage: `invalid number of pairings in ${roundLabel}. Expected ${String(numGamesPerRound)}, got ${String(pairings.length)}.`,
+        errorMessage: `invalid number of matches in ${roundLabel}. Expected ${String(numGamesPerRound)}, got ${String(matches.length)}.`,
       };
     }
 
     const playersInRound = new Set<string>();
 
-    for (const [player1, player2] of pairings) {
-      // 3. No round contains a pairing of players who are already listed in playedMatches
+    for (const [player1, player2] of matches) {
+      // 3. No round contains a match of players who are already listed in playedMatches
       if (currentPlayedMatches.get(player1)?.has(player2)) {
         return {
           isValid: false,
-          errorMessage: `invalid pairing in ${roundLabel}: ${player1} and ${player2} have already played.`,
+          errorMessage: `invalid match in ${roundLabel}: ${player1} and ${player2} have already played.`,
         };
       }
 
@@ -135,7 +126,7 @@ export function validateRoundPairingsOutput({
       if (playersInRound.has(player1) || playersInRound.has(player2)) {
         return {
           isValid: false,
-          errorMessage: `invalid pairing in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
+          errorMessage: `invalid match in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
         };
       }
       playersInRound.add(player1);

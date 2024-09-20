@@ -1,28 +1,28 @@
 import {
-  GenerateRoundPairingsInput,
-  GenerateRoundPairingsOutput,
-  PlayedMatches,
-  ReadonlyPairing,
-  ReadonlyPlayedMatches,
-  ReadonlyRoundPairings,
+  GenerateRoundMatchesInput,
+  GenerateRoundMatchesOutput,
+  PlayedOpponents,
+  ReadonlyMatch,
+  ReadonlyPlayedOpponents,
+  ReadonlyRoundMatches,
 } from '../types.js';
-import { validateRoundPairingsInput, validateRoundPairingsOutput } from './validation.js';
+import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 
 import { createBidirectionalMap } from '../utils.js';
-import { mutableClonePlayedMatches } from './utils.js';
+import { mutableClonePlayedOpponents } from './utils.js';
 
 /**
- * Generates round pairings for a Swiss-style tournament
- * @param {GenerateRoundPairingsInput} input - The input parameters for generating pairings
- * @returns {GenerateRoundPairingsOutput} The generated pairings or an error
+ * Generates multiple rounds worth of matches for a Swiss-style tournament
+ * @param {GenerateRoundMatchesInput} input - The input parameters for generating matches
+ * @returns {GenerateRoundMatchesOutput} The generated matches or an error
  */
-export function generateRoundPairings({
+export function generateRoundMatches({
   players,
   numRounds,
   startRound,
-  playedMatches,
-}: GenerateRoundPairingsInput): GenerateRoundPairingsOutput {
-  const inputValidation = validateRoundPairingsInput({ players, numRounds, playedMatches });
+  playedOpponents,
+}: GenerateRoundMatchesInput): GenerateRoundMatchesOutput {
+  const inputValidation = validateRoundMatchesInput({ players, numRounds, playedOpponents });
 
   if (!inputValidation.isValid) {
     return {
@@ -32,34 +32,34 @@ export function generateRoundPairings({
     };
   }
 
-  const roundPairings: ReadonlyRoundPairings = {};
-  const currentPlayers = preparePlayersForPairing(players);
-  let currentPlayedMatches = mutableClonePlayedMatches(playedMatches);
+  const roundMatches: ReadonlyRoundMatches = {};
+  const currentPlayers = addByePlayerIfNecessary(players);
+  let currentPlayedOpponents = mutableClonePlayedOpponents(playedOpponents);
 
   for (let roundNumber = 1; roundNumber <= numRounds; roundNumber++) {
     const roundLabel = `Round ${String(startRound + roundNumber - 1)}`;
-    const newPairings = generateSingleRoundPairings({
+    const newMatches = generateSingleRoundMatches({
       players: currentPlayers,
-      playedMatches: currentPlayedMatches,
+      playedOpponents: currentPlayedOpponents,
     });
 
-    if (!newPairings) {
+    if (!newMatches) {
       return {
         success: false,
         errorType: 'NoValidSolution',
-        errorMessage: `unable to generate valid pairings for ${roundLabel}.`,
+        errorMessage: `unable to generate valid matches for ${roundLabel}.`,
       };
     }
-    roundPairings[roundLabel] = newPairings;
+    roundMatches[roundLabel] = newMatches;
 
-    currentPlayedMatches = updatePlayedMatches({ currentPlayedMatches, newPairings });
+    currentPlayedOpponents = updatePlayedOpponents({ currentPlayedOpponents, newMatches });
   }
 
-  const resultValidation = validateRoundPairingsOutput({
+  const resultValidation = validateRoundMatchesOutput({
     players: currentPlayers,
-    roundPairings,
+    roundMatches: roundMatches,
     numRounds,
-    playedMatches,
+    playedOpponents,
   });
 
   if (!resultValidation.isValid) {
@@ -70,60 +70,60 @@ export function generateRoundPairings({
     };
   }
 
-  return { success: true, roundPairings };
+  return { success: true, roundMatches: roundMatches };
 }
 
 /**
- * Prepares the list of players for pairing, adding a 'BYE' player if necessary
+ * Adds a 'BYE' player if necessary to ensure an even number of players
  * @param {readonly string[]} players - The original list of players
  * @returns {readonly string[]} The prepared list of players
  */
-function preparePlayersForPairing(players: readonly string[]): readonly string[] {
+function addByePlayerIfNecessary(players: readonly string[]): readonly string[] {
   return players.length % 2 === 1 ? [...players, 'BYE'] : players;
 }
 
 /**
- * Updates the played matches with new pairings
- * @param {ReadonlyPlayedMatches} currentMatches - The current played matches
- * @param {readonly ReadonlyPairing[]} newPairings - The new pairings to add
- * @returns {PlayedMatches} The updated played matches
+ * Updates the played opponents with new opponents
+ * @param {ReadonlyPlayedOpponents} currentPlayedOpponents - The current played opponents
+ * @param {readonly ReadonlyMatch[]} newMatches - The new matches to add
+ * @returns {PlayedOpponents} The updated played opponents
  */
-function updatePlayedMatches({
-  currentPlayedMatches,
-  newPairings,
+function updatePlayedOpponents({
+  currentPlayedOpponents,
+  newMatches,
 }: {
-  readonly currentPlayedMatches: ReadonlyPlayedMatches;
-  readonly newPairings: readonly ReadonlyPairing[];
-}): PlayedMatches {
-  const updatedMatches = mutableClonePlayedMatches(currentPlayedMatches);
-  const newMatches = createBidirectionalMap(newPairings);
+  readonly currentPlayedOpponents: ReadonlyPlayedOpponents;
+  readonly newMatches: readonly ReadonlyMatch[];
+}): PlayedOpponents {
+  const updatedPlayedOpponents = mutableClonePlayedOpponents(currentPlayedOpponents);
+  const newPlayedOpponents = createBidirectionalMap(newMatches);
 
-  for (const [player, newOpponents] of newMatches.entries()) {
-    if (!updatedMatches.has(player)) {
-      updatedMatches.set(player, new Set());
+  for (const [player, newOpponents] of newPlayedOpponents.entries()) {
+    if (!updatedPlayedOpponents.has(player)) {
+      updatedPlayedOpponents.set(player, new Set());
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const currentOpponents = updatedMatches.get(player)!;
+    const currentOpponents = updatedPlayedOpponents.get(player)!;
     newOpponents.forEach((opponent) => currentOpponents.add(opponent));
   }
 
-  return updatedMatches;
+  return updatedPlayedOpponents;
 }
 
 /**
- * Generates pairings for a single round
- * @param {Object} params - The parameters for generating pairings
+ * Generates matches for a single round
+ * @param {Object} params - The parameters for generating matches
  * @param {readonly string[]} params.players - The list of players
- * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
- * @returns {readonly ReadonlyPairing[] | null} The generated pairings or null if no valid pairings are possible
+ * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
+ * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible
  */
-function generateSingleRoundPairings({
+function generateSingleRoundMatches({
   players,
-  playedMatches,
+  playedOpponents,
 }: {
   readonly players: readonly string[];
-  readonly playedMatches: ReadonlyPlayedMatches;
-}): readonly ReadonlyPairing[] | null {
+  readonly playedOpponents: ReadonlyPlayedOpponents;
+}): readonly ReadonlyMatch[] | null {
   // Base case: if no players left, we've successfully paired everyone
   if (players.length === 0) {
     return [];
@@ -134,16 +134,16 @@ function generateSingleRoundPairings({
   // Try to pair the current player with each remaining player
   for (const opponent of remainingPlayers) {
     // Skip if these players have already played each other
-    if (!playedMatches.get(currentPlayer)?.has(opponent)) {
-      // Recursively generate pairings for the remaining players
-      const subPairings = generateSingleRoundPairings({
+    if (!playedOpponents.get(currentPlayer)?.has(opponent)) {
+      // Recursively generate matches for the remaining players
+      const newMatches = generateSingleRoundMatches({
         players: remainingPlayers.filter((p) => p !== opponent),
-        playedMatches,
+        playedOpponents,
       });
 
-      // If we found valid pairings for the remaining players, we're done
-      if (subPairings !== null) {
-        return [[currentPlayer, opponent], ...subPairings];
+      // If we found valid matches for the remaining players, we're done
+      if (newMatches !== null) {
+        return [[currentPlayer, opponent], ...newMatches];
       }
     }
   }

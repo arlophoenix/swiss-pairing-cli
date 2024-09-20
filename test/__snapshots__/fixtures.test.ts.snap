@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Fixtures CLI Output - Round6-1Unmodified.txt 1`] = `
-"Pairings generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
 "
 `;
 
 exports[`Fixtures CLI Output - Round6-2GGWin.txt 1`] = `
-"Pairings generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
 "
 `;
 
 exports[`Fixtures CLI Output - Round6-3ADWin.txt 1`] = `
-"Pairings generated successfully: {"Round 6":[["Morgath","armydan"],["Nzdaemon","Pauldog"],["Saravock","lilme"],["Arlo","LCYig"],["GreyGhost","Colain"],["iso.evil","Clin"]]}
+"Matches generated successfully: {"Round 6":[["Morgath","armydan"],["Nzdaemon","Pauldog"],["Saravock","lilme"],["Arlo","LCYig"],["GreyGhost","Colain"],["iso.evil","Clin"]]}
 "
 `;
 
 exports[`Fixtures CLI Output - Round6-4Draw.txt 1`] = `
-"Pairings generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
 "
 `;

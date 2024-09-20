@@ -1,7 +1,7 @@
 import { CLIOptions, Result } from './types.js';
 import { createBidirectionalMap, shuffle } from './utils.js';
 
-import { generateRoundPairings } from './swiss-pairing/index.js';
+import { generateRoundMatches } from './swiss-pairing/index.js';
 
 /**
  * Creates and configures the CLI command for Swiss pairing generation
@@ -19,34 +19,34 @@ export function handleCLIAction({
 
   const currentPlayers = randomize ? shuffle(players) : players;
 
-  const pairingResult = generateRoundPairings({
+  const roundMatchesResult = generateRoundMatches({
     players: currentPlayers,
     numRounds,
     startRound,
-    playedMatches,
+    playedOpponents: playedMatches,
   });
 
-  if (!pairingResult.success) {
+  if (!roundMatchesResult.success) {
     let errorPrefix;
 
-    switch (pairingResult.errorType) {
+    switch (roundMatchesResult.errorType) {
       case 'InvalidInput':
         errorPrefix = 'Invalid input: ';
         break;
       case 'InvalidOutput':
       case 'NoValidSolution':
-        errorPrefix = 'Pairing failed: ';
+        errorPrefix = 'Failed to generate matches: ';
         break;
     }
 
     return {
       success: false,
-      errorMessage: errorPrefix + pairingResult.errorMessage,
+      errorMessage: errorPrefix + roundMatchesResult.errorMessage,
     };
   }
 
   return {
     success: true,
-    value: 'Pairings generated successfully: ' + JSON.stringify(pairingResult.roundPairings),
+    value: 'Matches generated successfully: ' + JSON.stringify(roundMatchesResult.roundMatches),
   };
 }

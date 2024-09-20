@@ -1,10 +1,10 @@
-import { PlayedMatches, ReadonlyPlayedMatches } from '../types.js';
+import { PlayedOpponents, ReadonlyPlayedOpponents } from '../types.js';
 
 /**
- * Creates a mutable clone of the played matches map
- * @param {ReadonlyPlayedMatches} playedMatches - The original played matches map
- * @returns {PlayedMatches} A mutable clone of the played matches map
+ * Creates a mutable clone of the played opponents map
+ * @param {ReadonlyPlayedOpponents} playedOpponents - The original played opponents map
+ * @returns {PlayedOpponents} A mutable clone of the played opponents map
  */
-export function mutableClonePlayedMatches(playedMatches: ReadonlyPlayedMatches): PlayedMatches {
-  return new Map(Array.from(playedMatches, ([key, set]) => [key, new Set(set)]));
+export function mutableClonePlayedOpponents(playedOpponents: ReadonlyPlayedOpponents): PlayedOpponents {
+  return new Map(Array.from(playedOpponents, ([key, set]) => [key, new Set(set)]));
 }
