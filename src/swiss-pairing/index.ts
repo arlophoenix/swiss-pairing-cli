@@ -42,7 +42,10 @@ export function generateRoundPairings({
 
   for (let round = 1; round <= numRounds; round++) {
     const roundLabel = `Round ${String(startRound + round - 1)}`;
-    const pairings = generatePairings({ players: currentPlayers, playedMatches: currentPlayedMatches });
+    const pairings = generateSingleRoundPairings({
+      players: currentPlayers,
+      playedMatches: currentPlayedMatches,
+    });
 
     if (!pairings) {
       return {
@@ -90,7 +93,7 @@ export function generateRoundPairings({
  * @param {ReadonlyPlayedMatches} params.playedMatches - The matches already played
  * @returns {readonly ReadonlyPairing[] | null} The generated pairings or null if no valid pairings are possible
  */
-function generatePairings({
+function generateSingleRoundPairings({
   players,
   playedMatches,
 }: {
@@ -106,7 +109,7 @@ function generatePairings({
 
   for (const opponent of remainingPlayers) {
     if (!playedMatches.get(currentPlayer)?.has(opponent)) {
-      const subPairings = generatePairings({
+      const subPairings = generateSingleRoundPairings({
         players: remainingPlayers.filter((p) => p !== opponent),
         playedMatches,
       });
