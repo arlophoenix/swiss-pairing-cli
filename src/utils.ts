@@ -1,14 +1,18 @@
 export function createBidirectionalMap(
   matches: readonly (readonly [string, string])[] = []
-): Record<string, readonly string[]> {
+): ReadonlyMap<string, ReadonlySet<string>> {
   // eslint-disable-next-line functional/prefer-readonly-type
-  const playedMatches: Record<string, string[]> = {};
+  const playedMatches = new Map<string, Set<string>>();
 
   matches.forEach(([player, opponent]) => {
-    if (!playedMatches[player]) playedMatches[player] = [];
-    if (!playedMatches[opponent]) playedMatches[opponent] = [];
-    playedMatches[player].push(opponent);
-    playedMatches[opponent].push(player);
+    if (!playedMatches.has(player)) {
+      playedMatches.set(player, new Set());
+    }
+    if (!playedMatches.has(opponent)) {
+      playedMatches.set(opponent, new Set());
+    }
+    playedMatches.get(player)?.add(opponent);
+    playedMatches.get(opponent)?.add(player);
   });
 
   return playedMatches;

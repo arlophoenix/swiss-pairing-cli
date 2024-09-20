@@ -12,14 +12,18 @@ describe('Swiss Pairing CLI', () => {
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   // used in order to throw if the process.exit() is called
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let mockProcessExit: SpyInstance;
 
   beforeEach(() => {
-    mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
-    mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {
+      // do nothing
+    });
+    mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {
+      // do nothing
+    });
     mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
-      throw new Error(`Process exited with code ${code}`);
+      throw new Error(`Process exited with code ${String(code)}`);
     }) as SpyInstance;
   });
 
@@ -31,7 +35,7 @@ describe('Swiss Pairing CLI', () => {
     let program: Command;
     let mockHandleCLIAction: SpyInstance<typeof cliAction.handleCLIAction>;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       mockHandleCLIAction = jest
         .spyOn(cliAction, 'handleCLIAction')
         .mockImplementation(() => ({ success: true, value: '' }));

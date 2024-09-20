@@ -1,6 +1,7 @@
-import { Result } from './types.js';
+import { CLIOptions, Result } from './types.js';
+
 import { createBidirectionalMap } from './utils.js';
-import { generatePairings } from './swissPairing.js';
+import { generateRoundPairings } from './swissPairing.js';
 
 // This exists in a seperate file mainly to enable mocking for test
 export function handleCLIAction({
@@ -8,15 +9,10 @@ export function handleCLIAction({
   numRounds = 1,
   startRound = 1,
   matches = [],
-}: {
-  readonly players?: readonly string[];
-  readonly numRounds?: number;
-  readonly startRound?: number;
-  readonly matches?: readonly (readonly [string, string])[];
-}): Result<String> {
+}: CLIOptions): Result<string> {
   const playedMatches = createBidirectionalMap(matches);
 
-  const pairingResult = generatePairings({ players, numRounds, startRound, playedMatches });
+  const pairingResult = generateRoundPairings({ players, numRounds, startRound, playedMatches });
 
   if (!pairingResult.success) {
     let errorPrefix;

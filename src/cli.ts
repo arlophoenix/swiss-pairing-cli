@@ -1,3 +1,4 @@
+import { CLIOptions } from './types.js';
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';
 
@@ -17,7 +18,7 @@ export function createCLI(): Command {
     .option(
       '-m, --matches <matches...>',
       `List of pairs of player names that have already played against each other \ne.g. ${exampleMatches}`,
-      // eslint-disable-next-line max-params, functional/prefer-readonly-type
+      // eslint-disable-next-line functional/prefer-readonly-type, max-params
       (value: string, previous: string[][] = []) => {
         const matchPlayers = value.split(',');
 
@@ -61,7 +62,7 @@ export function createCLI(): Command {
     )
     .helpOption('-h, --help', 'Display this help information')
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
-    .action((options) => {
+    .action((options: CLIOptions) => {
       const result = handleCLIAction(options);
 
       if (!result.success) {

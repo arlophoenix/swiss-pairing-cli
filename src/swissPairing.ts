@@ -1,11 +1,25 @@
-import { GeneratePairingsResult, SwissPairingInput, ValidationResult } from './types.js';
+import {
+  GenerateRoundPairingsInput,
+  GenerateRoundPairingsOutput,
+  PlayedMatches,
+  ReadonlyPairing,
+  ReadonlyPlayedMatches,
+  ReadonlyRoundPairings,
+  ValidationResult,
+} from './types.js';
 
-export function generatePairings({
+import { createBidirectionalMap } from './utils.js';
+
+function mutableClonePlayedMatches(playedMatches: ReadonlyPlayedMatches): PlayedMatches {
+  return new Map(Array.from(playedMatches, ([key, set]) => [key, new Set(set)]));
+}
+
+export function generateRoundPairings({
   players,
   numRounds,
   startRound,
   playedMatches,
-}: SwissPairingInput): GeneratePairingsResult {
+}: GenerateRoundPairingsInput): GenerateRoundPairingsOutput {
   const inputValidation = validateInput({ players, numRounds, playedMatches });
 
   if (!inputValidation.isValid) {
@@ -16,35 +30,46 @@ export function generatePairings({
     };
   }
 
-  // eslint-disable-next-line functional/prefer-readonly-type
-  const result: { [round: string]: readonly (readonly [string, string])[] } = {};
-  let currentPlayedMatches = { ...playedMatches };
+  const roundPairings: ReadonlyRoundPairings = {};
 
-  if (players.length % 2 === 1) {
-    players = [...players, 'BYE'];
+  const currentPlayers = [...players];
+  const currentPlayedMatches = mutableClonePlayedMatches(playedMatches);
+
+  if (currentPlayers.length % 2 === 1) {
+    currentPlayers.push('BYE');
   }
 
   for (let round = 1; round <= numRounds; round++) {
-    const roundLabel = `Round ${startRound + round - 1}`;
-    const roundPairings = generateRoundPairings({ players, playedMatches: currentPlayedMatches });
+    const roundLabel = `Round ${String(startRound + round - 1)}`;
+    const pairings = generatePairings({ players: currentPlayers, playedMatches: currentPlayedMatches });
 
-    if (!roundPairings) {
+    if (!pairings) {
       return {
         success: false,
         errorType: 'NoValidSolution',
         errorMessage: `unable to generate valid pairings for ${roundLabel}`,
       };
     }
-    result[roundLabel] = roundPairings;
+    roundPairings[roundLabel] = pairings;
 
     // Update currentPlayedMatches for the next round, if necessary
-    roundPairings.forEach(([player1, player2]) => {
-      currentPlayedMatches[player1] = [...(currentPlayedMatches[player1] || []), player2];
-      currentPlayedMatches[player2] = [...(currentPlayedMatches[player2] || []), player1];
-    });
+    const newMatches = createBidirectionalMap(pairings);
+    for (const [player, newOpponents] of newMatches.entries()) {
+      if (!currentPlayedMatches.has(player)) {
+        currentPlayedMatches.set(player, new Set());
+      }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const currentOpponents = currentPlayedMatches.get(player)!;
+      newOpponents.forEach((opponent) => currentOpponents.add(opponent));
+    }
   }
 
-  const resultValidation = validateResult({ pairings: result, players, numRounds, playedMatches });
+  const resultValidation = validateResult({
+    players: currentPlayers,
+    roundPairings,
+    numRounds,
+    playedMatches,
+  });
 
   if (!resultValidation.isValid) {
     return {
@@ -54,16 +79,16 @@ export function generatePairings({
     };
   }
 
-  return { success: true, roundPairings: result };
+  return { success: true, roundPairings };
 }
 
-function generateRoundPairings({
+function generatePairings({
   players,
   playedMatches,
 }: {
   readonly players: readonly string[];
-  readonly playedMatches: Record<string, readonly string[]>;
-}): readonly (readonly [string, string])[] | null {
+  readonly playedMatches: ReadonlyPlayedMatches;
+}): readonly ReadonlyPairing[] | null {
   if (players.length === 0) {
     return [];
   }
@@ -72,8 +97,8 @@ function generateRoundPairings({
   const remainingPlayers = players.slice(1);
 
   for (const opponent of remainingPlayers) {
-    if (!playedMatches[currentPlayer]?.includes(opponent)) {
-      const subPairings = generateRoundPairings({
+    if (!playedMatches.get(currentPlayer)?.has(opponent)) {
+      const subPairings = generatePairings({
         players: remainingPlayers.filter((p) => p !== opponent),
         playedMatches,
       });
@@ -94,7 +119,7 @@ export function validateInput({
 }: {
   readonly players: readonly string[];
   readonly numRounds: number;
-  readonly playedMatches: Record<string, readonly string[]>;
+  readonly playedMatches: ReadonlyPlayedMatches;
 }): ValidationResult {
   // Check if there are at least two players
   if (players.length < 2) {
@@ -120,19 +145,22 @@ export function validateInput({
   }
 
   // Check if all players in playedMatches are valid
-  const playedMatchesPlayers = new Set([
-    ...Object.keys(playedMatches),
-    ...Object.values(playedMatches).flat(),
-  ]);
+  const playedMatchesPlayers = new Set<string>();
+  for (const [player, opponents] of playedMatches.entries()) {
+    playedMatchesPlayers.add(player);
+    for (const opponent of opponents) {
+      playedMatchesPlayers.add(opponent);
+    }
+  }
 
   if (!Array.from(playedMatchesPlayers).every((player) => players.includes(player))) {
     return { isValid: false, errorMessage: 'matches contains invalid player names.' };
   }
 
   // Check if playedMatches is symmetrical
-  for (const [player, opponents] of Object.entries(playedMatches)) {
+  for (const [player, opponents] of playedMatches.entries()) {
     for (const opponent of opponents) {
-      if (!playedMatches[opponent] || !playedMatches[opponent].includes(player)) {
+      if (!playedMatches.get(opponent)?.has(player)) {
         return { isValid: false, errorMessage: 'matches are not symmetrical.' };
       }
     }
@@ -143,49 +171,57 @@ export function validateInput({
 }
 
 export function validateResult({
-  pairings,
+  roundPairings,
   players,
   numRounds,
   playedMatches,
 }: {
-  readonly pairings: { readonly [round: string]: readonly (readonly [string, string])[] };
+  readonly roundPairings: ReadonlyRoundPairings;
   readonly players: readonly string[];
   readonly numRounds: number;
-  readonly playedMatches: Record<string, readonly string[]>;
+  readonly playedMatches: ReadonlyPlayedMatches;
 }): ValidationResult {
   const numGamesPerRound = players.length / 2;
 
   // 1. There is one key per round in the record
-  if (Object.keys(pairings).length !== numRounds) {
+  const resultNumRounds = Object.keys(roundPairings).length;
+  if (resultNumRounds !== numRounds) {
     return {
       isValid: false,
-      errorMessage: `invalid number of rounds in the result. Expected ${numRounds}, got ${Object.keys(pairings).length}.`,
+      errorMessage: `invalid number of rounds in the result. Expected ${String(numRounds)}, got ${String(resultNumRounds)}.`,
     };
   }
 
-  const currentPlayedMatches = { ...playedMatches };
+  const currentPlayedMatches = mutableClonePlayedMatches(playedMatches);
 
-  for (const [roundLabel, roundPairings] of Object.entries(pairings)) {
+  for (const [roundLabel, pairings] of Object.entries(roundPairings)) {
     // 2. There are num players / 2 values per round
-    if (roundPairings.length !== numGamesPerRound) {
+    if (pairings.length !== numGamesPerRound) {
       return {
         isValid: false,
-        errorMessage: `invalid number of pairings in ${roundLabel}. Expected ${numGamesPerRound}, got ${roundPairings.length}.`,
+        errorMessage: `invalid number of pairings in ${roundLabel}. Expected ${String(numGamesPerRound)}, got ${String(pairings.length)}.`,
       };
     }
 
     const playersInRound = new Set<string>();
 
-    for (const [player1, player2] of roundPairings) {
+    for (const [player1, player2] of pairings) {
       // 3. No round contains a pairing of players who are already listed in playedMatches
-      if (currentPlayedMatches[player1]?.includes(player2)) {
+      if (currentPlayedMatches.get(player1)?.has(player2)) {
         return {
           isValid: false,
           errorMessage: `invalid pairing in ${roundLabel}: ${player1} and ${player2} have already played.`,
         };
       }
-      currentPlayedMatches[player1] = [...(currentPlayedMatches[player1] || []), player2];
-      currentPlayedMatches[player2] = [...(currentPlayedMatches[player2] || []), player1];
+
+      if (currentPlayedMatches.get(player1) === undefined) {
+        currentPlayedMatches.set(player1, new Set());
+      }
+      if (currentPlayedMatches.get(player2) === undefined) {
+        currentPlayedMatches.set(player2, new Set());
+      }
+      currentPlayedMatches.get(player1)?.add(player2);
+      currentPlayedMatches.get(player2)?.add(player1);
 
       // 4. No player appears more than once in the values for a round
       if (playersInRound.has(player1) || playersInRound.has(player2)) {

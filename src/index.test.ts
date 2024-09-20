@@ -1,37 +1,49 @@
-import { describe, expect, it, jest } from '@jest/globals';
+/* eslint-disable functional/prefer-readonly-type */
+import { createCLI } from './cli.js';
 
-import { Command } from 'commander';
-
-// Define the shape of the mocked module
-interface MockedCli {
-  readonly createCLI: jest.MockedFunction<() => Command>;
+// Define an interface for the mock program
+interface MockProgram {
+  parse: jest.Mock;
 }
 
-jest.mock('./cli', () => ({
-  createCLI: jest.fn().mockReturnValue({
-    parse: jest.fn().mockReturnThis(),
-  }),
+// Update the mock to use the interface
+jest.mock('./cli.js', () => ({
+  createCLI: jest.fn(
+    (): MockProgram => ({
+      parse: jest.fn(),
+    })
+  ),
 }));
 
-describe('Swiss Pairing CLI Entry Point', () => {
-  it('should create and parse CLI', () => {
-    const mockParse = jest.fn().mockReturnThis();
-    // Cast the mocked module to the correct type
-    const mockedCli = jest.requireMock('./cli') as MockedCli;
+describe('index', () => {
+  let originalArgv: string[];
 
-    mockedCli.createCLI.mockReturnValue({
-      parse: mockParse,
-      // Add other necessary properties to match Command interface
-      opts: jest.fn(),
-      args: [],
-      // ... other properties as needed
-    } as unknown as Command);
+  beforeEach(() => {
+    // Store the original process.argv
+    originalArgv = process.argv;
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
 
-    jest.isolateModules(() => {
-      require('./index');
-    });
+  afterEach(() => {
+    // Restore the original process.argv after each test
+    process.argv = originalArgv;
+  });
 
-    expect(mockedCli.createCLI).toHaveBeenCalledWith();
-    expect(mockParse).toHaveBeenCalledWith(process.argv);
+  it('should call createCLI and parse with process.argv', async () => {
+    // Arrange
+    const mockArgv = ['node', 'script.js', 'arg1', 'arg2'];
+    process.argv = mockArgv;
+
+    // Act
+    await import('./index.js');
+
+    // Assert
+    expect(createCLI).toHaveBeenCalledTimes(1);
+
+    const mockProgram = (createCLI as jest.MockedFunction<typeof createCLI>).mock.results[0]
+      .value as MockProgram;
+    expect(mockProgram.parse).toHaveBeenCalledTimes(1);
+    expect(mockProgram.parse).toHaveBeenCalledWith(mockArgv);
   });
 });

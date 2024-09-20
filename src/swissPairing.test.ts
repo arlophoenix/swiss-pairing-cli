@@ -1,18 +1,18 @@
-import { SwissPairingInput, ValidationResult } from './types.js';
+import { GenerateRoundPairingsInput, RoundPairings, ValidationResult } from './types.js';
 import { describe, expect, it } from '@jest/globals';
-import { generatePairings, validateInput, validateResult } from './swissPairing.js';
+import { generateRoundPairings, validateInput, validateResult } from './swissPairing.js';
 
 describe('Swiss Pairing', () => {
   describe('validateInput', () => {
     it('should return valid for valid input', () => {
-      const validInput: SwissPairingInput = {
+      const validInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player3', 'Player4'],
         numRounds: 3,
         startRound: 1,
-        playedMatches: {
-          Player1: ['Player2'],
-          Player2: ['Player1'],
-        },
+        playedMatches: new Map([
+          ['Player1', new Set(['Player2'])],
+          ['Player2', new Set(['Player1'])],
+        ]),
       };
       const result: ValidationResult = validateInput(validInput);
 
@@ -20,11 +20,11 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return invalid if there are less than two players', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['Player1'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
       const result: ValidationResult = validateInput(invalidInput);
 
@@ -35,11 +35,11 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return invalid if there are duplicate players', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player1', 'Player3'],
         numRounds: 2,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
       const result: ValidationResult = validateInput(invalidInput);
 
@@ -50,11 +50,11 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return invalid if rounds is less than 1', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player3', 'Player4'],
         numRounds: 0,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
       const result: ValidationResult = validateInput(invalidInput);
 
@@ -65,11 +65,11 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return invalid if rounds is greater than players minus 1', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player3', 'Player4'],
         numRounds: 4,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
       const result: ValidationResult = validateInput(invalidInput);
 
@@ -82,15 +82,15 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return invalid if playedMatches contains invalid player names', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player3', 'Player4'],
         numRounds: 2,
         startRound: 1,
-        playedMatches: {
-          Player1: ['Player2'],
-          Player2: ['Player1'],
-          InvalidPlayer: ['Player3'],
-        },
+        playedMatches: new Map([
+          ['Player1', new Set(['Player2'])],
+          ['Player2', new Set(['Player1'])],
+          ['InvalidPlayer', new Set(['Player3'])],
+        ]),
       };
       const result: ValidationResult = validateInput(invalidInput);
 
@@ -101,14 +101,14 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return invalid if playedMatches is not symmetrical', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['Player1', 'Player2', 'Player3', 'Player4'],
         numRounds: 2,
         startRound: 1,
-        playedMatches: {
-          Player1: ['Player2'],
-          Player2: ['Player3'], // Should be ['Player1']
-        },
+        playedMatches: new Map([
+          ['Player1', new Set(['Player2'])],
+          ['Player2', new Set(['Player3'])], // Should be ['Player1']
+        ]),
       };
       const result: ValidationResult = validateInput(invalidInput);
 
@@ -121,13 +121,13 @@ describe('Swiss Pairing', () => {
 
   describe('generatePairings', () => {
     it('should return an error if validation fails', () => {
-      const invalidInput: SwissPairingInput = {
+      const invalidInput: GenerateRoundPairingsInput = {
         players: ['p1'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
-      const result = generatePairings(invalidInput);
+      const result = generateRoundPairings(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -137,13 +137,13 @@ describe('Swiss Pairing', () => {
     });
 
     it('should generate correct pairings for 4 players, 1 round, and no played matches', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
-      const pairingResult = generatePairings(input);
+      const pairingResult = generateRoundPairings(input);
 
       expect(pairingResult.success).toBe(true);
       if (pairingResult.success) {
@@ -157,13 +157,13 @@ describe('Swiss Pairing', () => {
     });
 
     it('should generate correct pairings for 4 players and 2 rounds', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 2,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
-      const pairingResult = generatePairings(input);
+      const pairingResult = generateRoundPairings(input);
 
       expect(pairingResult.success).toBe(true);
       if (pairingResult.success) {
@@ -181,13 +181,13 @@ describe('Swiss Pairing', () => {
     });
 
     it('should generate correct pairings for 4 players and 3 rounds', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 3,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
-      const pairingResult = generatePairings(input);
+      const pairingResult = generateRoundPairings(input);
 
       expect(pairingResult.success).toBe(true);
       if (pairingResult.success) {
@@ -209,13 +209,13 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return an error for 4 players and 4 rounds', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 4,
         startRound: 1,
-        playedMatches: {},
+        playedMatches: new Map(),
       };
-      const result = generatePairings(input);
+      const result = generateRoundPairings(input);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -227,18 +227,18 @@ describe('Swiss Pairing', () => {
     });
 
     it('should generate correct pairings for 1 round with existing played matches (p1 vs p2, p3 vs p4)', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {
-          p1: ['p2'],
-          p2: ['p1'],
-          p3: ['p4'],
-          p4: ['p3'],
-        },
+        playedMatches: new Map([
+          ['p1', new Set(['p2'])],
+          ['p2', new Set(['p1'])],
+          ['p3', new Set(['p4'])],
+          ['p4', new Set(['p3'])],
+        ]),
       };
-      const pairingResult = generatePairings(input);
+      const pairingResult = generateRoundPairings(input);
 
       expect(pairingResult.success).toBe(true);
       if (pairingResult.success) {
@@ -252,18 +252,18 @@ describe('Swiss Pairing', () => {
     });
 
     it('should generate correct pairings for 1 round with existing played matches (p1 vs p3, p2 vs p4)', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {
-          p1: ['p3'],
-          p2: ['p4'],
-          p3: ['p1'],
-          p4: ['p2'],
-        },
+        playedMatches: new Map([
+          ['p1', new Set(['p3'])],
+          ['p2', new Set(['p4'])],
+          ['p3', new Set(['p1'])],
+          ['p4', new Set(['p2'])],
+        ]),
       };
-      const pairingResult = generatePairings(input);
+      const pairingResult = generateRoundPairings(input);
 
       expect(pairingResult.success).toBe(true);
       if (pairingResult.success) {
@@ -277,17 +277,17 @@ describe('Swiss Pairing', () => {
     });
 
     it('should generate correct pairings for 1 round with existing played matches (p1 vs p2, p1 vs p3)', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {
-          p1: ['p2', 'p3'],
-          p2: ['p1'],
-          p3: ['p1'],
-        },
+        playedMatches: new Map([
+          ['p1', new Set(['p2', 'p3'])],
+          ['p2', new Set(['p1'])],
+          ['p3', new Set(['p1'])],
+        ]),
       };
-      const pairingResult = generatePairings(input);
+      const pairingResult = generateRoundPairings(input);
 
       expect(pairingResult.success).toBe(true);
       if (pairingResult.success) {
@@ -301,18 +301,18 @@ describe('Swiss Pairing', () => {
     });
 
     it('should return an error when one player has played all others', () => {
-      const input: SwissPairingInput = {
+      const input: GenerateRoundPairingsInput = {
         players: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
-        playedMatches: {
-          p1: ['p2', 'p3', 'p4'],
-          p2: ['p1'],
-          p3: ['p1'],
-          p4: ['p1'],
-        },
+        playedMatches: new Map([
+          ['p1', new Set(['p2', 'p3', 'p4'])],
+          ['p2', new Set(['p1'])],
+          ['p3', new Set(['p1'])],
+          ['p4', new Set(['p1'])],
+        ]),
       };
-      const result = generatePairings(input);
+      const result = generateRoundPairings(input);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -320,166 +320,166 @@ describe('Swiss Pairing', () => {
         expect(result.errorMessage).toBe('unable to generate valid pairings for Round 1');
       }
     });
+
+    it('should add a BYE round if provided with an uneven number of players', () => {
+      const input: GenerateRoundPairingsInput = {
+        players: ['p1', 'p2', 'p3'],
+        numRounds: 1,
+        startRound: 1,
+        playedMatches: new Map(),
+      };
+      const pairingResult = generateRoundPairings(input);
+
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 1': [
+            ['p1', 'p2'],
+            ['p3', 'BYE'],
+          ],
+        });
+      }
+    });
+
+    it('should start labelling rounds from the startRound', () => {
+      const input: GenerateRoundPairingsInput = {
+        players: ['p1', 'p2', 'p3', 'p4'],
+        numRounds: 2,
+        startRound: 3,
+        playedMatches: new Map(),
+      };
+      const pairingResult = generateRoundPairings(input);
+
+      expect(pairingResult.success).toBe(true);
+      if (pairingResult.success) {
+        expect(pairingResult.roundPairings).toEqual({
+          'Round 3': [
+            ['p1', 'p2'],
+            ['p3', 'p4'],
+          ],
+          'Round 4': [
+            ['p1', 'p3'],
+            ['p2', 'p4'],
+          ],
+        });
+      }
+    });
   });
 
-  it('should add a BYE round if provided with an uneven number of players', () => {
-    const input: SwissPairingInput = {
-      players: ['p1', 'p2', 'p3'],
-      numRounds: 1,
-      startRound: 1,
-      playedMatches: {},
-    };
-    const pairingResult = generatePairings(input);
+  describe('validateResult', () => {
+    let players: readonly string[];
+    let numRounds: number;
+    let playedMatches: ReadonlyMap<string, ReadonlySet<string>>;
 
-    expect(pairingResult.success).toBe(true);
-    if (pairingResult.success) {
-      expect(pairingResult.roundPairings).toEqual({
+    beforeEach(() => {
+      players = ['p1', 'p2', 'p3', 'p4'];
+      numRounds = 2;
+      playedMatches = new Map();
+    });
+
+    it('should return valid for correct pairings', () => {
+      const roundPairings: RoundPairings = {
         'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'BYE'],
-        ],
-      });
-    }
-  });
-
-  it('should start labelling rounds from the startRound', () => {
-    const input: SwissPairingInput = {
-      players: ['p1', 'p2', 'p3', 'p4'],
-      numRounds: 2,
-      startRound: 3,
-      playedMatches: {},
-    };
-    const pairingResult = generatePairings(input);
-
-    expect(pairingResult.success).toBe(true);
-    if (pairingResult.success) {
-      expect(pairingResult.roundPairings).toEqual({
-        'Round 3': [
           ['p1', 'p2'],
           ['p3', 'p4'],
         ],
-        'Round 4': [
+        'Round 2': [
           ['p1', 'p3'],
           ['p2', 'p4'],
         ],
-      });
-    }
-  });
-});
+      };
+      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
 
-describe('validateResult', () => {
-  let players: readonly string[];
-  let numRounds: number;
-  let playedMatches: Record<string, readonly string[]>;
+      expect(result.isValid).toBe(true);
+    });
 
-  beforeEach(() => {
-    players = ['p1', 'p2', 'p3', 'p4'];
-    numRounds = 2;
-    playedMatches = {};
-  });
+    it('should return invalid if number of rounds is incorrect', () => {
+      const roundPairings: RoundPairings = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+      };
+      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
 
-  it('should return valid for correct pairings', () => {
-    const pairings = {
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-      'Round 2': [
-        ['p1', 'p3'],
-        ['p2', 'p4'],
-      ],
-    };
-    const result = validateResult({ pairings, players, numRounds, playedMatches });
+      expect(result.isValid).toBe(false);
+      if (!result.isValid) {
+        expect(result.errorMessage).toBe('invalid number of rounds in the result. Expected 2, got 1.');
+      }
+    });
 
-    expect(result.isValid).toBe(true);
-  });
+    it('should return invalid if number of pairings in a round is incorrect', () => {
+      const roundPairings: RoundPairings = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+        'Round 2': [['p1', 'p3']],
+      };
+      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
 
-  it('should return invalid if number of rounds is incorrect', () => {
-    const pairings = {
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-    };
-    const result = validateResult({ pairings, players, numRounds, playedMatches });
+      expect(result.isValid).toBe(false);
+      if (!result.isValid) {
+        expect(result.errorMessage).toBe('invalid number of pairings in Round 2. Expected 2, got 1.');
+      }
+    });
 
-    expect(result.isValid).toBe(false);
-    if (!result.isValid) {
-      expect(result.errorMessage).toBe('invalid number of rounds in the result. Expected 2, got 1.');
-    }
-  });
+    it('should return invalid if a pairing includes players who have already played', () => {
+      const roundPairings: RoundPairings = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+      };
+      const numRounds = 1;
+      playedMatches = new Map([
+        ['p1', new Set(['p2'])],
+        ['p2', new Set(['p1'])],
+      ]);
+      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
 
-  it('should return invalid if number of pairings in a round is incorrect', () => {
-    const pairings = {
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-      'Round 2': [['p1', 'p3']],
-    };
-    const result = validateResult({ pairings, players, numRounds, playedMatches });
+      expect(result.isValid).toBe(false);
+      if (!result.isValid) {
+        expect(result.errorMessage).toBe('invalid pairing in Round 1: p1 and p2 have already played.');
+      }
+    });
 
-    expect(result.isValid).toBe(false);
-    if (!result.isValid) {
-      expect(result.errorMessage).toBe('invalid number of pairings in Round 2. Expected 2, got 1.');
-    }
-  });
+    it('should return invalid if a pairing includes players who have played in a previous round', () => {
+      const roundPairings: RoundPairings = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+        'Round 2': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+      };
+      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
 
-  it('should return invalid if a pairing includes players who have already played', () => {
-    const pairings = {
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-    };
-    const numRounds = 1;
-    const playedMatches = {
-      p1: ['p2'],
-      p2: ['p1'],
-    };
-    const result = validateResult({ pairings, players, numRounds, playedMatches });
+      expect(result.isValid).toBe(false);
+      if (!result.isValid) {
+        expect(result.errorMessage).toBe('invalid pairing in Round 2: p1 and p2 have already played.');
+      }
+    });
 
-    expect(result.isValid).toBe(false);
-    if (!result.isValid) {
-      expect(result.errorMessage).toBe('invalid pairing in Round 1: p1 and p2 have already played.');
-    }
-  });
+    it('should return invalid if a player appears more than once in a round', () => {
+      const roundPairings: RoundPairings = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+        'Round 2': [
+          ['p1', 'p3'],
+          ['p1', 'p4'],
+        ],
+      };
+      const result = validateResult({ roundPairings, players, numRounds, playedMatches });
 
-  it('should return invalid if a pairing includes players who have played in a previous round', () => {
-    const pairings = {
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-      'Round 2': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-    };
-    const result = validateResult({ pairings, players, numRounds, playedMatches });
-
-    expect(result.isValid).toBe(false);
-    if (!result.isValid) {
-      expect(result.errorMessage).toBe('invalid pairing in Round 2: p1 and p2 have already played.');
-    }
-  });
-
-  it('should return invalid if a player appears more than once in a round', () => {
-    const pairings = {
-      'Round 1': [
-        ['p1', 'p2'],
-        ['p3', 'p4'],
-      ],
-      'Round 2': [
-        ['p1', 'p3'],
-        ['p1', 'p4'],
-      ],
-    };
-    const result = validateResult({ pairings, players, numRounds, playedMatches });
-
-    expect(result.isValid).toBe(false);
-    if (!result.isValid) {
-      expect(result.errorMessage).toBe('invalid pairing in Round 2: p1 or p4 appears more than once.');
-    }
+      expect(result.isValid).toBe(false);
+      if (!result.isValid) {
+        expect(result.errorMessage).toBe('invalid pairing in Round 2: p1 or p4 appears more than once.');
+      }
+    });
   });
 });

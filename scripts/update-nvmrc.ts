@@ -3,6 +3,13 @@ import * as path from 'path';
 
 import { fileURLToPath } from 'url';
 
+interface PackageJson {
+  readonly engines?: {
+    readonly node?: string;
+  };
+  // Add other properties as needed
+}
+
 // Get the root directory (parent of the scripts folder)
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,19 +18,19 @@ const rootPath: string = path.join(__dirname, '..');
 
 // Read package.json from the root
 const packageJsonPath: string = path.join(rootPath, 'package.json');
-let packageJson: { readonly engines: { readonly node: string } };
+let packageJson: PackageJson;
 
 try {
   const packageJsonStr = fs.readFileSync(packageJsonPath, 'utf8');
 
-  packageJson = JSON.parse(packageJsonStr);
+  packageJson = JSON.parse(packageJsonStr) as PackageJson;
 } catch (error) {
   console.error(`Error reading package.json: ${(error as Error).message}`);
   process.exit(1);
 }
 
 // Extract Node.js version from engines field
-const packageNodeVersion: string | undefined = packageJson.engines.node;
+const packageNodeVersion: string | undefined = packageJson.engines?.node;
 
 if (!packageNodeVersion) {
   console.error('Node.js version not found in package.json');
@@ -37,11 +44,11 @@ const nvmNodeVersion: string = packageNodeVersion.replace(/[^0-9.]/g, '');
 const nvmrcPath: string = path.join(rootPath, '.nvmrc');
 
 // Check if .nvmrc exists and read its content
-let currentNvmrcVersion: string = '';
+let currentNvmrcVersion = '';
 
 try {
   currentNvmrcVersion = fs.readFileSync(nvmrcPath, 'utf8').trim();
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 } catch (error) {
   // File doesn't exist or can't be read, we'll create/update it
 }
