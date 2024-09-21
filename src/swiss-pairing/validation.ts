@@ -21,6 +21,11 @@ export function validateRoundMatchesInput({
     return { isValid: false, errorMessage: 'there must be at least two players.' };
   }
 
+  // Check there is an even number of players
+  if (players.length % 2 !== 0) {
+    return { isValid: false, errorMessage: 'there must be an even number of players.' };
+  }
+
   // Check for duplicate players
   if (new Set(players).size !== players.length) {
     return { isValid: false, errorMessage: 'duplicate players are not allowed.' };

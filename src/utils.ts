@@ -40,3 +40,12 @@ export function shuffle<T>(array: readonly T[]): readonly T[] {
   }
   return shuffled;
 }
+
+/**
+ * Reverse a list without modifying the original
+ * @param {readonly T[]} players - The original array
+ * @returns {readonly T[]} A new reversed array
+ */
+export function reverse<T>(array: readonly T[]): readonly T[] {
+  return [...array].reverse();
+}

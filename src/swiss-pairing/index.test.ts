@@ -43,13 +43,13 @@ describe('index', () => {
 
     it('should return an error if output validation fails', () => {
       mockValidateOutput.mockReturnValue({ isValid: false, errorMessage: 'output validation error' });
-      const invalidInput: GenerateRoundMatchesInput = {
-        players: ['p1'],
+      const validInput: GenerateRoundMatchesInput = {
+        players: ['p1', 'p2'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
       };
-      const result = generateRoundMatches(invalidInput);
+      const result = generateRoundMatches(validInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -240,26 +240,6 @@ describe('index', () => {
       if (!result.success) {
         expect(result.errorType).toBe('NoValidSolution');
         expect(result.errorMessage).toBe('unable to generate valid matches for Round 1.');
-      }
-    });
-
-    it('should add a BYE round if provided with an uneven number of players', () => {
-      const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3'],
-        numRounds: 1,
-        startRound: 1,
-        playedOpponents: new Map(),
-      };
-      const roundMatchesResult = generateRoundMatches(input);
-
-      expect(roundMatchesResult.success).toBe(true);
-      if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
-          'Round 1': [
-            ['p1', 'p2'],
-            ['p3', 'BYE'],
-          ],
-        });
       }
     });
 

@@ -33,13 +33,13 @@ export function generateRoundMatches({
   }
 
   const roundMatches: ReadonlyRoundMatches = {};
-  const currentPlayers = addByePlayerIfNecessary(players);
+
   let currentPlayedOpponents = mutableClonePlayedOpponents(playedOpponents);
 
   for (let roundNumber = 1; roundNumber <= numRounds; roundNumber++) {
     const roundLabel = `Round ${String(startRound + roundNumber - 1)}`;
     const newMatches = generateSingleRoundMatches({
-      players: currentPlayers,
+      players,
       playedOpponents: currentPlayedOpponents,
     });
 
@@ -56,7 +56,7 @@ export function generateRoundMatches({
   }
 
   const resultValidation = validateRoundMatchesOutput({
-    players: currentPlayers,
+    players,
     roundMatches: roundMatches,
     numRounds,
     playedOpponents,
@@ -71,15 +71,6 @@ export function generateRoundMatches({
   }
 
   return { success: true, roundMatches: roundMatches };
-}
-
-/**
- * Adds a 'BYE' player if necessary to ensure an even number of players
- * @param {readonly string[]} players - The original list of players
- * @returns {readonly string[]} The prepared list of players
- */
-function addByePlayerIfNecessary(players: readonly string[]): readonly string[] {
-  return players.length % 2 === 1 ? [...players, 'BYE'] : players;
 }
 
 /**

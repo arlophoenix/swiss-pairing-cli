@@ -39,6 +39,21 @@ describe('Validation', () => {
       }
     });
 
+    it('should return invalid if there is an odd number of players', () => {
+      const invalidInput: GenerateRoundMatchesInput = {
+        players: ['Player1', 'Player2', 'Player3'],
+        numRounds: 1,
+        startRound: 1,
+        playedOpponents: new Map(),
+      };
+      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+
+      expect(result.isValid).toBe(false);
+      if (!result.isValid) {
+        expect(result.errorMessage).toBe('there must be an even number of players.');
+      }
+    });
+
     it('should return invalid if there are duplicate players', () => {
       const invalidInput: GenerateRoundMatchesInput = {
         players: ['Player1', 'Player2', 'Player1', 'Player3'],

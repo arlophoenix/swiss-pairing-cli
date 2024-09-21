@@ -1,4 +1,5 @@
-import { CLIOptions } from './types.js';
+import { CLIOptionOrder, CLIOptions } from './types.js';
+
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';
 
@@ -28,7 +29,7 @@ export function createCLI(): Command {
 
         if (matchPlayers.length !== 2) {
           exitWithError(
-            `Invalid input: match "${value}" is formatted incorrectly; expected "player1,player2".`
+            `Invalid input: matches "${value}" is formatted incorrectly; expected "player1,player2".`
           );
         }
         previous.push(matchPlayers);
@@ -39,11 +40,11 @@ export function createCLI(): Command {
     .option(
       '-n, --num-rounds <number>',
       'Number of rounds to generate',
-      (value) => {
+      (value: string) => {
         const parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-          exitWithError('Invalid input: num-rounds must be a positive whole number');
+          exitWithError('Invalid input: num-rounds must be a positive whole number.');
         }
 
         return parsed;
@@ -53,18 +54,29 @@ export function createCLI(): Command {
     .option(
       '-s, --start-round <number>',
       'Used to name the generated rounds',
-      (value) => {
+      (value: string) => {
         const parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-          exitWithError('Invalid input: start-round must be a positive whole number');
+          exitWithError('Invalid input: start-round must be a positive whole number.');
         }
 
         return parsed;
       },
       1 // default to calling the first Round 1
     )
-    .option('-r --randomize', 'Use random pairing instead of swiss', false)
+    .option(
+      '-o --order <string>',
+      'The sequence in which players should be matched. Valid options are "top-down", "random" or "bottom-up"',
+      (value?: string) => {
+        const lowercaseValue = (value ?? '').toLowerCase();
+        if (lowercaseValue === 'top-down' || lowercaseValue === 'random' || lowercaseValue === 'bottom-up') {
+          return lowercaseValue as CLIOptionOrder;
+        }
+        exitWithError('Invalid input: order must be "top-down", "random" or "bottom-up".');
+      },
+      'top-down'
+    )
     .helpOption('-h, --help', 'Display this help information')
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
     .action((options: CLIOptions) => {

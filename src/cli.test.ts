@@ -60,7 +60,8 @@ describe('Swiss Pairing CLI', () => {
         '0',
         '--matches',
         'Alice,Bob',
-        '--randomize',
+        '--order',
+        'bottom-up',
       ]);
       const options = program.opts();
 
@@ -68,7 +69,7 @@ describe('Swiss Pairing CLI', () => {
       expect(options.numRounds).toBe(2);
       expect(options.startRound).toBe(0);
       expect(options.matches).toEqual([['Alice', 'Bob']]);
-      expect(options.randomize).toBe(true);
+      expect(options.order).toBe('bottom-up');
     });
 
     it('should fail to parse command line arguments without players', () => {
@@ -119,6 +120,9 @@ describe('Swiss Pairing CLI', () => {
           'Alice,Bob',
         ]);
       }).toThrow('Process exited with code 1');
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Invalid input: num-rounds must be a positive whole number.'
+      );
     });
 
     it('should parse command line arguments without start-rounds', () => {
@@ -154,6 +158,9 @@ describe('Swiss Pairing CLI', () => {
           'Alice,Bob',
         ]);
       }).toThrow('Process exited with code 1');
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Invalid input: start-round must be a positive whole number.'
+      );
     });
 
     it('should parse command line arguments without matches', () => {
@@ -187,6 +194,9 @@ describe('Swiss Pairing CLI', () => {
           'Alice',
         ]);
       }).toThrow('Process exited with code 1');
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Invalid input: matches "Alice" is formatted incorrectly; expected "player1,player2".'
+      );
     });
 
     it('should parse command line arguments with multiple matches', () => {
@@ -219,11 +229,20 @@ describe('Swiss Pairing CLI', () => {
       ]);
     });
 
-    it('should default randomize to false', () => {
+    it('should exit for invalid order', () => {
+      expect(() => {
+        program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--order', 'foo']);
+      }).toThrow('Process exited with code 1');
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Invalid input: order must be "top-down", "random" or "bottom-up".'
+      );
+    });
+
+    it('should default order to top-down', () => {
       program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
       const options = program.opts();
 
-      expect(options.randomize).toBe(false);
+      expect(options.order).toBe('top-down');
     });
 
     it('should log the result of handleCLIAction on success', () => {

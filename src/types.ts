@@ -6,8 +6,13 @@ export interface CLIOptions {
   readonly numRounds?: number;
   readonly startRound?: number;
   readonly matches?: readonly ReadonlyMatch[];
-  readonly randomize?: boolean;
+  readonly order?: CLIOptionOrder;
 }
+
+/**
+ * Represents the order option for CLI
+ */
+export type CLIOptionOrder = 'top-down' | 'random' | 'bottom-up';
 
 /**
  * Represents the input for generating matches over multiple rounds

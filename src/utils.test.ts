@@ -1,4 +1,4 @@
-import { createBidirectionalMap, shuffle } from './utils.js';
+import { createBidirectionalMap, reverse, shuffle } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
 describe('utils', () => {
@@ -69,6 +69,31 @@ describe('utils', () => {
       const original = ['a', 'b', 'c', 'd', 'e'];
       const originalCopy = [...original];
       shuffle(original);
+      expect(original).toEqual(originalCopy);
+    });
+  });
+
+  describe('reverse', () => {
+    it('should return a new array', () => {
+      const original = ['a', 'b', 'c'];
+      const result = reverse(original);
+      expect(result).not.toBe(original);
+      expect(result).toHaveLength(original.length);
+      expect(result).toEqual(['c', 'b', 'a']);
+    });
+
+    it('should work with empty arrays', () => {
+      expect(reverse([])).toEqual([]);
+    });
+
+    it('should work with single-element arrays', () => {
+      expect(reverse(['a'])).toEqual(['a']);
+    });
+
+    it('should not modify the original array', () => {
+      const original = ['a', 'b', 'c', 'd', 'e'];
+      const originalCopy = [...original];
+      reverse(original);
       expect(original).toEqual(originalCopy);
     });
   });

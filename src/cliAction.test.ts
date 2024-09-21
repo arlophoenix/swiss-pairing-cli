@@ -7,8 +7,13 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import type { SpyInstance } from 'jest-mock';
 
+function mockShuffleImplementation<T>(arr: readonly T[]): readonly T[] {
+  return [...arr].reverse();
+}
+
 describe('handleCLIAction', () => {
   let mockGenerateRoundMatches: SpyInstance<typeof swissPairing.generateRoundMatches>;
+  // not using SpyInstance here because the generic type signatures didn't work
   let mockShuffle: jest.MockedFunction<typeof utils.shuffle>;
 
   beforeEach(() => {
@@ -16,7 +21,7 @@ describe('handleCLIAction', () => {
       .spyOn(swissPairing, 'generateRoundMatches')
       .mockReturnValue({ success: true, roundMatches: {} });
     mockShuffle = jest.fn(utils.shuffle) as jest.MockedFunction<typeof utils.shuffle>;
-    mockShuffle.mockImplementation(<T>(arr: readonly T[]): readonly T[] => [...arr].reverse());
+    mockShuffle.mockImplementation(mockShuffleImplementation);
     jest.spyOn(utils, 'shuffle').mockImplementation(mockShuffle);
   });
 
@@ -25,8 +30,8 @@ describe('handleCLIAction', () => {
   });
 
   it('should process valid input and generate matches', () => {
-    const players = ['Player1', 'Player2', 'Player3'];
-    const numRounds = 2;
+    const players = ['Player1', 'Player2', 'Player3', 'Player4'];
+    const numRounds = 1;
     const startRound = 0;
     const options: CLIOptions = {
       players,
@@ -38,7 +43,7 @@ describe('handleCLIAction', () => {
     const roundMatches: ReadonlyRoundMatches = {
       'Round 0': [
         ['Player1', 'Player3'],
-        ['Player2', 'BYE'],
+        ['Player2', 'Player4'],
       ],
     };
 
@@ -62,36 +67,60 @@ describe('handleCLIAction', () => {
     expect(mockShuffle).not.toHaveBeenCalled();
   });
 
-  it('should randomize the player order before match if randomize is true', () => {
-    const players = ['Player1', 'Player2', 'Player3', 'Player4'];
-    const randomize = true;
-    const options: CLIOptions = {
-      players,
-      randomize,
-    };
+  describe('order', () => {
+    it('should randomize the player order before generating matches if order is random', () => {
+      const players = ['Player1', 'Player2', 'Player3', 'Player4'];
+      const options: CLIOptions = {
+        players,
+        order: 'random',
+      };
 
-    const roundMatches: ReadonlyRoundMatches = {
-      'Round 0': [
-        ['Player1', 'Player3'],
-        ['Player2', 'BYE'],
-      ],
-    };
+      cliAction.handleCLIAction(options);
 
-    mockGenerateRoundMatches.mockReturnValue({ success: true, roundMatches: roundMatches });
-
-    const result = cliAction.handleCLIAction(options);
-
-    expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
-      players: players.reverse(),
-      numRounds: 1,
-      startRound: 1,
-      playedOpponents: new Map(),
+      expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
+        players: mockShuffleImplementation(players),
+        numRounds: 1,
+        startRound: 1,
+        playedOpponents: new Map(),
+      });
+      expect(mockShuffle).toHaveBeenCalledWith(players);
     });
-    expect(result).toEqual({
-      success: true,
-      value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+
+    it('should reverse the player order before generating matches if order is bottom-up', () => {
+      const players = ['Player1', 'Player2', 'Player3', 'Player4'];
+      const options: CLIOptions = {
+        players,
+        order: 'bottom-up',
+      };
+
+      cliAction.handleCLIAction(options);
+
+      expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
+        players: ['Player4', 'Player3', 'Player2', 'Player1'],
+        numRounds: 1,
+        startRound: 1,
+        playedOpponents: new Map(),
+      });
+      expect(mockShuffle).not.toHaveBeenCalled();
     });
-    expect(mockShuffle).toHaveBeenCalledWith(players);
+
+    it('should reverse the player order after adding a BYE if order is bottom-up', () => {
+      const players = ['Player1', 'Player2', 'Player3'];
+      const options: CLIOptions = {
+        players,
+        order: 'bottom-up',
+      };
+
+      cliAction.handleCLIAction(options);
+
+      expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
+        players: ['BYE', 'Player3', 'Player2', 'Player1'],
+        numRounds: 1,
+        startRound: 1,
+        playedOpponents: new Map(),
+      });
+      expect(mockShuffle).not.toHaveBeenCalled();
+    });
   });
 
   it('should default the missing values correctly', () => {
@@ -114,6 +143,19 @@ describe('handleCLIAction', () => {
     expect(result).toEqual({
       success: true,
       value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+    });
+  });
+
+  it('should add a BYE round if provided with an uneven number of players', () => {
+    const options: CLIOptions = {
+      players: ['Player1', 'Player2', 'Player3'],
+    };
+    cliAction.handleCLIAction(options);
+    expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
+      players: ['Player1', 'Player2', 'Player3', 'BYE'],
+      numRounds: 1,
+      startRound: 1,
+      playedOpponents: new Map(),
     });
   });
 
