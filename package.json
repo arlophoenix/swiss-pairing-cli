@@ -28,6 +28,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
+    "test:perf": "tsx scripts/performance-test.ts",
     "build": "tsc",
     "build:clean": "npm run clean && npm run build",
     "clean": "rm -rf dist",
