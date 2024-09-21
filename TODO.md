@@ -4,11 +4,8 @@
 
 - [ ] Support for additional input types (csv, json)
 - [ ] Support for additional output types (csv, json)
-- [ ] Change the interface to use excludes (avoid?) instead of matches
 
-## TypeScript and Code Quality
-
-- [ ] Add JSDoc comments to functions, especially in `src/swissPairing.ts`
+## Code Quality
 
 ## Project Configuration
 
@@ -20,5 +17,3 @@
 
 - [ ] Commitlint for enforcing consistent commit messages (works well with 📦 Semantic Release)
 - [ ] Semantic Release for automating version management and package publishing
-- [ ] Code complexity analysis (e.g., SonarQube)
-- [ ] Dependency visualization (e.g., Dependency Cruiser)
