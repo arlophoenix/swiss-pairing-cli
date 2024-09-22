@@ -1,3 +1,5 @@
+import { Result } from './types.js';
+
 /**
  * Creates a bidirectional map from an array of pairs.
  * Each element in a pair becomes a key in the map, with its partner added to its corresponding set of values.
@@ -48,4 +50,41 @@ export function shuffle<T>(array: readonly T[]): readonly T[] {
  */
 export function reverse<T>(array: readonly T[]): readonly T[] {
   return [...array].reverse();
+}
+
+export function parseStringLiteral<T extends string>({
+  input,
+  options,
+  errorMessage,
+}: {
+  readonly input: string;
+  readonly options: readonly T[];
+  readonly errorMessage?: string;
+}): Result<T> {
+  if (options.includes(input as T)) {
+    return { success: true, value: input as T };
+  }
+  return {
+    success: false,
+    errorMessage: errorMessage ?? `Invalid option: ${input}. Valid options are: ${options.join(', ')}`,
+  };
+}
+
+export function parseStringEnum<T extends Record<string, string>>({
+  input,
+  enumObj,
+  errorMessage,
+}: {
+  readonly input: string;
+  readonly enumObj: T;
+  readonly errorMessage?: string;
+}): Result<T[keyof T]> {
+  const values = Object.values(enumObj);
+  if (values.includes(input)) {
+    return { success: true, value: input as T[keyof T] };
+  }
+  return {
+    success: false,
+    errorMessage: errorMessage ?? `Invalid option: ${input}. Valid options are: ${values.join(', ')}`,
+  };
 }
