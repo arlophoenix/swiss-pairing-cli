@@ -54,7 +54,7 @@ export function createCLI(): Command {
     )
     .option(
       '-s, --start-round <number>',
-      'Used to name the generated rounds',
+      'Name the generated rounds starting with this number',
       (value: string) => {
         const parsed = parseInt(value, 10);
 
@@ -67,8 +67,8 @@ export function createCLI(): Command {
       1 // default to calling the first Round 1
     )
     .option(
-      '-o --order <string>',
-      `The sequence in which players should be matched. Valid options are ${CLI_OPTION_ORDER.join(', ')}`,
+      `-o --order <${CLI_OPTION_ORDER.join(' | ')}>`,
+      'The sequence in which players should be paired.',
       (value?: string) => {
         const lowercaseValue = (value ?? '').toLowerCase();
         const result = parseStringLiteral<CLIOptionOrder>({
