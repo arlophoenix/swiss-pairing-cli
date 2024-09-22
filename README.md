@@ -41,8 +41,8 @@ Options:
   -n, --num-rounds <number>   Number of rounds to generate (default: 1)
   -s, --start-round <number>  Used to name the generated rounds (default: 1)
   -o --order <string>         The sequence in which players should be matched.
-                              Valid options are "top-down", "random" or
-                              "bottom-up" (default: "top-down")
+                              Valid options are top-down, random, bottom-up
+                              (default: "top-down")
   -h, --help                  Display this help information
 ```
 

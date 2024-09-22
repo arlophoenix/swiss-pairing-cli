@@ -1,6 +1,7 @@
 import { CLIOptions, Result } from './types.js';
 import { createBidirectionalMap, reverse, shuffle } from './utils.js';
 
+import { CLI_OPTION_ORDER_DEFAULT } from './constants.js';
 import { generateRoundMatches } from './swiss-pairing/index.js';
 
 /**
@@ -13,7 +14,7 @@ export function handleCLIAction({
   numRounds = 1,
   startRound = 1,
   matches = [],
-  order = 'top-down',
+  order = CLI_OPTION_ORDER_DEFAULT,
 }: CLIOptions): Result<string> {
   const playedMatches = createBidirectionalMap(matches);
 

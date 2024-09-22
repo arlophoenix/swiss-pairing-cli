@@ -1,7 +1,9 @@
 import { CLIOptionOrder, CLIOptions } from './types.js';
+import { CLI_OPTION_ORDER, CLI_OPTION_ORDER_DEFAULT } from './constants.js';
 
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';
+import { parseStringLiteral } from './utils.js';
 
 /**
  * Creates and configures the CLI command for Swiss pairing generation
@@ -68,15 +70,19 @@ export function createCLI(): Command {
     )
     .option(
       '-o --order <string>',
-      'The sequence in which players should be matched. Valid options are "top-down", "random" or "bottom-up"',
+      `The sequence in which players should be matched. Valid options are ${CLI_OPTION_ORDER.join(', ')}`,
       (value?: string) => {
         const lowercaseValue = (value ?? '').toLowerCase();
-        if (lowercaseValue === 'top-down' || lowercaseValue === 'random' || lowercaseValue === 'bottom-up') {
-          return lowercaseValue as CLIOptionOrder;
+        const result = parseStringLiteral<CLIOptionOrder>({
+          input: lowercaseValue,
+          options: CLI_OPTION_ORDER,
+        });
+        if (result.success) {
+          return result.value;
         }
-        exitWithError('Invalid input: order must be "top-down", "random" or "bottom-up".');
+        exitWithError(`Invalid input: order must be one of: ${CLI_OPTION_ORDER.join(', ')}.`);
       },
-      'top-down'
+      CLI_OPTION_ORDER_DEFAULT
     )
     .helpOption('-h, --help', 'Display this help information')
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)

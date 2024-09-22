@@ -234,7 +234,7 @@ describe('Swiss Pairing CLI', () => {
         program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--order', 'foo']);
       }).toThrow('Process exited with code 1');
       expect(mockConsoleError).toHaveBeenCalledWith(
-        'Invalid input: order must be "top-down", "random" or "bottom-up".'
+        'Invalid input: order must be one of: top-down, random, bottom-up.'
       );
     });
 

@@ -1,3 +1,5 @@
+import { CLI_OPTION_ORDER } from './constants.js';
+
 /**
  * Represents the options provided through the CLI
  */
@@ -12,7 +14,7 @@ export interface CLIOptions {
 /**
  * Represents the order option for CLI
  */
-export type CLIOptionOrder = 'top-down' | 'random' | 'bottom-up';
+export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
 
 /**
  * Represents the input for generating matches over multiple rounds
