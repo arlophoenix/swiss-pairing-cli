@@ -27,12 +27,14 @@ describe('index', () => {
 
   afterEach(() => {
     // Restore the original process.argv after each test
+    // eslint-disable-next-line functional/immutable-data
     process.argv = originalArgv;
   });
 
   it('should call createCLI and parse with process.argv', async () => {
     // Arrange
     const mockArgv = ['node', 'script.js', 'arg1', 'arg2'];
+    // eslint-disable-next-line functional/immutable-data
     process.argv = mockArgv;
 
     // Act

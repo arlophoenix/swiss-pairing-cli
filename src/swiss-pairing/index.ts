@@ -50,6 +50,7 @@ export function generateRoundMatches({
         errorMessage: `unable to generate valid matches for ${roundLabel}.`,
       };
     }
+    // eslint-disable-next-line functional/immutable-data
     roundMatches[roundLabel] = newMatches;
 
     currentPlayedOpponents = updatePlayedOpponents({ currentPlayedOpponents, newMatches });
@@ -57,7 +58,7 @@ export function generateRoundMatches({
 
   const resultValidation = validateRoundMatchesOutput({
     players,
-    roundMatches: roundMatches,
+    roundMatches,
     numRounds,
     playedOpponents,
   });
@@ -70,7 +71,7 @@ export function generateRoundMatches({
     };
   }
 
-  return { success: true, roundMatches: roundMatches };
+  return { success: true, roundMatches };
 }
 
 /**

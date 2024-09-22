@@ -35,6 +35,7 @@ function runPerformanceTest({
     });
 
     const endTime = performance.now();
+    // eslint-disable-next-line functional/immutable-data
     times.push(endTime - startTime);
   }
 

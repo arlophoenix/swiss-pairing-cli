@@ -16,6 +16,7 @@ const jsConfig = {
     'functional/functional-parameters': ['error', { allowRestParameter: true, enforceParameterCount: false }],
     'functional/no-expression-statement': 'off',
     'functional/prefer-readonly-type': 'error',
+    'functional/immutable-data': 'error',
     // Prefer arrow functions
     'prefer-arrow-callback': 'error',
     'arrow-body-style': ['error', 'as-needed'],
@@ -31,14 +32,11 @@ const tsConfig = tseslint.config({
       project: ['./tsconfig.json', './tsconfig.test.json'],
     },
   },
-  extends: [
-    // TODO: enable configs to encourage functional programming style
-    // ...functional.configs.externalTypescriptRecommended,
-    // ...functional.configs.recommended,
-    // ...functional.configs.stylistic,
-    ...tseslint.configs.strictTypeChecked,
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
+  // Disabled due to too many false positives
+  // ...eslintPluginFunctional.configs.recommended,
+  // Disabled due to conflict with Prettier's style
+  // ...eslintPluginFunctional.configs.stylistic,
+  extends: [...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked],
 });
 
 const testConfig = {

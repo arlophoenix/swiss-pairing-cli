@@ -32,6 +32,7 @@ export function createCLI(): Command {
             `Invalid input: matches "${value}" is formatted incorrectly; expected "player1,player2".`
           );
         }
+        // eslint-disable-next-line functional/immutable-data
         previous.push(matchPlayers);
 
         return previous;
