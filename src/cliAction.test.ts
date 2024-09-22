@@ -5,6 +5,7 @@ import * as utils from './utils.js';
 import { CLIOptions, ReadonlyRoundMatches } from './types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
+import { BYE_PLAYER } from './constants.js';
 import type { SpyInstance } from 'jest-mock';
 
 function mockShuffleImplementation<T>(arr: readonly T[]): readonly T[] {
@@ -114,7 +115,7 @@ describe('handleCLIAction', () => {
       cliAction.handleCLIAction(options);
 
       expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
-        players: ['BYE', 'Player3', 'Player2', 'Player1'],
+        players: [BYE_PLAYER, 'Player3', 'Player2', 'Player1'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
@@ -152,7 +153,7 @@ describe('handleCLIAction', () => {
     };
     cliAction.handleCLIAction(options);
     expect(mockGenerateRoundMatches).toHaveBeenCalledWith({
-      players: ['Player1', 'Player2', 'Player3', 'BYE'],
+      players: ['Player1', 'Player2', 'Player3', BYE_PLAYER],
       numRounds: 1,
       startRound: 1,
       playedOpponents: new Map(),

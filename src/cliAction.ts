@@ -1,7 +1,7 @@
+import { BYE_PLAYER, CLI_OPTION_ORDER_DEFAULT } from './constants.js';
 import { CLIOptions, Result } from './types.js';
 import { buildErrorMessage, createBidirectionalMap, reverse, shuffle } from './utils.js';
 
-import { CLI_OPTION_ORDER_DEFAULT } from './constants.js';
 import { generateRoundMatches } from './swiss-pairing/index.js';
 
 /**
@@ -60,5 +60,5 @@ export function handleCLIAction({
  * @returns {readonly string[]} The shuffled list of players
  */
 function addByePlayerIfNecessary(players: readonly string[]): readonly string[] {
-  return players.length % 2 === 1 ? [...players, 'BYE'] : players;
+  return players.length % 2 === 1 ? [...players, BYE_PLAYER] : players;
 }
