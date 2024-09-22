@@ -1,3 +1,4 @@
+import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_PLAYERS } from '../constants.js';
 import { ValidateRoundMatchesInput, ValidateRoundMatchesOutput, ValidationResult } from '../types.js';
 
 import { mutableClonePlayedOpponents } from './utils.js';
@@ -18,29 +19,29 @@ export function validateRoundMatchesInput({
 }: ValidateRoundMatchesInput): ValidationResult {
   // Check if there are at least two players
   if (players.length < 2) {
-    return { isValid: false, errorMessage: 'there must be at least two players.' };
+    return { isValid: false, errorMessage: `there must be at least two ${ARG_PLAYERS}.` };
   }
 
   // Check there is an even number of players
   if (players.length % 2 !== 0) {
-    return { isValid: false, errorMessage: 'there must be an even number of players.' };
+    return { isValid: false, errorMessage: `there must be an even number of ${ARG_PLAYERS}.` };
   }
 
   // Check for duplicate players
   if (new Set(players).size !== players.length) {
-    return { isValid: false, errorMessage: 'duplicate players are not allowed.' };
+    return { isValid: false, errorMessage: `duplicate ${ARG_PLAYERS} are not allowed.` };
   }
 
   // Check if rounds is at least 1
   if (numRounds < 1) {
-    return { isValid: false, errorMessage: 'num-rounds to generate must be at least 1.' };
+    return { isValid: false, errorMessage: `${ARG_NUM_ROUNDS} to generate must be at least 1.` };
   }
 
   // Check if rounds is not greater than players minus 1
   if (numRounds >= players.length) {
     return {
       isValid: false,
-      errorMessage: 'num-rounds to generate must be fewer than the number of players.',
+      errorMessage: `${ARG_NUM_ROUNDS} to generate must be fewer than the number of ${ARG_PLAYERS}.`,
     };
   }
 
@@ -54,14 +55,14 @@ export function validateRoundMatchesInput({
   }
 
   if (!Array.from(allPlayersInPlayedMatches).every((player) => players.includes(player))) {
-    return { isValid: false, errorMessage: 'matches contains invalid player names.' };
+    return { isValid: false, errorMessage: `${ARG_MATCHES} contains invalid player names.` };
   }
 
   // Check if playedMatches is symmetrical
   for (const [player, opponents] of playedOpponents.entries()) {
     for (const opponent of opponents) {
       if (!playedOpponents.get(opponent)?.has(player)) {
-        return { isValid: false, errorMessage: 'matches are not symmetrical.' };
+        return { isValid: false, errorMessage: `${ARG_MATCHES} are not symmetrical.` };
       }
     }
   }

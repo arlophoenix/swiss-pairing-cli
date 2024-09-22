@@ -1,5 +1,13 @@
+import {
+  ARG_MATCHES,
+  ARG_NUM_ROUNDS,
+  ARG_ORDER,
+  ARG_PLAYERS,
+  ARG_START_ROUND,
+  CLI_OPTION_ORDER,
+  CLI_OPTION_ORDER_DEFAULT,
+} from './constants.js';
 import { CLIOptionOrder, CLIOptions } from './types.js';
-import { CLI_OPTION_ORDER, CLI_OPTION_ORDER_DEFAULT } from './constants.js';
 import { buildErrorMessage, parseStringLiteral } from './utils.js';
 
 import { Command } from 'commander';
@@ -19,18 +27,20 @@ export function createCLI(): Command {
     .name(programName)
     .description('A CLI tool for generating Swiss-style tournament pairings')
     .requiredOption(
-      '-p, --players <names...>',
+      `-p, --${ARG_PLAYERS} <names...>`,
       `List of player names in order from top standing to bottom [required] \ne.g. ${examplePlayers}`
     )
     .option(
-      '-m, --matches <matches...>',
+      `-m, --${ARG_MATCHES} <matches...>`,
       `List of pairs of player names that have already played against each other \ne.g. ${exampleMatches}`,
       // eslint-disable-next-line functional/prefer-readonly-type, max-params
       (value: string, previous: string[][] = []) => {
         const matchPlayers = value.split(',');
 
         if (matchPlayers.length !== 2) {
-          exitWithInputError(`matches "${value}" is formatted incorrectly; expected "player1,player2".`);
+          exitWithInputError(
+            `${ARG_MATCHES} "${value}" is formatted incorrectly; expected "player1,player2".`
+          );
         }
         // eslint-disable-next-line functional/immutable-data
         previous.push(matchPlayers);
@@ -39,13 +49,13 @@ export function createCLI(): Command {
       }
     )
     .option(
-      '-n, --num-rounds <number>',
+      `-n, --${ARG_NUM_ROUNDS} <number>`,
       'Number of rounds to generate',
       (value: string) => {
         const parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-          exitWithInputError('num-rounds must be a positive whole number.');
+          exitWithInputError(`${ARG_NUM_ROUNDS} must be a positive whole number.`);
         }
 
         return parsed;
@@ -53,13 +63,13 @@ export function createCLI(): Command {
       1 // default to 1 round
     )
     .option(
-      '-s, --start-round <number>',
+      `-s, --${ARG_START_ROUND} <number>`,
       'Name the generated rounds starting with this number',
       (value: string) => {
         const parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-          exitWithInputError('start-round must be a positive whole number.');
+          exitWithInputError(`${ARG_START_ROUND} must be a positive whole number.`);
         }
 
         return parsed;
@@ -67,7 +77,7 @@ export function createCLI(): Command {
       1 // default to calling the first Round 1
     )
     .option(
-      `-o --order <${CLI_OPTION_ORDER.join(' | ')}>`,
+      `-o --${ARG_ORDER} <${CLI_OPTION_ORDER.join(' | ')}>`,
       'The sequence in which players should be paired.',
       (value?: string) => {
         const lowercaseValue = (value ?? '').toLowerCase();
@@ -78,7 +88,7 @@ export function createCLI(): Command {
         if (result.success) {
           return result.value;
         }
-        exitWithInputError(`order must be one of: ${CLI_OPTION_ORDER.join(', ')}.`);
+        exitWithInputError(`${ARG_ORDER} must be one of: ${CLI_OPTION_ORDER.join(', ')}.`);
       },
       CLI_OPTION_ORDER_DEFAULT
     )
