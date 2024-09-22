@@ -1,9 +1,9 @@
 import { CLIOptionOrder, CLIOptions } from './types.js';
 import { CLI_OPTION_ORDER, CLI_OPTION_ORDER_DEFAULT } from './constants.js';
+import { buildErrorMessage, parseStringLiteral } from './utils.js';
 
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';
-import { parseStringLiteral } from './utils.js';
 
 /**
  * Creates and configures the CLI command for Swiss pairing generation
@@ -30,9 +30,7 @@ export function createCLI(): Command {
         const matchPlayers = value.split(',');
 
         if (matchPlayers.length !== 2) {
-          exitWithError(
-            `Invalid input: matches "${value}" is formatted incorrectly; expected "player1,player2".`
-          );
+          exitWithInputError(`matches "${value}" is formatted incorrectly; expected "player1,player2".`);
         }
         // eslint-disable-next-line functional/immutable-data
         previous.push(matchPlayers);
@@ -47,7 +45,7 @@ export function createCLI(): Command {
         const parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-          exitWithError('Invalid input: num-rounds must be a positive whole number.');
+          exitWithInputError('num-rounds must be a positive whole number.');
         }
 
         return parsed;
@@ -61,7 +59,7 @@ export function createCLI(): Command {
         const parsed = parseInt(value, 10);
 
         if (isNaN(parsed)) {
-          exitWithError('Invalid input: start-round must be a positive whole number.');
+          exitWithInputError('start-round must be a positive whole number.');
         }
 
         return parsed;
@@ -80,7 +78,7 @@ export function createCLI(): Command {
         if (result.success) {
           return result.value;
         }
-        exitWithError(`Invalid input: order must be one of: ${CLI_OPTION_ORDER.join(', ')}.`);
+        exitWithInputError(`order must be one of: ${CLI_OPTION_ORDER.join(', ')}.`);
       },
       CLI_OPTION_ORDER_DEFAULT
     )
@@ -96,6 +94,15 @@ export function createCLI(): Command {
     });
 
   return program;
+}
+
+function exitWithInputError(message: string): never {
+  exitWithError(
+    buildErrorMessage({
+      type: 'InvalidInput',
+      message,
+    })
+  );
 }
 
 function exitWithError(message: string): never {

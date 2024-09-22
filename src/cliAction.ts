@@ -1,5 +1,5 @@
 import { CLIOptions, Result } from './types.js';
-import { createBidirectionalMap, reverse, shuffle } from './utils.js';
+import { buildErrorMessage, createBidirectionalMap, reverse, shuffle } from './utils.js';
 
 import { CLI_OPTION_ORDER_DEFAULT } from './constants.js';
 import { generateRoundMatches } from './swiss-pairing/index.js';
@@ -39,21 +39,12 @@ export function handleCLIAction({
   });
 
   if (!roundMatchesResult.success) {
-    let errorPrefix;
-
-    switch (roundMatchesResult.errorType) {
-      case 'InvalidInput':
-        errorPrefix = 'Invalid input: ';
-        break;
-      case 'InvalidOutput':
-      case 'NoValidSolution':
-        errorPrefix = 'Failed to generate matches: ';
-        break;
-    }
-
     return {
       success: false,
-      errorMessage: errorPrefix + roundMatchesResult.errorMessage,
+      errorMessage: buildErrorMessage({
+        type: roundMatchesResult.errorType,
+        message: roundMatchesResult.errorMessage,
+      }),
     };
   }
 

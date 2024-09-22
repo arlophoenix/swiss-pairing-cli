@@ -26,6 +26,8 @@ export interface GenerateRoundMatchesInput {
   readonly playedOpponents: ReadonlyPlayedOpponents;
 }
 
+export type GenerateRoundMatchesOutputErrorType = 'InvalidInput' | 'NoValidSolution' | 'InvalidOutput';
+
 /**
  * Represents the output for generating matches over multiple rounds
  */
@@ -33,7 +35,7 @@ export type GenerateRoundMatchesOutput =
   | { readonly success: true; readonly roundMatches: ReadonlyRoundMatches }
   | {
       readonly success: false;
-      readonly errorType: 'InvalidInput' | 'NoValidSolution' | 'InvalidOutput';
+      readonly errorType: GenerateRoundMatchesOutputErrorType;
       readonly errorMessage: string;
     };
 

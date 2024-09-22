@@ -1,4 +1,4 @@
-import { Result } from './types.js';
+import { GenerateRoundMatchesOutputErrorType, Result } from './types.js';
 
 /**
  * Creates a bidirectional map from an array of pairs.
@@ -87,4 +87,25 @@ export function parseStringEnum<T extends Record<string, string>>({
     success: false,
     errorMessage: errorMessage ?? `Invalid option: ${input}. Valid options are: ${values.join(', ')}`,
   };
+}
+
+export function buildErrorMessage({
+  type,
+  message,
+}: {
+  readonly type: GenerateRoundMatchesOutputErrorType;
+  readonly message: string;
+}) {
+  let errorPrefix;
+
+  switch (type) {
+    case 'InvalidInput':
+      errorPrefix = 'Invalid input';
+      break;
+    case 'InvalidOutput':
+    case 'NoValidSolution':
+      errorPrefix = 'Failed to generate matches';
+      break;
+  }
+  return `${errorPrefix}: ${message}`;
 }
