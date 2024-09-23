@@ -96,7 +96,7 @@ export function createCLI(): Command {
     )
     .option(
       `-f, --${ARG_FILE} <path>`,
-      'Path to input file (CSV or JSON). Options provided via cli take precedence over file contents.',
+      'Path to input file (CSV or JSON). File contents take precedence over options provided via cli.',
       (value: string) => {
         const result = isSupportedFileType(value);
         if (!result.success) {
@@ -115,7 +115,7 @@ export function createCLI(): Command {
       if (file) {
         try {
           const fileData = await parseFile(file);
-          options = { ...fileData, ...options };
+          options = { ...options, ...fileData };
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
           exitWithInputError(`error parsing file - ${errorMessage}`);

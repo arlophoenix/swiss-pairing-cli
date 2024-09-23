@@ -34,6 +34,15 @@ describe('Fixtures', () => {
         const output = runCLIWithFile(fixturePath);
         expect(output).toMatchSnapshot();
       });
+      if (fs.existsSync(fixturePath.replace(ext, '.txt'))) {
+        // Load arguments directly for .txt files
+        const inputWithArgs = fs.readFileSync(fixturePath.replace(ext, '.txt'), 'utf-8');
+        test(`CLI Output (args & file version match) - ${fixture}`, () => {
+          const outputWithArgs = runCLIWithArgs(inputWithArgs);
+          const outputWithFile = runCLIWithFile(fixturePath);
+          expect(outputWithFile).toEqual(outputWithArgs);
+        });
+      }
     }
   });
 });

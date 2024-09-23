@@ -1,66 +1,111 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fixtures CLI Output - Round6-1Unmodified.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
-"
-`;
-
-exports[`Fixtures CLI Output - Round6-1Unmodified-bottom-up.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["LCYig","armydan"],["Clin","iso.evil"],["Colain","Arlo"],["GreyGhost","Nzdaemon"],["Pauldog","Morgath"],["lilme","Saravock"]]}
-"
-`;
-
-exports[`Fixtures CLI Output - Round6-2GGWin.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
-"
-`;
-
-exports[`Fixtures CLI Output - Round6-3ADWin.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","armydan"],["Nzdaemon","Pauldog"],["Saravock","lilme"],["Arlo","LCYig"],["GreyGhost","Colain"],["iso.evil","Clin"]]}
-"
-`;
-
-exports[`Fixtures CLI Output - Round6-4Draw.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
-"
-`;
-
-exports[`Fixtures CLI Output - four-players-order-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output (file) - four-players-bottom-up.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["Player4","Player3"],["Player2","Player1"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-top-down.txt 1`] = `
+exports[`Fixtures CLI Output (file) - four-players-top-down.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","Player4"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output (file) - four-players-with-matches-bottom-up.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["Player4","Player2"],["Player3","Player1"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-top-down.txt 1`] = `
+exports[`Fixtures CLI Output (file) - four-players-with-matches-top-down.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","Player4"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output (file) - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
+"Matches generated successfully: {"Round 6":[["LCYig","armydan"],["Clin","iso.evil"],["Colain","Arlo"],["GreyGhost","Nzdaemon"],["Pauldog","Morgath"],["lilme","Saravock"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (file) - three-players-bottom-up.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["BYE","Player3"],["Player2","Player1"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-top-down.txt 1`] = `
+exports[`Fixtures CLI Output (file) - three-players-top-down.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","BYE"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output (file) - three-players-with-matches-bottom-up.csv 1`] = `
 "Matches generated successfully: {"Round 1":[["BYE","Player2"],["Player3","Player1"]]}
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-top-down.txt 1`] = `
+exports[`Fixtures CLI Output (file) - three-players-with-matches-top-down.csv 1`] = `
+"Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","BYE"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - four-players-bottom-up.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["Player4","Player3"],["Player2","Player1"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - four-players-top-down.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","Player4"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - four-players-with-matches-bottom-up.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["Player4","Player2"],["Player3","Player1"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - four-players-with-matches-top-down.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","Player4"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-1-unmodified.txt 1`] = `
+"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
+"Matches generated successfully: {"Round 6":[["LCYig","armydan"],["Clin","iso.evil"],["Colain","Arlo"],["GreyGhost","Nzdaemon"],["Pauldog","Morgath"],["lilme","Saravock"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-2-win-gg.txt 1`] = `
+"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-3-win-ad.txt 1`] = `
+"Matches generated successfully: {"Round 6":[["Morgath","armydan"],["Nzdaemon","Pauldog"],["Saravock","lilme"],["Arlo","LCYig"],["GreyGhost","Colain"],["iso.evil","Clin"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-4-draw.txt 1`] = `
+"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - three-players-bottom-up.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["BYE","Player3"],["Player2","Player1"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - three-players-top-down.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","BYE"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - three-players-with-matches-bottom-up.txt 1`] = `
+"Matches generated successfully: {"Round 1":[["BYE","Player2"],["Player3","Player1"]]}
+"
+`;
+
+exports[`Fixtures CLI Output (txt) - three-players-with-matches-top-down.txt 1`] = `
 "Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","BYE"]]}
 "
 `;

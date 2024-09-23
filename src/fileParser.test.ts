@@ -18,14 +18,14 @@ describe('fileParser', () => {
     describe('CSV', () => {
       it('should parse CSV file correctly', async () => {
         const mockContent =
-          'players,num-rounds,start-round,order,matches1,matches2\nAlice,3,1,random,Bob,Charlie\nBob,,,,,\nCharlie,,,,,';
+          'players,num-rounds,start-round,order,matches1,matches2\nAlice,3,2,random,Bob,Charlie\nBob,,,,,\nCharlie,,,,,';
         (readFile as jest.Mock).mockResolvedValue(mockContent);
         (papa.parse as jest.Mock).mockReturnValue({
           data: [
             {
               players: 'Alice',
               'num-rounds': '3',
-              'start-round': '1',
+              'start-round': '2',
               order: 'random',
               matches1: 'Bob',
               matches2: 'Charlie',
@@ -41,7 +41,7 @@ describe('fileParser', () => {
         expect(result).toEqual({
           players: ['Alice', 'Bob', 'Charlie'],
           numRounds: 3,
-          startRound: 1,
+          startRound: 2,
           order: 'random',
           matches: [['Bob', 'Charlie']],
         });

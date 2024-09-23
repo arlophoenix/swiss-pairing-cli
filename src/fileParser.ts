@@ -1,5 +1,3 @@
-import * as papa from 'papaparse';
-
 import {
   ARG_FILE,
   ARG_NUM_ROUNDS,
@@ -14,6 +12,7 @@ import { CLIOptionOrder, CLIOptions, ReadonlyMatch, Result, SupportedFileTypes }
 
 import { existsSync } from 'fs';
 import { extname } from 'path';
+import papa from 'papaparse';
 import { readFile } from 'fs/promises';
 import { removeNullOrUndefinedValues } from './utils.js';
 
