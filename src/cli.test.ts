@@ -46,8 +46,8 @@ describe('Swiss Pairing CLI', () => {
       expect(program.description()).toBe('A CLI tool for generating Swiss-style tournament pairings');
     });
 
-    it('should parse command line arguments correctly', () => {
-      program.parse([
+    it('should parse command line arguments correctly', async () => {
+      await program.parseAsync([
         'node',
         'swiss-pairing',
         '--players',
@@ -72,9 +72,9 @@ describe('Swiss Pairing CLI', () => {
       expect(options.order).toBe('bottom-up');
     });
 
-    it('should fail to parse command line arguments without players', () => {
-      expect(() => {
-        program.parse([
+    it('should fail to parse command line arguments without players', async () => {
+      await expect(() =>
+        program.parseAsync([
           'node',
           'swiss-pairing',
           '--num-rounds',
@@ -83,12 +83,13 @@ describe('Swiss Pairing CLI', () => {
           '0',
           '--matches',
           'Alice,Bob',
-        ]);
-      }).toThrow("required option '-p, --players <names...>' not specified");
+        ])
+      ).rejects.toThrow('Process exited with code 1');
+      expect(mockConsoleError).toHaveBeenCalledWith('Invalid input: either --players or --file is required.');
     });
 
-    it('should parse command line arguments without num-rounds', () => {
-      program.parse([
+    it('should parse command line arguments without num-rounds', async () => {
+      await program.parseAsync([
         'node',
         'swiss-pairing',
         '--players',
@@ -105,9 +106,9 @@ describe('Swiss Pairing CLI', () => {
       expect(options.numRounds).toBe(1);
     });
 
-    it('should exit for invalid num-rounds', () => {
-      expect(() => {
-        program.parse([
+    it('should exit for invalid num-rounds', async () => {
+      await expect(() =>
+        program.parseAsync([
           'node',
           'swiss-pairing',
           '--players',
@@ -118,15 +119,15 @@ describe('Swiss Pairing CLI', () => {
           'a',
           '--matches',
           'Alice,Bob',
-        ]);
-      }).toThrow('Process exited with code 1');
+        ])
+      ).rejects.toThrow('Process exited with code 1');
       expect(mockConsoleError).toHaveBeenCalledWith(
         'Invalid input: num-rounds must be a positive whole number.'
       );
     });
 
-    it('should parse command line arguments without start-rounds', () => {
-      program.parse([
+    it('should parse command line arguments without start-rounds', async () => {
+      await program.parseAsync([
         'node',
         'swiss-pairing',
         '--players',
@@ -143,9 +144,9 @@ describe('Swiss Pairing CLI', () => {
       expect(options.startRound).toBe(1);
     });
 
-    it('should exit for invalid start-rounds', () => {
-      expect(() => {
-        program.parse([
+    it('should exit for invalid start-rounds', async () => {
+      await expect(() =>
+        program.parseAsync([
           'node',
           'swiss-pairing',
           '--players',
@@ -156,15 +157,15 @@ describe('Swiss Pairing CLI', () => {
           'a',
           '--matches',
           'Alice,Bob',
-        ]);
-      }).toThrow('Process exited with code 1');
+        ])
+      ).rejects.toThrow('Process exited with code 1');
       expect(mockConsoleError).toHaveBeenCalledWith(
         'Invalid input: start-round must be a positive whole number.'
       );
     });
 
-    it('should parse command line arguments without matches', () => {
-      program.parse([
+    it('should parse command line arguments without matches', async () => {
+      await program.parseAsync([
         'node',
         'swiss-pairing',
         '--players',
@@ -181,9 +182,9 @@ describe('Swiss Pairing CLI', () => {
       expect(options.matches).toBeUndefined();
     });
 
-    it('should exit for invalid matches', () => {
-      expect(() => {
-        program.parse([
+    it('should exit for invalid matches', async () => {
+      await expect(() =>
+        program.parseAsync([
           'node',
           'swiss-pairing',
           '--players',
@@ -192,15 +193,15 @@ describe('Swiss Pairing CLI', () => {
           'Charlie',
           '--matches',
           'Alice',
-        ]);
-      }).toThrow('Process exited with code 1');
+        ])
+      ).rejects.toThrow('Process exited with code 1');
       expect(mockConsoleError).toHaveBeenCalledWith(
         'Invalid input: matches "Alice" is formatted incorrectly; expected "player1,player2".'
       );
     });
 
-    it('should parse command line arguments with multiple matches', () => {
-      program.parse([
+    it('should parse command line arguments with multiple matches', async () => {
+      await program.parseAsync([
         'node',
         'swiss-pairing',
         '--players',
@@ -229,38 +230,47 @@ describe('Swiss Pairing CLI', () => {
       ]);
     });
 
-    it('should exit for invalid order', () => {
-      expect(() => {
-        program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie', '--order', 'foo']);
-      }).toThrow('Process exited with code 1');
+    it('should exit for invalid order', async () => {
+      await expect(() =>
+        program.parseAsync([
+          'node',
+          'swiss-pairing',
+          '--players',
+          'Alice',
+          'Bob',
+          'Charlie',
+          '--order',
+          'foo',
+        ])
+      ).rejects.toThrow('Process exited with code 1');
       expect(mockConsoleError).toHaveBeenCalledWith(
         'Invalid input: order must be one of: top-down, random, bottom-up.'
       );
     });
 
-    it('should default order to top-down', () => {
-      program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
+    it('should default order to top-down', async () => {
+      await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
       const options = program.opts();
 
       expect(options.order).toBe('top-down');
     });
 
-    it('should log the result of handleCLIAction on success', () => {
+    it('should log the result of handleCLIAction on success', async () => {
       const message = 'test';
 
       mockHandleCLIAction.mockReturnValue({ success: true, value: message });
-      program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob']);
+      await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob']);
       expect(mockConsoleLog).toHaveBeenCalledWith(message);
       expect(mockConsoleError).not.toHaveBeenCalled();
     });
 
-    it('should error the result of handleCLIAction on failure', () => {
+    it('should error the result of handleCLIAction on failure', async () => {
       const message = 'test';
 
       mockHandleCLIAction.mockReturnValue({ success: false, errorMessage: message });
-      expect(() => program.parse(['node', 'swiss-pairing', '--players', 'Alice', 'Bob'])).toThrow(
-        'Process exited with code 1'
-      );
+      await expect(() =>
+        program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob'])
+      ).rejects.toThrow('Process exited with code 1');
       expect(mockConsoleError).toHaveBeenCalledWith(message);
       expect(mockConsoleLog).not.toHaveBeenCalled();
     });

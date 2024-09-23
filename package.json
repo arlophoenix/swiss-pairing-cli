@@ -55,6 +55,7 @@
     "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.5.4",
+    "@types/papaparse": "^5.3.14",
     "@typescript-eslint/eslint-plugin": "^8.5.0",
     "@typescript-eslint/parser": "^8.5.0",
     "eslint": "^9.10.0",
@@ -75,6 +76,8 @@
   },
   "type": "module",
   "dependencies": {
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "file-type": "^19.5.0",
+    "papaparse": "^5.4.1"
   }
 }

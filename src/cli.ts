@@ -1,4 +1,5 @@
 import {
+  ARG_FILE,
   ARG_MATCHES,
   ARG_NUM_ROUNDS,
   ARG_ORDER,
@@ -9,6 +10,7 @@ import {
 } from './constants.js';
 import { CLIOptionOrder, CLIOptions } from './types.js';
 import { buildErrorMessage, parseStringLiteral } from './utils.js';
+import { isSupportedFileType, parseFile } from './fileParser.js';
 
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';
@@ -26,9 +28,9 @@ export function createCLI(): Command {
   program
     .name(programName)
     .description('A CLI tool for generating Swiss-style tournament pairings')
-    .requiredOption(
+    .option(
       `-p, --${ARG_PLAYERS} <names...>`,
-      `List of player names in order from top standing to bottom [required] \ne.g. ${examplePlayers}`
+      `List of player names in order from top standing to bottom \ne.g. ${examplePlayers}`
     )
     .option(
       `-m, --${ARG_MATCHES} <matches...>`,
@@ -92,9 +94,33 @@ export function createCLI(): Command {
       },
       CLI_OPTION_ORDER_DEFAULT
     )
+    .option(
+      `-f, --${ARG_FILE} <path>`,
+      'Path to input file (CSV or JSON). Options provided via cli take precedence over file contents.',
+      (value: string) => {
+        const result = isSupportedFileType(value);
+        if (!result.success) {
+          exitWithInputError(result.errorMessage);
+        }
+        return value;
+      }
+    )
     .helpOption('-h, --help', 'Display this help information')
     .addHelpText('afterAll', `Examples:\n  ${programName} -p ${examplePlayers} -m ${exampleMatches}`)
-    .action((options: CLIOptions) => {
+    .action(async (options: CLIOptions) => {
+      if (!options.players && !options.file) {
+        exitWithInputError(`either --${ARG_PLAYERS} or --${ARG_FILE} is required.`);
+      }
+      const file = options.file;
+      if (file) {
+        try {
+          const fileData = await parseFile(file);
+          options = { ...fileData, ...options };
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          exitWithInputError(`error parsing file - ${errorMessage}`);
+        }
+      }
       const result = handleCLIAction(options);
 
       if (!result.success) {

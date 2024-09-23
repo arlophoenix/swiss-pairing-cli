@@ -1,4 +1,4 @@
-import { CLI_OPTION_ORDER } from './constants.js';
+import { CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from './constants.js';
 
 /**
  * Represents the options provided through the CLI
@@ -9,6 +9,7 @@ export interface CLIOptions {
   readonly startRound?: number;
   readonly matches?: readonly ReadonlyMatch[];
   readonly order?: CLIOptionOrder;
+  readonly file?: string;
 }
 
 /**
@@ -97,3 +98,5 @@ export type PlayedOpponents = Map<string, Set<string>>;
  * Represents the opponents already played (readonly version)
  */
 export type ReadonlyPlayedOpponents = ReadonlyMap<string, ReadonlySet<string>>;
+
+export type SupportedFileTypes = (typeof SUPPORTED_FILE_TYPES)[number];
