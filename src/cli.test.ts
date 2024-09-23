@@ -273,6 +273,82 @@ describe('Swiss Pairing CLI', () => {
       });
     });
 
+    describe('--file', () => {
+      it('should parse command line arguments with file option', async () => {
+        mockParseFile.mockResolvedValue({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 2,
+          startRound: 1,
+          order: 'random',
+        });
+
+        await program.parseAsync(['node', 'swiss-pairing', '--file', 'input.json']);
+        const options = program.opts();
+
+        expect(options.file).toBe('input.json');
+        expect(mockParseFile).toHaveBeenCalledWith('input.json');
+        expect(mockHandleCLIAction).toHaveBeenCalledWith(
+          expect.objectContaining({
+            players: ['Alice', 'Bob', 'Charlie'],
+            numRounds: 2,
+            startRound: 1,
+            order: 'random',
+            file: 'input.json',
+          })
+        );
+      });
+
+      it('should exit for unsupported file type', async () => {
+        mockIsSupportedFileType.mockReturnValue({
+          success: false,
+          errorMessage: 'Unsupported file type',
+        });
+
+        await expect(() =>
+          program.parseAsync(['node', 'swiss-pairing', '--file', 'input.txt'])
+        ).rejects.toThrow('Process exited with code 1');
+        expect(mockConsoleError).toHaveBeenCalledWith('Invalid input: Unsupported file type');
+      });
+
+      it('should exit for file parsing errors', async () => {
+        mockParseFile.mockRejectedValue(new Error('File parsing error'));
+
+        await expect(() =>
+          program.parseAsync(['node', 'swiss-pairing', '--file', 'input.json'])
+        ).rejects.toThrow('Process exited with code 1');
+        expect(mockConsoleError).toHaveBeenCalledWith(
+          'Invalid input: error parsing file - File parsing error'
+        );
+      });
+
+      it('should prioritize file contents over CLI options', async () => {
+        mockParseFile.mockResolvedValue({
+          players: ['Alice', 'Bob'],
+          numRounds: 3,
+        });
+
+        await program.parseAsync([
+          'node',
+          'swiss-pairing',
+          '--file',
+          'input.json',
+          '--players',
+          'Charlie',
+          'David',
+          '--num-rounds',
+          '2',
+        ]);
+
+        expect(mockHandleCLIAction).toHaveBeenCalledWith(
+          expect.objectContaining({
+            players: ['Alice', 'Bob'],
+            numRounds: 3,
+            file: 'input.json',
+          })
+        );
+      });
+    });
+
     describe('handleCLIAction', () => {
       it('should log the result of handleCLIAction on success', async () => {
         const message = 'test';
