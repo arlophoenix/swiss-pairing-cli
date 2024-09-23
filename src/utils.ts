@@ -70,25 +70,6 @@ export function parseStringLiteral<T extends string>({
   };
 }
 
-export function parseStringEnum<T extends Record<string, string>>({
-  input,
-  enumObj,
-  errorMessage,
-}: {
-  readonly input: string;
-  readonly enumObj: T;
-  readonly errorMessage?: string;
-}): Result<T[keyof T]> {
-  const values = Object.values(enumObj);
-  if (values.includes(input)) {
-    return { success: true, value: input as T[keyof T] };
-  }
-  return {
-    success: false,
-    errorMessage: errorMessage ?? `Invalid option: ${input}. Valid options are: ${values.join(', ')}`,
-  };
-}
-
 export function buildErrorMessage({
   type,
   message,
@@ -108,4 +89,12 @@ export function buildErrorMessage({
       break;
   }
   return `${errorPrefix}: ${message}`;
+}
+
+export function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Partial<T> {
+  return Object.entries(obj).reduce(
+    // eslint-disable-next-line max-params
+    (acc, [key, value]) => (value !== undefined ? { ...acc, [key]: value } : acc),
+    {}
+  );
 }

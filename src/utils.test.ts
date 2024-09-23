@@ -1,4 +1,4 @@
-import { createBidirectionalMap, parseStringEnum, parseStringLiteral, reverse, shuffle } from './utils.js';
+import { createBidirectionalMap, parseStringLiteral, reverse, shuffle } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
 describe('utils', () => {
@@ -125,50 +125,6 @@ describe('utils', () => {
 
     it('should be case-sensitive', () => {
       const result = parseStringLiteral({ input: 'RED', options: colors });
-      expect(result.success).toBe(false);
-    });
-  });
-
-  describe('parseStringEnum', () => {
-    enum StringStatus {
-      ACTIVE = 'active',
-      INACTIVE = 'inactive',
-      PENDING = 'pending',
-    }
-
-    it('should return success for a valid enum value', () => {
-      const result = parseStringEnum({ input: 'active', enumObj: StringStatus });
-      expect(result).toEqual({ success: true, value: 'active' });
-    });
-
-    it('should return failure for an invalid enum value', () => {
-      const result = parseStringEnum({ input: 'completed', enumObj: StringStatus });
-      expect(result).toEqual({
-        success: false,
-        errorMessage: 'Invalid option: completed. Valid options are: active, inactive, pending',
-      });
-    });
-
-    it('should use a custom error message when provided', () => {
-      const customError = 'Custom error for invalid status';
-      const result = parseStringEnum({
-        input: 'completed',
-        enumObj: StringStatus,
-        errorMessage: customError,
-      });
-      expect(result).toEqual({
-        success: false,
-        errorMessage: customError,
-      });
-    });
-
-    it('should not accept enum keys as valid inputs', () => {
-      const result = parseStringEnum({ input: 'ACTIVE', enumObj: StringStatus });
-      expect(result.success).toBe(false);
-    });
-
-    it('should be case-sensitive', () => {
-      const result = parseStringEnum({ input: 'Active', enumObj: StringStatus });
       expect(result.success).toBe(false);
     });
   });

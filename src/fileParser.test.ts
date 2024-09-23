@@ -19,7 +19,7 @@ describe('fileParser', () => {
   describe('CSV parsing', () => {
     it('should parse a valid CSV file correctly', async () => {
       const csvContent = `
-players,numRounds,startRound,order,matches1,matches2
+players,num-rounds,start-round,order,matches1,matches2
 Alice,2,1,random,Alice,Bob
 Bob,,,,,
 Charlie,,,,,
