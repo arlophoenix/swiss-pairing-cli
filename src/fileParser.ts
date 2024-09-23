@@ -131,12 +131,22 @@ function parseIntegerOption(value: string | undefined): number | undefined {
  * @returns {Partial<CLIOptions>} A partial CLIOptions object.
  */
 function parseJSON(content: string): Partial<CLIOptions> {
-  const parsed = JSON.parse(content) as Partial<CLIOptions>;
+  const parsed = JSON.parse(content) as {
+    readonly players?: readonly string[];
+    readonly 'num-rounds'?: number;
+    readonly 'start-round'?: number;
+    readonly order?: CLIOptionOrder;
+    readonly matches?: unknown;
+  };
 
-  const result = {
-    ...parsed,
+  const result: Partial<CLIOptions> = {
+    players: parsed.players,
+    numRounds: parsed['num-rounds'],
+    startRound: parsed['start-round'],
+    order: parsed.order,
     matches: Array.isArray(parsed.matches) ? parsed.matches.filter(isValidMatch) : undefined,
   };
+
   return removeNullOrUndefinedValues(result);
 }
 

@@ -117,8 +117,8 @@ describe('fileParser', () => {
       it('should parse JSON file correctly', async () => {
         const mockContent = JSON.stringify({
           players: ['Alice', 'Bob', 'Charlie'],
-          numRounds: 3,
-          startRound: 1,
+          'num-rounds': 3,
+          'start-round': 1,
           order: 'random',
           matches: [['Bob', 'Charlie']],
         });
@@ -151,7 +151,7 @@ describe('fileParser', () => {
       it('should parse JSON file with some optional fields missing', async () => {
         const mockContent = JSON.stringify({
           players: ['Alice', 'Bob', 'Charlie'],
-          numRounds: 3,
+          'num-rounds': 3,
         });
         (readFile as jest.Mock).mockResolvedValue(mockContent);
 
@@ -166,8 +166,8 @@ describe('fileParser', () => {
       it('should handle JSON file with null optional fields', async () => {
         const mockContent = JSON.stringify({
           players: ['Alice', 'Bob', 'Charlie'],
-          numRounds: null,
-          startRound: null,
+          'num-rounds': null,
+          'start-round': null,
           order: null,
           matches: null,
         });
