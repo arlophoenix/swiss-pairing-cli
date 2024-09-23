@@ -15,7 +15,7 @@ import { CLIOptionOrder, CLIOptions, ReadonlyMatch, Result, SupportedFileTypes }
 import { existsSync } from 'fs';
 import { extname } from 'path';
 import { readFile } from 'fs/promises';
-import { removeUndefinedValues } from './utils.js';
+import { removeNullOrUndefinedValues } from './utils.js';
 
 // Interface for CSV record structure
 interface CSVRecord {
@@ -78,7 +78,7 @@ function parseCSV(content: string): Partial<CLIOptions> {
     matches: extractMatchesFromRecords(records),
   } as Partial<CLIOptions>;
 
-  return removeUndefinedValues(result);
+  return removeNullOrUndefinedValues(result);
 }
 
 function extractPlayersFromCSV(records: readonly CSVRecord[]): readonly string[] | undefined {
@@ -138,7 +138,7 @@ function parseJSON(content: string): Partial<CLIOptions> {
     ...parsed,
     matches: Array.isArray(parsed.matches) ? parsed.matches.filter(isValidMatch) : undefined,
   };
-  return removeUndefinedValues(result);
+  return removeNullOrUndefinedValues(result);
 }
 
 function isValidMatch(match: unknown): match is ReadonlyMatch {

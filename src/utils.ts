@@ -91,10 +91,6 @@ export function buildErrorMessage({
   return `${errorPrefix}: ${message}`;
 }
 
-export function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Partial<T> {
-  return Object.entries(obj).reduce(
-    // eslint-disable-next-line max-params
-    (acc, [key, value]) => (value !== undefined ? { ...acc, [key]: value } : acc),
-    {}
-  );
+export function removeNullOrUndefinedValues(obj: Record<string, any>): Record<string, any> {
+  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== null && value !== null));
 }

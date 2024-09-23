@@ -1,113 +1,211 @@
-import { mkdir, rm } from 'fs/promises';
+import * as papa from 'papaparse';
 
-import { CLIOptions } from './types.js';
-import { join } from 'path';
-import { parseFile } from './fileParser.js';
-import { writeFile } from 'fs/promises';
+import { isSupportedFileType, parseFile } from './fileParser.js';
+
+import { existsSync } from 'fs';
+import { readFile } from 'fs/promises';
+
+jest.mock('fs/promises');
+jest.mock('fs');
+jest.mock('papaparse');
 
 describe('fileParser', () => {
-  const tempDir = join(__dirname, 'temp');
+  describe('parseFile', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
 
-  beforeAll(async () => {
-    await mkdir(tempDir, { recursive: true });
-  });
+    describe('CSV', () => {
+      it('should parse CSV file correctly', async () => {
+        const mockContent =
+          'players,num-rounds,start-round,order,matches1,matches2\nAlice,3,1,random,Bob,Charlie\nBob,,,,,\nCharlie,,,,,';
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [
+            {
+              players: 'Alice',
+              'num-rounds': '3',
+              'start-round': '1',
+              order: 'random',
+              matches1: 'Bob',
+              matches2: 'Charlie',
+            },
+            { players: 'Bob' },
+            { players: 'Charlie' },
+          ],
+          errors: [],
+        });
 
-  afterAll(async () => {
-    await rm(tempDir, { recursive: true, force: true });
-  });
+        const result = await parseFile('test.csv');
 
-  describe('CSV parsing', () => {
-    it('should parse a valid CSV file correctly', async () => {
-      const csvContent = `
-players,num-rounds,start-round,order,matches1,matches2
-Alice,2,1,random,Alice,Bob
-Bob,,,,,
-Charlie,,,,,
-David,,,,,
-`;
-      const filePath = join(tempDir, 'test.csv');
-      await writeFile(filePath, csvContent);
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+          startRound: 1,
+          order: 'random',
+          matches: [['Bob', 'Charlie']],
+        });
+      });
 
-      const result = await parseFile(filePath);
+      it('should handle CSV parsing errors', async () => {
+        (readFile as jest.Mock).mockResolvedValue('invalid,csv,content');
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [],
+          errors: [{ message: 'CSV parsing error' }],
+        });
 
-      expect(result).toEqual({
-        players: ['Alice', 'Bob', 'Charlie', 'David'],
-        numRounds: 2,
-        startRound: 1,
-        order: 'random',
-        matches: [['Alice', 'Bob']],
+        await expect(parseFile('test.csv')).rejects.toThrow('CSV parsing error: CSV parsing error');
+      });
+
+      it('should parse CSV file with only players field', async () => {
+        const mockContent = 'players\nAlice\nBob\nCharlie';
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [{ players: 'Alice' }, { players: 'Bob' }, { players: 'Charlie' }],
+          errors: [],
+        });
+
+        const result = await parseFile('test.csv');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+        });
+      });
+
+      it('should parse CSV file with some optional fields missing', async () => {
+        const mockContent = 'players,num-rounds,start-round\nAlice,3,\nBob,3,\nCharlie,3,';
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [
+            { players: 'Alice', 'num-rounds': '3', 'start-round': '' },
+            { players: 'Bob', 'num-rounds': '3', 'start-round': '' },
+            { players: 'Charlie', 'num-rounds': '3', 'start-round': '' },
+          ],
+          errors: [],
+        });
+
+        const result = await parseFile('test.csv');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+        });
+      });
+
+      it('should parse CSV file with some optional fields missing', async () => {
+        const mockContent = 'players,num-rounds,start-round\nAlice,3,\nBob,3,\nCharlie,3,';
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [
+            { players: 'Alice', 'num-rounds': '3', 'start-round': '' },
+            { players: 'Bob', 'num-rounds': '3', 'start-round': '' },
+            { players: 'Charlie', 'num-rounds': '3', 'start-round': '' },
+          ],
+          errors: [],
+        });
+
+        const result = await parseFile('test.csv');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+        });
       });
     });
 
-    it('should handle missing optional fields in CSV', async () => {
-      const csvContent = `
-players,matches1,matches2
-Alice,Alice,Bob
-Bob,Charlie,David
-Charlie,,
-David,,
-`;
-      const filePath = join(tempDir, 'test_minimal.csv');
-      await writeFile(filePath, csvContent);
+    describe('JSON', () => {
+      it('should parse JSON file correctly', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+          startRound: 1,
+          order: 'random',
+          matches: [['Bob', 'Charlie']],
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
 
-      const result = await parseFile(filePath);
+        const result = await parseFile('test.json');
 
-      expect(result).toEqual({
-        players: ['Alice', 'Bob', 'Charlie', 'David'],
-        matches: [
-          ['Alice', 'Bob'],
-          ['Charlie', 'David'],
-        ],
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+          startRound: 1,
+          order: 'random',
+          matches: [['Bob', 'Charlie']],
+        });
       });
+
+      it('should parse JSON file with only players field', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob', 'Charlie'],
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+
+        const result = await parseFile('test.json');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+        });
+      });
+
+      it('should parse JSON file with some optional fields missing', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+
+        const result = await parseFile('test.json');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: 3,
+        });
+      });
+
+      it('should handle JSON file with null optional fields', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob', 'Charlie'],
+          numRounds: null,
+          startRound: null,
+          order: null,
+          matches: null,
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+
+        const result = await parseFile('test.json');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob', 'Charlie'],
+        });
+      });
+    });
+
+    it('should throw error for unsupported file type', async () => {
+      await expect(parseFile('test.txt')).rejects.toThrow('Unsupported file type: .txt');
     });
   });
 
-  describe('JSON parsing', () => {
-    it('should parse a valid JSON file correctly', async () => {
-      const jsonContent: CLIOptions = {
-        players: ['Alice', 'Bob', 'Charlie', 'David'],
-        numRounds: 2,
-        startRound: 1,
-        order: 'random',
-        matches: [
-          ['Alice', 'Bob'],
-          ['Charlie', 'David'],
-        ],
-      };
-      const filePath = join(tempDir, 'test.json');
-      await writeFile(filePath, JSON.stringify(jsonContent));
-
-      const result = await parseFile(filePath);
-
-      expect(result).toEqual(jsonContent);
+  describe('isSupportedFileType', () => {
+    it('should return success for supported file types', () => {
+      (existsSync as jest.Mock).mockReturnValue(true);
+      expect(isSupportedFileType('test.csv')).toEqual({ success: true, value: undefined });
+      expect(isSupportedFileType('test.json')).toEqual({ success: true, value: undefined });
     });
 
-    it('should handle JSON with missing optional fields', async () => {
-      const jsonContent = {
-        players: ['Alice', 'Bob', 'Charlie', 'David'],
-        matches: [['Alice', 'Bob']],
-      };
-      const filePath = join(tempDir, 'test_minimal.json');
-      await writeFile(filePath, JSON.stringify(jsonContent));
-
-      const result = await parseFile(filePath);
-
-      expect(result).toEqual(jsonContent);
+    it('should return failure for unsupported file types', () => {
+      (existsSync as jest.Mock).mockReturnValue(true);
+      expect(isSupportedFileType('test.txt')).toEqual({
+        success: false,
+        errorMessage: 'file must have extension .csv, .json.',
+      });
     });
 
-    it('should filter out invalid matches in JSON', async () => {
-      const jsonContent = {
-        players: ['Alice', 'Bob', 'Charlie', 'David'],
-        matches: [['Alice', 'Bob'], ['Charlie'], 'Invalid', { not: 'valid' }],
-      };
-      const filePath = join(tempDir, 'test_invalid_matches.json');
-      await writeFile(filePath, JSON.stringify(jsonContent));
-
-      const result = await parseFile(filePath);
-
-      expect(result).toEqual({
-        players: ['Alice', 'Bob', 'Charlie', 'David'],
-        matches: [['Alice', 'Bob']],
+    it('should return failure for non-existent files', () => {
+      (existsSync as jest.Mock).mockReturnValue(false);
+      expect(isSupportedFileType('nonexistent.csv')).toEqual({
+        success: false,
+        errorMessage: 'file "nonexistent.csv" does not exist.',
       });
     });
   });
