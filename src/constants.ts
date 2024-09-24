@@ -19,6 +19,8 @@ export const CLI_OPTION_ORDER = [
 ] as const;
 
 export const CLI_OPTION_ORDER_DEFAULT: CLIOptionOrder = CLI_OPTION_ORDER_TOP_DOWN;
+export const CLI_OPTION_NUM_ROUND_DEFAULT = 1;
+export const CLI_OPTION_START_ROUND_DEFAULT = 1;
 
 export const SUPPORTED_FILE_TYPE_CSV = '.csv';
 export const SUPPORTED_FILE_TYPE_JSON = '.json';

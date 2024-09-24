@@ -5,10 +5,12 @@ import {
   ARG_ORDER,
   ARG_PLAYERS,
   ARG_START_ROUND,
+  CLI_OPTION_NUM_ROUND_DEFAULT,
   CLI_OPTION_ORDER,
   CLI_OPTION_ORDER_BOOTOM_UP,
   CLI_OPTION_ORDER_DEFAULT,
   CLI_OPTION_ORDER_RANDOM,
+  CLI_OPTION_START_ROUND_DEFAULT,
   EXAMPLE_FILE_CSV,
   EXAMPLE_FILE_JSON,
   EXAMPLE_MATCHES,
@@ -56,7 +58,7 @@ export function createCLI(): Command {
     )
     .option(
       `-n, --${ARG_NUM_ROUNDS} <number>`,
-      'Number of rounds to generate',
+      `Number of rounds to generate (default: ${String(CLI_OPTION_NUM_ROUND_DEFAULT)})`,
       (value: string) => {
         const parsed = parseInt(value, 10);
 
@@ -65,12 +67,11 @@ export function createCLI(): Command {
         }
 
         return parsed;
-      },
-      1 // default to 1 round
+      }
     )
     .option(
       `-s, --${ARG_START_ROUND} <number>`,
-      'Name the generated rounds starting with this number',
+      `Name the generated rounds starting with this number (default: ${String(CLI_OPTION_START_ROUND_DEFAULT)})`,
       (value: string) => {
         const parsed = parseInt(value, 10);
 
@@ -79,12 +80,11 @@ export function createCLI(): Command {
         }
 
         return parsed;
-      },
-      1 // default to calling the first Round 1
+      }
     )
     .option(
       `-o --${ARG_ORDER} <${CLI_OPTION_ORDER.join(' | ')}>`,
-      'The sequence in which players should be paired',
+      `The sequence in which players should be paired (default: ${CLI_OPTION_ORDER_DEFAULT})`,
       (value?: string) => {
         const lowercaseValue = (value ?? '').toLowerCase();
         const result = parseStringLiteral<CLIOptionOrder>({
@@ -95,12 +95,11 @@ export function createCLI(): Command {
           return result.value;
         }
         exitWithInputError(`${ARG_ORDER} must be one of: ${CLI_OPTION_ORDER.join(', ')}.`);
-      },
-      CLI_OPTION_ORDER_DEFAULT
+      }
     )
     .option(
       `-f, --${ARG_FILE} <path>`,
-      'Path to input file (CSV or JSON). File contents take precedence over options provided via cli',
+      'Path to input file (CSV or JSON). Options provided via cli override file contents',
       (value: string) => {
         const result = isSupportedFileType(value);
         if (!result.success) {
@@ -119,7 +118,7 @@ export function createCLI(): Command {
       if (file) {
         try {
           const fileData = await parseFile(file);
-          options = { ...options, ...fileData };
+          options = { ...fileData, ...options };
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
           exitWithInputError(`error parsing file - ${errorMessage}`);
@@ -148,7 +147,7 @@ export function exampleUsage(): string {
   ${PROGRAM_NAME} --${ARG_PLAYERS} ${EXAMPLE_PLAYERS} --${ARG_START_ROUND} 2 --${ARG_MATCHES} ${EXAMPLE_MATCHES}\n
 3. Generate pairings using a CSV file:\n
   ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_CSV}\n
-4. Generate pairings using a JSON file, providing a default pairing order:\n
+4. Generate pairings using a JSON file, overriding the pairing order:\n
   ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_JSON} --${ARG_ORDER} ${CLI_OPTION_ORDER_BOOTOM_UP}\n
 5. Generate multiple rounds of pairings:\n
   ${PROGRAM_NAME} --${ARG_PLAYERS} ${EXAMPLE_PLAYERS} --${ARG_NUM_ROUNDS} 3`;

@@ -1,4 +1,9 @@
-import { BYE_PLAYER, CLI_OPTION_ORDER_DEFAULT } from './constants.js';
+import {
+  BYE_PLAYER,
+  CLI_OPTION_NUM_ROUND_DEFAULT,
+  CLI_OPTION_ORDER_DEFAULT,
+  CLI_OPTION_START_ROUND_DEFAULT,
+} from './constants.js';
 import { CLIOptions, Result } from './types.js';
 import { buildErrorMessage, createBidirectionalMap, reverse, shuffle } from './utils.js';
 
@@ -11,8 +16,8 @@ import { generateRoundMatches } from './swiss-pairing/index.js';
 // This exists in a seperate file mainly to enable mocking for test
 export function handleCLIAction({
   players = [],
-  numRounds = 1,
-  startRound = 1,
+  numRounds = CLI_OPTION_NUM_ROUND_DEFAULT,
+  startRound = CLI_OPTION_START_ROUND_DEFAULT,
   matches = [],
   order = CLI_OPTION_ORDER_DEFAULT,
 }: CLIOptions): Result<string> {

@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
+import { start } from 'repl';
 
 describe('Swiss Pairing CLI', () => {
   let mockConsoleLog: SpyInstance;
@@ -65,8 +66,8 @@ Options:
   e.g. \"Alice,Bob\" \"Charlie,David\"
   -n, --num-rounds <number>                   Number of rounds to generate (default: 1)
   -s, --start-round <number>                  Name the generated rounds starting with this number (default: 1)
-  -o --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: \"top-down\")
-  -f, --file <path>                           Path to input file (CSV or JSON). File contents take precedence over options provided via cli
+  -o --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: top-down)
+  -f, --file <path>                           Path to input file (CSV or JSON). Options provided via cli override file contents
   -h, --help                                  Display this help information
 
 Examples:
@@ -83,7 +84,7 @@ Examples:
 
   swiss-pairing --file tournament_data.csv
 
-4. Generate pairings using a JSON file, providing a default pairing order:
+4. Generate pairings using a JSON file, overriding the pairing order:
 
   swiss-pairing --file tournament_data.json --order bottom-up
 
@@ -139,21 +140,10 @@ Examples:
 
     describe('--num-rounds', () => {
       it('should parse command line arguments without num-rounds', async () => {
-        await program.parseAsync([
-          'node',
-          'swiss-pairing',
-          '--players',
-          'Alice',
-          'Bob',
-          'Charlie',
-          '--start-round',
-          '0',
-          '--matches',
-          'Alice,Bob',
-        ]);
+        await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
         const options = program.opts();
 
-        expect(options.numRounds).toBe(1);
+        expect(options.numRounds).toBe(undefined);
       });
 
       it('should exit for invalid num-rounds', async () => {
@@ -179,21 +169,10 @@ Examples:
 
     describe('--start-rounds', () => {
       it('should parse command line arguments without start-rounds', async () => {
-        await program.parseAsync([
-          'node',
-          'swiss-pairing',
-          '--players',
-          'Alice',
-          'Bob',
-          'Charlie',
-          '--num-rounds',
-          '2',
-          '--matches',
-          'Alice,Bob',
-        ]);
+        await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
         const options = program.opts();
 
-        expect(options.startRound).toBe(1);
+        expect(options.startRound).toBe(undefined);
       });
 
       it('should exit for invalid start-rounds', async () => {
@@ -304,11 +283,11 @@ Examples:
         );
       });
 
-      it('should default order to top-down', async () => {
+      it('should default order to undefined', async () => {
         await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', 'Charlie']);
         const options = program.opts();
 
-        expect(options.order).toBe('top-down');
+        expect(options.order).toBe(undefined);
       });
     });
 
@@ -360,10 +339,12 @@ Examples:
         );
       });
 
-      it('should prioritize file contents over CLI options', async () => {
+      it('should prioritize CLI options over file contents', async () => {
         mockParseFile.mockResolvedValue({
           players: ['Alice', 'Bob'],
-          numRounds: 3,
+          numRounds: 2,
+          startRound: 1,
+          order: 'random',
         });
 
         await program.parseAsync([
@@ -375,13 +356,19 @@ Examples:
           'Charlie',
           'David',
           '--num-rounds',
-          '2',
+          '3',
+          '--start-round',
+          '0',
+          '--order',
+          'bottom-up',
         ]);
 
         expect(mockHandleCLIAction).toHaveBeenCalledWith(
           expect.objectContaining({
-            players: ['Alice', 'Bob'],
+            players: ['Charlie', 'David'],
             numRounds: 3,
+            startRound: 0,
+            order: 'bottom-up',
             file: 'input.json',
           })
         );
