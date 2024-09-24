@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-import { helpWithExamples } from '../src/cli.js';
+import { helpWithExamples } from '../src/cli/cli.js';
 
 // Generate CLI usage information
 const usage = helpWithExamples();

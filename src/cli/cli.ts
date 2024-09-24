@@ -19,9 +19,9 @@ import {
   EXAMPLE_MATCHES,
   EXAMPLE_PLAYERS,
   PROGRAM_NAME,
-} from './constants.js';
-import { CLIOptionFormat, CLIOptionOrder, CLIOptions, Result } from './types.js';
-import { buildErrorMessage, parseStringLiteral } from './utils.js';
+} from '../constants.js';
+import { CLIOptionFormat, CLIOptionOrder, CLIOptions, Result } from '../types.js';
+import { buildErrorMessage, parseStringLiteral } from '../utils.js';
 import { isSupportedFileType, parseFile } from './fileParser.js';
 
 import { Command } from 'commander';

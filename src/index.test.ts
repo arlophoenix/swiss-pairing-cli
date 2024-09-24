@@ -1,5 +1,5 @@
 /* eslint-disable functional/prefer-readonly-type */
-import { createCLI } from './cli.js';
+import { createCLI } from './cli/cli.js';
 
 // Define an interface for the mock program
 interface MockProgram {
@@ -7,7 +7,7 @@ interface MockProgram {
 }
 
 // Update the mock to use the interface
-jest.mock('./cli.js', () => ({
+jest.mock('./cli/cli.js', () => ({
   createCLI: jest.fn(
     (): MockProgram => ({
       parse: jest.fn(),

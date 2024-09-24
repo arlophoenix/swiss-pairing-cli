@@ -10,7 +10,7 @@ import {
   SUPPORTED_FILE_TYPES,
   SUPPORTED_FILE_TYPE_CSV,
   SUPPORTED_FILE_TYPE_JSON,
-} from './constants.js';
+} from '../constants.js';
 import {
   CLIOptionFormat,
   CLIOptionOrder,
@@ -18,8 +18,8 @@ import {
   ReadonlyMatch,
   Result,
   SupportedFileTypes,
-} from './types.js';
-import { parseStringLiteralSilently, removeNullOrUndefinedValues } from './utils.js';
+} from '../types.js';
+import { parseStringLiteralSilently, removeNullOrUndefinedValues } from '../utils.js';
 
 import { existsSync } from 'fs';
 import { extname } from 'path';

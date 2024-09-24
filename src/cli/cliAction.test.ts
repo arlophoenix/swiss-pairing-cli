@@ -1,11 +1,11 @@
 import * as cliAction from './cliAction.js';
-import * as swissPairing from './swiss-pairing/swissPairing.js';
-import * as utils from './utils.js';
+import * as swissPairing from '../swiss-pairing/swissPairing.js';
+import * as utils from '../utils.js';
 
-import { CLIOptions, ReadonlyRoundMatches } from './types.js';
+import { CLIOptions, ReadonlyRoundMatches } from '../types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { BYE_PLAYER } from './constants.js';
+import { BYE_PLAYER } from '../constants.js';
 import type { SpyInstance } from 'jest-mock';
 
 function mockShuffleImplementation<T>(arr: readonly T[]): readonly T[] {
