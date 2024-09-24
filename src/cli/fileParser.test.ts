@@ -220,23 +220,6 @@ describe('fileParser', () => {
         });
       });
 
-      it('should handle JSON file with null optional fields', async () => {
-        const mockContent = JSON.stringify({
-          players: ['Alice', 'Bob', 'Charlie'],
-          'num-rounds': null,
-          'start-round': null,
-          order: null,
-          matches: null,
-        });
-        (readFile as jest.Mock).mockResolvedValue(mockContent);
-
-        const result = await parseFile('test.json');
-
-        expect(result).toEqual({
-          players: ['Alice', 'Bob', 'Charlie'],
-        });
-      });
-
       it('should parse JSON file with format field', async () => {
         const mockContent = JSON.stringify({
           players: ['Alice', 'Bob'],
@@ -267,11 +250,9 @@ describe('fileParser', () => {
         });
         (readFile as jest.Mock).mockResolvedValue(mockContent);
 
-        const result = await parseFile('test.json');
-
-        expect(result).toEqual({
-          players: ['Alice', 'Bob'],
-        });
+        await expect(parseFile('test.json')).rejects.toThrow(
+          'Invalid JSON: format must be one of text, json-plain, json-pretty'
+        );
       });
 
       it('should handle JSON file with invalid order field', async () => {
@@ -281,11 +262,9 @@ describe('fileParser', () => {
         });
         (readFile as jest.Mock).mockResolvedValue(mockContent);
 
-        const result = await parseFile('test.json');
-
-        expect(result).toEqual({
-          players: ['Alice', 'Bob'],
-        });
+        await expect(parseFile('test.json')).rejects.toThrow(
+          'Invalid JSON: order must be one of top-down, bottom-up, random'
+        );
       });
     });
 

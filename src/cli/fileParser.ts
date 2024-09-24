@@ -1,6 +1,7 @@
 import {
   ARG_FILE,
   ARG_FORMAT,
+  ARG_MATCHES,
   ARG_NUM_ROUNDS,
   ARG_ORDER,
   ARG_PLAYERS,
@@ -38,10 +39,10 @@ interface CSVRecord {
 }
 
 interface JSONRecord {
-  readonly format?: string;
-  readonly matches?: unknown;
+  readonly format?: CLIOptionFormat;
+  readonly matches?: readonly ReadonlyMatch[];
   readonly 'num-rounds'?: number;
-  readonly order?: string;
+  readonly order?: CLIOptionOrder;
   readonly players?: readonly string[];
   readonly 'start-round'?: number;
 }
@@ -159,24 +160,65 @@ function parseIntegerOption(value: string | undefined): number | undefined {
  * @returns {Partial<CLIOptions>} A partial CLIOptions object.
  */
 function parseJSON(content: string): Partial<CLIOptions> {
-  const parsedJSON = JSON.parse(content) as JSONRecord;
+  const parsedJSON = JSON.parse(content) as unknown;
+
+  assertJSONRecord(parsedJSON);
 
   const result: Partial<CLIOptions> = {
-    format: parseStringLiteralSilently<CLIOptionFormat>({
-      input: parsedJSON.format,
-      options: CLI_OPTION_FORMAT,
-    }),
-    matches: Array.isArray(parsedJSON.matches) ? parsedJSON.matches.filter(isValidMatch) : undefined,
-    numRounds: parsedJSON['num-rounds'],
-    order: parseStringLiteralSilently<CLIOptionOrder>({
-      input: parsedJSON.order,
-      options: CLI_OPTION_ORDER,
-    }),
-    players: parsedJSON.players,
-    startRound: parsedJSON['start-round'],
+    players: parsedJSON[ARG_PLAYERS],
+    numRounds: parsedJSON[ARG_NUM_ROUNDS],
+    startRound: parsedJSON[ARG_START_ROUND],
+    order: parsedJSON[ARG_ORDER],
+    matches: parsedJSON[ARG_MATCHES],
+    format: parsedJSON[ARG_FORMAT],
   };
 
   return removeNullOrUndefinedValues(result);
+}
+
+function assertJSONRecord(obj: unknown): asserts obj is JSONRecord {
+  if (typeof obj !== 'object' || obj === null) {
+    throw new Error('Invalid JSON: not an object');
+  }
+
+  const record = obj as Record<string, unknown>;
+
+  if (ARG_PLAYERS in record && !Array.isArray(record[ARG_PLAYERS])) {
+    throw new Error(`Invalid JSON: ${ARG_PLAYERS} must be an array`);
+  }
+  if (ARG_NUM_ROUNDS in record) {
+    const numRounds = record[ARG_NUM_ROUNDS];
+    if (typeof numRounds !== 'number' || numRounds < 1) {
+      throw new Error(`Invalid JSON: ${ARG_NUM_ROUNDS} must be a number >= 1`);
+    }
+  }
+  if (ARG_START_ROUND in record) {
+    const startRound = record[ARG_START_ROUND];
+    if (typeof startRound !== 'number' || startRound < 1) {
+      throw new Error(`Invalid JSON: ${ARG_START_ROUND} must be a number >= 1`);
+    }
+  }
+  if (ARG_ORDER in record) {
+    if (
+      typeof record[ARG_ORDER] !== 'string' ||
+      !CLI_OPTION_ORDER.includes(record[ARG_ORDER] as CLIOptionOrder)
+    ) {
+      throw new Error(`Invalid JSON: ${ARG_ORDER} must be one of ${CLI_OPTION_ORDER.join(', ')}`);
+    }
+  }
+  if (ARG_FORMAT in record) {
+    if (
+      typeof record[ARG_FORMAT] !== 'string' ||
+      !CLI_OPTION_FORMAT.includes(record[ARG_FORMAT] as CLIOptionFormat)
+    ) {
+      throw new Error(`Invalid JSON: ${ARG_FORMAT} must be one of ${CLI_OPTION_FORMAT.join(', ')}`);
+    }
+  }
+  if (ARG_MATCHES in record) {
+    if (!Array.isArray(record[ARG_MATCHES]) || !record[ARG_MATCHES].every(isValidMatch)) {
+      throw new Error(`Invalid JSON: ${ARG_MATCHES} must be an array of valid matches`);
+    }
+  }
 }
 
 function isValidMatch(match: unknown): match is ReadonlyMatch {
