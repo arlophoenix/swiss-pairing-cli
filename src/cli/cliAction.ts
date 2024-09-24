@@ -1,16 +1,14 @@
 import {
   BYE_PLAYER,
   CLI_OPTION_FORMAT_DEFAULT,
-  CLI_OPTION_FORMAT_JSON_PLAIN,
-  CLI_OPTION_FORMAT_JSON_PRETTY,
-  CLI_OPTION_FORMAT_TEXT,
   CLI_OPTION_NUM_ROUND_DEFAULT,
   CLI_OPTION_ORDER_DEFAULT,
   CLI_OPTION_START_ROUND_DEFAULT,
 } from '../constants.js';
-import { CLIOptionFormat, CLIOptionOrder, CLIOptions, ReadonlyRoundMatches, Result } from '../types.js';
+import { CLIOptionOrder, CLIOptions, Result } from '../types.js';
 import { buildErrorMessage, createBidirectionalMap, reverse, shuffle } from '../utils.js';
 
+import { formatOutput } from './outputFormatter.js';
 import { generateRoundMatches } from '../swiss-pairing/swissPairing.js';
 
 /**
@@ -71,23 +69,6 @@ function preparePlayers({
   }
 }
 
-function formatOutput({
-  roundMatches,
-  format,
-}: {
-  readonly roundMatches: ReadonlyRoundMatches;
-  readonly format: CLIOptionFormat;
-}): string {
-  switch (format) {
-    case CLI_OPTION_FORMAT_JSON_PLAIN:
-      return JSON.stringify(roundMatches);
-    case CLI_OPTION_FORMAT_JSON_PRETTY:
-      return JSON.stringify(roundMatches, null, 2);
-    case CLI_OPTION_FORMAT_TEXT:
-      return formatRoundMatchesAsMarkdown(roundMatches);
-  }
-}
-
 /**
  * Adds a 'BYE' player if necessary to ensure an even number of players
  * @param {readonly string[]} players - The original list of players
@@ -95,22 +76,4 @@ function formatOutput({
  */
 function addByePlayerIfNecessary(players: readonly string[]): readonly string[] {
   return players.length % 2 === 1 ? [...players, BYE_PLAYER] : players;
-}
-
-function formatRoundMatchesAsMarkdown(roundMatches: ReadonlyRoundMatches): string {
-  const rounds = Object.entries(roundMatches);
-  const multipleRounds = rounds.length > 1;
-
-  let output = multipleRounds ? '# Matches\n\n' : '';
-
-  rounds.forEach(([round, matches]) => {
-    output += `**${round}**\n\n`;
-    // eslint-disable-next-line max-params
-    matches.forEach((match, index) => {
-      output += `${String(index + 1)}. ${match[0]} vs ${match[1]}\n`;
-    });
-    output += '\n';
-  });
-
-  return output.trim();
 }
