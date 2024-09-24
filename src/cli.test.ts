@@ -53,6 +53,45 @@ describe('Swiss Pairing CLI', () => {
       expect(program.description()).toBe('A CLI tool for generating Swiss-style tournament pairings');
     });
 
+    it('should provide useful help information and examples', () => {
+      expect(cli.helpWithExamples()).toEqual(`Usage: swiss-pairing [options]
+
+A CLI tool for generating Swiss-style tournament pairings
+
+Options:
+  -p, --players <names...>                    List of player names in order from top standing to bottom
+  e.g. Alice Bob Charlie David
+  -m, --matches <matches...>                  List of pairs of player names that have already played against each other
+  e.g. \"Alice,Bob\" \"Charlie,David\"
+  -n, --num-rounds <number>                   Number of rounds to generate (default: 1)
+  -s, --start-round <number>                  Name the generated rounds starting with this number (default: 1)
+  -o --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: \"top-down\")
+  -f, --file <path>                           Path to input file (CSV or JSON). File contents take precedence over options provided via cli
+  -h, --help                                  Display this help information
+
+Examples:
+
+1. Generate random pairings for 4 players:
+
+  swiss-pairing --players Alice Bob Charlie David --order random
+
+2. Generate pairings for 4 players, on round 2, with some matches already played:
+
+  swiss-pairing --players Alice Bob Charlie David --start-round 2 --matches \"Alice,Bob\" \"Charlie,David\"
+
+3. Generate pairings using a CSV file:
+
+  swiss-pairing --file tournament_data.csv
+
+4. Generate pairings using a JSON file, providing a default pairing order:
+
+  swiss-pairing --file tournament_data.json --order bottom-up
+
+5. Generate multiple rounds of pairings:
+
+  swiss-pairing --players Alice Bob Charlie David --num-rounds 3`);
+    });
+
     it('should parse command line arguments correctly', async () => {
       await program.parseAsync([
         'node',
@@ -261,7 +300,7 @@ describe('Swiss Pairing CLI', () => {
           ])
         ).rejects.toThrow('Process exited with code 1');
         expect(mockConsoleError).toHaveBeenCalledWith(
-          'Invalid input: order must be one of: top-down, random, bottom-up.'
+          'Invalid input: order must be one of: top-down, bottom-up, random.'
         );
       });
 

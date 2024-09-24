@@ -1,9 +1,9 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-import { createCLI } from '../src/cli.js';
+import { helpWithExamples } from '../src/cli.js';
 
 // Generate CLI usage information
-const usage = createCLI().helpInformation();
+const usage = helpWithExamples();
 
 // Read the current README.md
 let readme = readFileSync('README.md', 'utf8');

@@ -22,7 +22,12 @@ or you can use npx to run it directly:
 npx swiss-pairing ...options
 ```
 
-## Help
+## Usage
+
+You can use the Swiss Pairing CLI in two ways:
+
+1. Providing options directly via command-line arguments
+2. Using an input file (CSV or JSON format)
 
 <!-- CLI_USAGE_START -->
 
@@ -32,18 +37,91 @@ Usage: swiss-pairing [options]
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -p, --players <names...>                    List of player names in order from top standing to bottom 
-  e.g. player1 player2 player3 player4
-  -m, --matches <matches...>                  List of pairs of player names that have already played against each other 
-  e.g. "player1,player2" "player3,player4"
+  -p, --players <names...>                    List of player names in order from top standing to bottom
+  e.g. Alice Bob Charlie David
+  -m, --matches <matches...>                  List of pairs of player names that have already played against each other
+  e.g. "Alice,Bob" "Charlie,David"
   -n, --num-rounds <number>                   Number of rounds to generate (default: 1)
   -s, --start-round <number>                  Name the generated rounds starting with this number (default: 1)
-  -o --order <top-down | random | bottom-up>  The sequence in which players should be paired. (default: "top-down")
-  -f, --file <path>                           Path to input file (CSV or JSON). File contents take precedence over options provided via cli.
+  -o --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: "top-down")
+  -f, --file <path>                           Path to input file (CSV or JSON). File contents take precedence over options provided via cli
   -h, --help                                  Display this help information
-```
+
+Examples:
+
+1. Generate random pairings for 4 players:
+
+  swiss-pairing --players Alice Bob Charlie David --order random
+
+2. Generate pairings for 4 players, on round 2, with some matches already played:
+
+  swiss-pairing --players Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
+
+3. Generate pairings using a CSV file:
+
+  swiss-pairing --file tournament_data.csv
+
+4. Generate pairings using a JSON file, providing a default pairing order:
+
+  swiss-pairing --file tournament_data.json --order bottom-up
+
+5. Generate multiple rounds of pairings:
+
+  swiss-pairing --players Alice Bob Charlie David --num-rounds 3```
 
 <!-- CLI_USAGE_END -->
+
+### Using Input Files
+
+You can provide tournament data using CSV or JSON files. To use a file, use the `-f` or `--file` option:
+
+```bash
+swiss-pairing --file path/to/your/input.csv
+````
+
+or
+
+```bash
+swiss-pairing --file path/to/your/input.json
+```
+
+Note: When using an input file, any options provided via command-line arguments will be overridden by the file contents.
+
+#### CSV File Format
+
+The CSV file should have the following structure:
+
+```csv
+players,num-rounds,start-round,order,matches1,matches2
+Player1,3,1,random,Player2,Player3
+Player2,,,,
+Player3,,,,
+Player4,,,,
+```
+
+- The first row must be a header
+- Column headers correspond to the CLI options except matches which is split into two columns: matches1 and matches2
+- The `players` column is required
+
+#### JSON File Format
+
+The JSON file should have the following structure:
+
+```json
+{
+  "players": ["Player1", "Player2", "Player3", "Player4"],
+  "num-rounds": 3,
+  "start-round": 1,
+  "order": "random",
+  "matches": [
+    ["Player1", "Player2"],
+    ["Player3", "Player4"]
+  ]
+}
+```
+
+- Fields in the JSON file correspond to the CLI options
+- The `players` column is required
 
 ## Development
 
