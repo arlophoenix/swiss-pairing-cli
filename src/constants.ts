@@ -10,11 +10,11 @@ export const ARG_START_ROUND = 'start-round';
 export const BYE_PLAYER = 'BYE';
 
 export const CLI_OPTION_ORDER_TOP_DOWN = 'top-down';
-export const CLI_OPTION_ORDER_BOOTOM_UP = 'bottom-up';
+export const CLI_OPTION_ORDER_BOTOM_UP = 'bottom-up';
 export const CLI_OPTION_ORDER_RANDOM = 'random';
 export const CLI_OPTION_ORDER = [
   CLI_OPTION_ORDER_TOP_DOWN,
-  CLI_OPTION_ORDER_BOOTOM_UP,
+  CLI_OPTION_ORDER_BOTOM_UP,
   CLI_OPTION_ORDER_RANDOM,
 ] as const;
 

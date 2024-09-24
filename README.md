@@ -37,20 +37,20 @@ Usage: swiss-pairing [options]
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -p, --players <names...>                    List of player names in order from top standing
-                                              to bottom
-                                              e.g. Alice Bob Charlie David
-  -m, --matches <matches...>                  List of pairs of player names that have already
-                                              played against each other
-                                              e.g. "Alice,Bob" "Charlie,David"
-  -n, --num-rounds <number>                   Number of rounds to generate (default: 1)
-  -s, --start-round <number>                  Name the generated rounds starting with this
-                                              number (default: 1)
-  -o --order <top-down | bottom-up | random>  The sequence in which players should be paired
-                                              (default: top-down)
-  -f, --file <path>                           Path to input file (CSV or JSON). Options
-                                              provided via cli override file contents
-  -h, --help                                  Display this help information
+  -p, --players <names...>                     List of player names in order from top
+                                               standing to bottom
+                                               e.g. Alice Bob Charlie David
+  -m, --matches <matches...>                   List of pairs of player names that have
+                                               already played against each other
+                                               e.g. "Alice,Bob" "Charlie,David"
+  -n, --num-rounds <number>                    Number of rounds to generate (default: 1)
+  -s, --start-round <number>                   Name the generated rounds starting with this
+                                               number (default: 1)
+  -o, --order <top-down | bottom-up | random>  The sequence in which players should be paired
+                                               (default: top-down)
+  -f, --file <path>                            Path to input file (CSV or JSON). Options
+                                               provided via cli override file contents
+  -h, --help                                   Display this help information
 
 Examples:
 

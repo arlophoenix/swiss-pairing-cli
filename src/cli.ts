@@ -7,7 +7,7 @@ import {
   ARG_START_ROUND,
   CLI_OPTION_NUM_ROUND_DEFAULT,
   CLI_OPTION_ORDER,
-  CLI_OPTION_ORDER_BOOTOM_UP,
+  CLI_OPTION_ORDER_BOTOM_UP,
   CLI_OPTION_ORDER_DEFAULT,
   CLI_OPTION_ORDER_RANDOM,
   CLI_OPTION_START_ROUND_DEFAULT,
@@ -83,7 +83,7 @@ export function createCLI(): Command {
       }
     )
     .option(
-      `-o --${ARG_ORDER} <${CLI_OPTION_ORDER.join(' | ')}>`,
+      `-o, --${ARG_ORDER} <${CLI_OPTION_ORDER.join(' | ')}>`,
       `The sequence in which players should be paired (default: ${CLI_OPTION_ORDER_DEFAULT})`,
       (value?: string) => {
         const lowercaseValue = (value ?? '').toLowerCase();
@@ -148,7 +148,7 @@ export function exampleUsage(): string {
 3. Generate pairings using a CSV file:\n
   ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_CSV}\n
 4. Generate pairings using a JSON file, overriding the pairing order:\n
-  ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_JSON} --${ARG_ORDER} ${CLI_OPTION_ORDER_BOOTOM_UP}\n
+  ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_JSON} --${ARG_ORDER} ${CLI_OPTION_ORDER_BOTOM_UP}\n
 5. Generate multiple rounds of pairings:\n
   ${PROGRAM_NAME} --${ARG_PLAYERS} ${EXAMPLE_PLAYERS} --${ARG_NUM_ROUNDS} 3`;
 }
