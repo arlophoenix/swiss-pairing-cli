@@ -40,7 +40,7 @@ export function parseJSON(content: string): Partial<CLIOptions> {
 }
 
 function assertJSONRecord(obj: unknown): asserts obj is JSONRecord {
-  if (typeof obj !== 'object' || obj === null) {
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
     throw new Error('Invalid JSON: not an object');
   }
 
@@ -51,13 +51,13 @@ function assertJSONRecord(obj: unknown): asserts obj is JSONRecord {
   }
   if (ARG_NUM_ROUNDS in record) {
     const numRounds = record[ARG_NUM_ROUNDS];
-    if (typeof numRounds !== 'number' || numRounds < 1) {
+    if (typeof numRounds !== 'number' || numRounds < 1 || !Number.isInteger(numRounds)) {
       throwInvalidJSONValueError({ argName: ARG_NUM_ROUNDS, record, expectedValue: 'a positive integer' });
     }
   }
   if (ARG_START_ROUND in record) {
     const startRound = record[ARG_START_ROUND];
-    if (typeof startRound !== 'number' || startRound < 1) {
+    if (typeof startRound !== 'number' || startRound < 1 || !Number.isInteger(startRound)) {
       throwInvalidJSONValueError({ argName: ARG_START_ROUND, record, expectedValue: 'a positive integer' });
     }
   }
@@ -79,7 +79,11 @@ function assertJSONRecord(obj: unknown): asserts obj is JSONRecord {
   }
   if (ARG_MATCHES in record) {
     if (!Array.isArray(record[ARG_MATCHES]) || !record[ARG_MATCHES].every(isValidMatch)) {
-      throwInvalidJSONValueError({ argName: ARG_FORMAT, record, expectedValue: 'an array of valid matches' });
+      throwInvalidJSONValueError({
+        argName: ARG_MATCHES,
+        record,
+        expectedValue: 'an array of valid matches',
+      });
     }
   }
 }
