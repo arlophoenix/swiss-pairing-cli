@@ -92,14 +92,17 @@ describe('fileParser', () => {
         });
       });
 
-      it('should parse CSV file with some optional fields missing', async () => {
-        const mockContent = 'players,num-rounds,start-round\nAlice,3,\nBob,3,\nCharlie,3,';
+      it('should parse CSV file with invalid order field', async () => {
+        const mockContent = 'players,num-rounds,start-round,order\nAlice,3,2,invalid-order';
         (readFile as jest.Mock).mockResolvedValue(mockContent);
         (papa.parse as jest.Mock).mockReturnValue({
           data: [
-            { players: 'Alice', 'num-rounds': '3', 'start-round': '' },
-            { players: 'Bob', 'num-rounds': '3', 'start-round': '' },
-            { players: 'Charlie', 'num-rounds': '3', 'start-round': '' },
+            {
+              players: 'Alice',
+              'num-rounds': '3',
+              'start-round': '2',
+              order: 'invalid-order',
+            },
           ],
           errors: [],
         });
@@ -107,8 +110,9 @@ describe('fileParser', () => {
         const result = await parseFile('test.csv');
 
         expect(result).toEqual({
-          players: ['Alice', 'Bob', 'Charlie'],
+          players: ['Alice'],
           numRounds: 3,
+          startRound: 2,
         });
       });
     });
@@ -177,6 +181,20 @@ describe('fileParser', () => {
 
         expect(result).toEqual({
           players: ['Alice', 'Bob', 'Charlie'],
+        });
+      });
+
+      it('should handle JSON file with invalid order field', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob'],
+          order: 'invalid-order',
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+
+        const result = await parseFile('test.json');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob'],
         });
       });
     });

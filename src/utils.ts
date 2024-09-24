@@ -70,6 +70,22 @@ export function parseStringLiteral<T extends string>({
   };
 }
 
+export function parseStringLiteralSilently<T extends string>({
+  input,
+  options,
+}: {
+  readonly input: string | undefined;
+  readonly options: readonly T[];
+}): T | undefined {
+  if (input === undefined) {
+    return undefined;
+  }
+  if (options.includes(input as T)) {
+    return input as T;
+  }
+  return undefined;
+}
+
 export function buildErrorMessage({
   type,
   message,
