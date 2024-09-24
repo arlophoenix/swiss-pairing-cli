@@ -1,5 +1,9 @@
 import {
   BYE_PLAYER,
+  CLI_OPTION_FORMAT_DEFAULT,
+  CLI_OPTION_FORMAT_JSON_PLAIN,
+  CLI_OPTION_FORMAT_JSON_PRETTY,
+  CLI_OPTION_FORMAT_TEXT,
   CLI_OPTION_NUM_ROUND_DEFAULT,
   CLI_OPTION_ORDER_DEFAULT,
   CLI_OPTION_START_ROUND_DEFAULT,
@@ -20,6 +24,7 @@ export function handleCLIAction({
   startRound = CLI_OPTION_START_ROUND_DEFAULT,
   matches = [],
   order = CLI_OPTION_ORDER_DEFAULT,
+  format = CLI_OPTION_FORMAT_DEFAULT,
 }: CLIOptions): Result<string> {
   const playedMatches = createBidirectionalMap(matches);
 
@@ -53,9 +58,22 @@ export function handleCLIAction({
     };
   }
 
+  let message: string;
+
+  switch (format) {
+    case CLI_OPTION_FORMAT_JSON_PLAIN:
+      message = JSON.stringify(roundMatchesResult.roundMatches);
+      break;
+    case CLI_OPTION_FORMAT_JSON_PRETTY:
+      message = JSON.stringify(roundMatchesResult.roundMatches, null, 2);
+      break;
+    case CLI_OPTION_FORMAT_TEXT:
+      message = 'Matches generated successfully: ' + JSON.stringify(roundMatchesResult.roundMatches);
+  }
+
   return {
     success: true,
-    value: 'Matches generated successfully: ' + JSON.stringify(roundMatchesResult.roundMatches),
+    value: message,
   };
 }
 

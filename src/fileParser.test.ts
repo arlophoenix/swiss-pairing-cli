@@ -92,6 +92,59 @@ describe('fileParser', () => {
         });
       });
 
+      it('should parse CSV file with format field', async () => {
+        const mockContent = 'players,num-rounds,start-round,order,format\nAlice,3,2,random,json-pretty';
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [
+            {
+              players: 'Alice',
+              'num-rounds': '3',
+              'start-round': '2',
+              order: 'random',
+              format: 'json-pretty',
+            },
+          ],
+          errors: [],
+        });
+
+        const result = await parseFile('test.csv');
+
+        expect(result).toEqual({
+          players: ['Alice'],
+          numRounds: 3,
+          startRound: 2,
+          order: 'random',
+          format: 'json-pretty',
+        });
+      });
+
+      it('should parse CSV file with invalid format field', async () => {
+        const mockContent = 'players,num-rounds,start-round,order,format\nAlice,3,2,random,invalid-format';
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+        (papa.parse as jest.Mock).mockReturnValue({
+          data: [
+            {
+              players: 'Alice',
+              'num-rounds': '3',
+              'start-round': '2',
+              order: 'random',
+              format: 'invalid-format',
+            },
+          ],
+          errors: [],
+        });
+
+        const result = await parseFile('test.csv');
+
+        expect(result).toEqual({
+          players: ['Alice'],
+          numRounds: 3,
+          startRound: 2,
+          order: 'random',
+        });
+      });
+
       it('should parse CSV file with invalid order field', async () => {
         const mockContent = 'players,num-rounds,start-round,order\nAlice,3,2,invalid-order';
         (readFile as jest.Mock).mockResolvedValue(mockContent);
@@ -181,6 +234,43 @@ describe('fileParser', () => {
 
         expect(result).toEqual({
           players: ['Alice', 'Bob', 'Charlie'],
+        });
+      });
+
+      it('should parse JSON file with format field', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob'],
+          'num-rounds': 3,
+          'start-round': 1,
+          order: 'random',
+          matches: [['Alice', 'Bob']],
+          format: 'json-plain',
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+
+        const result = await parseFile('test.json');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob'],
+          numRounds: 3,
+          startRound: 1,
+          order: 'random',
+          matches: [['Alice', 'Bob']],
+          format: 'json-plain',
+        });
+      });
+
+      it('should handle JSON file with invalid format field', async () => {
+        const mockContent = JSON.stringify({
+          players: ['Alice', 'Bob'],
+          format: 'invalid-format',
+        });
+        (readFile as jest.Mock).mockResolvedValue(mockContent);
+
+        const result = await parseFile('test.json');
+
+        expect(result).toEqual({
+          players: ['Alice', 'Bob'],
         });
       });
 

@@ -1,15 +1,24 @@
 import {
   ARG_FILE,
+  ARG_FORMAT,
   ARG_NUM_ROUNDS,
   ARG_ORDER,
   ARG_PLAYERS,
   ARG_START_ROUND,
+  CLI_OPTION_FORMAT,
   CLI_OPTION_ORDER,
   SUPPORTED_FILE_TYPES,
   SUPPORTED_FILE_TYPE_CSV,
   SUPPORTED_FILE_TYPE_JSON,
 } from './constants.js';
-import { CLIOptionOrder, CLIOptions, ReadonlyMatch, Result, SupportedFileTypes } from './types.js';
+import {
+  CLIOptionFormat,
+  CLIOptionOrder,
+  CLIOptions,
+  ReadonlyMatch,
+  Result,
+  SupportedFileTypes,
+} from './types.js';
 import { parseStringLiteralSilently, removeNullOrUndefinedValues } from './utils.js';
 
 import { existsSync } from 'fs';
@@ -18,6 +27,7 @@ import papa from 'papaparse';
 import { readFile } from 'fs/promises';
 
 interface CSVRecord {
+  readonly format?: string;
   readonly matches1?: string;
   readonly matches2?: string;
   readonly 'num-rounds'?: string;
@@ -28,6 +38,7 @@ interface CSVRecord {
 }
 
 interface JSONRecord {
+  readonly format?: string;
   readonly matches?: unknown;
   readonly 'num-rounds'?: number;
   readonly order?: string;
@@ -78,6 +89,7 @@ function parseCSV(content: string): Partial<CLIOptions> {
 
   // Extract and transform CSV data into CLIOptions
   const result = {
+    format: extractFormatFromCSV(records),
     matches: extractMatchesFromRecords(records),
     numRounds: extractNumRoundsFromCSV(records),
     order: extractOrderFromCSV(records),
@@ -96,6 +108,14 @@ function extractMatchesFromRecords(records: readonly CSVRecord[]): readonly Read
   return records
     .map((record): ReadonlyMatch => [record.matches1 ?? '', record.matches2 ?? ''])
     .filter((match): match is ReadonlyMatch => !!match[0] && !!match[1]);
+}
+
+function extractFormatFromCSV(records: readonly CSVRecord[]): CLIOptionFormat | undefined {
+  const firstRecord = records[0];
+  if (!(ARG_FORMAT in firstRecord)) {
+    return undefined;
+  }
+  return parseStringLiteralSilently({ input: firstRecord.format, options: CLI_OPTION_FORMAT });
 }
 
 function extractNumRoundsFromCSV(records: readonly CSVRecord[]): number | undefined {
@@ -142,6 +162,10 @@ function parseJSON(content: string): Partial<CLIOptions> {
   const parsedJSON = JSON.parse(content) as JSONRecord;
 
   const result: Partial<CLIOptions> = {
+    format: parseStringLiteralSilently<CLIOptionFormat>({
+      input: parsedJSON.format,
+      options: CLI_OPTION_FORMAT,
+    }),
     matches: Array.isArray(parsedJSON.matches) ? parsedJSON.matches.filter(isValidMatch) : undefined,
     numRounds: parsedJSON['num-rounds'],
     order: parseStringLiteralSilently<CLIOptionOrder>({

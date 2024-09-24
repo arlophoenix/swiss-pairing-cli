@@ -124,6 +124,74 @@ describe('handleCLIAction', () => {
     });
   });
 
+  describe('format', () => {
+    const roundMatches: ReadonlyRoundMatches = {
+      'Round 0': [
+        ['Player1', 'Player3'],
+        ['Player2', 'Player4'],
+      ],
+    };
+
+    beforeEach(() => {
+      mockGenerateRoundMatches.mockReturnValue({ success: true, roundMatches });
+    });
+
+    it('should format output as text when format is text', () => {
+      const options: CLIOptions = {
+        players: ['Player1', 'Player2'],
+        format: 'text',
+      };
+
+      const result = cliAction.handleCLIAction(options);
+
+      expect(result).toEqual({
+        success: true,
+        value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+      });
+    });
+
+    it('should format output as plain JSON when format is json-plain', () => {
+      const options: CLIOptions = {
+        players: ['Player1', 'Player2'],
+        format: 'json-plain',
+      };
+
+      const result = cliAction.handleCLIAction(options);
+
+      expect(result).toEqual({
+        success: true,
+        value: JSON.stringify(roundMatches),
+      });
+    });
+
+    it('should format output as pretty JSON when format is json-pretty', () => {
+      const options: CLIOptions = {
+        players: ['Player1', 'Player2'],
+        format: 'json-pretty',
+      };
+
+      const result = cliAction.handleCLIAction(options);
+
+      expect(result).toEqual({
+        success: true,
+        value: JSON.stringify(roundMatches, null, 2),
+      });
+    });
+
+    it('should default to text format when format is not specified', () => {
+      const options: CLIOptions = {
+        players: ['Player1', 'Player2'],
+      };
+
+      const result = cliAction.handleCLIAction(options);
+
+      expect(result).toEqual({
+        success: true,
+        value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+      });
+    });
+  });
+
   it('should default the missing values correctly', () => {
     const options = {
       players: ['Player1', 'Player2'],

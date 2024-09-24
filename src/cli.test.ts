@@ -376,6 +376,39 @@ Examples:
       });
     });
 
+    describe('--format', () => {
+      it('should parse command line arguments with format option', async () => {
+        await program.parseAsync([
+          'node',
+          'swiss-pairing',
+          '--players',
+          'Alice',
+          'Bob',
+          '--format',
+          'json-pretty',
+        ]);
+        const options = program.opts();
+
+        expect(options.format).toBe('json-pretty');
+      });
+
+      it('should default format to undefined when not provided', async () => {
+        await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob']);
+        const options = program.opts();
+
+        expect(options.format).toBe(undefined);
+      });
+
+      it('should exit for invalid format', async () => {
+        await expect(() =>
+          program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', '--format', 'invalid'])
+        ).rejects.toThrow('Process exited with code 1');
+        expect(mockConsoleError).toHaveBeenCalledWith(
+          'Invalid input: format must be one of: text, json-plain, json-pretty.'
+        );
+      });
+    });
+
     describe('handleCLIAction', () => {
       it('should log the result of handleCLIAction on success', async () => {
         const message = 'test';

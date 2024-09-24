@@ -10,6 +10,7 @@ export interface CLIOptions {
   readonly matches?: readonly ReadonlyMatch[];
   readonly order?: CLIOptionOrder;
   readonly file?: string;
+  readonly format?: CLIOptionFormat;
 }
 
 /**
