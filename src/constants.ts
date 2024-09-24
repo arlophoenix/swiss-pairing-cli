@@ -7,6 +7,15 @@ export const ARG_NUM_ROUNDS = 'num-rounds';
 export const ARG_ORDER = 'order';
 export const ARG_PLAYERS = 'players';
 export const ARG_START_ROUND = 'start-round';
+export const ARGS = [
+  ARG_FILE,
+  ARG_FORMAT,
+  ARG_MATCHES,
+  ARG_NUM_ROUNDS,
+  ARG_ORDER,
+  ARG_PLAYERS,
+  ARG_START_ROUND,
+] as const;
 
 export const BYE_PLAYER = 'BYE';
 

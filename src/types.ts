@@ -1,4 +1,4 @@
-import { CLI_OPTION_FORMAT, CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from './constants.js';
+import { ARGS, CLI_OPTION_FORMAT, CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from './constants.js';
 
 /**
  * Represents the options provided through the CLI
@@ -12,6 +12,8 @@ export interface CLIOptions {
   readonly file?: string;
   readonly format?: CLIOptionFormat;
 }
+
+export type CLIArg = (typeof ARGS)[number];
 
 /**
  * Represents the order option for CLI

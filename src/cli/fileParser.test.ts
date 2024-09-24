@@ -10,11 +10,15 @@ jest.mock('fs');
 jest.mock('papaparse');
 
 describe('fileParser', () => {
-  describe('parseFile', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+  beforeEach(() => {
+    (existsSync as jest.Mock).mockReturnValue(true);
+  });
 
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  describe('parseFile', () => {
     describe('CSV', () => {
       it('should parse CSV file correctly', async () => {
         const mockContent =
@@ -135,14 +139,9 @@ describe('fileParser', () => {
           errors: [],
         });
 
-        const result = await parseFile('test.csv');
-
-        expect(result).toEqual({
-          players: ['Alice'],
-          numRounds: 3,
-          startRound: 2,
-          order: 'random',
-        });
+        await expect(parseFile('test.csv')).rejects.toThrow(
+          'Invalid CSV value "format": "invalid-format". Expected one of "text, json-plain, json-pretty".'
+        );
       });
 
       it('should parse CSV file with invalid order field', async () => {
@@ -160,13 +159,9 @@ describe('fileParser', () => {
           errors: [],
         });
 
-        const result = await parseFile('test.csv');
-
-        expect(result).toEqual({
-          players: ['Alice'],
-          numRounds: 3,
-          startRound: 2,
-        });
+        await expect(parseFile('test.csv')).rejects.toThrow(
+          'Invalid CSV value "order": "invalid-order". Expected one of "top-down, bottom-up, random".'
+        );
       });
     });
 
@@ -251,7 +246,7 @@ describe('fileParser', () => {
         (readFile as jest.Mock).mockResolvedValue(mockContent);
 
         await expect(parseFile('test.json')).rejects.toThrow(
-          'Invalid JSON: format must be one of text, json-plain, json-pretty'
+          'Invalid JSON value "format": ""invalid-format"". Expected one of "text, json-plain, json-pretty".'
         );
       });
 
@@ -263,7 +258,7 @@ describe('fileParser', () => {
         (readFile as jest.Mock).mockResolvedValue(mockContent);
 
         await expect(parseFile('test.json')).rejects.toThrow(
-          'Invalid JSON: order must be one of top-down, bottom-up, random'
+          'Invalid JSON value "order": ""invalid-order"". Expected one of "top-down, bottom-up, random".'
         );
       });
     });
@@ -275,9 +270,8 @@ describe('fileParser', () => {
 
   describe('isSupportedFileType', () => {
     it('should return success for supported file types', () => {
-      (existsSync as jest.Mock).mockReturnValue(true);
-      expect(isSupportedFileType('test.csv')).toEqual({ success: true, value: undefined });
-      expect(isSupportedFileType('test.json')).toEqual({ success: true, value: undefined });
+      expect(isSupportedFileType('test.csv')).toEqual({ success: true, value: '.csv' });
+      expect(isSupportedFileType('test.json')).toEqual({ success: true, value: '.json' });
     });
 
     it('should return failure for unsupported file types', () => {

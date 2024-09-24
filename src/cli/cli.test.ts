@@ -27,7 +27,7 @@ describe('Swiss Pairing CLI', () => {
     }) as SpyInstance;
     mockIsSupportedFileType = jest
       .spyOn(fileParser, 'isSupportedFileType')
-      .mockReturnValue({ success: true, value: undefined });
+      .mockReturnValue({ success: true, value: '.csv' });
     mockParseFile = jest.spyOn(fileParser, 'parseFile').mockResolvedValue({});
   });
 
