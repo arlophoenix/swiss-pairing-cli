@@ -1,10 +1,13 @@
 import {
   ARG_FILE,
+  ARG_FORMAT,
   ARG_MATCHES,
   ARG_NUM_ROUNDS,
   ARG_ORDER,
   ARG_PLAYERS,
   ARG_START_ROUND,
+  CLI_OPTION_FORMAT,
+  CLI_OPTION_FORMAT_DEFAULT,
   CLI_OPTION_NUM_ROUND_DEFAULT,
   CLI_OPTION_ORDER,
   CLI_OPTION_ORDER_BOTOM_UP,
@@ -17,7 +20,7 @@ import {
   EXAMPLE_PLAYERS,
   PROGRAM_NAME,
 } from './constants.js';
-import { CLIOptionOrder, CLIOptions } from './types.js';
+import { CLIOptionFormat, CLIOptionOrder, CLIOptions } from './types.js';
 import { buildErrorMessage, parseStringLiteral } from './utils.js';
 import { isSupportedFileType, parseFile } from './fileParser.js';
 
@@ -98,7 +101,7 @@ export function createCLI(): Command {
       }
     )
     .option(
-      `-f, --${ARG_FILE} <path>`,
+      `--${ARG_FILE} <path>`,
       'Path to input file (CSV or JSON). Options provided via cli override file contents',
       (value: string) => {
         const result = isSupportedFileType(value);
@@ -106,6 +109,21 @@ export function createCLI(): Command {
           exitWithInputError(result.errorMessage);
         }
         return value;
+      }
+    )
+    .option(
+      `--${ARG_FORMAT} <${CLI_OPTION_FORMAT.join(' | ')}>`,
+      `Output format (default: ${CLI_OPTION_FORMAT_DEFAULT})`,
+      (value?: string) => {
+        const lowercaseValue = (value ?? '').toLowerCase();
+        const result = parseStringLiteral<CLIOptionFormat>({
+          input: lowercaseValue,
+          options: CLI_OPTION_FORMAT,
+        });
+        if (result.success) {
+          return result.value;
+        }
+        exitWithInputError(`${ARG_FORMAT} must be one of: ${CLI_OPTION_FORMAT.join(', ')}.`);
       }
     )
     .helpOption('-h, --help', 'Display this help information')

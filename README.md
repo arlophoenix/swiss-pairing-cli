@@ -48,8 +48,9 @@ Options:
                                                number (default: 1)
   -o, --order <top-down | bottom-up | random>  The sequence in which players should be paired
                                                (default: top-down)
-  -f, --file <path>                            Path to input file (CSV or JSON). Options
+  --file <path>                                Path to input file (CSV or JSON). Options
                                                provided via cli override file contents
+  --format <text | json-plain | json-pretty>   Output format (default: text)
   -h, --help                                   Display this help information
 
 Examples:

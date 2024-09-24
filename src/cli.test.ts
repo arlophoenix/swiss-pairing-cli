@@ -60,15 +60,16 @@ describe('Swiss Pairing CLI', () => {
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -p, --players <names...>                    List of player names in order from top standing to bottom
+  -p, --players <names...>                     List of player names in order from top standing to bottom
   e.g. Alice Bob Charlie David
-  -m, --matches <matches...>                  List of pairs of player names that have already played against each other
-  e.g. \"Alice,Bob\" \"Charlie,David\"
-  -n, --num-rounds <number>                   Number of rounds to generate (default: 1)
-  -s, --start-round <number>                  Name the generated rounds starting with this number (default: 1)
-  -o --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: top-down)
-  -f, --file <path>                           Path to input file (CSV or JSON). Options provided via cli override file contents
-  -h, --help                                  Display this help information
+  -m, --matches <matches...>                   List of pairs of player names that have already played against each other
+  e.g. "Alice,Bob" "Charlie,David"
+  -n, --num-rounds <number>                    Number of rounds to generate (default: 1)
+  -s, --start-round <number>                   Name the generated rounds starting with this number (default: 1)
+  -o, --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: top-down)
+  --file <path>                                Path to input file (CSV or JSON). Options provided via cli override file contents
+  --format <text | json-plain | json-pretty>   Output format (default: text)
+  -h, --help                                   Display this help information
 
 Examples:
 
@@ -78,7 +79,7 @@ Examples:
 
 2. Generate pairings for 4 players, on round 2, with some matches already played:
 
-  swiss-pairing --players Alice Bob Charlie David --start-round 2 --matches \"Alice,Bob\" \"Charlie,David\"
+  swiss-pairing --players Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
 
 3. Generate pairings using a CSV file:
 

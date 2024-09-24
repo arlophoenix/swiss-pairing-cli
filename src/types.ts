@@ -1,4 +1,4 @@
-import { CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from './constants.js';
+import { CLI_OPTION_FORMAT, CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from './constants.js';
 
 /**
  * Represents the options provided through the CLI
@@ -16,6 +16,11 @@ export interface CLIOptions {
  * Represents the order option for CLI
  */
 export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
+
+/**
+ * Represents the format option for CLI
+ */
+export type CLIOptionFormat = (typeof CLI_OPTION_FORMAT)[number];
 
 /**
  * Represents the input for generating matches over multiple rounds
