@@ -63,7 +63,10 @@ describe('handleCLIAction', () => {
     });
     expect(result).toEqual({
       success: true,
-      value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+      value: `**Round 0**
+
+1. Player1 vs Player3
+2. Player2 vs Player4`,
     });
     expect(mockShuffle).not.toHaveBeenCalled();
   });
@@ -146,7 +149,47 @@ describe('handleCLIAction', () => {
 
       expect(result).toEqual({
         success: true,
-        value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+        value: `**Round 0**
+
+1. Player1 vs Player3
+2. Player2 vs Player4`,
+      });
+    });
+
+    it('should format multiple rounds correctly', () => {
+      const roundMatches: ReadonlyRoundMatches = {
+        'Round 1': [
+          ['Player1', 'Player2'],
+          ['Player3', 'Player4'],
+        ],
+        'Round 2': [
+          ['Player1', 'Player3'],
+          ['Player2', 'Player4'],
+        ],
+      };
+      mockGenerateRoundMatches.mockReturnValue({ success: true, roundMatches });
+
+      const options: CLIOptions = {
+        players: ['Player1', 'Player2', 'Player3', 'Player4'],
+        numRounds: 2,
+        format: 'text',
+      };
+
+      const result = cliAction.handleCLIAction(options);
+
+      expect(result).toEqual({
+        success: true,
+        value: `# Matches
+
+**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs Player4
+
+**Round 2**
+
+1. Player1 vs Player3
+2. Player2 vs Player4`,
       });
     });
 
@@ -187,7 +230,10 @@ describe('handleCLIAction', () => {
 
       expect(result).toEqual({
         success: true,
-        value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+        value: `**Round 0**
+
+1. Player1 vs Player3
+2. Player2 vs Player4`,
       });
     });
   });
@@ -211,7 +257,9 @@ describe('handleCLIAction', () => {
     });
     expect(result).toEqual({
       success: true,
-      value: `Matches generated successfully: ${JSON.stringify(roundMatches)}`,
+      value: `**Round 1**
+
+1. Player1 vs Player2`,
     });
   });
 

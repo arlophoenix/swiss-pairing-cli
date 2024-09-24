@@ -1,111 +1,201 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Fixtures CLI Output (file) - four-players-bottom-up.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["Player4","Player3"],["Player2","Player1"]]}
+"**Round 1**
+
+1. Player4 vs Player3
+2. Player2 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (file) - four-players-top-down.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","Player4"]]}
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs Player4
 "
 `;
 
 exports[`Fixtures CLI Output (file) - four-players-with-matches-bottom-up.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["Player4","Player2"],["Player3","Player1"]]}
+"**Round 1**
+
+1. Player4 vs Player2
+2. Player3 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (file) - four-players-with-matches-top-down.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","Player4"]]}
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs Player4
 "
 `;
 
 exports[`Fixtures CLI Output (file) - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
-"Matches generated successfully: {"Round 6":[["LCYig","armydan"],["Clin","iso.evil"],["Colain","Arlo"],["GreyGhost","Nzdaemon"],["Pauldog","Morgath"],["lilme","Saravock"]]}
+"**Round 6**
+
+1. LCYig vs armydan
+2. Clin vs iso.evil
+3. Colain vs Arlo
+4. GreyGhost vs Nzdaemon
+5. Pauldog vs Morgath
+6. lilme vs Saravock
 "
 `;
 
 exports[`Fixtures CLI Output (file) - three-players-bottom-up.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["BYE","Player3"],["Player2","Player1"]]}
+"**Round 1**
+
+1. BYE vs Player3
+2. Player2 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (file) - three-players-top-down.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","BYE"]]}
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs BYE
 "
 `;
 
 exports[`Fixtures CLI Output (file) - three-players-with-matches-bottom-up.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["BYE","Player2"],["Player3","Player1"]]}
+"**Round 1**
+
+1. BYE vs Player2
+2. Player3 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (file) - three-players-with-matches-top-down.csv 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","BYE"]]}
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs BYE
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - four-players-bottom-up.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["Player4","Player3"],["Player2","Player1"]]}
+"**Round 1**
+
+1. Player4 vs Player3
+2. Player2 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - four-players-top-down.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","Player4"]]}
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs Player4
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - four-players-with-matches-bottom-up.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["Player4","Player2"],["Player3","Player1"]]}
+"**Round 1**
+
+1. Player4 vs Player2
+2. Player3 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - four-players-with-matches-top-down.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","Player4"]]}
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs Player4
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-1-unmodified.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"**Round 6**
+
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["LCYig","armydan"],["Clin","iso.evil"],["Colain","Arlo"],["GreyGhost","Nzdaemon"],["Pauldog","Morgath"],["lilme","Saravock"]]}
+"**Round 6**
+
+1. LCYig vs armydan
+2. Clin vs iso.evil
+3. Colain vs Arlo
+4. GreyGhost vs Nzdaemon
+5. Pauldog vs Morgath
+6. lilme vs Saravock
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-2-win-gg.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"**Round 6**
+
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-3-win-ad.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","armydan"],["Nzdaemon","Pauldog"],["Saravock","lilme"],["Arlo","LCYig"],["GreyGhost","Colain"],["iso.evil","Clin"]]}
+"**Round 6**
+
+1. Morgath vs armydan
+2. Nzdaemon vs Pauldog
+3. Saravock vs lilme
+4. Arlo vs LCYig
+5. GreyGhost vs Colain
+6. iso.evil vs Clin
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-4-draw.txt 1`] = `
-"Matches generated successfully: {"Round 6":[["Morgath","Pauldog"],["Nzdaemon","GreyGhost"],["Saravock","lilme"],["Arlo","Colain"],["armydan","LCYig"],["iso.evil","Clin"]]}
+"**Round 6**
+
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - three-players-bottom-up.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["BYE","Player3"],["Player2","Player1"]]}
+"**Round 1**
+
+1. BYE vs Player3
+2. Player2 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - three-players-top-down.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player2"],["Player3","BYE"]]}
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs BYE
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - three-players-with-matches-bottom-up.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["BYE","Player2"],["Player3","Player1"]]}
+"**Round 1**
+
+1. BYE vs Player2
+2. Player3 vs Player1
 "
 `;
 
 exports[`Fixtures CLI Output (txt) - three-players-with-matches-top-down.txt 1`] = `
-"Matches generated successfully: {"Round 1":[["Player1","Player3"],["Player2","BYE"]]}
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs BYE
 "
 `;

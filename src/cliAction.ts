@@ -84,7 +84,7 @@ function formatOutput({
     case CLI_OPTION_FORMAT_JSON_PRETTY:
       return JSON.stringify(roundMatches, null, 2);
     case CLI_OPTION_FORMAT_TEXT:
-      return 'Matches generated successfully: ' + JSON.stringify(roundMatches);
+      return formatRoundMatchesAsMarkdown(roundMatches);
   }
 }
 
@@ -95,4 +95,22 @@ function formatOutput({
  */
 function addByePlayerIfNecessary(players: readonly string[]): readonly string[] {
   return players.length % 2 === 1 ? [...players, BYE_PLAYER] : players;
+}
+
+function formatRoundMatchesAsMarkdown(roundMatches: ReadonlyRoundMatches): string {
+  const rounds = Object.entries(roundMatches);
+  const multipleRounds = rounds.length > 1;
+
+  let output = multipleRounds ? '# Matches\n\n' : '';
+
+  rounds.forEach(([round, matches]) => {
+    output += `**${round}**\n\n`;
+    // eslint-disable-next-line max-params
+    matches.forEach((match, index) => {
+      output += `${String(index + 1)}. ${match[0]} vs ${match[1]}\n`;
+    });
+    output += '\n';
+  });
+
+  return output.trim();
 }
