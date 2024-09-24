@@ -43,8 +43,25 @@ describe('fileParser', () => {
       expect(result).toEqual({ players: ['Alice', 'Bob'] });
     });
 
+    it('should parse files with uppercase extensions', async () => {
+      const mockContent = 'mock,csv,content';
+      (readFile as jest.Mock).mockResolvedValue(mockContent);
+      (csvParser.parseCSV as jest.Mock).mockReturnValue({ players: ['Alice', 'Bob'] });
+
+      const result = await parseFile('test.CSV');
+
+      expect(csvParser.parseCSV).toHaveBeenCalledWith(mockContent);
+      expect(result).toEqual({ players: ['Alice', 'Bob'] });
+    });
+
     it('should throw error for unsupported file type', async () => {
       await expect(parseFile('test.txt')).rejects.toThrow('Unsupported file type: .txt');
+    });
+
+    it('should throw error when readFile fails', async () => {
+      (readFile as jest.Mock).mockRejectedValue(new Error('File read error'));
+
+      await expect(parseFile('test.csv')).rejects.toThrow('File read error');
     });
   });
 
@@ -54,8 +71,12 @@ describe('fileParser', () => {
       expect(isSupportedFileType('test.json')).toEqual({ success: true, value: '.json' });
     });
 
+    it('should return success for supported file types with uppercase extensions', () => {
+      expect(isSupportedFileType('test.CSV')).toEqual({ success: true, value: '.csv' });
+      expect(isSupportedFileType('test.JSON')).toEqual({ success: true, value: '.json' });
+    });
+
     it('should return failure for unsupported file types', () => {
-      (existsSync as jest.Mock).mockReturnValue(true);
       expect(isSupportedFileType('test.txt')).toEqual({
         success: false,
         errorMessage: 'file must have extension .csv, .json.',
