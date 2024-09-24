@@ -8,7 +8,7 @@ import {
   CLI_OPTION_ORDER_DEFAULT,
   CLI_OPTION_START_ROUND_DEFAULT,
 } from './constants.js';
-import { CLIOptionFormat, CLIOptions, ReadonlyRoundMatches, Result } from './types.js';
+import { CLIOptionFormat, CLIOptionOrder, CLIOptions, ReadonlyRoundMatches, Result } from './types.js';
 import { buildErrorMessage, createBidirectionalMap, reverse, shuffle } from './utils.js';
 
 import { generateRoundMatches } from './swiss-pairing/index.js';
@@ -26,20 +26,8 @@ export function handleCLIAction({
   order = CLI_OPTION_ORDER_DEFAULT,
   format = CLI_OPTION_FORMAT_DEFAULT,
 }: CLIOptions): Result<string> {
+  const currentPlayers = preparePlayers({ players, order });
   const playedMatches = createBidirectionalMap(matches);
-
-  let currentPlayers = addByePlayerIfNecessary(players);
-
-  switch (order) {
-    case 'random':
-      currentPlayers = shuffle(currentPlayers);
-      break;
-    case 'top-down':
-      break;
-    case 'bottom-up':
-      currentPlayers = reverse(currentPlayers);
-      break;
-  }
 
   const roundMatchesResult = generateRoundMatches({
     players: currentPlayers,
@@ -62,6 +50,25 @@ export function handleCLIAction({
     success: true,
     value: formatOutput({ roundMatches: roundMatchesResult.roundMatches, format }),
   };
+}
+
+function preparePlayers({
+  players,
+  order,
+}: {
+  readonly players: readonly string[];
+  readonly order: CLIOptionOrder;
+}): readonly string[] {
+  const currentPlayers = addByePlayerIfNecessary(players);
+
+  switch (order) {
+    case 'random':
+      return shuffle(currentPlayers);
+    case 'top-down':
+      return currentPlayers;
+    case 'bottom-up':
+      return reverse(currentPlayers);
+  }
 }
 
 function formatOutput({
