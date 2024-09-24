@@ -1,4 +1,4 @@
-import { PlayedOpponents, ReadonlyPlayedOpponents, ReadonlyRoundMatches } from '../types.js';
+import { PlayedOpponents, ReadonlyPlayedOpponents } from '../types.js';
 
 /**
  * Creates a mutable clone of the played opponents map

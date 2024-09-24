@@ -48,8 +48,7 @@ let currentNvmrcVersion = '';
 
 try {
   currentNvmrcVersion = fs.readFileSync(nvmrcPath, 'utf8').trim();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-} catch (error) {
+} catch (_error) {
   // File doesn't exist or can't be read, we'll create/update it
 }
 

@@ -37,6 +37,17 @@ const tsConfig = tseslint.config({
   // Disabled due to conflict with Prettier's style
   // ...eslintPluginFunctional.configs.stylistic,
   extends: [...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked],
+  rules: {
+    // Allow unused variables if they start with _
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
+  },
 });
 
 const testConfig = {

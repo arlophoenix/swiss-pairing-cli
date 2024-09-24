@@ -6,14 +6,12 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import { Command } from 'commander';
 import type { SpyInstance } from 'jest-mock';
-import { start } from 'repl';
 
 describe('Swiss Pairing CLI', () => {
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   // used in order to throw if the process.exit() is called
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let mockProcessExit: SpyInstance;
+  let _mockProcessExit: SpyInstance;
   let mockIsSupportedFileType: SpyInstance<typeof fileParser.isSupportedFileType>;
   let mockParseFile: SpyInstance<typeof fileParser.parseFile>;
 
@@ -24,7 +22,7 @@ describe('Swiss Pairing CLI', () => {
     mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {
       // do nothing
     });
-    mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
+    _mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
       throw new Error(`Process exited with code ${String(code)}`);
     }) as SpyInstance;
     mockIsSupportedFileType = jest
