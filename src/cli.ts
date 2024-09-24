@@ -20,7 +20,7 @@ import {
   EXAMPLE_PLAYERS,
   PROGRAM_NAME,
 } from './constants.js';
-import { CLIOptionFormat, CLIOptionOrder, CLIOptions } from './types.js';
+import { CLIOptionFormat, CLIOptionOrder, CLIOptions, Result } from './types.js';
 import { buildErrorMessage, parseStringLiteral } from './utils.js';
 import { isSupportedFileType, parseFile } from './fileParser.js';
 
@@ -129,20 +129,11 @@ export function createCLI(): Command {
     .helpOption('-h, --help', 'Display this help information')
     .addHelpText('afterAll', `\n${exampleUsage()}`)
     .action(async (options: CLIOptions) => {
-      if (!options.players && !options.file) {
-        exitWithInputError(`either --${ARG_PLAYERS} or --${ARG_FILE} is required.`);
+      const parseFileOptionsResult = await parseFileOptions(options);
+      if (!parseFileOptionsResult.success) {
+        exitWithInputError(parseFileOptionsResult.errorMessage);
       }
-      const file = options.file;
-      if (file) {
-        try {
-          const fileData = await parseFile(file);
-          options = { ...fileData, ...options };
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          exitWithInputError(`error parsing file - ${errorMessage}`);
-        }
-      }
-      const result = handleCLIAction(options);
+      const result = handleCLIAction(parseFileOptionsResult.value);
 
       if (!result.success) {
         exitWithError(result.errorMessage);
@@ -151,6 +142,23 @@ export function createCLI(): Command {
     });
 
   return program;
+}
+
+async function parseFileOptions(options: CLIOptions): Promise<Result<CLIOptions>> {
+  if (!options.players && !options.file) {
+    return { success: false, errorMessage: `either --${ARG_PLAYERS} or --${ARG_FILE} is required.` };
+  }
+  const file = options.file;
+  if (file) {
+    try {
+      const fileData = await parseFile(file);
+      options = { ...fileData, ...options };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return { success: false, errorMessage: `error parsing file - ${errorMessage}` };
+    }
+  }
+  return { success: true, value: options };
 }
 
 export function helpWithExamples(): string {
