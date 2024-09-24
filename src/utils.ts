@@ -107,6 +107,6 @@ export function buildErrorMessage({
   return `${errorPrefix}: ${message}`;
 }
 
-export function removeNullOrUndefinedValues(obj: Record<string, any>): Record<string, any> {
-  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== null && value !== null));
+export function removeNullOrUndefinedValues<T extends Record<string, unknown>>(obj: T): Partial<T> {
+  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value != null)) as Partial<T>;
 }
