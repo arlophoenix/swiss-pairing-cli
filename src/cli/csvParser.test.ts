@@ -133,5 +133,104 @@ describe('csvParser', () => {
         'Invalid CSV value "order": "invalid-order". Expected one of "top-down, bottom-up, random".'
       );
     });
+
+    it('should handle empty CSV file', () => {
+      const mockContent = '';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [],
+        errors: [],
+      });
+
+      const result = parseCSV(mockContent);
+
+      expect(result).toEqual({});
+    });
+
+    it('should throw error for non-number num-rounds', () => {
+      const mockContent = 'players,num-rounds\nAlice,invalid';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [{ players: 'Alice', 'num-rounds': 'invalid' }],
+        errors: [],
+      });
+
+      expect(() => parseCSV(mockContent)).toThrow(
+        'Invalid CSV value "num-rounds": "invalid". Expected a positive integer.'
+      );
+    });
+
+    it('should throw error for negative num-rounds', () => {
+      const mockContent = 'players,num-rounds\nAlice,-1';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [{ players: 'Alice', 'num-rounds': '-1' }],
+        errors: [],
+      });
+
+      expect(() => parseCSV(mockContent)).toThrow(
+        'Invalid CSV value "num-rounds": "-1". Expected a positive integer.'
+      );
+    });
+
+    it('should throw error for non-number start-round', () => {
+      const mockContent = 'players,start-round\nAlice,invalid';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [{ players: 'Alice', 'start-round': 'invalid' }],
+        errors: [],
+      });
+
+      expect(() => parseCSV(mockContent)).toThrow(
+        'Invalid CSV value "start-round": "invalid". Expected a positive integer.'
+      );
+    });
+
+    it('should throw error for negative start-round', () => {
+      const mockContent = 'players,start-round\nAlice,-1';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [{ players: 'Alice', 'start-round': '-1' }],
+        errors: [],
+      });
+
+      expect(() => parseCSV(mockContent)).toThrow(
+        'Invalid CSV value "start-round": "-1". Expected a positive integer.'
+      );
+    });
+
+    it('should parse matches correctly', () => {
+      const mockContent = 'players,matches1,matches2\nAlice,Bob,Charlie\nBob,Alice,David';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [
+          { players: 'Alice', matches1: 'Bob', matches2: 'Charlie' },
+          { players: 'Bob', matches1: 'Alice', matches2: 'David' },
+        ],
+        errors: [],
+      });
+
+      const result = parseCSV(mockContent);
+
+      expect(result).toEqual({
+        players: ['Alice', 'Bob'],
+        matches: [
+          ['Bob', 'Charlie'],
+          ['Alice', 'David'],
+        ],
+      });
+    });
+
+    it('should ignore incomplete matches', () => {
+      const mockContent = 'players,matches1,matches2\nAlice,Bob,\nBob,Alice,David';
+      (papa.parse as jest.Mock).mockReturnValue({
+        data: [
+          { players: 'Alice', matches1: 'Bob', matches2: '' },
+          { players: 'Bob', matches1: 'Alice', matches2: 'David' },
+        ],
+        errors: [],
+      });
+
+      const result = parseCSV(mockContent);
+
+      expect(result).toEqual({
+        players: ['Alice', 'Bob'],
+        matches: [['Alice', 'David']],
+      });
+    });
   });
 });

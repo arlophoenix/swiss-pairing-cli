@@ -125,7 +125,9 @@ function extractStartRoundsFromCSV(records: readonly CSVRecord[]): CLIOptions['s
 }
 
 function parseIntegerOption(value: string | undefined): number | undefined {
-  return value ? parseInt(value, 10) : undefined;
+  if (value === undefined) return undefined;
+  const parsed = parseInt(value, 10);
+  return isNaN(parsed) ? undefined : parsed;
 }
 
 function throwInvalidCSVValueError({
