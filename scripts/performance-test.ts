@@ -1,4 +1,4 @@
-import { generateRoundMatches } from '../src/swiss-pairing/index.js';
+import { generateRoundMatches } from '../src/swiss-pairing/swissPairing.js';
 import { performance } from 'perf_hooks';
 
 function generateRandomPlayers(count: number): readonly string[] {

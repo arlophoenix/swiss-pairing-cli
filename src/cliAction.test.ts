@@ -1,5 +1,5 @@
 import * as cliAction from './cliAction.js';
-import * as swissPairing from './swiss-pairing/index.js';
+import * as swissPairing from './swiss-pairing/swissPairing.js';
 import * as utils from './utils.js';
 
 import { CLIOptions, ReadonlyRoundMatches } from './types.js';

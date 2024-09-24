@@ -11,7 +11,7 @@ import {
 import { CLIOptionFormat, CLIOptionOrder, CLIOptions, ReadonlyRoundMatches, Result } from './types.js';
 import { buildErrorMessage, createBidirectionalMap, reverse, shuffle } from './utils.js';
 
-import { generateRoundMatches } from './swiss-pairing/index.js';
+import { generateRoundMatches } from './swiss-pairing/swissPairing.js';
 
 /**
  * Creates and configures the CLI command for Swiss pairing generation
