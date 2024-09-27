@@ -55,10 +55,6 @@ export function createCLI(): Command {
       // eslint-disable-next-line max-params, functional/prefer-readonly-type
       (value: string, previous: ReadonlyMatch[] = []) => {
         const matchPlayers = value.split(',');
-        if (matchPlayers.length !== 2) {
-          // TODO: use standard error here
-          throw new Error(`Invalid match format: ${value}. Expected "player1,player2".`);
-        }
         return [...previous, matchPlayers as Match];
       }
     )
