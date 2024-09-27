@@ -1,5 +1,5 @@
 import * as fileParser from '../parsers/fileParser.js';
-import * as utils from '../utils.js';
+import * as utils from '../utils/utils.js';
 
 import { BYE_PLAYER, CLI_OPTION_DEFAULTS } from '../constants.js';
 import { Result, ValidatedCLIOptions } from '../types/types.js';
@@ -13,7 +13,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import type { SpyInstance } from 'jest-mock';
 
-jest.mock('../utils.js');
+jest.mock('../utils/utils.js');
 jest.mock('../parsers/fileParser.js');
 
 describe('cliActionUtils', () => {

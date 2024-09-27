@@ -7,6 +7,7 @@
 - remove duplication from the three different options validators
 - standardise error messages
 - add json integration tests
+- rename JSONRecord and CSVRecord to something more clear
 
 ## Project Configuration
 

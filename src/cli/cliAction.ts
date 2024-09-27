@@ -1,7 +1,7 @@
 import { Result, UnvalidatedCLIOptions } from '../types/types.js';
 import { mergeOptions, preparePlayers, validateFileOptions } from './cliActionUtils.js';
 
-import { createBidirectionalMap } from '../utils.js';
+import { createBidirectionalMap } from '../utils/utils.js';
 import { formatOutput } from './outputFormatter.js';
 import { generateRoundMatches } from '../swiss-pairing/swissPairing.js';
 import { validateCLIOptions } from '../validators/cliValidator.js';

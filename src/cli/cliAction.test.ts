@@ -2,7 +2,7 @@ import * as cliActionUtils from './cliActionUtils.js';
 import * as cliValidator from '../validators/cliValidator.js';
 import * as outputFormatter from './outputFormatter.js';
 import * as swissPairing from '../swiss-pairing/swissPairing.js';
-import * as utils from '../utils.js';
+import * as utils from '../utils/utils.js';
 
 import {
   ReadonlyPlayedOpponents,
@@ -20,7 +20,7 @@ jest.mock('../validators/cliValidator.js');
 jest.mock('./cliActionUtils.js');
 jest.mock('../swiss-pairing/swissPairing.js');
 jest.mock('./outputFormatter.js');
-jest.mock('../utils.js');
+jest.mock('../utils/utils.js');
 
 describe('handleCLIAction', () => {
   let mockValidateCLIOptions: SpyInstance<typeof cliValidator.validateCLIOptions>;

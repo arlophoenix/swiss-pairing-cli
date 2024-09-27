@@ -8,8 +8,8 @@ import {
   ValidatedCLIOptions,
 } from '../types/types.js';
 
-import { createInvalidValueErrorMessage } from '../errorUtils.js';
-import { parseStringLiteral } from '../utils.js';
+import { createInvalidValueErrorMessage } from '../utils/errorUtils.js';
+import { parseStringLiteral } from '../utils/utils.js';
 
 export function validateCLIOptions(options: UnvalidatedCLIOptions): Result<Partial<ValidatedCLIOptions>> {
   const results: readonly [

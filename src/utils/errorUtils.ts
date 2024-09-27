@@ -1,4 +1,4 @@
-import { CLIArg } from './types/types.js';
+import { CLIArg } from '../types/types.js';
 
 export function createInvalidValueErrorMessage({
   origin,

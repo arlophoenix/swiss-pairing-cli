@@ -1,7 +1,7 @@
 import { createBidirectionalMap, parseStringLiteral, reverse, shuffle } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
-import { ValidationError } from './types/types.js';
+import { ValidationError } from '../types/types.js';
 
 describe('utils', () => {
   describe('createBidirectionalMap', () => {

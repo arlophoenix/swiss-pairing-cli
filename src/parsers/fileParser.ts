@@ -6,12 +6,12 @@ import {
 } from '../constants.js';
 import { Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
 
-import { createInvalidValueErrorMessage } from '../errorUtils.js';
+import { createInvalidValueErrorMessage } from '../utils/errorUtils.js';
 import { existsSync } from 'fs';
 import { extname } from 'path';
 import { parseOptionsFromCSV } from './csvParser.js';
 import { parseOptionsFromJSON } from './jsonParser.js';
-import { parseStringLiteral } from '../utils.js';
+import { parseStringLiteral } from '../utils/utils.js';
 import { readFile } from 'fs/promises';
 
 export async function parseFile(filePath: string): Promise<Result<Partial<ValidatedCLIOptions>>> {

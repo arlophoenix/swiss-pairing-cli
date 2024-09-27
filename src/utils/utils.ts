@@ -1,4 +1,4 @@
-import { Result, ValidationError } from './types/types.js';
+import { Result, ValidationError } from '../types/types.js';
 
 /**
  * Creates a bidirectional map from an array of pairs.

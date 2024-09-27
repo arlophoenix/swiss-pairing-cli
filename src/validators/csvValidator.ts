@@ -23,7 +23,7 @@ import {
 } from './cliValidator.js';
 
 import { CSVRecord } from '../parsers/csvParserUtils.js';
-import { createInvalidValueErrorMessage } from '../errorUtils.js';
+import { createInvalidValueErrorMessage } from '../utils/errorUtils.js';
 
 export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Partial<ValidatedCLIOptions>> {
   const results: readonly [
