@@ -4,7 +4,7 @@ import * as csvValidator from '../validators/csvValidator.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
-import { ValidationError } from '../types.js';
+import { ValidationError } from '../types/types.js';
 import { parseOptionsFromCSV } from './csvParser.js';
 
 describe('csvParser', () => {

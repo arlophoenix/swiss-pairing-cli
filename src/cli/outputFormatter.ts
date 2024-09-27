@@ -1,4 +1,4 @@
-import { CLIOptionFormat, ReadonlyRoundMatches } from '../types.js';
+import { CLIOptionFormat, ReadonlyRoundMatches } from '../types/types.js';
 import {
   CLI_OPTION_FORMAT_JSON_PLAIN,
   CLI_OPTION_FORMAT_JSON_PRETTY,

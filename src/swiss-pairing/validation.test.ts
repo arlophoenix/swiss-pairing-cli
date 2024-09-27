@@ -1,4 +1,4 @@
-import { GenerateRoundMatchesInput, ReadonlyPlayedOpponents, RoundMatches } from '../types.js';
+import { GenerateRoundMatchesInput, ReadonlyPlayedOpponents, RoundMatches } from '../types/types.js';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 

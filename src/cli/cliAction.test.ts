@@ -10,7 +10,7 @@ import {
   Result,
   UnvalidatedCLIOptions,
   ValidatedCLIOptions,
-} from '../types.js';
+} from '../types/types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';

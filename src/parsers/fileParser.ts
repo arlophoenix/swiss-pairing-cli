@@ -4,7 +4,7 @@ import {
   SUPPORTED_FILE_TYPE_CSV,
   SUPPORTED_FILE_TYPE_JSON,
 } from '../constants.js';
-import { Result, SupportedFileTypes, ValidatedCLIOptions } from '../types.js';
+import { Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
 
 import { createInvalidValueErrorMessage } from '../errorUtils.js';
 import { existsSync } from 'fs';

@@ -17,7 +17,7 @@ import {
   PROGRAM_NAME,
   SUPPORTED_FILE_TYPES,
 } from '../constants.js';
-import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types.js';
+import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
 import { handleCLIAction } from './cliAction.js';

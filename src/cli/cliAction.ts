@@ -1,4 +1,4 @@
-import { Result, UnvalidatedCLIOptions } from '../types.js';
+import { Result, UnvalidatedCLIOptions } from '../types/types.js';
 import { mergeOptions, preparePlayers, validateFileOptions } from './cliActionUtils.js';
 
 import { createBidirectionalMap } from '../utils.js';

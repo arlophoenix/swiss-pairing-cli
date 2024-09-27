@@ -1,5 +1,5 @@
 import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_PLAYERS } from '../constants.js';
-import { BooleanResult, ValidateRoundMatchesInput, ValidateRoundMatchesOutput } from '../types.js';
+import { BooleanResult, ValidateRoundMatchesInput, ValidateRoundMatchesOutput } from '../types/types.js';
 
 import { mutableClonePlayedOpponents } from './utils.js';
 

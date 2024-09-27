@@ -2,7 +2,7 @@ import * as fileParser from '../parsers/fileParser.js';
 import * as utils from '../utils.js';
 
 import { BYE_PLAYER, CLI_OPTION_DEFAULTS } from '../constants.js';
-import { Result, ValidatedCLIOptions } from '../types.js';
+import { Result, ValidatedCLIOptions } from '../types/types.js';
 import {
   addByePlayerIfNecessary,
   mergeOptions,

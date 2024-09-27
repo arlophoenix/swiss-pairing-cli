@@ -2,7 +2,7 @@ import * as validation from './validation.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { GenerateRoundMatchesInput } from '../types.js';
+import { GenerateRoundMatchesInput } from '../types/types.js';
 import type { SpyInstance } from 'jest-mock';
 import { generateRoundMatches } from './swissPairing.js';
 

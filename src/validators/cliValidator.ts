@@ -6,7 +6,7 @@ import {
   Result,
   UnvalidatedCLIOptions,
   ValidatedCLIOptions,
-} from '../types.js';
+} from '../types/types.js';
 
 import { createInvalidValueErrorMessage } from '../errorUtils.js';
 import { parseStringLiteral } from '../utils.js';

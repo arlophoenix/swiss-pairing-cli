@@ -1,4 +1,4 @@
-import { Result, ValidatedCLIOptions } from '../types.js';
+import { Result, ValidatedCLIOptions } from '../types/types.js';
 
 import { parseCSV } from './csvParserUtils.js';
 import { validateCSVOptions } from '../validators/csvValidator.js';

@@ -6,6 +6,7 @@
 
 - remove duplication from the three different options validators
 - standardise error messages
+- add json integration tests
 
 ## Project Configuration
 

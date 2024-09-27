@@ -1,5 +1,5 @@
 import { BYE_PLAYER, CLI_OPTION_DEFAULTS } from '../constants.js';
-import { CLIOptionOrder, Result, ValidatedCLIOptions } from '../types.js';
+import { CLIOptionOrder, Result, ValidatedCLIOptions } from '../types/types.js';
 import { reverse, shuffle } from '../utils.js';
 
 import { parseFile } from '../parsers/fileParser.js';

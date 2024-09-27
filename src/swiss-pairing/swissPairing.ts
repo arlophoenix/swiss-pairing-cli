@@ -5,7 +5,7 @@ import {
   ReadonlyPlayedOpponents,
   ReadonlyRoundMatches,
   Result,
-} from '../types.js';
+} from '../types/types.js';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 
 import { createBidirectionalMap } from '../utils.js';

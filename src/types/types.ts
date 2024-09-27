@@ -1,4 +1,6 @@
-import { ARGS, CLI_OPTION_FORMAT, CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from './constants.js';
+export * from './errors.js';
+
+import { ARGS, CLI_OPTION_FORMAT, CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from '../constants.js';
 
 export interface UnvalidatedCLIOptions {
   readonly players?: readonly string[];
@@ -22,21 +24,6 @@ export interface ValidatedCLIOptions {
 
 export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
 export type CLIOptionFormat = (typeof CLI_OPTION_FORMAT)[number];
-
-export type Result<T> =
-  | { readonly success: true; readonly value: T }
-  | { readonly success: false; readonly error: ValidationError };
-
-export type BooleanResult =
-  | { readonly success: true }
-  | { readonly success: false; readonly error: ValidationError };
-
-export interface ValidationError {
-  readonly type: ErrorType;
-  readonly message: string;
-}
-
-export type ErrorType = 'InvalidInput' | 'InvalidOutput' | 'NoValidSolution';
 
 export interface GenerateRoundMatchesInput {
   readonly players: readonly string[];

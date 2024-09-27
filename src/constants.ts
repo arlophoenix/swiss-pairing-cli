@@ -1,4 +1,4 @@
-import { CLIOptionFormat, CLIOptionOrder, ValidatedCLIOptions } from './types.js';
+import { CLIOptionFormat, CLIOptionOrder, ValidatedCLIOptions } from './types/types.js';
 
 export const ARG_FILE = 'file';
 export const ARG_FORMAT = 'format';

@@ -1,4 +1,4 @@
-import { Result, ValidatedCLIOptions } from '../types.js';
+import { Result, ValidatedCLIOptions } from '../types/types.js';
 
 import { validateJSONOptions } from '../validators/jsonValidator.js';
 

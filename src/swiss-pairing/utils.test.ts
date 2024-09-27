@@ -1,4 +1,4 @@
-import { PlayedOpponents, ReadonlyPlayedOpponents } from '../types.js';
+import { PlayedOpponents, ReadonlyPlayedOpponents } from '../types/types.js';
 import { describe, expect, it } from '@jest/globals';
 
 import { mutableClonePlayedOpponents } from './utils.js';

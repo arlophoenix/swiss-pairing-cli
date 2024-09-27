@@ -2,7 +2,7 @@ import * as papa from 'papaparse';
 
 import { ARG_FORMAT, ARG_NUM_ROUNDS, ARG_ORDER, ARG_PLAYERS, ARG_START_ROUND } from '../constants.js';
 
-import { Result } from '../types.js';
+import { Result } from '../types/types.js';
 
 // TODO: rename this type to something more explanatory
 export interface CSVRecord {

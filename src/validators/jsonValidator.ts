@@ -6,7 +6,13 @@ import {
   ARG_PLAYERS,
   ARG_START_ROUND,
 } from '../constants.js';
-import { CLIOptionFormat, CLIOptionOrder, ReadonlyMatch, Result, ValidatedCLIOptions } from '../types.js';
+import {
+  CLIOptionFormat,
+  CLIOptionOrder,
+  ReadonlyMatch,
+  Result,
+  ValidatedCLIOptions,
+} from '../types/types.js';
 import {
   validateFormat,
   validateMatches,
