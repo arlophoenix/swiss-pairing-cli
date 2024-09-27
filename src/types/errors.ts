@@ -12,3 +12,5 @@ export interface ValidationError {
 }
 
 export type ErrorType = 'InvalidInput' | 'InvalidOutput' | 'NoValidSolution';
+
+export type InputOrigin = 'CLI' | 'CSV' | 'JSON';

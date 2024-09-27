@@ -1,7 +1,7 @@
 import { createBidirectionalMap, parseStringLiteral, reverse, shuffle } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
-import { ValidationError } from '../types/types.js';
+import { ARG_FORMAT } from '../constants.js';
 
 describe('utils', () => {
   describe('createBidirectionalMap', () => {
@@ -104,7 +104,10 @@ describe('utils', () => {
     const colors = ['red', 'green', 'blue'] as const;
 
     it('should return success for a valid option', () => {
-      const result = parseStringLiteral({ input: 'green', options: colors });
+      const result = parseStringLiteral({
+        input: 'green',
+        options: colors,
+      });
       expect(result).toEqual({ success: true, value: 'green' });
     });
 
@@ -120,14 +123,17 @@ describe('utils', () => {
     });
 
     it('should use a custom error message when provided', () => {
-      const customError: ValidationError = {
-        type: 'InvalidInput',
-        message: 'Custom error for invalid color',
-      };
-      const result = parseStringLiteral({ input: 'yellow', options: colors, error: customError });
+      const result = parseStringLiteral({
+        input: 'yellow',
+        options: colors,
+        errorInfo: { origin: 'CLI', argName: ARG_FORMAT },
+      });
       expect(result).toEqual({
         success: false,
-        error: customError,
+        error: {
+          type: 'InvalidInput',
+          message: 'Invalid CLI value "--format": "yellow". Expected one of "red, green, blue".',
+        },
       });
     });
 

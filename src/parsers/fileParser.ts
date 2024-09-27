@@ -6,7 +6,6 @@ import {
 } from '../constants.js';
 import { Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
 
-import { createInvalidValueErrorMessage } from '../utils/errorUtils.js';
 import { existsSync } from 'fs';
 import { extname } from 'path';
 import { parseOptionsFromCSV } from './csvParser.js';
@@ -51,14 +50,9 @@ function getFileType(filePath: string): Result<SupportedFileTypes> {
   return parseStringLiteral<SupportedFileTypes>({
     input: ext,
     options: SUPPORTED_FILE_TYPES,
-    error: {
-      type: 'InvalidInput',
-      message: createInvalidValueErrorMessage({
-        origin: 'CLI',
-        argName: ARG_FILE,
-        expectedValue: SUPPORTED_FILE_TYPES,
-        inputValue: ext,
-      }),
+    errorInfo: {
+      origin: 'CLI',
+      argName: ARG_FILE,
     },
   });
 }

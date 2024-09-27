@@ -1,4 +1,6 @@
-import { Result, ValidationError } from '../types/types.js';
+import { CLIArg, InputOrigin, Result } from '../types/types.js';
+
+import { createInvalidInputError } from './errorUtils.js';
 
 /**
  * Creates a bidirectional map from an array of pairs.
@@ -55,20 +57,30 @@ export function reverse<T>(array: readonly T[]): readonly T[] {
 export function parseStringLiteral<T extends string>({
   input,
   options,
-  error,
+  errorInfo,
 }: {
   readonly input: string;
   readonly options: readonly T[];
-  readonly error?: ValidationError;
+  readonly errorInfo?: {
+    readonly origin: InputOrigin;
+    readonly argName: CLIArg;
+  };
 }): Result<T> {
   if (options.includes(input as T)) {
     return { success: true, value: input as T };
   }
   return {
     success: false,
-    error: error ?? {
-      type: 'InvalidInput',
-      message: `Invalid value: "${input}". Expected one of "${options.join(',')}".`,
-    },
+    error: errorInfo
+      ? createInvalidInputError({
+          origin: errorInfo.origin,
+          argName: errorInfo.argName,
+          inputValue: input,
+          expectedValue: options,
+        })
+      : {
+          type: 'InvalidInput',
+          message: `Invalid value: "${input}". Expected one of "${options.join(',')}".`,
+        },
   };
 }
