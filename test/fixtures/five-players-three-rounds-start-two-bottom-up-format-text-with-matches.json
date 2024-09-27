@@ -1,0 +1,12 @@
+{
+  "players": ["Alice", "Bob", "Charlie", "David", "Elvis"],
+  "num-rounds": 2,
+  "start-round": 3,
+  "order": "bottom-up",
+  "format": "text",
+  "matches": [
+    ["Alice", "Bob"],
+    ["Alice", "David"],
+    ["Bob", "Elvis"]
+  ]
+}

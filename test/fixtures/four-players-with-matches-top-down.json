@@ -1,0 +1,5 @@
+{
+  "players": ["Player1", "Player2", "Player3", "Player4"],
+  "order": "top-down",
+  "matches": [["Player1", "Player2"]]
+}
