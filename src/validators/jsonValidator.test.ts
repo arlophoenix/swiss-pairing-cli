@@ -4,7 +4,7 @@ import { validateJSONOptions } from './jsonValidator.js';
 
 describe('jsonValidator', () => {
   describe('validateJSONOptions', () => {
-    it('should return success for valid JSON record', () => {
+    it('should return success for valid complete JSON record', () => {
       const jsonRecord = {
         players: ['Alice', 'Bob'],
         'num-rounds': 3,
@@ -27,20 +27,7 @@ describe('jsonValidator', () => {
       }
     });
 
-    it('should return failure for invalid JSON record', () => {
-      const jsonRecord = {
-        players: ['Alice'],
-        'num-rounds': -1,
-        'start-round': 0,
-        order: 'invalid',
-        format: 'invalid',
-        matches: [['Alice']],
-      };
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(false);
-    });
-
-    it('should handle partial JSON record', () => {
+    it('should return success with partial object for partial JSON record', () => {
       const jsonRecord = {
         players: ['Alice', 'Bob'],
         'num-rounds': 3,
@@ -52,6 +39,10 @@ describe('jsonValidator', () => {
           players: ['Alice', 'Bob'],
           numRounds: 3,
         });
+        expect(result.value).not.toHaveProperty('startRound');
+        expect(result.value).not.toHaveProperty('order');
+        expect(result.value).not.toHaveProperty('format');
+        expect(result.value).not.toHaveProperty('matches');
       }
     });
 
@@ -62,6 +53,19 @@ describe('jsonValidator', () => {
       if (result.success) {
         expect(result.value).toEqual({});
       }
+    });
+
+    it('should return failure for invalid JSON record', () => {
+      const jsonRecord = {
+        players: ['Alice'],
+        'num-rounds': -1,
+        'start-round': 0,
+        order: 'invalid',
+        format: 'invalid',
+        matches: [['Alice']],
+      };
+      const result = validateJSONOptions(jsonRecord);
+      expect(result.success).toBe(false);
     });
   });
 });

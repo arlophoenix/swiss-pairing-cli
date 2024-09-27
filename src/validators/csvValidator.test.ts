@@ -53,12 +53,8 @@ describe('csvValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          format: undefined,
-          matches: [],
           numRounds: 3,
-          order: undefined,
           players: ['Alice', 'Bob'],
-          startRound: undefined,
         });
       }
     });

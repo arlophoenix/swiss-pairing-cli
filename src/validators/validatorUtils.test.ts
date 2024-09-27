@@ -12,7 +12,7 @@ import {
 
 describe('validatorUtils', () => {
   describe('validateAllOptions', () => {
-    it('should return success for valid input', () => {
+    it('should return success for valid complete input', () => {
       const input = {
         players: ['Alice', 'Bob'],
         numRounds: '3',
@@ -32,6 +32,50 @@ describe('validatorUtils', () => {
           format: 'text',
           matches: [['Alice', 'Bob']],
         });
+      }
+    });
+
+    it('should return success with partial object for partial valid input', () => {
+      const input = {
+        players: ['Alice', 'Bob'],
+        numRounds: '3',
+      };
+      const result = validateAllOptions({ input, origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toEqual({
+          players: ['Alice', 'Bob'],
+          numRounds: 3,
+        });
+        expect(result.value).not.toHaveProperty('startRound');
+        expect(result.value).not.toHaveProperty('order');
+        expect(result.value).not.toHaveProperty('format');
+        expect(result.value).not.toHaveProperty('matches');
+      }
+    });
+
+    it('should handle undefined values', () => {
+      const input = {
+        players: ['Alice', 'Bob'],
+        numRounds: undefined,
+        startRound: undefined,
+        order: undefined,
+        format: undefined,
+        matches: undefined,
+      };
+      const result = validateAllOptions({ input, origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toEqual({ players: ['Alice', 'Bob'] });
+      }
+    });
+
+    it('should return success with empty object for empty input', () => {
+      const input = {};
+      const result = validateAllOptions({ input, origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toEqual({});
       }
     });
 

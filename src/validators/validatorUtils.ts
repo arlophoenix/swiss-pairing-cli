@@ -1,4 +1,5 @@
 import {
+  ARG_FILE,
   ARG_FORMAT,
   ARG_MATCHES,
   ARG_NUM_ROUNDS,
@@ -7,6 +8,7 @@ import {
   ARG_START_ROUND,
   CLI_OPTION_FORMAT,
   CLI_OPTION_ORDER,
+  SUPPORTED_FILE_TYPES,
 } from '../constants.js';
 import {
   CLIArg,
@@ -15,10 +17,15 @@ import {
   Result,
   UnvalidatedCLIOptions,
   ValidatedCLIOptions,
+  ValidationError,
 } from '../types/types.js';
 
 import { createInvalidInputError } from '../utils/errorUtils.js';
 import { parseStringLiteral } from '../utils/utils.js';
+
+type Validator<K extends keyof ValidatedCLIOptions> = (
+  input: UnvalidatedCLIOptions
+) => Result<ValidatedCLIOptions[K] | undefined>;
 
 export function validateAllOptions({
   input,
@@ -27,31 +34,47 @@ export function validateAllOptions({
   readonly input: UnvalidatedCLIOptions;
   readonly origin: InputOrigin;
 }): Result<Partial<ValidatedCLIOptions>> {
-  const results = [
-    validatePlayers({ players: input.players, origin }),
-    validateNumRounds({ numRounds: input.numRounds, origin }),
-    validateStartRound({ startRound: input.startRound, origin }),
-    validateOrder({ order: input.order, origin }),
-    validateFormat({ format: input.format, origin }),
-    validateMatches({ matches: input.matches, origin }),
-  ] as const;
-
-  // Check all results for errors
-  const firstError = results.find((result) => !result.success);
-  if (firstError) return firstError as Result<never>;
-
-  // If no errors, construct the validated options
-  return {
-    success: true,
-    value: {
-      players: results[0].success ? results[0].value : undefined,
-      numRounds: results[1].success ? results[1].value : undefined,
-      startRound: results[2].success ? results[2].value : undefined,
-      order: results[3].success ? results[3].value : undefined,
-      format: results[4].success ? results[4].value : undefined,
-      matches: results[5].success ? results[5].value : undefined,
-    },
+  // eslint-disable-next-line functional/prefer-readonly-type
+  const validators: { [K in keyof ValidatedCLIOptions]: Validator<K> } = {
+    players: (i) => validatePlayers({ players: i.players, origin }),
+    numRounds: (i) => validateNumRounds({ numRounds: i.numRounds, origin }),
+    startRound: (i) => validateStartRound({ startRound: i.startRound, origin }),
+    order: (i) => validateOrder({ order: i.order, origin }),
+    format: (i) => validateFormat({ format: i.format, origin }),
+    matches: (i) => validateMatches({ matches: i.matches, origin }),
+    file: (i) => validateFile({ file: i.file, origin }),
   };
+
+  type ValidatorResult = {
+    readonly [K in keyof ValidatedCLIOptions]: Result<ValidatedCLIOptions[K] | undefined>;
+  };
+  const results: ValidatorResult = Object.fromEntries(
+    Object.entries(validators).map(([key, validator]) => [key, validator(input)])
+  ) as ValidatorResult;
+
+  const firstError = Object.values(results).find(
+    (result): result is { readonly success: false; readonly error: ValidationError } => !result.success
+  );
+  if (firstError) return firstError;
+
+  const validatedOptions: Partial<ValidatedCLIOptions> = Object.fromEntries(
+    Object.entries(results)
+      .filter(
+        (
+          entry
+          // eslint-disable-next-line functional/prefer-readonly-type
+        ): entry is [
+          keyof ValidatedCLIOptions,
+          {
+            readonly success: true;
+            readonly value: Exclude<ValidatedCLIOptions[keyof ValidatedCLIOptions], undefined>;
+          },
+        ] => entry[1].success && entry[1].value !== undefined
+      )
+      .map(([key, result]) => [key, result.value])
+  );
+
+  return { success: true, value: validatedOptions };
 }
 
 export function validatePlayers({
@@ -164,6 +187,24 @@ export function validateFormat({
     errorInfo: {
       origin,
       argName: ARG_FORMAT,
+    },
+  });
+}
+
+export function validateFile({
+  file,
+  origin,
+}: {
+  readonly file: string | undefined;
+  readonly origin: InputOrigin;
+}): Result<(typeof SUPPORTED_FILE_TYPES)[number] | undefined> {
+  if (file === undefined) return { success: true, value: undefined };
+  return parseStringLiteral({
+    input: file,
+    options: SUPPORTED_FILE_TYPES,
+    errorInfo: {
+      origin,
+      argName: ARG_FILE,
     },
   });
 }
