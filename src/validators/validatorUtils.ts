@@ -97,9 +97,6 @@ export function validatePlayers({
   if (players.length < 2) {
     return { success: false, error: createError('at least two players') };
   }
-  if (players.length % 2 !== 0) {
-    return { success: false, error: createError('an even number of players') };
-  }
   if (new Set(players).size !== players.length) {
     return { success: false, error: createError('unique player names') };
   }

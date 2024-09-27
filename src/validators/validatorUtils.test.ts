@@ -107,11 +107,6 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(false);
     });
 
-    it('should return failure for odd number of players', () => {
-      const result = validatePlayers({ players: ['Alice', 'Bob', 'Charlie'], origin: 'CLI' });
-      expect(result.success).toBe(false);
-    });
-
     it('should return failure for duplicate players', () => {
       const result = validatePlayers({ players: ['Alice', 'Bob', 'Alice', 'Charlie'], origin: 'CLI' });
       expect(result.success).toBe(false);
