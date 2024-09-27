@@ -4,10 +4,9 @@
 
 ## Code Quality
 
-- remove duplication from the three different options validators
-- standardise error messages
-- add json integration tests
+- standardise error messages in swissPairing/validation
 - rename JSONRecord and CSVRecord to something more clear
+- add more integration tests which cover the whole range of arguments
 
 ## Project Configuration
 
