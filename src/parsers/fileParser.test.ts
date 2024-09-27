@@ -98,7 +98,9 @@ describe('fileParser', () => {
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.error.type).toBe('InvalidInput');
-      expect(result.error.message).toContain('File not found: nonexistent.csv');
+      expect(result.error.message).toContain(
+        'Invalid CLI value "--file": "nonexistent.csv". Expected file does not exist.'
+      );
     }
   });
 });

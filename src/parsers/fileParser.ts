@@ -4,8 +4,9 @@ import {
   SUPPORTED_FILE_TYPE_CSV,
   SUPPORTED_FILE_TYPE_JSON,
 } from '../constants.js';
-import { Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
+import { BooleanResult, Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
 
+import { createInvalidInputError } from '../utils/errorUtils.js';
 import { existsSync } from 'fs';
 import { extname } from 'path';
 import { parseOptionsFromCSV } from './csvParser.js';
@@ -18,15 +19,9 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
   if (!fileTypeResult.success) return fileTypeResult;
 
   try {
-    if (!existsSync(filePath)) {
-      return {
-        success: false,
-        error: {
-          type: 'InvalidInput',
-          message: `File not found: ${filePath}`,
-        },
-      };
-    }
+    const fileExistsResult = fileExists(filePath);
+    if (!fileExistsResult.success) return fileExistsResult;
+
     const fileContent = await readFile(filePath, 'utf-8');
     switch (fileTypeResult.value) {
       case SUPPORTED_FILE_TYPE_CSV:
@@ -35,11 +30,12 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
         return parseOptionsFromJSON(fileContent);
     }
   } catch (error) {
+    const errorMessage = (error as Error).message;
     return {
       success: false,
       error: {
         type: 'InvalidInput',
-        message: `Error reading file: ${(error as Error).message}`,
+        message: `Error reading file: ${errorMessage}`,
       },
     };
   }
@@ -55,4 +51,19 @@ function getFileType(filePath: string): Result<SupportedFileTypes> {
       argName: ARG_FILE,
     },
   });
+}
+
+function fileExists(filePath: string): BooleanResult {
+  if (!existsSync(filePath)) {
+    return {
+      success: false,
+      error: createInvalidInputError({
+        origin: 'CLI',
+        argName: ARG_FILE,
+        inputValue: filePath,
+        expectedValue: 'file does not exist',
+      }),
+    };
+  }
+  return { success: true };
 }
