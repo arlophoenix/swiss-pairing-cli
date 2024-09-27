@@ -1,5 +1,5 @@
 import * as csvParserUtils from './csvParserUtils.js';
-import * as csvValidator from './csvValidator.js';
+import * as csvValidator from '../validators/csvValidator.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 

@@ -1,10 +1,10 @@
 import {
   GenerateRoundMatchesInput,
-  GenerateRoundMatchesOutput,
   PlayedOpponents,
   ReadonlyMatch,
   ReadonlyPlayedOpponents,
   ReadonlyRoundMatches,
+  Result,
 } from '../types.js';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 
@@ -21,15 +21,11 @@ export function generateRoundMatches({
   numRounds,
   startRound,
   playedOpponents,
-}: GenerateRoundMatchesInput): GenerateRoundMatchesOutput {
+}: GenerateRoundMatchesInput): Result<ReadonlyRoundMatches> {
   const inputValidation = validateRoundMatchesInput({ players, numRounds, playedOpponents });
 
-  if (!inputValidation.isValid) {
-    return {
-      success: false,
-      errorType: 'InvalidInput',
-      errorMessage: inputValidation.errorMessage,
-    };
+  if (!inputValidation.success) {
+    return inputValidation;
   }
 
   const roundMatches: ReadonlyRoundMatches = {};
@@ -46,8 +42,10 @@ export function generateRoundMatches({
     if (!newMatches) {
       return {
         success: false,
-        errorType: 'NoValidSolution',
-        errorMessage: `unable to generate valid matches for ${roundLabel}.`,
+        error: {
+          type: 'NoValidSolution',
+          message: `unable to generate valid matches for ${roundLabel}.`,
+        },
       };
     }
     // eslint-disable-next-line functional/immutable-data
@@ -63,15 +61,11 @@ export function generateRoundMatches({
     playedOpponents,
   });
 
-  if (!resultValidation.isValid) {
-    return {
-      success: false,
-      errorType: 'InvalidOutput',
-      errorMessage: resultValidation.errorMessage,
-    };
+  if (!resultValidation.success) {
+    return resultValidation;
   }
 
-  return { success: true, roundMatches };
+  return { success: true, value: roundMatches };
 }
 
 /**

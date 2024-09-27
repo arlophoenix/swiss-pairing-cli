@@ -1,3 +1,5 @@
+import { describe, expect, test } from '@jest/globals';
+
 import { SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { SupportedFileTypes } from '../src/types.js';
 import { execSync } from 'child_process';

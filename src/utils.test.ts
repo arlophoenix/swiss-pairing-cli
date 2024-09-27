@@ -1,6 +1,8 @@
 import { createBidirectionalMap, parseStringLiteral, reverse, shuffle } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
+import { ValidationError } from './types.js';
+
 describe('utils', () => {
   describe('createBidirectionalMap', () => {
     it('should correctly build played matches Map', () => {
@@ -110,16 +112,22 @@ describe('utils', () => {
       const result = parseStringLiteral({ input: 'yellow', options: colors });
       expect(result).toEqual({
         success: false,
-        errorMessage: 'Invalid option: yellow. Valid options are: red, green, blue',
+        error: {
+          message: 'Invalid value: "yellow". Expected one of "red,green,blue".',
+          type: 'InvalidInput',
+        },
       });
     });
 
     it('should use a custom error message when provided', () => {
-      const customError = 'Custom error for invalid color';
-      const result = parseStringLiteral({ input: 'yellow', options: colors, errorMessage: customError });
+      const customError: ValidationError = {
+        type: 'InvalidInput',
+        message: 'Custom error for invalid color',
+      };
+      const result = parseStringLiteral({ input: 'yellow', options: colors, error: customError });
       expect(result).toEqual({
         success: false,
-        errorMessage: customError,
+        error: customError,
       });
     });
 

@@ -1,4 +1,4 @@
-import { GenerateRoundMatchesOutputErrorType, Result } from './types.js';
+import { Result, ValidationError } from './types.js';
 
 /**
  * Creates a bidirectional map from an array of pairs.
@@ -55,58 +55,20 @@ export function reverse<T>(array: readonly T[]): readonly T[] {
 export function parseStringLiteral<T extends string>({
   input,
   options,
-  errorMessage,
+  error,
 }: {
   readonly input: string;
   readonly options: readonly T[];
-  readonly errorMessage?: string;
+  readonly error?: ValidationError;
 }): Result<T> {
   if (options.includes(input as T)) {
     return { success: true, value: input as T };
   }
   return {
     success: false,
-    errorMessage: errorMessage ?? `Invalid option: ${input}. Valid options are: ${options.join(', ')}`,
+    error: error ?? {
+      type: 'InvalidInput',
+      message: `Invalid value: "${input}". Expected one of "${options.join(',')}".`,
+    },
   };
-}
-
-export function parseStringLiteralSilently<T extends string>({
-  input,
-  options,
-}: {
-  readonly input: string | undefined;
-  readonly options: readonly T[];
-}): T | undefined {
-  if (input === undefined) {
-    return undefined;
-  }
-  if (options.includes(input as T)) {
-    return input as T;
-  }
-  return undefined;
-}
-
-export function buildErrorMessage({
-  type,
-  message,
-}: {
-  readonly type: GenerateRoundMatchesOutputErrorType;
-  readonly message: string;
-}) {
-  let errorPrefix;
-
-  switch (type) {
-    case 'InvalidInput':
-      errorPrefix = 'Invalid input';
-      break;
-    case 'InvalidOutput':
-    case 'NoValidSolution':
-      errorPrefix = 'Failed to generate matches';
-      break;
-  }
-  return `${errorPrefix}: ${message}`;
-}
-
-export function removeNullOrUndefinedValues<T extends Record<string, unknown>>(obj: T): Partial<T> {
-  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value != null)) as Partial<T>;
 }

@@ -1,4 +1,4 @@
-import { CLIOptionFormat, CLIOptionOrder } from './types.js';
+import { CLIOptionFormat, CLIOptionOrder, ValidatedCLIOptions } from './types.js';
 
 export const ARG_FILE = 'file';
 export const ARG_FORMAT = 'format';
@@ -37,10 +37,21 @@ export const CLI_OPTION_FORMAT = [
   CLI_OPTION_FORMAT_JSON_PRETTY,
 ] as const;
 
-export const CLI_OPTION_ORDER_DEFAULT: CLIOptionOrder = CLI_OPTION_ORDER_TOP_DOWN;
 export const CLI_OPTION_FORMAT_DEFAULT: CLIOptionFormat = CLI_OPTION_FORMAT_TEXT;
+export const CLI_OPTION_MATCHES_DEFAULT = [];
 export const CLI_OPTION_NUM_ROUND_DEFAULT = 1;
+export const CLI_OPTION_ORDER_DEFAULT: CLIOptionOrder = CLI_OPTION_ORDER_TOP_DOWN;
+export const CLI_OPTION_PLAYERS_DEFAULT = [];
 export const CLI_OPTION_START_ROUND_DEFAULT = 1;
+export const CLI_OPTION_DEFAULTS: ValidatedCLIOptions = {
+  file: '',
+  format: CLI_OPTION_FORMAT_DEFAULT,
+  matches: CLI_OPTION_MATCHES_DEFAULT,
+  numRounds: CLI_OPTION_NUM_ROUND_DEFAULT,
+  order: CLI_OPTION_ORDER_DEFAULT,
+  players: CLI_OPTION_PLAYERS_DEFAULT,
+  startRound: CLI_OPTION_START_ROUND_DEFAULT,
+};
 
 export const SUPPORTED_FILE_TYPE_CSV = '.csv';
 export const SUPPORTED_FILE_TYPE_JSON = '.json';

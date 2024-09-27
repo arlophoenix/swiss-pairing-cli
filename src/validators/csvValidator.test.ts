@@ -9,7 +9,7 @@ import {
   validateCSVStartRound,
 } from './csvValidator.js';
 
-import { CSVRecord } from './csvParserUtils.js';
+import { CSVRecord } from '../parsers/csvParserUtils.js';
 
 describe('csvValidator', () => {
   describe('validateCSVOptions', () => {

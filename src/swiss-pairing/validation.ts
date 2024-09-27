@@ -1,5 +1,5 @@
 import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_PLAYERS } from '../constants.js';
-import { ValidateRoundMatchesInput, ValidateRoundMatchesOutput, ValidationResult } from '../types.js';
+import { BooleanResult, ValidateRoundMatchesInput, ValidateRoundMatchesOutput } from '../types.js';
 
 import { mutableClonePlayedOpponents } from './utils.js';
 
@@ -9,39 +9,54 @@ import { mutableClonePlayedOpponents } from './utils.js';
  * @param {readonly string[]} params.players - The list of players
  * @param {number} params.numRounds - The number of rounds to generate
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
- * @returns {ValidationResult} The result of the validation
+ * @returns {BooleanResult} The result of the validation
  */
 
 export function validateRoundMatchesInput({
   players,
   numRounds,
   playedOpponents,
-}: ValidateRoundMatchesInput): ValidationResult {
+}: ValidateRoundMatchesInput): BooleanResult {
   // Check if there are at least two players
   if (players.length < 2) {
-    return { isValid: false, errorMessage: `there must be at least two ${ARG_PLAYERS}.` };
+    return {
+      success: false,
+      error: { type: 'InvalidInput', message: `there must be at least two ${ARG_PLAYERS}.` },
+    };
   }
 
   // Check there is an even number of players
   if (players.length % 2 !== 0) {
-    return { isValid: false, errorMessage: `there must be an even number of ${ARG_PLAYERS}.` };
+    return {
+      success: false,
+      error: { type: 'InvalidInput', message: `there must be an even number of ${ARG_PLAYERS}.` },
+    };
   }
 
   // Check for duplicate players
   if (new Set(players).size !== players.length) {
-    return { isValid: false, errorMessage: `duplicate ${ARG_PLAYERS} are not allowed.` };
+    return {
+      success: false,
+      error: { type: 'InvalidInput', message: `duplicate ${ARG_PLAYERS} are not allowed.` },
+    };
   }
 
   // Check if rounds is at least 1
   if (numRounds < 1) {
-    return { isValid: false, errorMessage: `${ARG_NUM_ROUNDS} to generate must be at least 1.` };
+    return {
+      success: false,
+      error: { type: 'InvalidInput', message: `${ARG_NUM_ROUNDS} to generate must be at least 1.` },
+    };
   }
 
   // Check if rounds is not greater than players minus 1
   if (numRounds >= players.length) {
     return {
-      isValid: false,
-      errorMessage: `${ARG_NUM_ROUNDS} to generate must be fewer than the number of ${ARG_PLAYERS}.`,
+      success: false,
+      error: {
+        type: 'InvalidInput',
+        message: `${ARG_NUM_ROUNDS} to generate must be fewer than the number of ${ARG_PLAYERS}.`,
+      },
     };
   }
 
@@ -55,20 +70,26 @@ export function validateRoundMatchesInput({
   }
 
   if (!Array.from(allPlayersInPlayedMatches).every((player) => players.includes(player))) {
-    return { isValid: false, errorMessage: `${ARG_MATCHES} contains invalid player names.` };
+    return {
+      success: false,
+      error: { type: 'InvalidInput', message: `${ARG_MATCHES} contains invalid player names.` },
+    };
   }
 
   // Check if playedMatches is symmetrical
   for (const [player, opponents] of playedOpponents.entries()) {
     for (const opponent of opponents) {
       if (!playedOpponents.get(opponent)?.has(player)) {
-        return { isValid: false, errorMessage: `${ARG_MATCHES} are not symmetrical.` };
+        return {
+          success: false,
+          error: { type: 'InvalidInput', message: `${ARG_MATCHES} are not symmetrical.` },
+        };
       }
     }
   }
 
   // If all checks pass, return true
-  return { isValid: true };
+  return { success: true };
 }
 
 /**
@@ -78,22 +99,25 @@ export function validateRoundMatchesInput({
  * @param {readonly string[]} params.players - The list of players
  * @param {number} params.numRounds - The number of rounds generated
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
- * @returns {ValidationResult} The result of the validation
+ * @returns {BooleanResult} The result of the validation
  */
 export function validateRoundMatchesOutput({
   roundMatches,
   players,
   numRounds,
   playedOpponents,
-}: ValidateRoundMatchesOutput): ValidationResult {
+}: ValidateRoundMatchesOutput): BooleanResult {
   const numGamesPerRound = players.length / 2;
 
   // 1. There is one key per round in the record
   const resultNumRounds = Object.keys(roundMatches).length;
   if (resultNumRounds !== numRounds) {
     return {
-      isValid: false,
-      errorMessage: `invalid number of rounds in the result. Expected ${String(numRounds)}, got ${String(resultNumRounds)}.`,
+      success: false,
+      error: {
+        type: 'InvalidOutput',
+        message: `invalid number of rounds in the result. Expected ${String(numRounds)}, got ${String(resultNumRounds)}.`,
+      },
     };
   }
 
@@ -103,8 +127,11 @@ export function validateRoundMatchesOutput({
     // 2. There are num players / 2 values per round
     if (matches.length !== numGamesPerRound) {
       return {
-        isValid: false,
-        errorMessage: `invalid number of matches in ${roundLabel}. Expected ${String(numGamesPerRound)}, got ${String(matches.length)}.`,
+        success: false,
+        error: {
+          type: 'InvalidOutput',
+          message: `invalid number of matches in ${roundLabel}. Expected ${String(numGamesPerRound)}, got ${String(matches.length)}.`,
+        },
       };
     }
 
@@ -114,8 +141,11 @@ export function validateRoundMatchesOutput({
       // 3. No round contains a match of players who are already listed in playedMatches
       if (currentPlayedMatches.get(player1)?.has(player2)) {
         return {
-          isValid: false,
-          errorMessage: `invalid match in ${roundLabel}: ${player1} and ${player2} have already played.`,
+          success: false,
+          error: {
+            type: 'InvalidOutput',
+            message: `invalid match in ${roundLabel}: ${player1} and ${player2} have already played.`,
+          },
         };
       }
 
@@ -131,8 +161,11 @@ export function validateRoundMatchesOutput({
       // 4. No player appears more than once in the values for a round
       if (playersInRound.has(player1) || playersInRound.has(player2)) {
         return {
-          isValid: false,
-          errorMessage: `invalid match in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
+          success: false,
+          error: {
+            type: 'InvalidOutput',
+            message: `invalid match in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
+          },
         };
       }
       playersInRound.add(player1);
@@ -140,5 +173,5 @@ export function validateRoundMatchesOutput({
     }
   }
 
-  return { isValid: true };
+  return { success: true };
 }

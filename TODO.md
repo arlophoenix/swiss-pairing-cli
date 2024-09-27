@@ -2,10 +2,10 @@
 
 ## Functionality
 
-- [ ] Support for additional input types (csv, json)
-- [ ] Support for additional output types (csv, json)
-
 ## Code Quality
+
+- remove duplication from the three different options validators
+- standardise error messages
 
 ## Project Configuration
 

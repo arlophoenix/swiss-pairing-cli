@@ -1,10 +1,5 @@
-import {
-  GenerateRoundMatchesInput,
-  ReadonlyPlayedOpponents,
-  RoundMatches,
-  ValidationResult,
-} from '../types.js';
-import { describe, expect, it } from '@jest/globals';
+import { GenerateRoundMatchesInput, ReadonlyPlayedOpponents, RoundMatches } from '../types.js';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 
 describe('Validation', () => {
@@ -19,9 +14,9 @@ describe('Validation', () => {
           ['Player2', new Set(['Player1'])],
         ]),
       };
-      const result: ValidationResult = validateRoundMatchesInput(validInput);
+      const result = validateRoundMatchesInput(validInput);
 
-      expect(result.isValid).toBe(true);
+      expect(result.success).toBe(true);
     });
 
     it('should return invalid if there are less than two players', () => {
@@ -31,11 +26,11 @@ describe('Validation', () => {
         startRound: 1,
         playedOpponents: new Map(),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('there must be at least two players.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('there must be at least two players.');
       }
     });
 
@@ -46,11 +41,11 @@ describe('Validation', () => {
         startRound: 1,
         playedOpponents: new Map(),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('there must be an even number of players.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('there must be an even number of players.');
       }
     });
 
@@ -61,11 +56,11 @@ describe('Validation', () => {
         startRound: 1,
         playedOpponents: new Map(),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('duplicate players are not allowed.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('duplicate players are not allowed.');
       }
     });
 
@@ -76,11 +71,11 @@ describe('Validation', () => {
         startRound: 1,
         playedOpponents: new Map(),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('num-rounds to generate must be at least 1.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('num-rounds to generate must be at least 1.');
       }
     });
 
@@ -91,11 +86,11 @@ describe('Validation', () => {
         startRound: 1,
         playedOpponents: new Map(),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('num-rounds to generate must be fewer than the number of players.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('num-rounds to generate must be fewer than the number of players.');
       }
     });
 
@@ -110,11 +105,11 @@ describe('Validation', () => {
           ['InvalidPlayer', new Set(['Player3'])],
         ]),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('matches contains invalid player names.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('matches contains invalid player names.');
       }
     });
 
@@ -128,11 +123,11 @@ describe('Validation', () => {
           ['Player2', new Set(['Player3'])], // Should be ['Player1']
         ]),
       };
-      const result: ValidationResult = validateRoundMatchesInput(invalidInput);
+      const result = validateRoundMatchesInput(invalidInput);
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('matches are not symmetrical.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('matches are not symmetrical.');
       }
     });
   });
@@ -166,7 +161,7 @@ describe('Validation', () => {
         playedOpponents,
       });
 
-      expect(result.isValid).toBe(true);
+      expect(result.success).toBe(true);
     });
 
     it('should return invalid if number of rounds is incorrect', () => {
@@ -183,9 +178,9 @@ describe('Validation', () => {
         playedOpponents,
       });
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('invalid number of rounds in the result. Expected 2, got 1.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('invalid number of rounds in the result. Expected 2, got 1.');
       }
     });
 
@@ -204,9 +199,9 @@ describe('Validation', () => {
         playedOpponents,
       });
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('invalid number of matches in Round 2. Expected 2, got 1.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('invalid number of matches in Round 2. Expected 2, got 1.');
       }
     });
 
@@ -229,9 +224,9 @@ describe('Validation', () => {
         playedOpponents,
       });
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('invalid match in Round 1: p1 and p2 have already played.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('invalid match in Round 1: p1 and p2 have already played.');
       }
     });
 
@@ -253,9 +248,9 @@ describe('Validation', () => {
         playedOpponents,
       });
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('invalid match in Round 2: p1 and p2 have already played.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('invalid match in Round 2: p1 and p2 have already played.');
       }
     });
 
@@ -277,9 +272,9 @@ describe('Validation', () => {
         playedOpponents,
       });
 
-      expect(result.isValid).toBe(false);
-      if (!result.isValid) {
-        expect(result.errorMessage).toBe('invalid match in Round 2: p1 or p4 appears more than once.');
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('invalid match in Round 2: p1 or p4 appears more than once.');
       }
     });
   });

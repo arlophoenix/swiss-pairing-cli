@@ -1,6 +1,6 @@
 import * as validation from './validation.js';
 
-import { describe, expect, it, jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { GenerateRoundMatchesInput } from '../types.js';
 import type { SpyInstance } from 'jest-mock';
@@ -14,18 +14,21 @@ describe('index', () => {
     beforeEach(() => {
       mockValidateInput = jest
         .spyOn(validation, 'validateRoundMatchesInput')
-        .mockReturnValue({ isValid: true });
+        .mockReturnValue({ success: true });
       mockValidateOutput = jest
         .spyOn(validation, 'validateRoundMatchesOutput')
-        .mockReturnValue({ isValid: true });
+        .mockReturnValue({ success: true });
     });
 
     afterEach(() => {
-      jest.restoreAllMocks();
+      jest.resetAllMocks();
     });
 
     it('should return an error if input validation fails', () => {
-      mockValidateInput.mockReturnValue({ isValid: false, errorMessage: 'input validation error' });
+      mockValidateInput.mockReturnValue({
+        success: false,
+        error: { type: 'InvalidInput', message: 'input validation error' },
+      });
       const invalidInput: GenerateRoundMatchesInput = {
         players: ['p1'],
         numRounds: 1,
@@ -36,13 +39,16 @@ describe('index', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.errorType).toBe('InvalidInput');
-        expect(result.errorMessage).toBe('input validation error');
+        expect(result.error.type).toBe('InvalidInput');
+        expect(result.error.message).toBe('input validation error');
       }
     });
 
     it('should return an error if output validation fails', () => {
-      mockValidateOutput.mockReturnValue({ isValid: false, errorMessage: 'output validation error' });
+      mockValidateOutput.mockReturnValue({
+        success: false,
+        error: { type: 'InvalidOutput', message: 'output validation error' },
+      });
       const validInput: GenerateRoundMatchesInput = {
         players: ['p1', 'p2'],
         numRounds: 1,
@@ -53,8 +59,8 @@ describe('index', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.errorType).toBe('InvalidOutput');
-        expect(result.errorMessage).toBe('output validation error');
+        expect(result.error.type).toBe('InvalidOutput');
+        expect(result.error.message).toBe('output validation error');
       }
     });
 
@@ -69,7 +75,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 1': [
             ['p1', 'p2'],
             ['p3', 'p4'],
@@ -89,7 +95,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 1': [
             ['p1', 'p2'],
             ['p3', 'p4'],
@@ -113,7 +119,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 1': [
             ['p1', 'p2'],
             ['p3', 'p4'],
@@ -143,8 +149,8 @@ describe('index', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.errorType).toBe('NoValidSolution');
-        expect(result.errorMessage).toBe('unable to generate valid matches for Round 4.');
+        expect(result.error.type).toBe('NoValidSolution');
+        expect(result.error.message).toBe('unable to generate valid matches for Round 4.');
       }
     });
 
@@ -164,7 +170,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 1': [
             ['p1', 'p3'],
             ['p2', 'p4'],
@@ -189,7 +195,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 1': [
             ['p1', 'p2'],
             ['p3', 'p4'],
@@ -213,7 +219,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 1': [
             ['p1', 'p4'],
             ['p2', 'p3'],
@@ -238,8 +244,8 @@ describe('index', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.errorType).toBe('NoValidSolution');
-        expect(result.errorMessage).toBe('unable to generate valid matches for Round 1.');
+        expect(result.error.type).toBe('NoValidSolution');
+        expect(result.error.message).toBe('unable to generate valid matches for Round 1.');
       }
     });
 
@@ -254,7 +260,7 @@ describe('index', () => {
 
       expect(roundMatchesResult.success).toBe(true);
       if (roundMatchesResult.success) {
-        expect(roundMatchesResult.roundMatches).toEqual({
+        expect(roundMatchesResult.value).toEqual({
           'Round 3': [
             ['p1', 'p2'],
             ['p3', 'p4'],

@@ -16,8 +16,8 @@ import {
   validateStartRound,
 } from './cliValidator.js';
 
-import { CSVRecord } from './csvParserUtils.js';
-import { createInvalidValueErrorMessage } from './errorUtils.js';
+import { CSVRecord } from '../parsers/csvParserUtils.js';
+import { createInvalidValueErrorMessage } from '../errorUtils.js';
 
 export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Partial<ValidatedCLIOptions>> {
   const results: readonly [
