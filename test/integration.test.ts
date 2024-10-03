@@ -2,48 +2,54 @@ import { describe, expect, test } from '@jest/globals';
 
 import { SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { SupportedFileTypes } from '../src/types/types.js';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import util from 'util';
 
-const runCLIWithArgs = (args: string) =>
-  execSync(`node dist/index.js ${args}`, {
-    encoding: 'utf-8',
-  });
+const execAsync = util.promisify(exec);
+const fixturesDir = path.join(__dirname, 'fixtures');
 
-const runCLIWithFile = (filePath: string) =>
-  execSync(`node dist/index.js --file ${filePath}`, {
-    encoding: 'utf-8',
-  });
+const runCLIWithArgs = async (args: string) => {
+  const { stdout } = await execAsync(`node dist/index.js ${args}`);
+  return stdout;
+};
+
+const runCLIWithFile = async (filePath: string) => {
+  const { stdout } = await execAsync(`node dist/index.js --file ${filePath}`);
+  return stdout;
+};
+
+const fileCache: Record<string, string> = {};
+
+const readFileContent = (filePath: string): string => {
+  if (!fileCache[filePath]) {
+    // eslint-disable-next-line functional/immutable-data
+    fileCache[filePath] = fs.readFileSync(filePath, 'utf-8');
+  }
+  return fileCache[filePath];
+};
 
 describe('Fixtures', () => {
-  const fixturesDir = path.join(__dirname, 'fixtures');
+  const fixtures = fs.readdirSync(fixturesDir);
 
-  fs.readdirSync(fixturesDir).forEach((fixture) => {
+  test.each(fixtures)('CLI Output - %s', async (fixture) => {
     const ext = path.extname(fixture);
     const fixturePath = path.join(fixturesDir, fixture);
 
     if (ext === '.txt') {
-      // Load arguments directly for .txt files
-      const input = fs.readFileSync(fixturePath, 'utf-8');
-      test(`CLI Output (txt) - ${fixture}`, () => {
-        const output = runCLIWithArgs(input);
-        expect(output).toMatchSnapshot();
-      });
+      const input = readFileContent(fixturePath);
+      const output = await runCLIWithArgs(input);
+      expect(output).toMatchSnapshot();
     } else if (SUPPORTED_FILE_TYPES.includes(ext as SupportedFileTypes)) {
-      // Use --file for .csv and .json files
-      test(`CLI Output (file) - ${fixture}`, () => {
-        const output = runCLIWithFile(fixturePath);
-        expect(output).toMatchSnapshot();
-      });
-      if (fs.existsSync(fixturePath.replace(ext, '.txt'))) {
-        // Load arguments directly for .txt files
-        const inputWithArgs = fs.readFileSync(fixturePath.replace(ext, '.txt'), 'utf-8');
-        test(`CLI Output (args & file version match) - ${fixture}`, () => {
-          const outputWithArgs = runCLIWithArgs(inputWithArgs);
-          const outputWithFile = runCLIWithFile(fixturePath);
-          expect(outputWithFile).toEqual(outputWithArgs);
-        });
+      const output = await runCLIWithFile(fixturePath);
+      expect(output).toMatchSnapshot();
+
+      const txtPath = fixturePath.replace(ext, '.txt');
+      if (fs.existsSync(txtPath)) {
+        const inputWithArgs = readFileContent(txtPath);
+        const outputWithArgs = await runCLIWithArgs(inputWithArgs);
+        expect(output).toEqual(outputWithArgs);
       }
     }
   });

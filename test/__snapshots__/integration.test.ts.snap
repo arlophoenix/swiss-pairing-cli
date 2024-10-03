@@ -304,3 +304,308 @@ exports[`Fixtures CLI Output (txt) - three-players-with-matches-top-down.txt 1`]
 2. Player2 vs BYE
 "
 `;
+
+exports[`Fixtures CLI Output - five-players-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
+"# Matches
+
+**Round 3**
+
+1. BYE vs Elvis
+2. David vs Bob
+3. Charlie vs Alice
+
+**Round 4**
+
+1. BYE vs David
+2. Elvis vs Alice
+3. Charlie vs Bob
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-bottom-up.csv 1`] = `
+"**Round 1**
+
+1. Player4 vs Player3
+2. Player2 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-bottom-up.json 1`] = `
+"**Round 1**
+
+1. Player4 vs Player3
+2. Player2 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-bottom-up.txt 1`] = `
+"**Round 1**
+
+1. Player4 vs Player3
+2. Player2 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-top-down.csv 1`] = `
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs Player4
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-top-down.json 1`] = `
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs Player4
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-top-down.txt 1`] = `
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs Player4
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.csv 1`] = `
+"**Round 1**
+
+1. Player4 vs Player2
+2. Player3 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.json 1`] = `
+"**Round 1**
+
+1. Player4 vs Player2
+2. Player3 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.txt 1`] = `
+"**Round 1**
+
+1. Player4 vs Player2
+2. Player3 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-with-matches-top-down.csv 1`] = `
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs Player4
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-with-matches-top-down.json 1`] = `
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs Player4
+"
+`;
+
+exports[`Fixtures CLI Output - four-players-with-matches-top-down.txt 1`] = `
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs Player4
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
+"**Round 6**
+
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
+"**Round 6**
+
+1. LCYig vs armydan
+2. Clin vs iso.evil
+3. Colain vs Arlo
+4. GreyGhost vs Nzdaemon
+5. Pauldog vs Morgath
+6. lilme vs Saravock
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.json 1`] = `
+"**Round 6**
+
+1. LCYig vs armydan
+2. Clin vs iso.evil
+3. Colain vs Arlo
+4. GreyGhost vs Nzdaemon
+5. Pauldog vs Morgath
+6. lilme vs Saravock
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
+"**Round 6**
+
+1. LCYig vs armydan
+2. Clin vs iso.evil
+3. Colain vs Arlo
+4. GreyGhost vs Nzdaemon
+5. Pauldog vs Morgath
+6. lilme vs Saravock
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-2-win-gg.txt 1`] = `
+"**Round 6**
+
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-3-win-ad.txt 1`] = `
+"**Round 6**
+
+1. Morgath vs armydan
+2. Nzdaemon vs Pauldog
+3. Saravock vs lilme
+4. Arlo vs LCYig
+5. GreyGhost vs Colain
+6. iso.evil vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R6-4-draw.txt 1`] = `
+"**Round 6**
+
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R7.txt 1`] = `
+"**Round 7**
+
+1. Morgath vs armydan
+2. Nzdaemon vs Pauldog
+3. Saravock vs Colain
+4. lilme vs iso.evil
+5. Arlo vs LCYig
+6. GreyGhost vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-bottom-up.csv 1`] = `
+"**Round 1**
+
+1. BYE vs Player3
+2. Player2 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-bottom-up.json 1`] = `
+"**Round 1**
+
+1. BYE vs Player3
+2. Player2 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-bottom-up.txt 1`] = `
+"**Round 1**
+
+1. BYE vs Player3
+2. Player2 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-top-down.csv 1`] = `
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs BYE
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-top-down.json 1`] = `
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs BYE
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-top-down.txt 1`] = `
+"**Round 1**
+
+1. Player1 vs Player2
+2. Player3 vs BYE
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.csv 1`] = `
+"**Round 1**
+
+1. BYE vs Player2
+2. Player3 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.json 1`] = `
+"**Round 1**
+
+1. BYE vs Player2
+2. Player3 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.txt 1`] = `
+"**Round 1**
+
+1. BYE vs Player2
+2. Player3 vs Player1
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-with-matches-top-down.csv 1`] = `
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs BYE
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-with-matches-top-down.json 1`] = `
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs BYE
+"
+`;
+
+exports[`Fixtures CLI Output - three-players-with-matches-top-down.txt 1`] = `
+"**Round 1**
+
+1. Player1 vs Player3
+2. Player2 vs BYE
+"
+`;
