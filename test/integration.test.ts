@@ -11,17 +11,8 @@ import util from 'util';
 const execAsync = util.promisify(exec);
 const fixturesDir = path.join(__dirname, 'fixtures');
 
-const runCLIWithArgs = async (args: string) => {
-  const { stdout } = await execAsync(`node dist/index.js ${args}`);
-  return stdout;
-};
-
-const runCLIWithFile = async (filePath: string) => {
-  const { stdout } = await execAsync(`node dist/index.js --file ${filePath}`);
-  return stdout;
-};
-
 const fileCache: Record<string, string> = {};
+const cliResultCache: Record<string, string> = {};
 
 const readFileContent = async (filePath: string): Promise<string> => {
   if (!fileCache[filePath]) {
@@ -29,6 +20,26 @@ const readFileContent = async (filePath: string): Promise<string> => {
     fileCache[filePath] = await fsPromise.readFile(filePath, 'utf-8');
   }
   return fileCache[filePath];
+};
+
+const runCLIWithArgs = async (args: string): Promise<string> => {
+  const cacheKey = `args:${args}`;
+  if (!cliResultCache[cacheKey]) {
+    const { stdout } = await execAsync(`node dist/index.js ${args}`);
+    // eslint-disable-next-line functional/immutable-data
+    cliResultCache[cacheKey] = stdout;
+  }
+  return cliResultCache[cacheKey];
+};
+
+const runCLIWithFile = async (filePath: string): Promise<string> => {
+  const cacheKey = `file:${filePath}`;
+  if (!cliResultCache[cacheKey]) {
+    const { stdout } = await execAsync(`node dist/index.js --file ${filePath}`);
+    // eslint-disable-next-line functional/immutable-data
+    cliResultCache[cacheKey] = stdout;
+  }
+  return cliResultCache[cacheKey];
 };
 
 describe('Fixtures', () => {
