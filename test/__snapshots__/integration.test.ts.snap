@@ -261,6 +261,18 @@ exports[`Fixtures CLI Output (txt) - hawbbl24S2R6-4-draw.txt 1`] = `
 "
 `;
 
+exports[`Fixtures CLI Output (txt) - hawbbl24S2R7.txt 1`] = `
+"**Round 7**
+
+1. Morgath vs armydan
+2. Nzdaemon vs Pauldog
+3. Saravock vs Colain
+4. lilme vs iso.evil
+5. Arlo vs LCYig
+6. GreyGhost vs Clin
+"
+`;
+
 exports[`Fixtures CLI Output (txt) - three-players-bottom-up.txt 1`] = `
 "**Round 1**
 
