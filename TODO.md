@@ -2,6 +2,9 @@
 
 ## Functionality
 
+- The term player should be replaced by Team. Matches are a game between teams, not players.
+- CSV headers are currently case-sensitive, but need not be?
+
 ## Code Quality
 
 - standardise error messages in swissPairing/validation
