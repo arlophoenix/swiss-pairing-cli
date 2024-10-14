@@ -1,0 +1,9 @@
+-p "Morgath Marauders" "Howl-Terrroa" "Kabal of Khaine" "Under Where?" "Friendly Unit" "The High Life" "The Barrowtown Brawlers" "Mean & Green" "Lyzyrd Skyzyrd" "Dark Accolytes" "The Good Runts" "AttackAttack" \
+-s 8 \
+-m 'Friendly Unit,Howl-Terrroa' 'Mean & Green,The High Life' 'Lyzyrd Skyzyrd,Dark Accolytes' 'AttackAttack,Under Where?' 'The Barrowtown Brawlers,The Good Runts' 'Kabal of Khaine,Morgath Marauders' \
+-m 'The Good Runts,Lyzyrd Skyzyrd' 'AttackAttack,Friendly Unit' 'Kabal of Khaine,The High Life' 'Mean & Green,Howl-Terrroa' 'Dark Accolytes,Morgath Marauders' 'Under Where?,The Barrowtown Brawlers' \
+-m 'Howl-Terrroa,Morgath Marauders' 'Under Where?,Kabal of Khaine' 'Friendly Unit,The Good Runts' 'Dark Accolytes,The Barrowtown Brawlers' 'Mean & Green,Lyzyrd Skyzyrd' 'The High Life,AttackAttack' \
+-m 'Kabal of Khaine,Howl-Terrroa' 'Morgath Marauders,Under Where?' 'The Barrowtown Brawlers,Friendly Unit' 'Dark Accolytes,Mean & Green' 'The Good Runts,The High Life' 'Lyzyrd Skyzyrd,AttackAttack' \
+-m 'Howl-Terrroa,Under Where?' 'Dark Accolytes,The High Life' 'The Good Runts,AttackAttack' 'Kabal of Khaine,Mean & Green' 'The Barrowtown Brawlers,Lyzyrd Skyzyrd' 'Morgath Marauders,Friendly Unit' \
+-m 'Morgath Marauders,The Barrowtown Brawlers' 'Howl-Terrroa,Dark Accolytes' 'Kabal of Khaine,Friendly Unit' 'Under Where?,The Good Runts' 'The High Life,Lyzyrd Skyzyrd' 'Mean & Green,AttackAttack' \
+-m 'The High Life,Morgath Marauders' 'The Barrowtown Brawlers,Howl-Terrroa' 'The Good Runts,Kabal of Khaine' 'Friendly Unit,Under Where?' 'Lyzyrd Skyzyrd,Mean & Green' 'AttackAttack,Dark Accolytes'

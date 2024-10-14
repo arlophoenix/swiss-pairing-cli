@@ -209,6 +209,78 @@ exports[`Fixtures CLI Output - hawbbl24S2R7.txt 1`] = `
 "
 `;
 
+exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified.txt 1`] = `
+"**Round 8**
+
+1. Nzdaemon vs armydan
+2. Morgath vs Colain
+3. Saravock vs LCYig
+4. Arlo vs iso.evil
+5. lilme vs GreyGhost
+6. Pauldog vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified-team-names.csv 1`] = `
+"**Round 8**
+
+1. Howl-Terrroa vs The High Life
+2. Morgath Marauders vs The Good Runts
+3. Kabal of Khaine vs Lyzyrd Skyzyrd
+4. Under Where? vs Mean & Green
+5. Friendly Unit vs Dark Accolytes
+6. The Barrowtown Brawlers vs AttackAttack
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified-team-names.txt 1`] = `
+"**Round 8**
+
+1. Howl-Terrroa vs The High Life
+2. Morgath Marauders vs The Good Runts
+3. Kabal of Khaine vs Lyzyrd Skyzyrd
+4. Under Where? vs Mean & Green
+5. Friendly Unit vs Dark Accolytes
+6. The Barrowtown Brawlers vs AttackAttack
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
+"**Round 8**
+
+1. Morgath vs LCYig
+2. Nzdaemon vs Colain
+3. Saravock vs GreyGhost
+4. Arlo vs armydan
+5. lilme vs iso.evil
+6. Pauldog vs Clin
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.csv 1`] = `
+"**Round 8**
+
+1. Morgath Marauders vs Mean & Green
+2. Howl-Terrroa vs The Good Runts
+3. Kabal of Khaine vs Lyzyrd Skyzyrd
+4. Under Where? vs The High Life
+5. Friendly Unit vs Dark Accolytes
+6. The Barrowtown Brawlers vs AttackAttack
+"
+`;
+
+exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] = `
+"**Round 8**
+
+1. Morgath Marauders vs Mean & Green
+2. Howl-Terrroa vs The Good Runts
+3. Kabal of Khaine vs Lyzyrd Skyzyrd
+4. Under Where? vs The High Life
+5. Friendly Unit vs Dark Accolytes
+6. The Barrowtown Brawlers vs AttackAttack
+"
+`;
+
 exports[`Fixtures CLI Output - three-players-bottom-up.csv 1`] = `
 "**Round 1**
 

@@ -1,0 +1,9 @@
+-p Morgath Nzdaemon Saravock Arlo lilme armydan LCYig Pauldog iso.evil GreyGhost Colain Clin \
+-s 8 \
+-m 'lilme,Nzdaemon' 'iso.evil,armydan' 'LCYig,GreyGhost' 'Clin,Arlo' 'Pauldog,Colain' 'Saravock,Morgath' \
+-m 'Colain,LCYig' 'Clin,lilme' 'Saravock,armydan' 'iso.evil,Nzdaemon' 'GreyGhost,Morgath' 'Arlo,Pauldog' \
+-m 'Nzdaemon,Morgath' 'Arlo,Saravock' 'lilme,Colain' 'GreyGhost,Pauldog' 'iso.evil,LCYig' 'armydan,Clin' \
+-m 'Saravock,Nzdaemon' 'Morgath,Arlo' 'Pauldog,lilme' 'GreyGhost,iso.evil' 'Colain,armydan' 'LCYig,Clin' \
+-m 'Nzdaemon,Arlo' 'GreyGhost,armydan' 'Colain,Clin' 'Saravock,iso.evil' 'Pauldog,LCYig' 'Morgath,lilme' \
+-m 'Morgath,Pauldog' 'Nzdaemon,GreyGhost' 'Saravock,lilme' 'Arlo,Colain' 'armydan,LCYig' 'iso.evil,Clin' \
+-m 'armydan,Morgath' 'Pauldog,Nzdaemon' 'Colain,Saravock' 'lilme,Arlo' 'LCYig,iso.evil' 'Clin,GreyGhost'
