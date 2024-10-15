@@ -32,8 +32,8 @@ export function generateRoundMatches({
 
   let currentPlayedOpponents = mutableClonePlayedOpponents(playedOpponents);
 
-  for (let roundNumber = 1; roundNumber <= numRounds; roundNumber++) {
-    const roundLabel = `Round ${String(startRound + roundNumber - 1)}`;
+  for (let roundNumber = 0; roundNumber < numRounds; roundNumber++) {
+    const roundLabel = `Round ${String(startRound + roundNumber)}`;
     const newMatches = generateSingleRoundMatches({
       teams,
       playedOpponents: currentPlayedOpponents,
