@@ -93,7 +93,7 @@ Note: When using an input file, any options provided will be overridden by the m
 The CSV file should have the following structure:
 
 ```csv
-teams,num-rounds,start-round,order,matches1,matches2
+teams,num-rounds,start-round,order,matches-home,matches-away
 Team1,3,1,random,Team2,Team3
 Team2,,,,
 Team3,,,,
@@ -101,7 +101,7 @@ Team4,,,,
 ```
 
 - The first row must be a header
-- Column headers correspond to the CLI options except matches which is split into two columns: matches1 and matches2
+- Column headers correspond to the CLI options except matches which is split into two columns: `matches-home` and `matches-away`
 - The `teams` column is required
 
 #### JSON File Format

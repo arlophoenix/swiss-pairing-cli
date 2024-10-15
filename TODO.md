@@ -2,8 +2,6 @@
 
 ## Functionality
 
-- CSV headers are currently case-sensitive, but need not be?
-
 ## Code Quality
 
 - standardise error messages in swissPairing/validation

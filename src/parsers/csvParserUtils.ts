@@ -10,15 +10,15 @@ export interface CSVRecord {
   readonly [ARG_START_ROUND]?: string;
   readonly [ARG_ORDER]?: string;
   readonly [ARG_FORMAT]?: string;
-  readonly matches1?: string;
-  readonly matches2?: string;
+  readonly 'matches-home'?: string;
+  readonly 'matches-away'?: string;
 }
 
 export function parseCSV(csv: string): Result<readonly CSVRecord[]> {
   const parseResult = papa.parse<CSVRecord>(csv, {
     header: true,
     skipEmptyLines: true,
-    transformHeader: (header) => header.trim(),
+    transformHeader: (header) => header.trim().toLowerCase(),
   });
 
   if (parseResult.errors.length > 0) {

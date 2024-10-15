@@ -23,7 +23,7 @@ describe('csvParser', () => {
   });
 
   it('should call parseCSV with the CSV string', () => {
-    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches-home,matches-away
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
 
@@ -48,7 +48,7 @@ Bob,,,,,`;
   });
 
   it('should return failure if parseCSV returns no records', () => {
-    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2`;
+    const mockContent = `teams,num-rounds,start-round,order,format,matches-home,matches-away`;
     mockParseCSV.mockReturnValue({ success: true, value: [] });
 
     const result = parseOptionsFromCSV(mockContent);
@@ -60,7 +60,7 @@ Bob,,,,,`;
   });
 
   it('should validate the parsed records', () => {
-    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches-home,matches-away
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
     const mockRecords = [
@@ -70,8 +70,8 @@ Bob,,,,,`;
         'start-round': '1',
         order: 'random',
         format: 'text',
-        matches1: 'Alice',
-        matches2: 'Bob',
+        'matches-home': 'Alice',
+        'matches-away': 'Bob',
       },
       { teams: 'Bob' },
     ] as const;
@@ -96,7 +96,7 @@ Bob,,,,,`;
   });
 
   it('should succeed if the records are valid', () => {
-    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches-home,matches-away
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
     const mockRecords = [
@@ -106,8 +106,8 @@ Bob,,,,,`;
         'start-round': '1',
         order: 'random',
         format: 'text',
-        matches1: 'Alice',
-        matches2: 'Bob',
+        'matches-home': 'Alice',
+        'matches-away': 'Bob',
       },
       { teams: 'Bob' },
     ] as const;
@@ -142,7 +142,7 @@ Bob,,,,,`;
   });
 
   it('should fail if the records are invalid', () => {
-    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches-home,matches-away
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
     const mockRecords = [
@@ -152,8 +152,8 @@ Bob,,,,,`;
         'start-round': '1',
         order: 'random',
         format: 'text',
-        matches1: 'Alice',
-        matches2: 'Bob',
+        'matches-home': 'Alice',
+        'matches-away': 'Bob',
       },
       { teams: 'Bob' },
     ] as const;

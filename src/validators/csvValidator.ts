@@ -13,7 +13,7 @@ export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Par
     .filter((team): team is string => team !== undefined && team.trim() !== '');
 
   const matches = csvRecords
-    .map((record) => [record.matches1, record.matches2])
+    .map((record) => [record['matches-home'], record['matches-away']])
     .filter(
       // eslint-disable-next-line functional/prefer-readonly-type
       (match): match is [string, string] =>

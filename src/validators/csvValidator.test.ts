@@ -13,8 +13,8 @@ describe('csvValidator', () => {
           'start-round': '1',
           order: 'random',
           format: 'text',
-          matches1: 'Alice',
-          matches2: 'Bob',
+          'matches-home': 'Alice',
+          'matches-away': 'Bob',
         },
         { teams: 'Bob' },
       ];
@@ -40,7 +40,7 @@ describe('csvValidator', () => {
           'start-round': '0',
           order: 'invalid',
           format: 'invalid',
-          matches1: 'Alice',
+          'matches-home': 'Alice',
         },
       ];
       const result = validateCSVOptions(csvRecords);
