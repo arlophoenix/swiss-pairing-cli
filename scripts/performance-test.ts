@@ -61,6 +61,6 @@ testCases.forEach(({ teamCount, roundCount }) => {
   console.log(`Start test with ${String(teamCount)} teams and ${String(roundCount)} rounds:`);
   logMemoryUsage();
   runPerformanceTest({ teamCount, roundCount, iterations: 10 });
-  logMemoryUsage();
   console.log(`End test with ${String(teamCount)} teams and ${String(roundCount)} rounds:`);
+  logMemoryUsage();
 });
