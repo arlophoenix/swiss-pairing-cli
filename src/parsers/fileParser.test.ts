@@ -37,31 +37,31 @@ describe('fileParser', () => {
     mockReadFile.mockResolvedValue(mockContent);
     mockParseCSV.mockReturnValue({
       success: true,
-      value: { players: ['Alice', 'Bob'] },
+      value: { teams: ['Alice', 'Bob'] },
     });
 
     const result = await parseFile('test.csv');
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({ players: ['Alice', 'Bob'] });
+      expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
     }
     expect(mockParseCSV).toHaveBeenCalledWith(mockContent);
   });
 
   it('should parse JSON file correctly', async () => {
-    const mockContent = '{"players": ["Alice", "Bob"]}';
+    const mockContent = '{"teams": ["Alice", "Bob"]}';
     mockReadFile.mockResolvedValue(mockContent);
     mockParseJSON.mockReturnValue({
       success: true,
-      value: { players: ['Alice', 'Bob'] },
+      value: { teams: ['Alice', 'Bob'] },
     });
 
     const result = await parseFile('test.json');
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({ players: ['Alice', 'Bob'] });
+      expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
     }
     expect(mockParseJSON).toHaveBeenCalledWith(mockContent);
   });

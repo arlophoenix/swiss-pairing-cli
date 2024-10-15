@@ -7,7 +7,7 @@ describe('cliValidator', () => {
   describe('validateCLIOptions', () => {
     it('should return success for valid options', () => {
       const options: UnvalidatedCLIOptions = {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: '3',
         startRound: '1',
         order: 'random',
@@ -18,7 +18,7 @@ describe('cliValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          players: ['Alice', 'Bob'],
+          teams: ['Alice', 'Bob'],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -30,7 +30,7 @@ describe('cliValidator', () => {
 
     it('should return failure for invalid options', () => {
       const options: UnvalidatedCLIOptions = {
-        players: ['Alice'],
+        teams: ['Alice'],
         numRounds: '-1',
         startRound: '0',
         order: 'invalid',
@@ -43,14 +43,14 @@ describe('cliValidator', () => {
 
     it('should handle partial options', () => {
       const options: UnvalidatedCLIOptions = {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: '3',
       };
       const result = validateCLIOptions(options);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          players: ['Alice', 'Bob'],
+          teams: ['Alice', 'Bob'],
           numRounds: 3,
         });
       }

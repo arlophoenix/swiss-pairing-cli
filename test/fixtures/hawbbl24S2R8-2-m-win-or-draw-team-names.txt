@@ -1,4 +1,4 @@
--p "Morgath Marauders" "Howl-Terrroa" "Kabal of Khaine" "Under Where?" "Friendly Unit" "The High Life" "The Barrowtown Brawlers" "Mean & Green" "Lyzyrd Skyzyrd" "Dark Accolytes" "The Good Runts" "AttackAttack" \
+-t "Morgath Marauders" "Howl-Terrroa" "Kabal of Khaine" "Under Where?" "Friendly Unit" "The High Life" "The Barrowtown Brawlers" "Mean & Green" "Lyzyrd Skyzyrd" "Dark Accolytes" "The Good Runts" "AttackAttack" \
 -s 8 \
 -m 'Friendly Unit,Howl-Terrroa' 'Mean & Green,The High Life' 'Lyzyrd Skyzyrd,Dark Accolytes' 'AttackAttack,Under Where?' 'The Barrowtown Brawlers,The Good Runts' 'Kabal of Khaine,Morgath Marauders' \
 -m 'The Good Runts,Lyzyrd Skyzyrd' 'AttackAttack,Friendly Unit' 'Kabal of Khaine,The High Life' 'Mean & Green,Howl-Terrroa' 'Dark Accolytes,Morgath Marauders' 'Under Where?,The Barrowtown Brawlers' \

@@ -6,15 +6,15 @@ import {
   validateMatches,
   validateNumRounds,
   validateOrder,
-  validatePlayers,
   validateStartRound,
+  validateTeams,
 } from './validatorUtils.js';
 
 describe('validatorUtils', () => {
   describe('validateAllOptions', () => {
     it('should return success for valid complete input', () => {
       const input = {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: '3',
         startRound: '1',
         order: 'random',
@@ -25,7 +25,7 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          players: ['Alice', 'Bob'],
+          teams: ['Alice', 'Bob'],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -37,14 +37,14 @@ describe('validatorUtils', () => {
 
     it('should return success with partial object for partial valid input', () => {
       const input = {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: '3',
       };
       const result = validateAllOptions({ input, origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          players: ['Alice', 'Bob'],
+          teams: ['Alice', 'Bob'],
           numRounds: 3,
         });
         expect(result.value).not.toHaveProperty('startRound');
@@ -56,7 +56,7 @@ describe('validatorUtils', () => {
 
     it('should handle undefined values', () => {
       const input = {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: undefined,
         startRound: undefined,
         order: undefined,
@@ -66,7 +66,7 @@ describe('validatorUtils', () => {
       const result = validateAllOptions({ input, origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value).toEqual({ players: ['Alice', 'Bob'] });
+        expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
       }
     });
 
@@ -81,7 +81,7 @@ describe('validatorUtils', () => {
 
     it('should return failure for invalid input', () => {
       const input = {
-        players: ['Alice'],
+        teams: ['Alice'],
         numRounds: '-1',
         startRound: '0',
         order: 'invalid',
@@ -93,22 +93,22 @@ describe('validatorUtils', () => {
     });
   });
 
-  describe('validatePlayers', () => {
-    it('should return success for valid players', () => {
-      const result = validatePlayers({ players: ['Alice', 'Bob'], origin: 'CLI' });
+  describe('validateTeams', () => {
+    it('should return success for valid teams', () => {
+      const result = validateTeams({ teams: ['Alice', 'Bob'], origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual(['Alice', 'Bob']);
       }
     });
 
-    it('should return failure for less than two players', () => {
-      const result = validatePlayers({ players: ['Alice'], origin: 'CLI' });
+    it('should return failure for less than two teams', () => {
+      const result = validateTeams({ teams: ['Alice'], origin: 'CLI' });
       expect(result.success).toBe(false);
     });
 
-    it('should return failure for duplicate players', () => {
-      const result = validatePlayers({ players: ['Alice', 'Bob', 'Alice', 'Charlie'], origin: 'CLI' });
+    it('should return failure for duplicate teams', () => {
+      const result = validateTeams({ teams: ['Alice', 'Bob', 'Alice', 'Charlie'], origin: 'CLI' });
       expect(result.success).toBe(false);
     });
   });
@@ -232,7 +232,7 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(false);
     });
 
-    it('should return failure for non-string player names', () => {
+    it('should return failure for non-string team names', () => {
       const result = validateMatches({
         matches: [['Alice', 'Bob'], [1, 2] as unknown as readonly [string, string]],
         origin: 'CLI',

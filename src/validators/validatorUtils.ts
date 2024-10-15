@@ -4,8 +4,8 @@ import {
   ARG_MATCHES,
   ARG_NUM_ROUNDS,
   ARG_ORDER,
-  ARG_PLAYERS,
   ARG_START_ROUND,
+  ARG_TEAMS,
   CLI_OPTION_FORMAT,
   CLI_OPTION_ORDER,
   SUPPORTED_FILE_TYPES,
@@ -36,7 +36,7 @@ export function validateAllOptions({
 }): Result<Partial<ValidatedCLIOptions>> {
   // eslint-disable-next-line functional/prefer-readonly-type
   const validators: { [K in keyof ValidatedCLIOptions]: Validator<K> } = {
-    players: (i) => validatePlayers({ players: i.players, origin }),
+    teams: (i) => validateTeams({ teams: i.teams, origin }),
     numRounds: (i) => validateNumRounds({ numRounds: i.numRounds, origin }),
     startRound: (i) => validateStartRound({ startRound: i.startRound, origin }),
     order: (i) => validateOrder({ order: i.order, origin }),
@@ -77,30 +77,30 @@ export function validateAllOptions({
   return { success: true, value: validatedOptions };
 }
 
-export function validatePlayers({
-  players,
+export function validateTeams({
+  teams,
   origin,
 }: {
-  readonly players: readonly string[] | undefined;
+  readonly teams: readonly string[] | undefined;
   readonly origin: InputOrigin;
 }): Result<readonly string[] | undefined> {
-  if (players === undefined) return { success: true, value: undefined };
+  if (teams === undefined) return { success: true, value: undefined };
 
   const createError = (expected: string) =>
     createInvalidInputError({
       origin,
-      argName: ARG_PLAYERS,
-      inputValue: players.join(', '),
+      argName: ARG_TEAMS,
+      inputValue: teams.join(', '),
       expectedValue: expected,
     });
 
-  if (players.length < 2) {
-    return { success: false, error: createError('at least two players') };
+  if (teams.length < 2) {
+    return { success: false, error: createError('at least two teams') };
   }
-  if (new Set(players).size !== players.length) {
-    return { success: false, error: createError('unique player names') };
+  if (new Set(teams).size !== teams.length) {
+    return { success: false, error: createError('unique team names') };
   }
-  return { success: true, value: players };
+  return { success: true, value: teams };
 }
 
 function validatePositiveInteger({
@@ -220,7 +220,7 @@ export function validateMatches({
       origin,
       argName: ARG_MATCHES,
       inputValue: JSON.stringify(match),
-      expectedValue: 'an array of two player names',
+      expectedValue: 'an array of two team names',
     });
 
   for (const match of matches) {

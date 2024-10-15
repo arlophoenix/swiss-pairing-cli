@@ -8,7 +8,7 @@ describe('csvValidator', () => {
     it('should return success for valid CSV records', () => {
       const csvRecords: readonly CSVRecord[] = [
         {
-          players: 'Alice',
+          teams: 'Alice',
           'num-rounds': '3',
           'start-round': '1',
           order: 'random',
@@ -16,13 +16,13 @@ describe('csvValidator', () => {
           matches1: 'Alice',
           matches2: 'Bob',
         },
-        { players: 'Bob' },
+        { teams: 'Bob' },
       ];
       const result = validateCSVOptions(csvRecords);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          players: ['Alice', 'Bob'],
+          teams: ['Alice', 'Bob'],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -35,7 +35,7 @@ describe('csvValidator', () => {
     it('should return failure for invalid CSV records', () => {
       const csvRecords: readonly CSVRecord[] = [
         {
-          players: 'Alice',
+          teams: 'Alice',
           'num-rounds': '-1',
           'start-round': '0',
           order: 'invalid',
@@ -48,13 +48,13 @@ describe('csvValidator', () => {
     });
 
     it('should handle partial CSV records', () => {
-      const csvRecords: readonly CSVRecord[] = [{ players: 'Alice', 'num-rounds': '3' }, { players: 'Bob' }];
+      const csvRecords: readonly CSVRecord[] = [{ teams: 'Alice', 'num-rounds': '3' }, { teams: 'Bob' }];
       const result = validateCSVOptions(csvRecords);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
           numRounds: 3,
-          players: ['Alice', 'Bob'],
+          teams: ['Alice', 'Bob'],
         });
       }
     });

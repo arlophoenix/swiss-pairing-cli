@@ -4,7 +4,7 @@ import { Result, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/typ
 import { validateAllOptions } from './validatorUtils.js';
 
 interface JSONRecord {
-  readonly players?: readonly string[];
+  readonly teams?: readonly string[];
   readonly 'num-rounds'?: number;
   readonly 'start-round'?: number;
   readonly order?: string;
@@ -14,7 +14,7 @@ interface JSONRecord {
 
 export function validateJSONOptions(jsonRecord: JSONRecord): Result<Partial<ValidatedCLIOptions>> {
   const input: UnvalidatedCLIOptions = {
-    players: jsonRecord.players,
+    teams: jsonRecord.teams,
     numRounds: jsonRecord[ARG_NUM_ROUNDS] ? String(jsonRecord[ARG_NUM_ROUNDS]) : undefined,
     startRound: jsonRecord[ARG_START_ROUND] ? String(jsonRecord[ARG_START_ROUND]) : undefined,
     order: jsonRecord.order,

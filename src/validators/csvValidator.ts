@@ -8,9 +8,9 @@ export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Par
     return { success: true, value: {} };
   }
 
-  const players = csvRecords
-    .map((record) => record.players)
-    .filter((player): player is string => player !== undefined && player.trim() !== '');
+  const teams = csvRecords
+    .map((record) => record.teams)
+    .filter((team): team is string => team !== undefined && team.trim() !== '');
 
   const matches = csvRecords
     .map((record) => [record.matches1, record.matches2])
@@ -21,7 +21,7 @@ export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Par
     );
 
   const input: UnvalidatedCLIOptions = {
-    players: players.length > 0 ? players : undefined,
+    teams: teams.length > 0 ? teams : undefined,
     numRounds: csvRecords[0]['num-rounds'],
     startRound: csvRecords[0]['start-round'],
     order: csvRecords[0].order,

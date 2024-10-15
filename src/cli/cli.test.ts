@@ -34,9 +34,9 @@ describe('Swiss Pairing CLI', () => {
 
   it('should handle valid input correctly', async () => {
     const program = createCLI();
-    await program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob', '--num-rounds', '3']);
+    await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob', '--num-rounds', '3']);
 
-    expect(mockHandleCLIAction).toHaveBeenCalledWith({ players: ['Alice', 'Bob'], numRounds: '3' });
+    expect(mockHandleCLIAction).toHaveBeenCalledWith({ teams: ['Alice', 'Bob'], numRounds: '3' });
     expect(mockConsoleLog).toHaveBeenCalledWith('Matches generated successfully');
   });
 
@@ -47,9 +47,7 @@ describe('Swiss Pairing CLI', () => {
     });
 
     const program = createCLI();
-    await expect(
-      program.parseAsync(['node', 'swiss-pairing', '--players', 'Alice', 'Bob'])
-    ).rejects.toThrow();
+    await expect(program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob'])).rejects.toThrow();
     expect(mockConsoleError).toHaveBeenCalledWith('NoValidSolution: Unable to generate valid matches');
   });
 
@@ -58,7 +56,7 @@ describe('Swiss Pairing CLI', () => {
     await program.parseAsync([
       'node',
       'swiss-pairing',
-      '--players',
+      '--teams',
       'Alice',
       'Bob',
       '--num-rounds',
@@ -76,7 +74,7 @@ describe('Swiss Pairing CLI', () => {
     ]);
 
     expect(mockHandleCLIAction).toHaveBeenCalledWith({
-      players: ['Alice', 'Bob'],
+      teams: ['Alice', 'Bob'],
       numRounds: '3',
       startRound: '2',
       order: 'random',

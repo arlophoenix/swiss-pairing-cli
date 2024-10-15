@@ -6,12 +6,12 @@ describe('Validation', () => {
   describe('validateRoundMatchesInput', () => {
     it('should return valid for valid input', () => {
       const validInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player3', 'Player4'],
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 3,
         startRound: 1,
         playedOpponents: new Map([
-          ['Player1', new Set(['Player2'])],
-          ['Player2', new Set(['Player1'])],
+          ['Team1', new Set(['Team2'])],
+          ['Team2', new Set(['Team1'])],
         ]),
       };
       const result = validateRoundMatchesInput(validInput);
@@ -19,9 +19,9 @@ describe('Validation', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should return invalid if there are less than two players', () => {
+    it('should return invalid if there are less than two teams', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1'],
+        teams: ['Team1'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
@@ -30,13 +30,13 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('there must be at least two players.');
+        expect(result.error.message).toBe('there must be at least two teams.');
       }
     });
 
-    it('should return invalid if there is an odd number of players', () => {
+    it('should return invalid if there is an odd number of teams', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player3'],
+        teams: ['Team1', 'Team2', 'Team3'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
@@ -45,13 +45,13 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('there must be an even number of players.');
+        expect(result.error.message).toBe('there must be an even number of teams.');
       }
     });
 
-    it('should return invalid if there are duplicate players', () => {
+    it('should return invalid if there are duplicate teams', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player1', 'Player3'],
+        teams: ['Team1', 'Team2', 'Team1', 'Team3'],
         numRounds: 2,
         startRound: 1,
         playedOpponents: new Map(),
@@ -60,13 +60,13 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('duplicate players are not allowed.');
+        expect(result.error.message).toBe('duplicate teams are not allowed.');
       }
     });
 
     it('should return invalid if rounds is less than 1', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player3', 'Player4'],
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 0,
         startRound: 1,
         playedOpponents: new Map(),
@@ -79,9 +79,9 @@ describe('Validation', () => {
       }
     });
 
-    it('should return invalid if rounds is greater than players minus 1', () => {
+    it('should return invalid if rounds is greater than teams minus 1', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player3', 'Player4'],
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 4,
         startRound: 1,
         playedOpponents: new Map(),
@@ -90,37 +90,37 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('num-rounds to generate must be fewer than the number of players.');
+        expect(result.error.message).toBe('num-rounds to generate must be fewer than the number of teams.');
       }
     });
 
-    it('should return invalid if playedMatches contains invalid player names', () => {
+    it('should return invalid if playedMatches contains invalid team names', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player3', 'Player4'],
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,
         playedOpponents: new Map([
-          ['Player1', new Set(['Player2'])],
-          ['Player2', new Set(['Player1'])],
-          ['InvalidPlayer', new Set(['Player3'])],
+          ['Team1', new Set(['Team2'])],
+          ['Team2', new Set(['Team1'])],
+          ['InvalidTeam', new Set(['Team3'])],
         ]),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('matches contains invalid player names.');
+        expect(result.error.message).toBe('matches contains invalid team names.');
       }
     });
 
     it('should return invalid if playedMatches is not symmetrical', () => {
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['Player1', 'Player2', 'Player3', 'Player4'],
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,
         playedOpponents: new Map([
-          ['Player1', new Set(['Player2'])],
-          ['Player2', new Set(['Player3'])], // Should be ['Player1']
+          ['Team1', new Set(['Team2'])],
+          ['Team2', new Set(['Team3'])], // Should be ['Team1']
         ]),
       };
       const result = validateRoundMatchesInput(invalidInput);
@@ -133,12 +133,12 @@ describe('Validation', () => {
   });
 
   describe('validateResult', () => {
-    let players: readonly string[];
+    let teams: readonly string[];
     let numRounds: number;
     let playedOpponents: ReadonlyPlayedOpponents;
 
     beforeEach(() => {
-      players = ['p1', 'p2', 'p3', 'p4'];
+      teams = ['p1', 'p2', 'p3', 'p4'];
       numRounds = 2;
       playedOpponents = new Map();
     });
@@ -156,7 +156,7 @@ describe('Validation', () => {
       };
       const result = validateRoundMatchesOutput({
         roundMatches,
-        players,
+        teams,
         numRounds,
         playedOpponents,
       });
@@ -173,7 +173,7 @@ describe('Validation', () => {
       };
       const result = validateRoundMatchesOutput({
         roundMatches,
-        players,
+        teams,
         numRounds,
         playedOpponents,
       });
@@ -194,7 +194,7 @@ describe('Validation', () => {
       };
       const result = validateRoundMatchesOutput({
         roundMatches,
-        players,
+        teams,
         numRounds,
         playedOpponents,
       });
@@ -205,7 +205,7 @@ describe('Validation', () => {
       }
     });
 
-    it('should return invalid if a match includes players who have already played', () => {
+    it('should return invalid if a match includes teams who have already played', () => {
       const roundMatches: RoundMatches = {
         'Round 1': [
           ['p1', 'p2'],
@@ -219,7 +219,7 @@ describe('Validation', () => {
       ]);
       const result = validateRoundMatchesOutput({
         roundMatches,
-        players,
+        teams,
         numRounds,
         playedOpponents,
       });
@@ -230,7 +230,7 @@ describe('Validation', () => {
       }
     });
 
-    it('should return invalid if a match includes players who have played in a previous round', () => {
+    it('should return invalid if a match includes teams who have played in a previous round', () => {
       const roundMatches: RoundMatches = {
         'Round 1': [
           ['p1', 'p2'],
@@ -243,7 +243,7 @@ describe('Validation', () => {
       };
       const result = validateRoundMatchesOutput({
         roundMatches,
-        players,
+        teams,
         numRounds,
         playedOpponents,
       });
@@ -254,7 +254,7 @@ describe('Validation', () => {
       }
     });
 
-    it('should return invalid if a player appears more than once in a round', () => {
+    it('should return invalid if a team appears more than once in a round', () => {
       const roundMatches: RoundMatches = {
         'Round 1': [
           ['p1', 'p2'],
@@ -267,7 +267,7 @@ describe('Validation', () => {
       };
       const result = validateRoundMatchesOutput({
         roundMatches,
-        players,
+        teams,
         numRounds,
         playedOpponents,
       });

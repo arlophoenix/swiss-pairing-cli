@@ -1,5 +1,5 @@
 {
-  "players": ["Alice", "Bob", "Charlie", "David", "Elvis"],
+  "teams": ["Alice", "Bob", "Charlie", "David", "Elvis"],
   "num-rounds": 2,
   "start-round": 3,
   "order": "bottom-up",

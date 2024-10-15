@@ -1,4 +1,4 @@
-import { BYE_PLAYER, CLI_OPTION_DEFAULTS } from '../constants.js';
+import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
 import { CLIOptionOrder, Result, ValidatedCLIOptions } from '../types/types.js';
 import { reverse, shuffle } from '../utils/utils.js';
 
@@ -21,25 +21,25 @@ export function mergeOptions({
   return { ...CLI_OPTION_DEFAULTS, ...fileOptions, ...cliOptions };
 }
 
-export function preparePlayers({
-  players,
+export function prepareTeams({
+  teams,
   order,
 }: {
-  readonly players: readonly string[];
+  readonly teams: readonly string[];
   readonly order: CLIOptionOrder;
 }): readonly string[] {
-  const currentPlayers = addByePlayerIfNecessary(players);
+  const currentTeams = addByeTeamIfNecessary(teams);
 
   switch (order) {
     case 'random':
-      return shuffle(currentPlayers);
+      return shuffle(currentTeams);
     case 'top-down':
-      return currentPlayers;
+      return currentTeams;
     case 'bottom-up':
-      return reverse(currentPlayers);
+      return reverse(currentTeams);
   }
 }
 
-export function addByePlayerIfNecessary(players: readonly string[]): readonly string[] {
-  return players.length % 2 === 1 ? [...players, BYE_PLAYER] : players;
+export function addByeTeamIfNecessary(teams: readonly string[]): readonly string[] {
+  return teams.length % 2 === 1 ? [...teams, BYE_TEAM] : teams;
 }

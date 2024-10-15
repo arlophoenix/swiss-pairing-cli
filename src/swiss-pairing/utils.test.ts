@@ -13,27 +13,27 @@ describe('mutableClonePlayedOpponents', () => {
 
   it('should create a deep clone of the map', () => {
     const original: ReadonlyPlayedOpponents = new Map([
-      ['player1', new Set(['opponent1', 'opponent2'])],
-      ['player2', new Set(['opponent3'])],
+      ['team1', new Set(['opponent1', 'opponent2'])],
+      ['team2', new Set(['opponent3'])],
     ]);
     const clone: PlayedOpponents = mutableClonePlayedOpponents(original);
 
     expect(clone).toEqual(original);
-    expect(clone.get('player1')).not.toBe(original.get('player1'));
-    expect(clone.get('player2')).not.toBe(original.get('player2'));
+    expect(clone.get('team1')).not.toBe(original.get('team1'));
+    expect(clone.get('team2')).not.toBe(original.get('team2'));
   });
 
   it('should allow mutations on the cloned map', () => {
-    const original: ReadonlyPlayedOpponents = new Map([['player1', new Set(['opponent1'])]]);
+    const original: ReadonlyPlayedOpponents = new Map([['team1', new Set(['opponent1'])]]);
     const clone = mutableClonePlayedOpponents(original);
 
-    clone.set('player2', new Set(['opponent2']));
-    clone.get('player1')?.add('opponent3');
+    clone.set('team2', new Set(['opponent2']));
+    clone.get('team1')?.add('opponent3');
 
-    expect(clone.has('player2')).toBe(true);
-    expect(clone.get('player1')?.has('opponent3')).toBe(true);
-    expect(original.has('player2')).toBe(false);
-    expect(original.get('player1')?.has('opponent3')).toBe(false);
+    expect(clone.has('team2')).toBe(true);
+    expect(clone.get('team1')?.has('opponent3')).toBe(true);
+    expect(original.has('team2')).toBe(false);
+    expect(original.get('team1')?.has('opponent3')).toBe(false);
   });
 
   it('should handle an empty map', () => {

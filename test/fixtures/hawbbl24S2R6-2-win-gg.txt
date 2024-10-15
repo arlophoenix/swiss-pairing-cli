@@ -1,4 +1,4 @@
--p Morgath Nzdaemon Saravock lilme GreyGhost Pauldog Arlo Colain armydan iso.evil Clin LCYig \
+-t Morgath Nzdaemon Saravock lilme GreyGhost Pauldog Arlo Colain armydan iso.evil Clin LCYig \
 -s 6 \
 -m 'lilme,Nzdaemon' 'iso.evil,armydan' 'LCYig,GreyGhost' 'Clin,Arlo' 'Pauldog,Colain' 'Saravock,Morgath' \
 -m 'Colain,LCYig' 'Clin,lilme' 'Saravock,armydan' 'iso.evil,Nzdaemon' 'GreyGhost,Morgath' 'Arlo,Pauldog' \

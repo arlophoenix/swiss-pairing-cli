@@ -34,13 +34,13 @@ describe('csvParserUtils', () => {
 
   describe('parseCSV', () => {
     it('should return success with parsed data when CSV is valid', () => {
-      const mockCSV = `players,num-rounds,start-round,order,format,matches1,matches2
+      const mockCSV = `teams,num-rounds,start-round,order,format,matches1,matches2
       Alice,3,1,random,text,Alice,Bob
       Bob,,,,,`;
       const mockParseResult = createMockPapaParseResult({
         data: [
           {
-            players: 'Alice',
+            teams: 'Alice',
             'num-rounds': '3',
             'start-round': '1',
             order: 'random',
@@ -48,7 +48,7 @@ describe('csvParserUtils', () => {
             matches1: 'Alice',
             matches2: 'Bob',
           },
-          { players: 'Bob' },
+          { teams: 'Bob' },
         ],
       });
 

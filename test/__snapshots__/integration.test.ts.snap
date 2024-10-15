@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fixtures CLI Output - five-players-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
+exports[`Fixtures CLI Output - five-teams-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
 "# Matches
 
 **Round 3**
@@ -17,99 +17,99 @@ exports[`Fixtures CLI Output - five-players-three-rounds-start-two-bottom-up-for
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-bottom-up.csv 1`] = `
+exports[`Fixtures CLI Output - four-teams-bottom-up.csv 1`] = `
 "**Round 1**
 
-1. Player4 vs Player3
-2. Player2 vs Player1
+1. Team4 vs Team3
+2. Team2 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-bottom-up.json 1`] = `
+exports[`Fixtures CLI Output - four-teams-bottom-up.json 1`] = `
 "**Round 1**
 
-1. Player4 vs Player3
-2. Player2 vs Player1
+1. Team4 vs Team3
+2. Team2 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output - four-teams-bottom-up.txt 1`] = `
 "**Round 1**
 
-1. Player4 vs Player3
-2. Player2 vs Player1
+1. Team4 vs Team3
+2. Team2 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-top-down.csv 1`] = `
+exports[`Fixtures CLI Output - four-teams-top-down.csv 1`] = `
 "**Round 1**
 
-1. Player1 vs Player2
-2. Player3 vs Player4
+1. Team1 vs Team2
+2. Team3 vs Team4
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-top-down.json 1`] = `
+exports[`Fixtures CLI Output - four-teams-top-down.json 1`] = `
 "**Round 1**
 
-1. Player1 vs Player2
-2. Player3 vs Player4
+1. Team1 vs Team2
+2. Team3 vs Team4
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-top-down.txt 1`] = `
+exports[`Fixtures CLI Output - four-teams-top-down.txt 1`] = `
 "**Round 1**
 
-1. Player1 vs Player2
-2. Player3 vs Player4
+1. Team1 vs Team2
+2. Team3 vs Team4
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.csv 1`] = `
+exports[`Fixtures CLI Output - four-teams-with-matches-bottom-up.csv 1`] = `
 "**Round 1**
 
-1. Player4 vs Player2
-2. Player3 vs Player1
+1. Team4 vs Team2
+2. Team3 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.json 1`] = `
+exports[`Fixtures CLI Output - four-teams-with-matches-bottom-up.json 1`] = `
 "**Round 1**
 
-1. Player4 vs Player2
-2. Player3 vs Player1
+1. Team4 vs Team2
+2. Team3 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output - four-teams-with-matches-bottom-up.txt 1`] = `
 "**Round 1**
 
-1. Player4 vs Player2
-2. Player3 vs Player1
+1. Team4 vs Team2
+2. Team3 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-top-down.csv 1`] = `
+exports[`Fixtures CLI Output - four-teams-with-matches-top-down.csv 1`] = `
 "**Round 1**
 
-1. Player1 vs Player3
-2. Player2 vs Player4
+1. Team1 vs Team3
+2. Team2 vs Team4
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-top-down.json 1`] = `
+exports[`Fixtures CLI Output - four-teams-with-matches-top-down.json 1`] = `
 "**Round 1**
 
-1. Player1 vs Player3
-2. Player2 vs Player4
+1. Team1 vs Team3
+2. Team2 vs Team4
 "
 `;
 
-exports[`Fixtures CLI Output - four-players-with-matches-top-down.txt 1`] = `
+exports[`Fixtures CLI Output - four-teams-with-matches-top-down.txt 1`] = `
 "**Round 1**
 
-1. Player1 vs Player3
-2. Player2 vs Player4
+1. Team1 vs Team3
+2. Team2 vs Team4
 "
 `;
 
@@ -281,98 +281,98 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] =
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-bottom-up.csv 1`] = `
+exports[`Fixtures CLI Output - three-teams-bottom-up.csv 1`] = `
 "**Round 1**
 
-1. BYE vs Player3
-2. Player2 vs Player1
+1. BYE vs Team3
+2. Team2 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-bottom-up.json 1`] = `
+exports[`Fixtures CLI Output - three-teams-bottom-up.json 1`] = `
 "**Round 1**
 
-1. BYE vs Player3
-2. Player2 vs Player1
+1. BYE vs Team3
+2. Team2 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output - three-teams-bottom-up.txt 1`] = `
 "**Round 1**
 
-1. BYE vs Player3
-2. Player2 vs Player1
+1. BYE vs Team3
+2. Team2 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-top-down.csv 1`] = `
+exports[`Fixtures CLI Output - three-teams-top-down.csv 1`] = `
 "**Round 1**
 
-1. Player1 vs Player2
-2. Player3 vs BYE
+1. Team1 vs Team2
+2. Team3 vs BYE
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-top-down.json 1`] = `
+exports[`Fixtures CLI Output - three-teams-top-down.json 1`] = `
 "**Round 1**
 
-1. Player1 vs Player2
-2. Player3 vs BYE
+1. Team1 vs Team2
+2. Team3 vs BYE
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-top-down.txt 1`] = `
+exports[`Fixtures CLI Output - three-teams-top-down.txt 1`] = `
 "**Round 1**
 
-1. Player1 vs Player2
-2. Player3 vs BYE
+1. Team1 vs Team2
+2. Team3 vs BYE
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.csv 1`] = `
+exports[`Fixtures CLI Output - three-teams-with-matches-bottom-up.csv 1`] = `
 "**Round 1**
 
-1. BYE vs Player2
-2. Player3 vs Player1
+1. BYE vs Team2
+2. Team3 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.json 1`] = `
+exports[`Fixtures CLI Output - three-teams-with-matches-bottom-up.json 1`] = `
 "**Round 1**
 
-1. BYE vs Player2
-2. Player3 vs Player1
+1. BYE vs Team2
+2. Team3 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-bottom-up.txt 1`] = `
+exports[`Fixtures CLI Output - three-teams-with-matches-bottom-up.txt 1`] = `
 "**Round 1**
 
-1. BYE vs Player2
-2. Player3 vs Player1
+1. BYE vs Team2
+2. Team3 vs Team1
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-top-down.csv 1`] = `
+exports[`Fixtures CLI Output - three-teams-with-matches-top-down.csv 1`] = `
 "**Round 1**
 
-1. Player1 vs Player3
-2. Player2 vs BYE
+1. Team1 vs Team3
+2. Team2 vs BYE
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-top-down.json 1`] = `
+exports[`Fixtures CLI Output - three-teams-with-matches-top-down.json 1`] = `
 "**Round 1**
 
-1. Player1 vs Player3
-2. Player2 vs BYE
+1. Team1 vs Team3
+2. Team2 vs BYE
 "
 `;
 
-exports[`Fixtures CLI Output - three-players-with-matches-top-down.txt 1`] = `
+exports[`Fixtures CLI Output - three-teams-with-matches-top-down.txt 1`] = `
 "**Round 1**
 
-1. Player1 vs Player3
-2. Player2 vs BYE
+1. Team1 vs Team3
+2. Team2 vs BYE
 "
 `;

@@ -1,4 +1,4 @@
-import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_PLAYERS } from '../constants.js';
+import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_TEAMS } from '../constants.js';
 import { BooleanResult, ValidateRoundMatchesInput, ValidateRoundMatchesOutput } from '../types/types.js';
 
 import { mutableClonePlayedOpponents } from './utils.js';
@@ -6,38 +6,38 @@ import { mutableClonePlayedOpponents } from './utils.js';
 /**
  * Validates the input for generating round matches
  * @param {Object} params - The parameters to validate
- * @param {readonly string[]} params.players - The list of players
+ * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds to generate
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
  * @returns {BooleanResult} The result of the validation
  */
 
 export function validateRoundMatchesInput({
-  players,
+  teams,
   numRounds,
   playedOpponents,
 }: ValidateRoundMatchesInput): BooleanResult {
-  // Check if there are at least two players
-  if (players.length < 2) {
+  // Check if there are at least two teams
+  if (teams.length < 2) {
     return {
       success: false,
-      error: { type: 'InvalidInput', message: `there must be at least two ${ARG_PLAYERS}.` },
+      error: { type: 'InvalidInput', message: `there must be at least two ${ARG_TEAMS}.` },
     };
   }
 
-  // Check there is an even number of players
-  if (players.length % 2 !== 0) {
+  // Check there is an even number of teams
+  if (teams.length % 2 !== 0) {
     return {
       success: false,
-      error: { type: 'InvalidInput', message: `there must be an even number of ${ARG_PLAYERS}.` },
+      error: { type: 'InvalidInput', message: `there must be an even number of ${ARG_TEAMS}.` },
     };
   }
 
-  // Check for duplicate players
-  if (new Set(players).size !== players.length) {
+  // Check for duplicate teams
+  if (new Set(teams).size !== teams.length) {
     return {
       success: false,
-      error: { type: 'InvalidInput', message: `duplicate ${ARG_PLAYERS} are not allowed.` },
+      error: { type: 'InvalidInput', message: `duplicate ${ARG_TEAMS} are not allowed.` },
     };
   }
 
@@ -49,37 +49,37 @@ export function validateRoundMatchesInput({
     };
   }
 
-  // Check if rounds is not greater than players minus 1
-  if (numRounds >= players.length) {
+  // Check if rounds is not greater than teams minus 1
+  if (numRounds >= teams.length) {
     return {
       success: false,
       error: {
         type: 'InvalidInput',
-        message: `${ARG_NUM_ROUNDS} to generate must be fewer than the number of ${ARG_PLAYERS}.`,
+        message: `${ARG_NUM_ROUNDS} to generate must be fewer than the number of ${ARG_TEAMS}.`,
       },
     };
   }
 
-  // Check if all players in playedMatches are valid
-  const allPlayersInPlayedMatches = new Set<string>();
-  for (const [player, opponents] of playedOpponents.entries()) {
-    allPlayersInPlayedMatches.add(player);
+  // Check if all teams in playedMatches are valid
+  const allTeamsInPlayedMatches = new Set<string>();
+  for (const [team, opponents] of playedOpponents.entries()) {
+    allTeamsInPlayedMatches.add(team);
     for (const opponent of opponents) {
-      allPlayersInPlayedMatches.add(opponent);
+      allTeamsInPlayedMatches.add(opponent);
     }
   }
 
-  if (!Array.from(allPlayersInPlayedMatches).every((player) => players.includes(player))) {
+  if (!Array.from(allTeamsInPlayedMatches).every((team) => teams.includes(team))) {
     return {
       success: false,
-      error: { type: 'InvalidInput', message: `${ARG_MATCHES} contains invalid player names.` },
+      error: { type: 'InvalidInput', message: `${ARG_MATCHES} contains invalid team names.` },
     };
   }
 
   // Check if playedMatches is symmetrical
-  for (const [player, opponents] of playedOpponents.entries()) {
+  for (const [team, opponents] of playedOpponents.entries()) {
     for (const opponent of opponents) {
-      if (!playedOpponents.get(opponent)?.has(player)) {
+      if (!playedOpponents.get(opponent)?.has(team)) {
         return {
           success: false,
           error: { type: 'InvalidInput', message: `${ARG_MATCHES} are not symmetrical.` },
@@ -96,18 +96,18 @@ export function validateRoundMatchesInput({
  * Validates the result of generating round matches
  * @param {Object} params - The parameters to validate
  * @param {ReadonlyRoundMatches} params.roundMatches - The generated round matches
- * @param {readonly string[]} params.players - The list of players
+ * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds generated
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
  * @returns {BooleanResult} The result of the validation
  */
 export function validateRoundMatchesOutput({
   roundMatches,
-  players,
+  teams,
   numRounds,
   playedOpponents,
 }: ValidateRoundMatchesOutput): BooleanResult {
-  const numGamesPerRound = players.length / 2;
+  const numGamesPerRound = teams.length / 2;
 
   // 1. There is one key per round in the record
   const resultNumRounds = Object.keys(roundMatches).length;
@@ -124,7 +124,7 @@ export function validateRoundMatchesOutput({
   const currentPlayedMatches = mutableClonePlayedOpponents(playedOpponents);
 
   for (const [roundLabel, matches] of Object.entries(roundMatches)) {
-    // 2. There are num players / 2 values per round
+    // 2. There are num teams / 2 values per round
     if (matches.length !== numGamesPerRound) {
       return {
         success: false,
@@ -135,41 +135,41 @@ export function validateRoundMatchesOutput({
       };
     }
 
-    const playersInRound = new Set<string>();
+    const teamsInRound = new Set<string>();
 
-    for (const [player1, player2] of matches) {
-      // 3. No round contains a match of players who are already listed in playedMatches
-      if (currentPlayedMatches.get(player1)?.has(player2)) {
+    for (const [team1, team2] of matches) {
+      // 3. No round contains a match of teams who are already listed in playedMatches
+      if (currentPlayedMatches.get(team1)?.has(team2)) {
         return {
           success: false,
           error: {
             type: 'InvalidOutput',
-            message: `invalid match in ${roundLabel}: ${player1} and ${player2} have already played.`,
+            message: `invalid match in ${roundLabel}: ${team1} and ${team2} have already played.`,
           },
         };
       }
 
-      if (currentPlayedMatches.get(player1) === undefined) {
-        currentPlayedMatches.set(player1, new Set());
+      if (currentPlayedMatches.get(team1) === undefined) {
+        currentPlayedMatches.set(team1, new Set());
       }
-      if (currentPlayedMatches.get(player2) === undefined) {
-        currentPlayedMatches.set(player2, new Set());
+      if (currentPlayedMatches.get(team2) === undefined) {
+        currentPlayedMatches.set(team2, new Set());
       }
-      currentPlayedMatches.get(player1)?.add(player2);
-      currentPlayedMatches.get(player2)?.add(player1);
+      currentPlayedMatches.get(team1)?.add(team2);
+      currentPlayedMatches.get(team2)?.add(team1);
 
-      // 4. No player appears more than once in the values for a round
-      if (playersInRound.has(player1) || playersInRound.has(player2)) {
+      // 4. No team appears more than once in the values for a round
+      if (teamsInRound.has(team1) || teamsInRound.has(team2)) {
         return {
           success: false,
           error: {
             type: 'InvalidOutput',
-            message: `invalid match in ${roundLabel}: ${player1} or ${player2} appears more than once.`,
+            message: `invalid match in ${roundLabel}: ${team1} or ${team2} appears more than once.`,
           },
         };
       }
-      playersInRound.add(player1);
-      playersInRound.add(player2);
+      teamsInRound.add(team1);
+      teamsInRound.add(team2);
     }
   }
 

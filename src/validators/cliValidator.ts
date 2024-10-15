@@ -4,7 +4,7 @@ import { validateAllOptions } from './validatorUtils.js';
 
 export function validateCLIOptions(options: UnvalidatedCLIOptions): Result<Partial<ValidatedCLIOptions>> {
   const input: UnvalidatedCLIOptions = {
-    players: options.players,
+    teams: options.teams,
     numRounds: options.numRounds,
     startRound: options.startRound,
     order: options.order,

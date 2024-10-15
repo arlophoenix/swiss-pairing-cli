@@ -17,12 +17,12 @@ import { mutableClonePlayedOpponents } from './utils.js';
  * @returns {GenerateRoundMatchesOutput} The generated matches or an error
  */
 export function generateRoundMatches({
-  players,
+  teams,
   numRounds,
   startRound,
   playedOpponents,
 }: GenerateRoundMatchesInput): Result<ReadonlyRoundMatches> {
-  const inputValidation = validateRoundMatchesInput({ players, numRounds, playedOpponents });
+  const inputValidation = validateRoundMatchesInput({ teams, numRounds, playedOpponents });
 
   if (!inputValidation.success) {
     return inputValidation;
@@ -35,7 +35,7 @@ export function generateRoundMatches({
   for (let roundNumber = 1; roundNumber <= numRounds; roundNumber++) {
     const roundLabel = `Round ${String(startRound + roundNumber - 1)}`;
     const newMatches = generateSingleRoundMatches({
-      players,
+      teams,
       playedOpponents: currentPlayedOpponents,
     });
 
@@ -55,7 +55,7 @@ export function generateRoundMatches({
   }
 
   const resultValidation = validateRoundMatchesOutput({
-    players,
+    teams,
     roundMatches,
     numRounds,
     playedOpponents,
@@ -84,12 +84,12 @@ function updatePlayedOpponents({
   const updatedPlayedOpponents = mutableClonePlayedOpponents(currentPlayedOpponents);
   const newPlayedOpponents = createBidirectionalMap(newMatches);
 
-  for (const [player, newOpponents] of newPlayedOpponents.entries()) {
-    if (!updatedPlayedOpponents.has(player)) {
-      updatedPlayedOpponents.set(player, new Set());
+  for (const [team, newOpponents] of newPlayedOpponents.entries()) {
+    if (!updatedPlayedOpponents.has(team)) {
+      updatedPlayedOpponents.set(team, new Set());
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const currentOpponents = updatedPlayedOpponents.get(player)!;
+    const currentOpponents = updatedPlayedOpponents.get(team)!;
     newOpponents.forEach((opponent) => currentOpponents.add(opponent));
   }
 
@@ -99,41 +99,41 @@ function updatePlayedOpponents({
 /**
  * Generates matches for a single round
  * @param {Object} params - The parameters for generating matches
- * @param {readonly string[]} params.players - The list of players
+ * @param {readonly string[]} params.teams - The list of teams
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
  * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible
  */
 function generateSingleRoundMatches({
-  players,
+  teams,
   playedOpponents,
 }: {
-  readonly players: readonly string[];
+  readonly teams: readonly string[];
   readonly playedOpponents: ReadonlyPlayedOpponents;
 }): readonly ReadonlyMatch[] | null {
-  // Base case: if no players left, we've successfully paired everyone
-  if (players.length === 0) {
+  // Base case: if no teams left, we've successfully paired everyone
+  if (teams.length === 0) {
     return [];
   }
 
-  const [currentPlayer, ...remainingPlayers] = players;
+  const [currentTeam, ...remainingTeams] = teams;
 
-  // Try to pair the current player with each remaining player
-  for (const opponent of remainingPlayers) {
-    // Skip if these players have already played each other
-    if (!playedOpponents.get(currentPlayer)?.has(opponent)) {
-      // Recursively generate matches for the remaining players
+  // Try to pair the current team with each remaining team
+  for (const opponent of remainingTeams) {
+    // Skip if these teams have already played each other
+    if (!playedOpponents.get(currentTeam)?.has(opponent)) {
+      // Recursively generate matches for the remaining teams
       const newMatches = generateSingleRoundMatches({
-        players: remainingPlayers.filter((p) => p !== opponent),
+        teams: remainingTeams.filter((p) => p !== opponent),
         playedOpponents,
       });
 
-      // If we found valid matches for the remaining players, we're done
+      // If we found valid matches for the remaining teams, we're done
       if (newMatches !== null) {
-        return [[currentPlayer, opponent], ...newMatches];
+        return [[currentTeam, opponent], ...newMatches];
       }
     }
   }
 
-  // If we couldn't pair the current player with anyone, backtrack
+  // If we couldn't pair the current team with anyone, backtrack
   return null;
 }

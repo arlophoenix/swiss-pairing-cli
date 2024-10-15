@@ -26,7 +26,7 @@ describe('handleCLIAction', () => {
   let mockValidateCLIOptions: SpyInstance<typeof cliValidator.validateCLIOptions>;
   let mockValidateFileOptions: SpyInstance<typeof cliActionUtils.validateFileOptions>;
   let mockMergeOptions: SpyInstance<typeof cliActionUtils.mergeOptions>;
-  let mockPreparePlayers: SpyInstance<typeof cliActionUtils.preparePlayers>;
+  let mockPrepareTeams: SpyInstance<typeof cliActionUtils.prepareTeams>;
   let mockGenerateRoundMatches: SpyInstance<typeof swissPairing.generateRoundMatches>;
   let mockFormatOutput: SpyInstance<typeof outputFormatter.formatOutput>;
   let mockCreateBidirectionalMap: jest.MockedFunction<typeof utils.createBidirectionalMap>;
@@ -35,7 +35,7 @@ describe('handleCLIAction', () => {
     mockValidateCLIOptions = jest.spyOn(cliValidator, 'validateCLIOptions');
     mockValidateFileOptions = jest.spyOn(cliActionUtils, 'validateFileOptions');
     mockMergeOptions = jest.spyOn(cliActionUtils, 'mergeOptions');
-    mockPreparePlayers = jest.spyOn(cliActionUtils, 'preparePlayers');
+    mockPrepareTeams = jest.spyOn(cliActionUtils, 'prepareTeams');
     mockGenerateRoundMatches = jest.spyOn(swissPairing, 'generateRoundMatches');
     mockFormatOutput = jest.spyOn(outputFormatter, 'formatOutput');
     mockCreateBidirectionalMap = utils.createBidirectionalMap as jest.MockedFunction<
@@ -50,7 +50,7 @@ describe('handleCLIAction', () => {
       Partial<ValidatedCLIOptions>
     >);
     mockMergeOptions.mockReturnValue({
-      players: ['Alice', 'Bob'],
+      teams: ['Alice', 'Bob'],
       numRounds: 1,
       startRound: 1,
       order: 'top-down',
@@ -58,7 +58,7 @@ describe('handleCLIAction', () => {
       format: 'text',
       file: 'input.txt',
     } as ValidatedCLIOptions);
-    mockPreparePlayers.mockReturnValue(['Alice', 'Bob']);
+    mockPrepareTeams.mockReturnValue(['Alice', 'Bob']);
     mockGenerateRoundMatches.mockReturnValue({
       success: true,
       value: { 'Round 1': [['Alice', 'Bob']] },
@@ -73,7 +73,7 @@ describe('handleCLIAction', () => {
 
   it('should process valid input and generate matches', async () => {
     const options: UnvalidatedCLIOptions = {
-      players: ['Alice', 'Bob'],
+      teams: ['Alice', 'Bob'],
       numRounds: '1',
     };
 
@@ -83,7 +83,7 @@ describe('handleCLIAction', () => {
     expect(mockValidateCLIOptions).toHaveBeenCalledWith(options);
     expect(mockValidateFileOptions).toHaveBeenCalled();
     expect(mockMergeOptions).toHaveBeenCalled();
-    expect(mockPreparePlayers).toHaveBeenCalled();
+    expect(mockPrepareTeams).toHaveBeenCalled();
     expect(mockGenerateRoundMatches).toHaveBeenCalled();
     expect(mockFormatOutput).toHaveBeenCalled();
     expect(mockCreateBidirectionalMap).toHaveBeenCalled();
@@ -136,7 +136,7 @@ describe('handleCLIAction', () => {
 
   it('should handle different output formats', async () => {
     mockMergeOptions.mockReturnValue({
-      players: ['Alice', 'Bob'],
+      teams: ['Alice', 'Bob'],
       numRounds: 1,
       startRound: 1,
       order: 'top-down',

@@ -1,11 +1,11 @@
-import { ARG_FORMAT, ARG_NUM_ROUNDS, ARG_ORDER, ARG_PLAYERS, ARG_START_ROUND } from '../constants.js';
+import { ARG_FORMAT, ARG_NUM_ROUNDS, ARG_ORDER, ARG_START_ROUND, ARG_TEAMS } from '../constants.js';
 
 import { Result } from '../types/types.js';
 import papa from 'papaparse';
 
 // TODO: rename this type to something more explanatory
 export interface CSVRecord {
-  readonly [ARG_PLAYERS]?: string;
+  readonly [ARG_TEAMS]?: string;
   readonly [ARG_NUM_ROUNDS]?: string;
   readonly [ARG_START_ROUND]?: string;
   readonly [ARG_ORDER]?: string;

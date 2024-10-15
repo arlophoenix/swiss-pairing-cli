@@ -7,9 +7,9 @@ describe('utils', () => {
   describe('createBidirectionalMap', () => {
     it('should correctly build played matches Map', () => {
       const matches: readonly (readonly [string, string])[] = [
-        ['Player1', 'Player2'],
-        ['Player3', 'Player4'],
-        ['Player1', 'Player3'],
+        ['Team1', 'Team2'],
+        ['Team3', 'Team4'],
+        ['Team1', 'Team3'],
       ];
 
       const result = createBidirectionalMap(matches);
@@ -17,10 +17,10 @@ describe('utils', () => {
       expect(result).toBeInstanceOf(Map);
       if (result instanceof Map) {
         expect(result.size).toBe(4);
-        expect(result.get('Player1')).toEqual(new Set(['Player2', 'Player3']));
-        expect(result.get('Player2')).toEqual(new Set(['Player1']));
-        expect(result.get('Player3')).toEqual(new Set(['Player4', 'Player1']));
-        expect(result.get('Player4')).toEqual(new Set(['Player3']));
+        expect(result.get('Team1')).toEqual(new Set(['Team2', 'Team3']));
+        expect(result.get('Team2')).toEqual(new Set(['Team1']));
+        expect(result.get('Team3')).toEqual(new Set(['Team4', 'Team1']));
+        expect(result.get('Team4')).toEqual(new Set(['Team3']));
       }
     });
 

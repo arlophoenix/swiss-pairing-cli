@@ -20,7 +20,7 @@ describe('jsonParser', () => {
 
   it('should parse valid JSON content correctly', () => {
     const mockContent = JSON.stringify({
-      players: ['Alice', 'Bob'],
+      teams: ['Alice', 'Bob'],
       'num-rounds': 3,
       'start-round': 1,
       order: 'random',
@@ -31,7 +31,7 @@ describe('jsonParser', () => {
     mockValidateJSONOptions.mockReturnValue({
       success: true,
       value: {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -45,7 +45,7 @@ describe('jsonParser', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.value).toEqual({
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -79,10 +79,10 @@ describe('jsonParser', () => {
   });
 
   it('should handle validation errors', () => {
-    const mockContent = JSON.stringify({ players: ['Alice', 'Bob'] });
+    const mockContent = JSON.stringify({ teams: ['Alice', 'Bob'] });
     mockValidateJSONOptions.mockReturnValue({
       success: false,
-      error: { type: 'InvalidInput', message: 'Invalid number of players' },
+      error: { type: 'InvalidInput', message: 'Invalid number of teams' },
     });
 
     const result = parseOptionsFromJSON(mockContent);
@@ -90,7 +90,7 @@ describe('jsonParser', () => {
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.error.type).toBe('InvalidInput');
-      expect(result.error.message).toBe('Invalid number of players');
+      expect(result.error.message).toBe('Invalid number of teams');
     }
     expect(mockValidateJSONOptions).toHaveBeenCalledWith(JSON.parse(mockContent));
   });
@@ -109,17 +109,17 @@ describe('jsonParser', () => {
   });
 
   it('should handle partial valid data', () => {
-    const mockContent = JSON.stringify({ players: ['Alice', 'Bob'] });
+    const mockContent = JSON.stringify({ teams: ['Alice', 'Bob'] });
     mockValidateJSONOptions.mockReturnValue({
       success: true,
-      value: { players: ['Alice', 'Bob'] },
+      value: { teams: ['Alice', 'Bob'] },
     });
 
     const result = parseOptionsFromJSON(mockContent);
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({ players: ['Alice', 'Bob'] });
+      expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
     }
     expect(mockValidateJSONOptions).toHaveBeenCalledWith(JSON.parse(mockContent));
   });

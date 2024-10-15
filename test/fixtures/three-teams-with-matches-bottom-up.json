@@ -1,0 +1,5 @@
+{
+  "teams": ["Team1", "Team2", "Team3"],
+  "order": "bottom-up",
+  "matches": [["Team1", "Team2"]]
+}

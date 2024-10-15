@@ -30,7 +30,7 @@ describe('index', () => {
         error: { type: 'InvalidInput', message: 'input validation error' },
       });
       const invalidInput: GenerateRoundMatchesInput = {
-        players: ['p1'],
+        teams: ['p1'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
@@ -50,7 +50,7 @@ describe('index', () => {
         error: { type: 'InvalidOutput', message: 'output validation error' },
       });
       const validInput: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2'],
+        teams: ['p1', 'p2'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
@@ -64,9 +64,9 @@ describe('index', () => {
       }
     });
 
-    it('should generate correct matches for 4 players, 1 round, and no played matches', () => {
+    it('should generate correct matches for 4 teams, 1 round, and no played matches', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
@@ -84,9 +84,9 @@ describe('index', () => {
       }
     });
 
-    it('should generate correct matches for 4 players and 2 rounds', () => {
+    it('should generate correct matches for 4 teams and 2 rounds', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 2,
         startRound: 1,
         playedOpponents: new Map(),
@@ -108,9 +108,9 @@ describe('index', () => {
       }
     });
 
-    it('should generate correct matches for 4 players and 3 rounds', () => {
+    it('should generate correct matches for 4 teams and 3 rounds', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 3,
         startRound: 1,
         playedOpponents: new Map(),
@@ -136,11 +136,11 @@ describe('index', () => {
       }
     });
 
-    it('should return an error for 4 players and 4 rounds', () => {
+    it('should return an error for 4 teams and 4 rounds', () => {
       // input validation would normally catch this but its also an example of an impossible solution
-      // without players needing to play multiple times
+      // without teams needing to play multiple times
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 4,
         startRound: 1,
         playedOpponents: new Map(),
@@ -156,7 +156,7 @@ describe('index', () => {
 
     it('should generate correct matches for 1 round with existing played matches (p1 vs p2, p3 vs p4)', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map([
@@ -181,7 +181,7 @@ describe('index', () => {
 
     it('should generate correct matches for 1 round with existing played matches (p1 vs p3, p2 vs p4)', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map([
@@ -206,7 +206,7 @@ describe('index', () => {
 
     it('should generate correct matches for 1 round with existing played matches (p1 vs p2, p1 vs p3)', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map([
@@ -228,9 +228,9 @@ describe('index', () => {
       }
     });
 
-    it('should return an error when one player has played all others', () => {
+    it('should return an error when one team has played all others', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map([
@@ -251,7 +251,7 @@ describe('index', () => {
 
     it('should start labelling rounds from the startRound', () => {
       const input: GenerateRoundMatchesInput = {
-        players: ['p1', 'p2', 'p3', 'p4'],
+        teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 2,
         startRound: 3,
         playedOpponents: new Map(),

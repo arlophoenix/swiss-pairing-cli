@@ -2,10 +2,15 @@ import {
   ARG_FILE,
   ARG_FORMAT,
   ARG_MATCHES,
+  ARG_MATCHES_SHORT,
   ARG_NUM_ROUNDS,
+  ARG_NUM_ROUNDS_SHORT,
   ARG_ORDER,
-  ARG_PLAYERS,
+  ARG_ORDER_SHORT,
   ARG_START_ROUND,
+  ARG_START_ROUND_SHORT,
+  ARG_TEAMS,
+  ARG_TEAMS_SHORT,
   CLI_OPTION_FORMAT_DEFAULT,
   CLI_OPTION_NUM_ROUND_DEFAULT,
   CLI_OPTION_ORDER_DEFAULT,
@@ -13,7 +18,7 @@ import {
   EXAMPLE_FILE_CSV,
   EXAMPLE_FILE_JSON,
   EXAMPLE_MATCHES,
-  EXAMPLE_PLAYERS,
+  EXAMPLE_TEAMS,
   PROGRAM_NAME,
   SUPPORTED_FILE_TYPES,
 } from '../constants.js';
@@ -29,20 +34,20 @@ export function createCLI(): Command {
     .name(PROGRAM_NAME)
     .description('A CLI tool for generating Swiss-style tournament pairings')
     .option(
-      `-p, --${ARG_PLAYERS} <names...>`,
-      `List of player names in order from top standing to bottom\ne.g. ${EXAMPLE_PLAYERS}`
+      `-${ARG_TEAMS_SHORT}, --${ARG_TEAMS} <names...>`,
+      `List of team names in order from top standing to bottom\ne.g. ${EXAMPLE_TEAMS}`
     )
     .option(
-      `-n, --${ARG_NUM_ROUNDS} <number>`,
+      `-${ARG_NUM_ROUNDS_SHORT}, --${ARG_NUM_ROUNDS} <number>`,
       `Number of rounds to generate (default: ${String(CLI_OPTION_NUM_ROUND_DEFAULT)})`
     )
     .option(
-      `-s, --${ARG_START_ROUND} <number>`,
+      `-${ARG_START_ROUND_SHORT}, --${ARG_START_ROUND} <number>`,
       `Name the generated rounds starting with this number (default: ${String(CLI_OPTION_START_ROUND_DEFAULT)})`
     )
     .option(
-      `-o, --${ARG_ORDER} <order>`,
-      `The sequence in which players should be paired (default: ${CLI_OPTION_ORDER_DEFAULT})`
+      `-${ARG_ORDER_SHORT}, --${ARG_ORDER} <order>`,
+      `The sequence in which teams should be paired (default: ${CLI_OPTION_ORDER_DEFAULT})`
     )
     .option(`--${ARG_FORMAT} <format>`, `Output format (default: ${CLI_OPTION_FORMAT_DEFAULT})`)
     .option(
@@ -50,12 +55,12 @@ export function createCLI(): Command {
       `Path to input file (${SUPPORTED_FILE_TYPES.join(', ')}). Options provided via cli override file contents`
     )
     .option(
-      `-m, --${ARG_MATCHES} <matches...>`,
-      `List of pairs of player names that have already played against each other\ne.g. ${EXAMPLE_MATCHES}`,
+      `-${ARG_MATCHES_SHORT}, --${ARG_MATCHES} <matches...>`,
+      `List of pairs of team names that have already played against each other\ne.g. ${EXAMPLE_MATCHES}`,
       // eslint-disable-next-line max-params, functional/prefer-readonly-type
       (value: string, previous: ReadonlyMatch[] = []) => {
-        const matchPlayers = value.split(',');
-        return [...previous, matchPlayers as Match];
+        const matchTeams = value.split(',');
+        return [...previous, matchTeams as Match];
       }
     )
     .action(async (options: UnvalidatedCLIOptions) => {
@@ -78,13 +83,13 @@ export function helpWithExamples(): string {
 export function exampleUsage(): string {
   return `Examples:
 
-1. Generate random pairings for 4 players:
+1. Generate random pairings for 4 teams:
 
-  ${PROGRAM_NAME} --${ARG_PLAYERS} ${EXAMPLE_PLAYERS} --${ARG_ORDER} random
+  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_ORDER} random
 
-2. Generate pairings for 4 players, on round 2, with some matches already played:
+2. Generate pairings for 4 teams, on round 2, with some matches already played:
 
-  ${PROGRAM_NAME} --${ARG_PLAYERS} ${EXAMPLE_PLAYERS} --${ARG_START_ROUND} 2 --${ARG_MATCHES} ${EXAMPLE_MATCHES}
+  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_START_ROUND} 2 --${ARG_MATCHES} ${EXAMPLE_MATCHES}
 
 3. Generate pairings using a CSV file:
 
@@ -96,5 +101,5 @@ export function exampleUsage(): string {
 
 5. Generate multiple rounds of pairings:
 
-  ${PROGRAM_NAME} --${ARG_PLAYERS} ${EXAMPLE_PLAYERS} --${ARG_NUM_ROUNDS} 3`;
+  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_NUM_ROUNDS} 3`;
 }

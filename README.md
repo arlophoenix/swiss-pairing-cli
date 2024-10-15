@@ -4,7 +4,7 @@ A simple command-line interface tool for generating Swiss pairings for tournamen
 
 ## Features
 
-- Generate Swiss pairings for a given list of players
+- Generate Swiss pairings for a given list of teams
 - Specify the number of rounds for the tournament
 - Easy-to-use CLI interface
 
@@ -31,32 +31,32 @@ You can use the Swiss Pairing CLI in two ways:
 
 <!-- CLI_USAGE_START -->
 
-```bash
+````bash
 Usage: swiss-pairing [options]
 
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -p, --players <names...>                     List of player names in order from top standing to bottom
-  e.g. Alice Bob Charlie David
-  -m, --matches <matches...>                   List of pairs of player names that have already played against each other
-  e.g. "Alice,Bob" "Charlie,David"
-  -n, --num-rounds <number>                    Number of rounds to generate (default: 1)
-  -s, --start-round <number>                   Name the generated rounds starting with this number (default: 1)
-  -o, --order <top-down | bottom-up | random>  The sequence in which players should be paired (default: top-down)
-  --file <path>                                Path to input file (CSV or JSON). Options provided via cli override file contents
-  --format <text | json-plain | json-pretty>   Output format (default: text)
-  -h, --help                                   Display this help information
+  -t, --teams <names...>      List of team names in order from top standing to bottom
+                              e.g. Alice Bob Charlie David
+  -n, --num-rounds <number>   Number of rounds to generate (default: 1)
+  -s, --start-round <number>  Name the generated rounds starting with this number (default: 1)
+  -o, --order <order>         The sequence in which teams should be paired (default: top-down)
+  --format <format>           Output format (default: text)
+  --file <path>               Path to input file (.csv, .json). Options provided via cli override file contents
+  -m, --matches <matches...>  List of pairs of team names that have already played against each other
+                              e.g. "Alice,Bob" "Charlie,David"
+  -h, --help                  display help for command
 
 Examples:
 
-1. Generate random pairings for 4 players:
+1. Generate random pairings for 4 teams:
 
-  swiss-pairing --players Alice Bob Charlie David --order random
+  swiss-pairing --teams Alice Bob Charlie David --order random
 
-2. Generate pairings for 4 players, on round 2, with some matches already played:
+2. Generate pairings for 4 teams, on round 2, with some matches already played:
 
-  swiss-pairing --players Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
+  swiss-pairing --teams Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
 
 3. Generate pairings using a CSV file:
 
@@ -68,7 +68,7 @@ Examples:
 
 5. Generate multiple rounds of pairings:
 
-  swiss-pairing --players Alice Bob Charlie David --num-rounds 3```
+  swiss-pairing --teams Alice Bob Charlie David --num-rounds 3```
 
 <!-- CLI_USAGE_END -->
 
@@ -93,16 +93,16 @@ Note: When using an input file, any options provided will be overridden by the m
 The CSV file should have the following structure:
 
 ```csv
-players,num-rounds,start-round,order,matches1,matches2
-Player1,3,1,random,Player2,Player3
-Player2,,,,
-Player3,,,,
-Player4,,,,
+teams,num-rounds,start-round,order,matches1,matches2
+Team1,3,1,random,Team2,Team3
+Team2,,,,
+Team3,,,,
+Team4,,,,
 ```
 
 - The first row must be a header
 - Column headers correspond to the CLI options except matches which is split into two columns: matches1 and matches2
-- The `players` column is required
+- The `teams` column is required
 
 #### JSON File Format
 
@@ -110,19 +110,19 @@ The JSON file should have the following structure:
 
 ```json
 {
-  "players": ["Player1", "Player2", "Player3", "Player4"],
+  "teams": ["Team1", "Team2", "Team3", "Team4"],
   "num-rounds": 3,
   "start-round": 1,
   "order": "random",
   "matches": [
-    ["Player1", "Player2"],
-    ["Player3", "Player4"]
+    ["Team1", "Team2"],
+    ["Team3", "Team4"]
   ]
 }
 ```
 
 - Fields in the JSON file correspond to the CLI options
-- The `players` column is required
+- The `teams` column is required
 
 ## Development
 

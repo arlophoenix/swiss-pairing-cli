@@ -3,7 +3,7 @@ export * from './errors.js';
 import { ARGS, CLI_OPTION_FORMAT, CLI_OPTION_ORDER, SUPPORTED_FILE_TYPES } from '../constants.js';
 
 export interface UnvalidatedCLIOptions {
-  readonly players?: readonly string[];
+  readonly teams?: readonly string[];
   readonly numRounds?: string;
   readonly startRound?: string;
   readonly matches?: readonly (readonly string[])[];
@@ -13,7 +13,7 @@ export interface UnvalidatedCLIOptions {
 }
 
 export interface ValidatedCLIOptions {
-  readonly players: readonly string[];
+  readonly teams: readonly string[];
   readonly numRounds: number;
   readonly startRound: number;
   readonly matches: readonly ReadonlyMatch[];
@@ -26,21 +26,21 @@ export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
 export type CLIOptionFormat = (typeof CLI_OPTION_FORMAT)[number];
 
 export interface GenerateRoundMatchesInput {
-  readonly players: readonly string[];
+  readonly teams: readonly string[];
   readonly numRounds: number;
   readonly startRound: number;
   readonly playedOpponents: ReadonlyPlayedOpponents;
 }
 
 export interface ValidateRoundMatchesInput {
-  readonly players: readonly string[];
+  readonly teams: readonly string[];
   readonly numRounds: number;
   readonly playedOpponents: ReadonlyPlayedOpponents;
 }
 
 export interface ValidateRoundMatchesOutput {
   readonly roundMatches: ReadonlyRoundMatches;
-  readonly players: readonly string[];
+  readonly teams: readonly string[];
   readonly numRounds: number;
   readonly playedOpponents: ReadonlyPlayedOpponents;
 }
@@ -57,5 +57,4 @@ export type ReadonlyPlayedOpponents = ReadonlyMap<string, ReadonlySet<string>>;
 
 export type SupportedFileTypes = (typeof SUPPORTED_FILE_TYPES)[number];
 
-// export type CLIArg = keyof UnvalidatedCLIOptions;
 export type CLIArg = (typeof ARGS)[number];

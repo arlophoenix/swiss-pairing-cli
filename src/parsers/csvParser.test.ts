@@ -23,7 +23,7 @@ describe('csvParser', () => {
   });
 
   it('should call parseCSV with the CSV string', () => {
-    const mockContent = `players,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
 
@@ -48,7 +48,7 @@ Bob,,,,,`;
   });
 
   it('should return failure if parseCSV returns no records', () => {
-    const mockContent = `players,num-rounds,start-round,order,format,matches1,matches2`;
+    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2`;
     mockParseCSV.mockReturnValue({ success: true, value: [] });
 
     const result = parseOptionsFromCSV(mockContent);
@@ -60,12 +60,12 @@ Bob,,,,,`;
   });
 
   it('should validate the parsed records', () => {
-    const mockContent = `players,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
     const mockRecords = [
       {
-        players: 'Alice',
+        teams: 'Alice',
         'num-rounds': '3',
         'start-round': '1',
         order: 'random',
@@ -73,7 +73,7 @@ Bob,,,,,`;
         matches1: 'Alice',
         matches2: 'Bob',
       },
-      { players: 'Bob' },
+      { teams: 'Bob' },
     ] as const;
     mockParseCSV.mockReturnValue({
       success: true,
@@ -82,7 +82,7 @@ Bob,,,,,`;
     mockValidateCSVOptions.mockReturnValue({
       success: true,
       value: {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -96,12 +96,12 @@ Bob,,,,,`;
   });
 
   it('should succeed if the records are valid', () => {
-    const mockContent = `players,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
     const mockRecords = [
       {
-        players: 'Alice',
+        teams: 'Alice',
         'num-rounds': '3',
         'start-round': '1',
         order: 'random',
@@ -109,7 +109,7 @@ Bob,,,,,`;
         matches1: 'Alice',
         matches2: 'Bob',
       },
-      { players: 'Bob' },
+      { teams: 'Bob' },
     ] as const;
     mockParseCSV.mockReturnValue({
       success: true,
@@ -118,7 +118,7 @@ Bob,,,,,`;
     mockValidateCSVOptions.mockReturnValue({
       success: true,
       value: {
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -131,7 +131,7 @@ Bob,,,,,`;
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.value).toEqual({
-        players: ['Alice', 'Bob'],
+        teams: ['Alice', 'Bob'],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -142,12 +142,12 @@ Bob,,,,,`;
   });
 
   it('should fail if the records are invalid', () => {
-    const mockContent = `players,num-rounds,start-round,order,format,matches1,matches2
+    const mockContent = `teams,num-rounds,start-round,order,format,matches1,matches2
 Alice,3,1,random,text,Alice,Bob
 Bob,,,,,`;
     const mockRecords = [
       {
-        players: 'Alice',
+        teams: 'Alice',
         'num-rounds': '3',
         'start-round': '1',
         order: 'random',
@@ -155,7 +155,7 @@ Bob,,,,,`;
         matches1: 'Alice',
         matches2: 'Bob',
       },
-      { players: 'Bob' },
+      { teams: 'Bob' },
     ] as const;
     mockParseCSV.mockReturnValue({
       success: true,

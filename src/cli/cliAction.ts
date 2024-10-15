@@ -1,5 +1,5 @@
 import { Result, UnvalidatedCLIOptions } from '../types/types.js';
-import { mergeOptions, preparePlayers, validateFileOptions } from './cliActionUtils.js';
+import { mergeOptions, prepareTeams, validateFileOptions } from './cliActionUtils.js';
 
 import { createBidirectionalMap } from '../utils/utils.js';
 import { formatOutput } from './outputFormatter.js';
@@ -12,16 +12,16 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   const validateFileOptionsResult = await validateFileOptions(cliOptions.file);
   if (!validateFileOptionsResult.success) return validateFileOptionsResult;
 
-  const { players, numRounds, startRound, order, matches, format } = mergeOptions({
+  const { teams, numRounds, startRound, order, matches, format } = mergeOptions({
     cliOptions: validateCLIOptionsResult.value,
     fileOptions: validateFileOptionsResult.value,
   });
 
-  const preparedPlayers = preparePlayers({ players, order });
+  const preparedTeams = prepareTeams({ teams, order });
   const playedOpponents = createBidirectionalMap(matches);
 
   const roundMatchesResult = generateRoundMatches({
-    players: preparedPlayers,
+    teams: preparedTeams,
     numRounds,
     startRound,
     playedOpponents,
