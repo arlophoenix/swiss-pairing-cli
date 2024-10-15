@@ -12,9 +12,9 @@ import { createBidirectionalMap } from '../utils/utils.js';
 import { mutableClonePlayedOpponents } from './utils.js';
 
 /**
- * Generates multiple rounds worth of matches for a Swiss-style tournament
- * @param {GenerateRoundMatchesInput} input - The input parameters for generating matches
- * @returns {GenerateRoundMatchesOutput} The generated matches or an error
+ * Generates multiple rounds of matches for a Swiss-style tournament.
+ * @param {GenerateRoundMatchesInput} input - The input parameters for generating matches.
+ * @returns {Result<ReadonlyRoundMatches>} The generated matches or an error.
  */
 export function generateRoundMatches({
   teams,
@@ -22,16 +22,16 @@ export function generateRoundMatches({
   startRound,
   playedOpponents,
 }: GenerateRoundMatchesInput): Result<ReadonlyRoundMatches> {
+  // Validate input parameters
   const inputValidation = validateRoundMatchesInput({ teams, numRounds, playedOpponents });
-
   if (!inputValidation.success) {
     return inputValidation;
   }
 
   const roundMatches: ReadonlyRoundMatches = {};
-
   let currentPlayedOpponents = mutableClonePlayedOpponents(playedOpponents);
 
+  // Generate matches for each round
   for (let roundNumber = 0; roundNumber < numRounds; roundNumber++) {
     const roundLabel = `Round ${String(startRound + roundNumber)}`;
     const newMatches = generateSingleRoundMatches({
@@ -39,6 +39,7 @@ export function generateRoundMatches({
       playedOpponents: currentPlayedOpponents,
     });
 
+    // If unable to generate valid matches for a round, return an error
     if (!newMatches) {
       return {
         success: false,
@@ -51,9 +52,11 @@ export function generateRoundMatches({
     // eslint-disable-next-line functional/immutable-data
     roundMatches[roundLabel] = newMatches;
 
+    // Update played opponents for the next round
     currentPlayedOpponents = updatePlayedOpponents({ currentPlayedOpponents, newMatches });
   }
 
+  // Validate the generated matches
   const resultValidation = validateRoundMatchesOutput({
     teams,
     roundMatches,
@@ -69,10 +72,11 @@ export function generateRoundMatches({
 }
 
 /**
- * Updates the played opponents with new opponents
- * @param {ReadonlyPlayedOpponents} currentPlayedOpponents - The current played opponents
- * @param {readonly ReadonlyMatch[]} newMatches - The new matches to add
- * @returns {PlayedOpponents} The updated played opponents
+ * Updates the played opponents map with new matches.
+ * @param {Object} params - The parameters for updating played opponents.
+ * @param {ReadonlyPlayedOpponents} params.currentPlayedOpponents - The current played opponents map.
+ * @param {readonly ReadonlyMatch[]} params.newMatches - The new matches to add.
+ * @returns {PlayedOpponents} The updated played opponents map.
  */
 function updatePlayedOpponents({
   currentPlayedOpponents,
@@ -84,6 +88,7 @@ function updatePlayedOpponents({
   const updatedPlayedOpponents = mutableClonePlayedOpponents(currentPlayedOpponents);
   const newPlayedOpponents = createBidirectionalMap(newMatches);
 
+  // Update the played opponents map with new matches
   for (const [team, newOpponents] of newPlayedOpponents.entries()) {
     if (!updatedPlayedOpponents.has(team)) {
       updatedPlayedOpponents.set(team, new Set());
@@ -97,11 +102,11 @@ function updatePlayedOpponents({
 }
 
 /**
- * Generates matches for a single round
- * @param {Object} params - The parameters for generating matches
- * @param {readonly string[]} params.teams - The list of teams
- * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
- * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible
+ * Generates matches for a single round using a recursive backtracking algorithm.
+ * @param {Object} params - The parameters for generating matches.
+ * @param {readonly string[]} params.teams - The list of teams.
+ * @param {ReadonlyPlayedOpponents} params.playedOpponents - The matches already played.
+ * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible.
  */
 function generateSingleRoundMatches({
   teams,
