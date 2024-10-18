@@ -15,13 +15,14 @@ import {
   InputOrigin,
   ReadonlyMatch,
   Result,
+  Team,
   UnvalidatedCLIOptions,
   ValidatedCLIOptions,
   ValidationError,
 } from '../types/types.js';
+import { parseStringLiteral, stringToTeam, teamToString } from '../utils/utils.js';
 
 import { createInvalidInputError } from '../utils/errorUtils.js';
-import { parseStringLiteral } from '../utils/utils.js';
 
 type Validator<K extends keyof ValidatedCLIOptions> = (
   input: UnvalidatedCLIOptions
@@ -97,9 +98,13 @@ export function validateTeams({
   if (teams.length < 2) {
     return { success: false, error: createError('at least two teams') };
   }
-  if (new Set(teams).size !== teams.length) {
+
+  const teamObjects: readonly Team[] = teams.map(stringToTeam);
+  const uniqueTeamNames = new Set(teamObjects.map((team) => team.name));
+  if (uniqueTeamNames.size !== teamObjects.length) {
     return { success: false, error: createError('unique team names') };
   }
+
   return { success: true, value: teams };
 }
 

@@ -102,13 +102,16 @@ describe('validatorUtils', () => {
       }
     });
 
-    it('should return failure for less than two teams', () => {
-      const result = validateTeams({ teams: ['Alice'], origin: 'CLI' });
-      expect(result.success).toBe(false);
+    it('should handle teams with squads', () => {
+      const result = validateTeams({ teams: ['Alice [A]', 'Bob [B]'], origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toEqual(['Alice [A]', 'Bob [B]']);
+      }
     });
 
     it('should return failure for duplicate teams', () => {
-      const result = validateTeams({ teams: ['Alice', 'Bob', 'Alice', 'Charlie'], origin: 'CLI' });
+      const result = validateTeams({ teams: ['Alice', 'Bob', 'Alice [A]', 'Charlie'], origin: 'CLI' });
       expect(result.success).toBe(false);
     });
   });
