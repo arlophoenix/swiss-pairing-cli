@@ -1,6 +1,7 @@
 import { Result, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
 
 import { CSVRecord } from '../parsers/csvParserUtils.js';
+import { teamToString } from '../utils/utils.js';
 import { validateAllOptions } from './validatorUtils.js';
 
 export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Partial<ValidatedCLIOptions>> {
@@ -9,8 +10,12 @@ export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Par
   }
 
   const teams = csvRecords
-    .map((record) => record.teams)
-    .filter((team): team is string => team !== undefined && team.trim() !== '');
+    .map((record) => {
+      const name = record.teams;
+      const squad = record.squads;
+      return name ? teamToString({ name, squad }) : undefined;
+    })
+    .filter((team): team is string => team !== undefined);
 
   const matches = csvRecords
     .map((record) => [record['matches-home'], record['matches-away']])

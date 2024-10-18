@@ -6,6 +6,7 @@ import papa from 'papaparse';
 // TODO: rename this type to something more explanatory
 export interface CSVRecord {
   readonly [ARG_TEAMS]?: string;
+  readonly squads?: string;
   readonly [ARG_NUM_ROUNDS]?: string;
   readonly [ARG_START_ROUND]?: string;
   readonly [ARG_ORDER]?: string;

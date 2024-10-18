@@ -67,5 +67,60 @@ describe('csvValidator', () => {
         expect(result.value).toEqual({});
       }
     });
+
+    it('should return success for valid CSV records with teams and squads', () => {
+      const csvRecords: readonly CSVRecord[] = [
+        {
+          teams: 'Alice',
+          squads: 'A',
+          'num-rounds': '3',
+          'start-round': '1',
+          order: 'random',
+          format: 'text',
+          'matches-home': 'Alice',
+          'matches-away': 'Bob',
+        },
+        { teams: 'Bob', squads: 'B' },
+        { teams: 'Charlie' }, // Team without squad
+      ];
+      const result = validateCSVOptions(csvRecords);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toEqual({
+          teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+          numRounds: 3,
+          startRound: 1,
+          order: 'random',
+          format: 'text',
+          matches: [['Alice', 'Bob']],
+        });
+      }
+    });
+
+    it('should handle teams without squads', () => {
+      const csvRecords: readonly CSVRecord[] = [
+        { teams: 'Alice', 'num-rounds': '3' },
+        { teams: 'Bob', squads: 'B' },
+        { teams: 'Charlie' },
+      ];
+      const result = validateCSVOptions(csvRecords);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value.teams).toEqual(['Alice', 'Bob [B]', 'Charlie']);
+      }
+    });
+
+    it('should return failure for duplicate team names, even with different squads', () => {
+      const csvRecords: readonly CSVRecord[] = [
+        { teams: 'Alice', squads: 'A' },
+        { teams: 'Bob' },
+        { teams: 'Alice', squads: 'B' },
+      ];
+      const result = validateCSVOptions(csvRecords);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toContain('unique team names');
+      }
+    });
   });
 });
