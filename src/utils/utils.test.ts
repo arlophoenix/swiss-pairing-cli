@@ -1,4 +1,24 @@
-import { createBidirectionalMap, parseStringLiteral, reverse, shuffle } from './utils.js';
+// utils/utils.test.ts
+
+import {
+  ReadonlyMatch,
+  ReadonlyPlayedOpponents,
+  ReadonlyPlayedTeams,
+  ReadonlyTeamMatch,
+  Team,
+} from '../types/types.js';
+import {
+  createBidirectionalMap,
+  matchToTeamMatch,
+  parseStringLiteral,
+  playedOpponentsToPlayedTeams,
+  playedTeamsToPlayedOpponents,
+  reverse,
+  shuffle,
+  stringToTeam,
+  teamMatchToMatch,
+  teamToString,
+} from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
 import { ARG_FORMAT } from '../constants.js';
@@ -140,6 +160,98 @@ describe('utils', () => {
     it('should be case-sensitive', () => {
       const result = parseStringLiteral({ input: 'RED', options: colors });
       expect(result.success).toBe(false);
+    });
+  });
+
+  describe('teamToString', () => {
+    it('should return name and squad when squad is present', () => {
+      const team: Team = { name: 'Team1', squad: 'A' };
+      expect(teamToString(team)).toBe('Team1 [A]');
+    });
+
+    it('should return only name when squad is not present', () => {
+      const team: Team = { name: 'Team2', squad: undefined };
+      expect(teamToString(team)).toBe('Team2');
+    });
+  });
+
+  describe('stringToTeam', () => {
+    it('should parse name and squad', () => {
+      expect(stringToTeam('Team1 [A]')).toEqual({ name: 'Team1', squad: 'A' });
+    });
+
+    it('should parse name only', () => {
+      expect(stringToTeam('Team2')).toEqual({ name: 'Team2' });
+    });
+  });
+
+  describe('matchToTeamMatch', () => {
+    it('should convert Match to TeamMatch', () => {
+      const match: ReadonlyMatch = ['Team1 [A]', 'Team2'];
+      const expected: ReadonlyTeamMatch = [
+        { name: 'Team1', squad: 'A' },
+        { name: 'Team2', squad: undefined },
+      ];
+      expect(matchToTeamMatch(match)).toEqual(expected);
+    });
+  });
+
+  describe('teamMatchToMatch', () => {
+    it('should convert TeamMatch to Match', () => {
+      const teamMatch: ReadonlyTeamMatch = [
+        { name: 'Team1', squad: 'A' },
+        { name: 'Team2', squad: undefined },
+      ];
+      const expected: ReadonlyMatch = ['Team1 [A]', 'Team2'];
+      expect(teamMatchToMatch(teamMatch)).toEqual(expected);
+    });
+  });
+
+  describe('playedOpponentsToPlayedTeams', () => {
+    it('should convert PlayedOpponents to PlayedTeams', () => {
+      const playedOpponents: ReadonlyPlayedOpponents = new Map([
+        ['Team1 [A]', new Set(['Team2', 'Team3 [C]'])],
+        ['Team2', new Set(['Team1 [A]'])],
+        ['Team3 [C]', new Set(['Team1 [A]'])],
+      ]);
+
+      const expected: ReadonlyPlayedTeams = new Map([
+        [
+          { name: 'Team1', squad: 'A' },
+          new Set([
+            { name: 'Team2', squad: undefined },
+            { name: 'Team3', squad: 'C' },
+          ]),
+        ],
+        [{ name: 'Team2', squad: undefined }, new Set([{ name: 'Team1', squad: 'A' }])],
+        [{ name: 'Team3', squad: 'C' }, new Set([{ name: 'Team1', squad: 'A' }])],
+      ]);
+
+      expect(playedOpponentsToPlayedTeams(playedOpponents)).toEqual(expected);
+    });
+  });
+
+  describe('playedTeamsToPlayedOpponents', () => {
+    it('should convert PlayedTeams to PlayedOpponents', () => {
+      const playedTeams: ReadonlyPlayedTeams = new Map([
+        [
+          { name: 'Team1', squad: 'A' },
+          new Set([
+            { name: 'Team2', squad: undefined },
+            { name: 'Team3', squad: 'C' },
+          ]),
+        ],
+        [{ name: 'Team2', squad: undefined }, new Set([{ name: 'Team1', squad: 'A' }])],
+        [{ name: 'Team3', squad: 'C' }, new Set([{ name: 'Team1', squad: 'A' }])],
+      ]);
+
+      const expected: ReadonlyPlayedOpponents = new Map([
+        ['Team1 [A]', new Set(['Team2', 'Team3 [C]'])],
+        ['Team2', new Set(['Team1 [A]'])],
+        ['Team3 [C]', new Set(['Team1 [A]'])],
+      ]);
+
+      expect(playedTeamsToPlayedOpponents(playedTeams)).toEqual(expected);
     });
   });
 });
