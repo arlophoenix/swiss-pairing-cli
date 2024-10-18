@@ -1,8 +1,6 @@
 import { ARG_NUM_ROUNDS, ARG_START_ROUND } from '../constants.js';
 import { Result, Team, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
-
-import { teamToString } from '../utils/utils.js';
-import { validateAllOptions } from './validatorUtils.js';
+import { teamToString, validateAllOptions } from './validatorUtils.js';
 
 interface JSONRecord {
   readonly teams?: readonly (string | Team)[];

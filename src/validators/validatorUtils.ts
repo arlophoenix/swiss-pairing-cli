@@ -20,9 +20,8 @@ import {
   ValidatedCLIOptions,
   ValidationError,
 } from '../types/types.js';
-import { parseStringLiteral, stringToTeam, teamToString } from '../utils/utils.js';
-
-import { createInvalidInputError } from '../utils/errorUtils.js';
+import { createInvalidInputError, parseStringLiteral, stringToTeam } from '../utils/utils.js';
+export * from '../utils/utils.js';
 
 type Validator<K extends keyof ValidatedCLIOptions> = (
   input: UnvalidatedCLIOptions

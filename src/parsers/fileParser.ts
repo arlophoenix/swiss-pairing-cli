@@ -5,13 +5,12 @@ import {
   SUPPORTED_FILE_TYPE_JSON,
 } from '../constants.js';
 import { BooleanResult, Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
+import { createInvalidInputError, parseStringLiteral } from './parserUtils.js';
 
-import { createInvalidInputError } from '../utils/errorUtils.js';
 import { existsSync } from 'fs';
 import { extname } from 'path';
 import { parseOptionsFromCSV } from './csvParser.js';
 import { parseOptionsFromJSON } from './jsonParser.js';
-import { parseStringLiteral } from '../utils/utils.js';
 import { readFile } from 'fs/promises';
 
 export async function parseFile(filePath: string): Promise<Result<Partial<ValidatedCLIOptions>>> {

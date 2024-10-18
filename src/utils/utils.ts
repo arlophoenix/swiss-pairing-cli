@@ -13,6 +13,8 @@ import {
 
 import { createInvalidInputError } from './errorUtils.js';
 
+export * from './errorUtils.js';
+
 /**
  * Creates a bidirectional map from an array of pairs.
  * Each element in a pair becomes a key in the map, with its partner added to its corresponding set of values.

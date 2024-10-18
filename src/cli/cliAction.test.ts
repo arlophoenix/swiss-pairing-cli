@@ -1,8 +1,7 @@
-import * as cliActionUtils from './cliActionUtils.js';
+import * as cliUtils from './cliUtils.js';
 import * as cliValidator from '../validators/cliValidator.js';
 import * as outputFormatter from './outputFormatter.js';
 import * as swissPairing from '../swiss-pairing/swissPairing.js';
-import * as utils from '../utils/utils.js';
 
 import {
   ReadonlyPlayedOpponents,
@@ -17,29 +16,28 @@ import type { SpyInstance } from 'jest-mock';
 import { handleCLIAction } from './cliAction.js';
 
 jest.mock('../validators/cliValidator.js');
-jest.mock('./cliActionUtils.js');
+jest.mock('./cliUtils.js');
 jest.mock('../swiss-pairing/swissPairing.js');
 jest.mock('./outputFormatter.js');
-jest.mock('../utils/utils.js');
 
 describe('handleCLIAction', () => {
   let mockValidateCLIOptions: SpyInstance<typeof cliValidator.validateCLIOptions>;
-  let mockValidateFileOptions: SpyInstance<typeof cliActionUtils.validateFileOptions>;
-  let mockMergeOptions: SpyInstance<typeof cliActionUtils.mergeOptions>;
-  let mockPrepareTeams: SpyInstance<typeof cliActionUtils.prepareTeams>;
+  let mockValidateFileOptions: SpyInstance<typeof cliUtils.validateFileOptions>;
+  let mockMergeOptions: SpyInstance<typeof cliUtils.mergeOptions>;
+  let mockPrepareTeams: SpyInstance<typeof cliUtils.prepareTeams>;
   let mockGenerateRoundMatches: SpyInstance<typeof swissPairing.generateRoundMatches>;
   let mockFormatOutput: SpyInstance<typeof outputFormatter.formatOutput>;
-  let mockCreateBidirectionalMap: jest.MockedFunction<typeof utils.createBidirectionalMap>;
+  let mockCreateBidirectionalMap: jest.MockedFunction<typeof cliUtils.createBidirectionalMap>;
 
   beforeEach(() => {
     mockValidateCLIOptions = jest.spyOn(cliValidator, 'validateCLIOptions');
-    mockValidateFileOptions = jest.spyOn(cliActionUtils, 'validateFileOptions');
-    mockMergeOptions = jest.spyOn(cliActionUtils, 'mergeOptions');
-    mockPrepareTeams = jest.spyOn(cliActionUtils, 'prepareTeams');
+    mockValidateFileOptions = jest.spyOn(cliUtils, 'validateFileOptions');
+    mockMergeOptions = jest.spyOn(cliUtils, 'mergeOptions');
+    mockPrepareTeams = jest.spyOn(cliUtils, 'prepareTeams');
     mockGenerateRoundMatches = jest.spyOn(swissPairing, 'generateRoundMatches');
     mockFormatOutput = jest.spyOn(outputFormatter, 'formatOutput');
-    mockCreateBidirectionalMap = utils.createBidirectionalMap as jest.MockedFunction<
-      typeof utils.createBidirectionalMap
+    mockCreateBidirectionalMap = cliUtils.createBidirectionalMap as jest.MockedFunction<
+      typeof cliUtils.createBidirectionalMap
     >;
 
     // Default mock implementations with typed return values

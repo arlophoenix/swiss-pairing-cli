@@ -5,7 +5,7 @@ import {
   ReadonlyRoundMatches,
   Result,
 } from '../types/types.js';
-import { createBidirectionalMap, mutableCloneBidirectionalMap } from './utils.js';
+import { createBidirectionalMap, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 
 /**

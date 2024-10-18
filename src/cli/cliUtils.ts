@@ -4,6 +4,8 @@ import { reverse, shuffle } from '../utils/utils.js';
 
 import { parseFile } from '../parsers/fileParser.js';
 
+export * from '../utils/utils.js';
+
 export async function validateFileOptions(
   filePath: string | undefined
 ): Promise<Result<Partial<ValidatedCLIOptions>>> {

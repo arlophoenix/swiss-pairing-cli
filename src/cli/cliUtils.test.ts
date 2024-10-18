@@ -3,7 +3,7 @@ import * as utils from '../utils/utils.js';
 
 import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
 import { Result, ValidatedCLIOptions } from '../types/types.js';
-import { addByeTeamIfNecessary, mergeOptions, prepareTeams, validateFileOptions } from './cliActionUtils.js';
+import { addByeTeamIfNecessary, mergeOptions, prepareTeams, validateFileOptions } from './cliUtils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
@@ -11,7 +11,7 @@ import type { SpyInstance } from 'jest-mock';
 jest.mock('../utils/utils.js');
 jest.mock('../parsers/fileParser.js');
 
-describe('cliActionUtils', () => {
+describe('cliUtils', () => {
   describe('validateFileOptions', () => {
     let mockParseFile: SpyInstance<typeof fileParser.parseFile>;
 

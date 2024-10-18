@@ -1,7 +1,7 @@
 import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_TEAMS } from '../constants.js';
 import { BooleanResult, ReadonlyPlayedOpponents, ReadonlyRoundMatches } from '../types/types.js';
 
-import { mutableCloneBidirectionalMap } from './utils.js';
+import { mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 
 /**
  * Validates the input for generating round matches

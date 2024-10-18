@@ -1,8 +1,7 @@
 import { Result, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
+import { teamToString, validateAllOptions } from './validatorUtils.js';
 
 import { CSVRecord } from '../parsers/csvParserUtils.js';
-import { teamToString } from '../utils/utils.js';
-import { validateAllOptions } from './validatorUtils.js';
 
 export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Partial<ValidatedCLIOptions>> {
   if (csvRecords.length === 0) {
