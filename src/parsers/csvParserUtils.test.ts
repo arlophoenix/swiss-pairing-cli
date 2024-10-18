@@ -52,8 +52,8 @@ describe('csvParserUtils', () => {
         ],
       });
 
-      // eslint-disable-next-line max-params
-      mockPapaParse.mockImplementation((_input, _config) => mockParseResult);
+      // eslint-disable-next-line max-params, @typescript-eslint/no-explicit-any
+      mockPapaParse.mockImplementation((_input: any, _config: any) => mockParseResult);
 
       const result = parseCSV(mockCSV);
 
@@ -76,8 +76,8 @@ describe('csvParserUtils', () => {
         ],
       });
 
-      // eslint-disable-next-line max-params
-      mockPapaParse.mockImplementation((_input, _config?) => mockParseResult);
+      // eslint-disable-next-line max-params, @typescript-eslint/no-explicit-any
+      mockPapaParse.mockImplementation((_input: any, _config?: any) => mockParseResult);
 
       const result = parseCSV(mockCSV);
 
@@ -108,7 +108,8 @@ describe('csvParserUtils', () => {
         ],
       });
 
-      mockPapaParse.mockImplementation((_input, _config) => mockParseResult);
+      // eslint-disable-next-line max-params, @typescript-eslint/no-explicit-any
+      mockPapaParse.mockImplementation((_input: any, _config: any) => mockParseResult);
 
       const result = parseCSV(mockCSV);
 
