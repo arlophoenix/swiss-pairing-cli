@@ -1,7 +1,7 @@
 import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_TEAMS } from '../constants.js';
 import { BooleanResult, ReadonlyPlayedOpponents, ReadonlyRoundMatches } from '../types/types.js';
 
-import { mutableClonePlayedOpponents } from './utils.js';
+import { mutableCloneBidirectionalMap } from './utils.js';
 
 /**
  * Validates the input for generating round matches
@@ -129,7 +129,7 @@ export function validateRoundMatchesOutput({
     };
   }
 
-  const currentPlayedMatches = mutableClonePlayedOpponents(playedOpponents);
+  const currentPlayedMatches = mutableCloneBidirectionalMap(playedOpponents);
 
   for (const [roundLabel, matches] of Object.entries(roundMatches)) {
     // 2. There are num teams / 2 values per round

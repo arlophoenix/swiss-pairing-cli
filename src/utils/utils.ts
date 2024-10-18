@@ -43,6 +43,16 @@ export function createBidirectionalMap<T>(
 }
 
 /**
+ * Creates a mutable clone of a bidirectional map.
+ * @param {ReadonlyMap<T, ReadonlySet<T>>} input - The original bidirectional map
+ * @returns {Map<T, Set<T>>} A mutable clone of the bidirectional map
+ */
+// eslint-disable-next-line functional/prefer-readonly-type
+export function mutableCloneBidirectionalMap<T>(input: ReadonlyMap<T, ReadonlySet<T>>): Map<T, Set<T>> {
+  return new Map(Array.from(input, ([key, set]) => [key, new Set(set)]));
+}
+
+/**
  * Shuffles an array using the Fisher-Yates algorithm
  * @param {readonly T[]} array - The array to shuffle
  * @returns {readonly T[]} A new shuffled array

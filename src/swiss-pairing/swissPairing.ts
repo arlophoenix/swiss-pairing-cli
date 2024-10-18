@@ -5,10 +5,8 @@ import {
   ReadonlyRoundMatches,
   Result,
 } from '../types/types.js';
+import { createBidirectionalMap, mutableCloneBidirectionalMap } from './utils.js';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
-
-import { createBidirectionalMap } from '../utils/utils.js';
-import { mutableClonePlayedOpponents } from './utils.js';
 
 /**
  * Generates multiple rounds of matches for a Swiss-style tournament.
@@ -37,7 +35,7 @@ export function generateRoundMatches({
   }
 
   const roundMatches: ReadonlyRoundMatches = {};
-  let currentPlayedOpponents = mutableClonePlayedOpponents(playedOpponents);
+  let currentPlayedOpponents = mutableCloneBidirectionalMap(playedOpponents);
 
   // Generate matches for each round
   for (let roundNumber = 0; roundNumber < numRounds; roundNumber++) {
@@ -93,7 +91,7 @@ function updatePlayedOpponents({
   readonly currentPlayedOpponents: ReadonlyPlayedOpponents;
   readonly newMatches: readonly ReadonlyMatch[];
 }): PlayedOpponents {
-  const updatedPlayedOpponents = mutableClonePlayedOpponents(currentPlayedOpponents);
+  const updatedPlayedOpponents = mutableCloneBidirectionalMap(currentPlayedOpponents);
   const newPlayedOpponents = createBidirectionalMap(newMatches);
 
   // Update the played opponents map with new matches
