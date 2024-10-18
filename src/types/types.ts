@@ -25,26 +25,6 @@ export interface ValidatedCLIOptions {
 export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
 export type CLIOptionFormat = (typeof CLI_OPTION_FORMAT)[number];
 
-export interface GenerateRoundMatchesInput {
-  readonly teams: readonly string[];
-  readonly numRounds: number;
-  readonly startRound: number;
-  readonly playedOpponents: ReadonlyPlayedOpponents;
-}
-
-export interface ValidateRoundMatchesInput {
-  readonly teams: readonly string[];
-  readonly numRounds: number;
-  readonly playedOpponents: ReadonlyPlayedOpponents;
-}
-
-export interface ValidateRoundMatchesOutput {
-  readonly roundMatches: ReadonlyRoundMatches;
-  readonly teams: readonly string[];
-  readonly numRounds: number;
-  readonly playedOpponents: ReadonlyPlayedOpponents;
-}
-
 export type RoundMatches = Record<string, readonly Match[]>;
 export type ReadonlyRoundMatches = Record<string, readonly ReadonlyMatch[]>;
 

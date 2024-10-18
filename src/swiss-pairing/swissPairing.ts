@@ -1,5 +1,4 @@
 import {
-  GenerateRoundMatchesInput,
   PlayedOpponents,
   ReadonlyMatch,
   ReadonlyPlayedOpponents,
@@ -13,7 +12,11 @@ import { mutableClonePlayedOpponents } from './utils.js';
 
 /**
  * Generates multiple rounds of matches for a Swiss-style tournament.
- * @param {GenerateRoundMatchesInput} input - The input parameters for generating matches.
+ * @param {Object} params - The parameters for updating played opponents.
+ * @param {readonly string[]} params.teams - The list of teams.
+ * @param {readonly number} params.numRounds - The number of rounds of matches to generate.
+ * @param {readonly number} params.startRound - The number with which to label the first round generated.
+ * @param {ReadonlyPlayedOpponents} params.playedOpponents - The matches already played.
  * @returns {Result<ReadonlyRoundMatches>} The generated matches or an error.
  */
 export function generateRoundMatches({
@@ -21,7 +24,12 @@ export function generateRoundMatches({
   numRounds,
   startRound,
   playedOpponents,
-}: GenerateRoundMatchesInput): Result<ReadonlyRoundMatches> {
+}: {
+  readonly teams: readonly string[];
+  readonly numRounds: number;
+  readonly startRound: number;
+  readonly playedOpponents: ReadonlyPlayedOpponents;
+}): Result<ReadonlyRoundMatches> {
   // Validate input parameters
   const inputValidation = validateRoundMatchesInput({ teams, numRounds, playedOpponents });
   if (!inputValidation.success) {

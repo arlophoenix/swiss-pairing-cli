@@ -2,7 +2,6 @@ import * as validation from './validation.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { GenerateRoundMatchesInput } from '../types/types.js';
 import type { SpyInstance } from 'jest-mock';
 import { generateRoundMatches } from './swissPairing.js';
 
@@ -29,7 +28,7 @@ describe('index', () => {
         success: false,
         error: { type: 'InvalidInput', message: 'input validation error' },
       });
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['p1'],
         numRounds: 1,
         startRound: 1,
@@ -49,7 +48,7 @@ describe('index', () => {
         success: false,
         error: { type: 'InvalidOutput', message: 'output validation error' },
       });
-      const validInput: GenerateRoundMatchesInput = {
+      const validInput = {
         teams: ['p1', 'p2'],
         numRounds: 1,
         startRound: 1,
@@ -65,7 +64,7 @@ describe('index', () => {
     });
 
     it('should generate correct matches for 4 teams, 1 round, and no played matches', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
@@ -85,7 +84,7 @@ describe('index', () => {
     });
 
     it('should generate correct matches for 4 teams and 2 rounds', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 2,
         startRound: 1,
@@ -109,7 +108,7 @@ describe('index', () => {
     });
 
     it('should generate correct matches for 4 teams and 3 rounds', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 3,
         startRound: 1,
@@ -139,7 +138,7 @@ describe('index', () => {
     it('should return an error for 4 teams and 4 rounds', () => {
       // input validation would normally catch this but its also an example of an impossible solution
       // without teams needing to play multiple times
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 4,
         startRound: 1,
@@ -155,7 +154,7 @@ describe('index', () => {
     });
 
     it('should generate correct matches for 1 round with existing played matches (p1 vs p2, p3 vs p4)', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
@@ -180,7 +179,7 @@ describe('index', () => {
     });
 
     it('should generate correct matches for 1 round with existing played matches (p1 vs p3, p2 vs p4)', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
@@ -205,7 +204,7 @@ describe('index', () => {
     });
 
     it('should generate correct matches for 1 round with existing played matches (p1 vs p2, p1 vs p3)', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
@@ -229,7 +228,7 @@ describe('index', () => {
     });
 
     it('should return an error when one team has played all others', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 1,
         startRound: 1,
@@ -250,7 +249,7 @@ describe('index', () => {
     });
 
     it('should start labelling rounds from the startRound', () => {
-      const input: GenerateRoundMatchesInput = {
+      const input = {
         teams: ['p1', 'p2', 'p3', 'p4'],
         numRounds: 2,
         startRound: 3,

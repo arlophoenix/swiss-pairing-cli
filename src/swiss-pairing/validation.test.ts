@@ -1,11 +1,11 @@
-import { GenerateRoundMatchesInput, ReadonlyPlayedOpponents, RoundMatches } from '../types/types.js';
+import { ReadonlyPlayedOpponents, RoundMatches } from '../types/types.js';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
 
 describe('Validation', () => {
   describe('validateRoundMatchesInput', () => {
     it('should return valid for valid input', () => {
-      const validInput: GenerateRoundMatchesInput = {
+      const validInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 3,
         startRound: 1,
@@ -20,7 +20,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if there are less than two teams', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1'],
         numRounds: 1,
         startRound: 1,
@@ -35,7 +35,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if there is an odd number of teams', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3'],
         numRounds: 1,
         startRound: 1,
@@ -50,7 +50,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if there are duplicate teams', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1', 'Team2', 'Team1', 'Team3'],
         numRounds: 2,
         startRound: 1,
@@ -65,7 +65,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if rounds is less than 1', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 0,
         startRound: 1,
@@ -80,7 +80,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if rounds is greater than teams minus 1', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 4,
         startRound: 1,
@@ -95,7 +95,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if playedMatches contains invalid team names', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,
@@ -114,7 +114,7 @@ describe('Validation', () => {
     });
 
     it('should return invalid if playedMatches is not symmetrical', () => {
-      const invalidInput: GenerateRoundMatchesInput = {
+      const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,

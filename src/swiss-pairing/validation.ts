@@ -1,5 +1,5 @@
 import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_TEAMS } from '../constants.js';
-import { BooleanResult, ValidateRoundMatchesInput, ValidateRoundMatchesOutput } from '../types/types.js';
+import { BooleanResult, ReadonlyPlayedOpponents, ReadonlyRoundMatches } from '../types/types.js';
 
 import { mutableClonePlayedOpponents } from './utils.js';
 
@@ -11,12 +11,15 @@ import { mutableClonePlayedOpponents } from './utils.js';
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
  * @returns {BooleanResult} The result of the validation
  */
-
 export function validateRoundMatchesInput({
   teams,
   numRounds,
   playedOpponents,
-}: ValidateRoundMatchesInput): BooleanResult {
+}: {
+  readonly teams: readonly string[];
+  readonly numRounds: number;
+  readonly playedOpponents: ReadonlyPlayedOpponents;
+}): BooleanResult {
   // Check if there are at least two teams
   if (teams.length < 2) {
     return {
@@ -106,7 +109,12 @@ export function validateRoundMatchesOutput({
   teams,
   numRounds,
   playedOpponents,
-}: ValidateRoundMatchesOutput): BooleanResult {
+}: {
+  readonly roundMatches: ReadonlyRoundMatches;
+  readonly teams: readonly string[];
+  readonly numRounds: number;
+  readonly playedOpponents: ReadonlyPlayedOpponents;
+}): BooleanResult {
   const numGamesPerRound = teams.length / 2;
 
   // 1. There is one key per round in the record
