@@ -13,6 +13,7 @@ describe('Validation', () => {
           ['Team1', new Set(['Team2'])],
           ['Team2', new Set(['Team1'])],
         ]),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(validInput);
 
@@ -25,6 +26,7 @@ describe('Validation', () => {
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -40,6 +42,7 @@ describe('Validation', () => {
         numRounds: 1,
         startRound: 1,
         playedOpponents: new Map(),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -55,6 +58,7 @@ describe('Validation', () => {
         numRounds: 2,
         startRound: 1,
         playedOpponents: new Map(),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -70,6 +74,7 @@ describe('Validation', () => {
         numRounds: 0,
         startRound: 1,
         playedOpponents: new Map(),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -85,6 +90,7 @@ describe('Validation', () => {
         numRounds: 4,
         startRound: 1,
         playedOpponents: new Map(),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -104,6 +110,7 @@ describe('Validation', () => {
           ['Team2', new Set(['Team1'])],
           ['InvalidTeam', new Set(['Team3'])],
         ]),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -122,6 +129,7 @@ describe('Validation', () => {
           ['Team1', new Set(['Team2'])],
           ['Team2', new Set(['Team3'])], // Should be ['Team1']
         ]),
+        squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
 
@@ -130,17 +138,38 @@ describe('Validation', () => {
         expect(result.error.message).toBe('matches are not symmetrical.');
       }
     });
+
+    it('should return invalid if squadMap contains invalid team names', () => {
+      const invalidInput = {
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
+        numRounds: 2,
+        startRound: 1,
+        playedOpponents: new Map() as ReadonlyPlayedOpponents,
+        squadMap: new Map([
+          ['Team1', 'SquadA'],
+          ['InvalidTeam', 'SquadB'],
+        ]),
+      };
+      const result = validateRoundMatchesInput(invalidInput);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('squadMap contains invalid team name: InvalidTeam.');
+      }
+    });
   });
 
-  describe('validateResult', () => {
+  describe('validateRoundMatchesOutput', () => {
     let teams: readonly string[];
     let numRounds: number;
     let playedOpponents: ReadonlyPlayedOpponents;
+    let squadMap: ReadonlyMap<string, string>;
 
     beforeEach(() => {
       teams = ['p1', 'p2', 'p3', 'p4'];
       numRounds = 2;
       playedOpponents = new Map();
+      squadMap = new Map();
     });
 
     it('should return valid for correct matches', () => {
@@ -159,6 +188,7 @@ describe('Validation', () => {
         teams,
         numRounds,
         playedOpponents,
+        squadMap,
       });
 
       expect(result.success).toBe(true);
@@ -176,6 +206,7 @@ describe('Validation', () => {
         teams,
         numRounds,
         playedOpponents,
+        squadMap,
       });
 
       expect(result.success).toBe(false);
@@ -197,6 +228,7 @@ describe('Validation', () => {
         teams,
         numRounds,
         playedOpponents,
+        squadMap,
       });
 
       expect(result.success).toBe(false);
@@ -222,6 +254,7 @@ describe('Validation', () => {
         teams,
         numRounds,
         playedOpponents,
+        squadMap,
       });
 
       expect(result.success).toBe(false);
@@ -246,6 +279,7 @@ describe('Validation', () => {
         teams,
         numRounds,
         playedOpponents,
+        squadMap,
       });
 
       expect(result.success).toBe(false);
@@ -270,12 +304,84 @@ describe('Validation', () => {
         teams,
         numRounds,
         playedOpponents,
+        squadMap,
       });
 
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.message).toBe('invalid match in Round 2: p1 or p4 appears more than once.');
       }
+    });
+
+    it('should return valid for correct matches respecting squad constraints', () => {
+      const roundMatches: RoundMatches = {
+        'Round 1': [
+          ['p1', 'p3'],
+          ['p2', 'p4'],
+        ],
+        'Round 2': [
+          ['p1', 'p4'],
+          ['p2', 'p3'],
+        ],
+      };
+      const result = validateRoundMatchesOutput({
+        roundMatches,
+        teams,
+        numRounds,
+        playedOpponents,
+        squadMap: new Map([
+          ['p1', 'A'],
+          ['p2', 'A'],
+          ['p3', 'B'],
+          ['p4', 'B'],
+        ]),
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('should return invalid if teams from the same squad are paired', () => {
+      const roundMatches: RoundMatches = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+      };
+      const result = validateRoundMatchesOutput({
+        roundMatches,
+        teams,
+        numRounds: 1,
+        playedOpponents,
+        squadMap: new Map([
+          ['p1', 'A'],
+          ['p2', 'A'],
+          ['p3', 'B'],
+          ['p4', 'B'],
+        ]),
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('invalid match in Round 1: p1 and p2 are from the same squad.');
+      }
+    });
+
+    it('should work correctly when squadMap is empty', () => {
+      const roundMatches: RoundMatches = {
+        'Round 1': [
+          ['p1', 'p2'],
+          ['p3', 'p4'],
+        ],
+      };
+      const result = validateRoundMatchesOutput({
+        roundMatches,
+        teams,
+        numRounds: 1,
+        playedOpponents,
+        squadMap: new Map(),
+      });
+
+      expect(result.success).toBe(true);
     });
   });
 });

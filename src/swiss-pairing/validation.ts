@@ -9,16 +9,19 @@ import { mutableCloneBidirectionalMap } from './swissPairingUtils.js';
  * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds to generate
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
+ * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
  * @returns {BooleanResult} The result of the validation
  */
 export function validateRoundMatchesInput({
   teams,
   numRounds,
   playedOpponents,
+  squadMap,
 }: {
   readonly teams: readonly string[];
   readonly numRounds: number;
   readonly playedOpponents: ReadonlyPlayedOpponents;
+  readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   // Check if there are at least two teams
   if (teams.length < 2) {
@@ -91,6 +94,16 @@ export function validateRoundMatchesInput({
     }
   }
 
+  // Check if all teams in squadMap are valid
+  for (const team of squadMap.keys()) {
+    if (!teams.includes(team)) {
+      return {
+        success: false,
+        error: { type: 'InvalidInput', message: `squadMap contains invalid team name: ${team}.` },
+      };
+    }
+  }
+
   // If all checks pass, return true
   return { success: true };
 }
@@ -102,6 +115,7 @@ export function validateRoundMatchesInput({
  * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds generated
  * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
+ * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
  * @returns {BooleanResult} The result of the validation
  */
 export function validateRoundMatchesOutput({
@@ -109,11 +123,13 @@ export function validateRoundMatchesOutput({
   teams,
   numRounds,
   playedOpponents,
+  squadMap,
 }: {
   readonly roundMatches: ReadonlyRoundMatches;
   readonly teams: readonly string[];
   readonly numRounds: number;
   readonly playedOpponents: ReadonlyPlayedOpponents;
+  readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   const numGamesPerRound = teams.length / 2;
 
@@ -178,6 +194,17 @@ export function validateRoundMatchesOutput({
       }
       teamsInRound.add(team1);
       teamsInRound.add(team2);
+
+      // 5. No teams from the same squad are paired
+      if (squadMap.get(team1) === squadMap.get(team2) && squadMap.get(team1) !== undefined) {
+        return {
+          success: false,
+          error: {
+            type: 'InvalidOutput',
+            message: `invalid match in ${roundLabel}: ${team1} and ${team2} are from the same squad.`,
+          },
+        };
+      }
     }
   }
 

@@ -271,5 +271,86 @@ describe('index', () => {
         });
       }
     });
+
+    it('should generate correct matches for 4 teams with 2 squads', () => {
+      const input = {
+        teams: ['p1', 'p2', 'p3', 'p4'],
+        numRounds: 2,
+        startRound: 1,
+        playedOpponents: new Map(),
+        squadMap: new Map([
+          ['p1', 'A'],
+          ['p2', 'A'],
+          ['p3', 'B'],
+          ['p4', 'B'],
+        ]),
+      };
+      const roundMatchesResult = generateRoundMatches(input);
+
+      expect(roundMatchesResult.success).toBe(true);
+      if (roundMatchesResult.success) {
+        expect(roundMatchesResult.value).toEqual({
+          'Round 1': [
+            ['p1', 'p3'],
+            ['p2', 'p4'],
+          ],
+          'Round 2': [
+            ['p1', 'p4'],
+            ['p2', 'p3'],
+          ],
+        });
+      }
+    });
+
+    it('should return an error when no valid pairings are possible due to squad constraints', () => {
+      const input = {
+        teams: ['p1', 'p2', 'p3', 'p4'],
+        numRounds: 3,
+        startRound: 1,
+        playedOpponents: new Map([
+          ['p1', new Set(['p3', 'p4'])],
+          ['p2', new Set(['p3', 'p4'])],
+          ['p3', new Set(['p1', 'p2'])],
+          ['p4', new Set(['p1', 'p2'])],
+        ]),
+        squadMap: new Map([
+          ['p1', 'A'],
+          ['p2', 'A'],
+          ['p3', 'B'],
+          ['p4', 'B'],
+        ]),
+      };
+      const result = generateRoundMatches(input);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.type).toBe('NoValidSolution');
+        expect(result.error.message).toBe('unable to generate valid matches for Round 1.');
+      }
+    });
+
+    it('should work correctly when squadMap is not provided', () => {
+      const input = {
+        teams: ['p1', 'p2', 'p3', 'p4'],
+        numRounds: 2,
+        startRound: 1,
+        playedOpponents: new Map(),
+      };
+      const roundMatchesResult = generateRoundMatches(input);
+
+      expect(roundMatchesResult.success).toBe(true);
+      if (roundMatchesResult.success) {
+        expect(roundMatchesResult.value).toEqual({
+          'Round 1': [
+            ['p1', 'p2'],
+            ['p3', 'p4'],
+          ],
+          'Round 2': [
+            ['p1', 'p3'],
+            ['p2', 'p4'],
+          ],
+        });
+      }
+    });
   });
 });

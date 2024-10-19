@@ -15,6 +15,7 @@ import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validat
  * @param {readonly number} params.numRounds - The number of rounds of matches to generate.
  * @param {readonly number} params.startRound - The number with which to label the first round generated.
  * @param {ReadonlyPlayedOpponents} params.playedOpponents - The matches already played.
+ * @param {ReadonlyMap<string, string>} [params.squadMap] - A map of team names to squad names.
  * @returns {Result<ReadonlyRoundMatches>} The generated matches or an error.
  */
 export function generateRoundMatches({
@@ -22,14 +23,16 @@ export function generateRoundMatches({
   numRounds,
   startRound,
   playedOpponents,
+  squadMap = new Map(),
 }: {
   readonly teams: readonly string[];
   readonly numRounds: number;
   readonly startRound: number;
   readonly playedOpponents: ReadonlyPlayedOpponents;
+  readonly squadMap?: ReadonlyMap<string, string>;
 }): Result<ReadonlyRoundMatches> {
   // Validate input parameters
-  const inputValidation = validateRoundMatchesInput({ teams, numRounds, playedOpponents });
+  const inputValidation = validateRoundMatchesInput({ teams, numRounds, playedOpponents, squadMap });
   if (!inputValidation.success) {
     return inputValidation;
   }
@@ -43,6 +46,7 @@ export function generateRoundMatches({
     const newMatches = generateSingleRoundMatches({
       teams,
       playedOpponents: currentPlayedOpponents,
+      squadMap,
     });
 
     // If unable to generate valid matches for a round, return an error
@@ -68,6 +72,7 @@ export function generateRoundMatches({
     roundMatches,
     numRounds,
     playedOpponents,
+    squadMap,
   });
 
   if (!resultValidation.success) {
@@ -112,14 +117,17 @@ function updatePlayedOpponents({
  * @param {Object} params - The parameters for generating matches.
  * @param {readonly string[]} params.teams - The list of teams.
  * @param {ReadonlyPlayedOpponents} params.playedOpponents - The matches already played.
+ * @param {ReadonlyMap<string, string>} [params.squadMap] - A map of team names to squad names.
  * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible.
  */
 function generateSingleRoundMatches({
   teams,
   playedOpponents,
+  squadMap,
 }: {
   readonly teams: readonly string[];
   readonly playedOpponents: ReadonlyPlayedOpponents;
+  readonly squadMap: ReadonlyMap<string, string>;
 }): readonly ReadonlyMatch[] | null {
   // Base case: if no teams left, we've successfully paired everyone
   if (teams.length === 0) {
@@ -127,15 +135,20 @@ function generateSingleRoundMatches({
   }
 
   const [currentTeam, ...remainingTeams] = teams;
+  const currentSquad = squadMap.get(currentTeam);
 
   // Try to pair the current team with each remaining team
   for (const opponent of remainingTeams) {
-    // Skip if these teams have already played each other
-    if (!playedOpponents.get(currentTeam)?.has(opponent)) {
+    // Skip if these teams have already played each other or are from the same squad
+    if (
+      !playedOpponents.get(currentTeam)?.has(opponent) &&
+      (!currentSquad || currentSquad !== squadMap.get(opponent))
+    ) {
       // Recursively generate matches for the remaining teams
       const newMatches = generateSingleRoundMatches({
         teams: remainingTeams.filter((p) => p !== opponent),
         playedOpponents,
+        squadMap,
       });
 
       // If we found valid matches for the remaining teams, we're done
