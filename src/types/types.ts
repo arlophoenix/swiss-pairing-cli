@@ -34,13 +34,6 @@ export interface Team {
 }
 
 // eslint-disable-next-line functional/prefer-readonly-type
-export type TeamMatch = [Team, Team];
-export type ReadonlyTeamMatch = readonly [Team, Team];
-// eslint-disable-next-line functional/prefer-readonly-type
-export type PlayedTeams = Map<Team, Set<Team>>;
-export type ReadonlyPlayedTeams = ReadonlyMap<Team, ReadonlySet<Team>>;
-
-// eslint-disable-next-line functional/prefer-readonly-type
 export type Match = [string, string];
 export type ReadonlyMatch = readonly [string, string];
 // eslint-disable-next-line functional/prefer-readonly-type
