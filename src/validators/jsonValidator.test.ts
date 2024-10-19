@@ -170,7 +170,7 @@ describe('jsonValidator', () => {
       };
 
       const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(false);
+      expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
           numRounds: 3,

@@ -84,6 +84,7 @@ export function validateTeams({
   readonly teams: readonly string[] | undefined;
   readonly origin: InputOrigin;
 }): Result<readonly string[] | undefined> {
+  // return success because the teams may be provided by either CLI or file input and be blank in the other
   if (teams === undefined) return { success: true, value: undefined };
 
   const createError = (expected: string) =>
