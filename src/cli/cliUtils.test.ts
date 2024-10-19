@@ -3,13 +3,16 @@ import * as utils from '../utils/utils.js';
 
 import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
 import { Result, ValidatedCLIOptions } from '../types/types.js';
-import { addByeTeamIfNecessary, mergeOptions, prepareTeams, validateFileOptions } from './cliUtils.js';
+import {
+  addByeTeamIfNecessary,
+  createSquadMap,
+  mergeOptions,
+  prepareTeams,
+  validateFileOptions,
+} from './cliUtils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
-
-jest.mock('../utils/utils.js');
-jest.mock('../parsers/fileParser.js');
 
 describe('cliUtils', () => {
   describe('validateFileOptions', () => {
@@ -121,6 +124,71 @@ describe('cliUtils', () => {
       const teams: readonly string[] = [];
       const result = addByeTeamIfNecessary(teams);
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('createSquadMap', () => {
+    beforeEach(() => {
+      jest.unmock('@jest/globals');
+    });
+
+    it('should create a map of team names to squad names', () => {
+      const teams = ['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]'];
+      const result = createSquadMap(teams);
+      expect(result).toEqual(
+        new Map([
+          ['Alice', 'A'],
+          ['Bob', 'B'],
+          ['Charlie', 'A'],
+          ['David', 'B'],
+        ])
+      );
+    });
+
+    it('should handle teams without squad information', () => {
+      const teams = ['Alice [A]', 'Bob', 'Charlie [C]', 'David'];
+      const result = createSquadMap(teams);
+      expect(result).toEqual(
+        new Map([
+          ['Alice', 'A'],
+          ['Charlie', 'C'],
+        ])
+      );
+    });
+
+    it('should return an empty map for empty input', () => {
+      const teams: readonly string[] = [];
+      const result = createSquadMap(teams);
+      expect(result).toEqual(new Map());
+    });
+
+    it('should handle mixed case in team and squad names', () => {
+      const teams = ['Alice [TeamA]', 'BOB [teamB]', 'Charlie [TEAMC]'];
+      const result = createSquadMap(teams);
+      expect(result).toEqual(
+        new Map([
+          ['Alice', 'TeamA'],
+          ['BOB', 'teamB'],
+          ['Charlie', 'TEAMC'],
+        ])
+      );
+    });
+
+    it('should handle squad names with spaces', () => {
+      const teams = ['Alice [Team A]', 'Bob [Team B]'];
+      const result = createSquadMap(teams);
+      expect(result).toEqual(
+        new Map([
+          ['Alice', 'Team A'],
+          ['Bob', 'Team B'],
+        ])
+      );
+    });
+
+    it('should ignore malformed team inputs', () => {
+      const teams = ['Alice [A]', 'Bob [B', 'Charlie] [C]', 'David []'];
+      const result = createSquadMap(teams);
+      expect(result).toEqual(new Map([['Alice', 'A']]));
     });
   });
 });

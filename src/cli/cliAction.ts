@@ -1,5 +1,11 @@
 import { Result, UnvalidatedCLIOptions } from '../types/types.js';
-import { createBidirectionalMap, mergeOptions, prepareTeams, validateFileOptions } from './cliUtils.js';
+import {
+  createBidirectionalMap,
+  createSquadMap,
+  mergeOptions,
+  prepareTeams,
+  validateFileOptions,
+} from './cliUtils.js';
 
 import { formatOutput } from './outputFormatter.js';
 import { generateRoundMatches } from '../swiss-pairing/swissPairing.js';
@@ -18,12 +24,14 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
 
   const preparedTeams = prepareTeams({ teams, order });
   const playedOpponents = createBidirectionalMap(matches);
+  const squadMap = createSquadMap(teams);
 
   const roundMatchesResult = generateRoundMatches({
     teams: preparedTeams,
     numRounds,
     startRound,
     playedOpponents,
+    squadMap,
   });
 
   if (!roundMatchesResult.success) {

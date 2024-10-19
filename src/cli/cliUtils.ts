@@ -1,6 +1,6 @@
 import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
 import { CLIOptionOrder, Result, ValidatedCLIOptions } from '../types/types.js';
-import { reverse, shuffle } from '../utils/utils.js';
+import { reverse, shuffle, stringToTeam } from '../utils/utils.js';
 
 import { parseFile } from '../parsers/fileParser.js';
 
@@ -44,4 +44,15 @@ export function prepareTeams({
 
 export function addByeTeamIfNecessary(teams: readonly string[]): readonly string[] {
   return teams.length % 2 === 1 ? [...teams, BYE_TEAM] : teams;
+}
+
+export function createSquadMap(teams: readonly string[]): ReadonlyMap<string, string> {
+  const squadMap = new Map<string, string>();
+  teams.forEach((teamStr) => {
+    const team = stringToTeam(teamStr);
+    if (team.squad) {
+      squadMap.set(team.name, team.squad);
+    }
+  });
+  return squadMap;
 }
