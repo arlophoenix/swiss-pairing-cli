@@ -127,9 +127,33 @@ describe('validatorUtils', () => {
       }
     });
 
-    it('should return failure for duplicate teams', () => {
-      const result = validateTeams({ teams: ['Alice', 'Bob', 'Alice [A]', 'Charlie'], origin: 'CLI' });
+    it('should return failure for less than two teams', () => {
+      const result = validateTeams({ teams: ['Alice'], origin: 'CLI' });
       expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toContain('at least two teams');
+      }
+    });
+
+    it('should return failure for invalid team names', () => {
+      const result = validateTeams({ teams: ['Alice', 'Bob [C] [D]'], origin: 'CLI' });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toContain('valid team name');
+      }
+    });
+
+    it('should return failure for duplicate team names', () => {
+      const result = validateTeams({ teams: ['Alice', 'Bob', 'Alice [A]'], origin: 'CLI' });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toContain('unique team names');
+      }
+    });
+
+    it('should return undefined for undefined input', () => {
+      const result = validateTeams({ teams: undefined, origin: 'CLI' });
+      expect(result).toEqual({ success: true, value: undefined });
     });
   });
 

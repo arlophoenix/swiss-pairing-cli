@@ -20,7 +20,12 @@ import {
   ValidatedCLIOptions,
   ValidationError,
 } from '../types/types.js';
-import { createInvalidInputError, parseStringLiteral, stringToTeam } from '../utils/utils.js';
+import {
+  createInvalidInputError,
+  isValidTeamString,
+  parseStringLiteral,
+  stringToTeam,
+} from '../utils/utils.js';
 export * from '../utils/utils.js';
 
 type Validator<K extends keyof ValidatedCLIOptions> = (
@@ -87,22 +92,34 @@ export function validateTeams({
   // return success because the teams may be provided by either CLI or file input and be blank in the other
   if (teams === undefined) return { success: true, value: undefined };
 
-  const createError = (expected: string) =>
+  const createError = ({ input, expected }: { readonly input?: string; readonly expected: string }) =>
     createInvalidInputError({
       origin,
       argName: ARG_TEAMS,
-      inputValue: teams.join(', '),
+      inputValue: input ?? teams.join(','),
       expectedValue: expected,
     });
 
   if (teams.length < 2) {
-    return { success: false, error: createError('at least two teams') };
+    return { success: false, error: createError({ expected: 'at least two teams' }) };
+  }
+
+  for (const team of teams) {
+    if (!isValidTeamString(team)) {
+      return {
+        success: false,
+        error: createError({
+          input: team,
+          expected: 'valid team name, optionally followed by [squad] e.g."Alice [Home]"',
+        }),
+      };
+    }
   }
 
   const teamObjects: readonly Team[] = teams.map(stringToTeam);
   const uniqueTeamNames = new Set(teamObjects.map((team) => team.name));
   if (uniqueTeamNames.size !== teamObjects.length) {
-    return { success: false, error: createError('unique team names') };
+    return { success: false, error: createError({ expected: 'unique team names' }) };
   }
 
   return { success: true, value: teamObjects };
