@@ -82,7 +82,10 @@ Bob,,,,,`;
     mockValidateCSVOptions.mockReturnValue({
       success: true,
       value: {
-        teams: ['Alice', 'Bob'],
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -118,7 +121,10 @@ Bob,,,,,`;
     mockValidateCSVOptions.mockReturnValue({
       success: true,
       value: {
-        teams: ['Alice', 'Bob'],
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -131,7 +137,10 @@ Bob,,,,,`;
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.value).toEqual({
-        teams: ['Alice', 'Bob'],
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
         numRounds: 3,
         startRound: 1,
         order: 'random',

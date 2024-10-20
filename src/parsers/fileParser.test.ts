@@ -37,14 +37,24 @@ describe('fileParser', () => {
     mockReadFile.mockResolvedValue(mockContent);
     mockParseCSV.mockReturnValue({
       success: true,
-      value: { teams: ['Alice', 'Bob'] },
+      value: {
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+      },
     });
 
     const result = await parseFile('test.csv');
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
+      expect(result.value).toEqual({
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+      });
     }
     expect(mockParseCSV).toHaveBeenCalledWith(mockContent);
   });
@@ -54,14 +64,24 @@ describe('fileParser', () => {
     mockReadFile.mockResolvedValue(mockContent);
     mockParseJSON.mockReturnValue({
       success: true,
-      value: { teams: ['Alice', 'Bob'] },
+      value: {
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+      },
     });
 
     const result = await parseFile('test.json');
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
+      expect(result.value).toEqual({
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+      });
     }
     expect(mockParseJSON).toHaveBeenCalledWith(mockContent);
   });

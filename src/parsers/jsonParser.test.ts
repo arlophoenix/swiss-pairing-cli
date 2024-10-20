@@ -31,7 +31,10 @@ describe('jsonParser', () => {
     mockValidateJSONOptions.mockReturnValue({
       success: true,
       value: {
-        teams: ['Alice', 'Bob'],
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -45,7 +48,10 @@ describe('jsonParser', () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.value).toEqual({
-        teams: ['Alice', 'Bob'],
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
         numRounds: 3,
         startRound: 1,
         order: 'random',
@@ -112,14 +118,24 @@ describe('jsonParser', () => {
     const mockContent = JSON.stringify({ teams: ['Alice', 'Bob'] });
     mockValidateJSONOptions.mockReturnValue({
       success: true,
-      value: { teams: ['Alice', 'Bob'] },
+      value: {
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+      },
     });
 
     const result = parseOptionsFromJSON(mockContent);
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
+      expect(result.value).toEqual({
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+      });
     }
     expect(mockValidateJSONOptions).toHaveBeenCalledWith(JSON.parse(mockContent));
   });

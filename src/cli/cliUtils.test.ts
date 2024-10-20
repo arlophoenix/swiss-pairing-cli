@@ -2,7 +2,7 @@ import * as fileParser from '../parsers/fileParser.js';
 import * as utils from '../utils/utils.js';
 
 import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
-import { Result, ValidatedCLIOptions } from '../types/types.js';
+import { Result, Team, ValidatedCLIOptions } from '../types/types.js';
 import {
   addByeTeamIfNecessary,
   createSquadMap,
@@ -21,7 +21,12 @@ describe('cliUtils', () => {
     beforeEach(() => {
       const result: Result<Partial<ValidatedCLIOptions>> = {
         success: true,
-        value: { teams: ['Alice', 'Bob'] },
+        value: {
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
+        },
       };
       mockParseFile = jest.spyOn(fileParser, 'parseFile').mockResolvedValue(result);
     });
@@ -37,9 +42,25 @@ describe('cliUtils', () => {
     });
 
     it('should call parseFile when filePath is defined', async () => {
-      mockParseFile.mockResolvedValue({ success: true, value: { teams: ['Alice', 'Bob'] } });
+      mockParseFile.mockResolvedValue({
+        success: true,
+        value: {
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
+        },
+      });
       const result = await validateFileOptions('test.csv');
-      expect(result).toEqual({ success: true, value: { teams: ['Alice', 'Bob'] } });
+      expect(result).toEqual({
+        success: true,
+        value: {
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
+        },
+      });
       expect(mockParseFile).toHaveBeenCalledWith('test.csv');
     });
 
@@ -55,7 +76,13 @@ describe('cliUtils', () => {
 
   describe('mergeOptions', () => {
     it('should merge CLI options, file options, and defaults correctly', () => {
-      const cliOptions = { teams: ['Alice', 'Bob'], numRounds: 3 };
+      const cliOptions = {
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+        numRounds: 3,
+      };
       const fileOptions = { startRound: 2, order: 'random' as const };
       const result = mergeOptions({ cliOptions, fileOptions });
       expect(result).toEqual({
@@ -66,10 +93,25 @@ describe('cliUtils', () => {
     });
 
     it('should prioritize CLI options over file options and defaults', () => {
-      const cliOptions = { teams: ['Alice', 'Bob'], numRounds: 3 };
-      const fileOptions = { teams: ['Charlie', 'David'], startRound: 2 };
+      const cliOptions = {
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+        numRounds: 3,
+      };
+      const fileOptions = {
+        teams: [
+          { name: 'Charlie', squad: undefined },
+          { name: 'David', squad: undefined },
+        ],
+        startRound: 2,
+      };
       const result = mergeOptions({ cliOptions, fileOptions });
-      expect(result.teams).toEqual(['Alice', 'Bob']);
+      expect(result.teams).toEqual([
+        { name: 'Alice', squad: undefined },
+        { name: 'Bob', squad: undefined },
+      ]);
       expect(result.numRounds).toBe(3);
       expect(result.startRound).toBe(2);
     });
@@ -128,12 +170,13 @@ describe('cliUtils', () => {
   });
 
   describe('createSquadMap', () => {
-    beforeEach(() => {
-      jest.unmock('@jest/globals');
-    });
-
     it('should create a map of team names to squad names', () => {
-      const teams = ['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]'];
+      const teams = [
+        { name: 'Alice', squad: 'A' },
+        { name: 'Bob', squad: 'B' },
+        { name: 'Charlie', squad: 'A' },
+        { name: 'David', squad: 'B' },
+      ];
       const result = createSquadMap(teams);
       expect(result).toEqual(
         new Map([
@@ -146,7 +189,12 @@ describe('cliUtils', () => {
     });
 
     it('should handle teams without squad information', () => {
-      const teams = ['Alice [A]', 'Bob', 'Charlie [C]', 'David'];
+      const teams = [
+        { name: 'Alice', squad: 'A' },
+        { name: 'Bob', squad: undefined },
+        { name: 'Charlie', squad: 'C' },
+        { name: 'David', squad: undefined },
+      ];
       const result = createSquadMap(teams);
       expect(result).toEqual(
         new Map([
@@ -157,38 +205,9 @@ describe('cliUtils', () => {
     });
 
     it('should return an empty map for empty input', () => {
-      const teams: readonly string[] = [];
+      const teams: readonly Team[] = [];
       const result = createSquadMap(teams);
       expect(result).toEqual(new Map());
-    });
-
-    it('should handle mixed case in team and squad names', () => {
-      const teams = ['Alice [TeamA]', 'BOB [teamB]', 'Charlie [TEAMC]'];
-      const result = createSquadMap(teams);
-      expect(result).toEqual(
-        new Map([
-          ['Alice', 'TeamA'],
-          ['BOB', 'teamB'],
-          ['Charlie', 'TEAMC'],
-        ])
-      );
-    });
-
-    it('should handle squad names with spaces', () => {
-      const teams = ['Alice [Team A]', 'Bob [Team B]'];
-      const result = createSquadMap(teams);
-      expect(result).toEqual(
-        new Map([
-          ['Alice', 'Team A'],
-          ['Bob', 'Team B'],
-        ])
-      );
-    });
-
-    it('should ignore malformed team inputs', () => {
-      const teams = ['Alice [A]', 'Bob [B', 'Charlie] [C]', 'David []'];
-      const result = createSquadMap(teams);
-      expect(result).toEqual(new Map([['Alice', 'A']]));
     });
   });
 });

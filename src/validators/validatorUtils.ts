@@ -83,7 +83,7 @@ export function validateTeams({
 }: {
   readonly teams: readonly string[] | undefined;
   readonly origin: InputOrigin;
-}): Result<readonly string[] | undefined> {
+}): Result<readonly Team[] | undefined> {
   // return success because the teams may be provided by either CLI or file input and be blank in the other
   if (teams === undefined) return { success: true, value: undefined };
 
@@ -105,7 +105,7 @@ export function validateTeams({
     return { success: false, error: createError('unique team names') };
   }
 
-  return { success: true, value: teams };
+  return { success: true, value: teamObjects };
 }
 
 function validatePositiveInteger({

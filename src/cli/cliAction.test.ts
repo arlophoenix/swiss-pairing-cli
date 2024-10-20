@@ -50,7 +50,10 @@ describe('handleCLIAction', () => {
       Partial<ValidatedCLIOptions>
     >);
     mockMergeOptions.mockReturnValue({
-      teams: ['Alice', 'Bob'],
+      teams: [
+        { name: 'Alice', squad: undefined },
+        { name: 'Bob', squad: undefined },
+      ],
       numRounds: 1,
       startRound: 1,
       order: 'top-down',
@@ -138,7 +141,10 @@ describe('handleCLIAction', () => {
 
   it('should handle different output formats', async () => {
     mockMergeOptions.mockReturnValue({
-      teams: ['Alice', 'Bob'],
+      teams: [
+        { name: 'Alice', squad: undefined },
+        { name: 'Bob', squad: undefined },
+      ],
       numRounds: 1,
       startRound: 1,
       order: 'top-down',
@@ -169,13 +175,23 @@ describe('handleCLIAction', () => {
     mockValidateCLIOptions.mockReturnValue({
       success: true,
       value: {
-        teams: ['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]'],
+        teams: [
+          { name: 'Alice', squad: 'A' },
+          { name: 'Bob', squad: 'B' },
+          { name: 'Charlie', squad: 'A' },
+          { name: 'David', squad: 'B' },
+        ],
         numRounds: 2,
       },
     });
     mockValidateFileOptions.mockResolvedValue({ success: true, value: {} });
     mockMergeOptions.mockReturnValue({
-      teams: ['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]'],
+      teams: [
+        { name: 'Alice', squad: 'A' },
+        { name: 'Bob', squad: 'B' },
+        { name: 'Charlie', squad: 'A' },
+        { name: 'David', squad: 'B' },
+      ],
       numRounds: 2,
       startRound: 1,
       order: 'top-down',
@@ -183,7 +199,7 @@ describe('handleCLIAction', () => {
       format: 'text',
       file: '',
     } as ValidatedCLIOptions);
-    mockPrepareTeams.mockReturnValue(['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]']);
+    mockPrepareTeams.mockReturnValue(['Alice', 'Bob', 'Charlie', 'David']);
     mockCreateSquadMap.mockReturnValue(
       new Map([
         ['Alice', 'A'],
@@ -206,6 +222,11 @@ describe('handleCLIAction', () => {
       })
     );
 
-    expect(mockCreateSquadMap).toHaveBeenCalledWith(['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]']);
+    expect(mockCreateSquadMap).toHaveBeenCalledWith([
+      { name: 'Alice', squad: 'A' },
+      { name: 'Bob', squad: 'B' },
+      { name: 'Charlie', squad: 'A' },
+      { name: 'David', squad: 'B' },
+    ]);
   });
 });

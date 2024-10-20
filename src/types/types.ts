@@ -13,7 +13,7 @@ export interface UnvalidatedCLIOptions {
 }
 
 export interface ValidatedCLIOptions {
-  readonly teams: readonly string[];
+  readonly teams: readonly Team[];
   readonly numRounds: number;
   readonly startRound: number;
   readonly matches: readonly ReadonlyMatch[];

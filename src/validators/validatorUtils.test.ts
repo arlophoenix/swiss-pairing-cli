@@ -25,7 +25,10 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -44,7 +47,10 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
         });
         expect(result.value).not.toHaveProperty('startRound');
@@ -66,7 +72,12 @@ describe('validatorUtils', () => {
       const result = validateAllOptions({ input, origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value).toEqual({ teams: ['Alice', 'Bob'] });
+        expect(result.value).toEqual({
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
+        });
       }
     });
 
@@ -98,7 +109,10 @@ describe('validatorUtils', () => {
       const result = validateTeams({ teams: ['Alice', 'Bob'], origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value).toEqual(['Alice', 'Bob']);
+        expect(result.value).toEqual([
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ]);
       }
     });
 
@@ -106,7 +120,10 @@ describe('validatorUtils', () => {
       const result = validateTeams({ teams: ['Alice [A]', 'Bob [B]'], origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value).toEqual(['Alice [A]', 'Bob [B]']);
+        expect(result.value).toEqual([
+          { name: 'Alice', squad: 'A' },
+          { name: 'Bob', squad: 'B' },
+        ]);
       }
     });
 

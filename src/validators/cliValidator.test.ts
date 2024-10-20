@@ -18,7 +18,10 @@ describe('cliValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -50,7 +53,10 @@ describe('cliValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
         });
       }

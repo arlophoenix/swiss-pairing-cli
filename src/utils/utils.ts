@@ -112,9 +112,14 @@ export function teamToString(team: Team): string {
  * @returns {Team} A Team object
  */
 export function stringToTeam(str: string): Team {
-  const match = /^(.+?)(\s+\[(.+)\])?$/.exec(str);
+  const match = /^(.*)\s+\[([^\[\]]*)\]\s*$/.exec(str.trim());
   if (match) {
-    return { name: match[1].trim(), squad: match[3] };
+    const [, name, squad] = match;
+    const trimmedSquad = squad.trim();
+    return {
+      name: name.trim(),
+      squad: trimmedSquad === '' ? undefined : trimmedSquad,
+    };
   }
   return { name: str.trim(), squad: undefined };
 }

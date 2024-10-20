@@ -22,7 +22,10 @@ describe('csvValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -54,7 +57,10 @@ describe('csvValidator', () => {
       if (result.success) {
         expect(result.value).toEqual({
           numRounds: 3,
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
         });
       }
     });
@@ -87,7 +93,11 @@ describe('csvValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+          teams: [
+            { name: 'Alice', squad: 'A' },
+            { name: 'Bob', squad: 'B' },
+            { name: 'Charlie', squad: undefined },
+          ],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -106,7 +116,11 @@ describe('csvValidator', () => {
       const result = validateCSVOptions(csvRecords);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value.teams).toEqual(['Alice', 'Bob [B]', 'Charlie']);
+        expect(result.value.teams).toEqual([
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: 'B' },
+          { name: 'Charlie', squad: undefined },
+        ]);
       }
     });
 

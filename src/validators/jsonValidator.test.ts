@@ -17,7 +17,10 @@ describe('jsonValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -36,7 +39,10 @@ describe('jsonValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+          ],
           numRounds: 3,
         });
         expect(result.value).not.toHaveProperty('startRound');
@@ -81,7 +87,11 @@ describe('jsonValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice', 'Bob', 'Charlie'],
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+            { name: 'Charlie', squad: undefined },
+          ],
           numRounds: 3,
           startRound: 1,
           order: 'random',
@@ -100,7 +110,11 @@ describe('jsonValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+          teams: [
+            { name: 'Alice', squad: 'A' },
+            { name: 'Bob', squad: 'B' },
+            { name: 'Charlie', squad: undefined },
+          ],
           numRounds: 3,
         });
       }
@@ -120,7 +134,11 @@ describe('jsonValidator', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
-          teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+          teams: [
+            { name: 'Alice', squad: 'A' },
+            { name: 'Bob', squad: 'B' },
+            { name: 'Charlie', squad: undefined },
+          ],
           numRounds: 3,
         });
       }
@@ -186,7 +204,12 @@ describe('jsonValidator', () => {
       const result = validateJSONOptions(jsonRecord);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value.teams).toEqual(['Alice [A]', 'Bob [B]', 'Charlie', 'David [D]']);
+        expect(result.value.teams).toEqual([
+          { name: 'Alice', squad: 'A' },
+          { name: 'Bob', squad: 'B' },
+          { name: 'Charlie', squad: undefined },
+          { name: 'David', squad: 'D' },
+        ]);
       }
     });
   });

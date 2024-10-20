@@ -22,7 +22,7 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
     fileOptions: validateFileOptionsResult.value,
   });
 
-  const preparedTeams = prepareTeams({ teams, order });
+  const preparedTeams = prepareTeams({ teams: teams.map((t) => t.name), order });
   const playedOpponents = createBidirectionalMap(matches);
   const squadMap = createSquadMap(teams);
 
