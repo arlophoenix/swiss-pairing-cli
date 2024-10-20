@@ -4,7 +4,8 @@ A simple command-line interface tool for generating Swiss pairings for tournamen
 
 ## Features
 
-- Generate Swiss pairings for a given list of teams
+- Generate Swiss (or random) pairings for a given list of teams
+- Support for squads to prevent intra-squad matchups
 - Specify the number of rounds for the tournament
 - Easy-to-use CLI interface
 
@@ -31,30 +32,35 @@ You can use the Swiss Pairing CLI in two ways:
 
 <!-- CLI_USAGE_START -->
 
-````bash
+```bash
 Usage: swiss-pairing [options]
 
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -t, --teams <names...>      List of team names in order from top standing to bottom
-                              e.g. Alice Bob Charlie David
-  -n, --num-rounds <number>   Number of rounds to generate (default: 1)
-  -s, --start-round <number>  Name the generated rounds starting with this number (default: 1)
-  -o, --order <order>         The sequence in which teams should be paired (default: top-down)
-  --format <format>           Output format (default: text)
-  --file <path>               Path to input file (.csv, .json). Options provided via cli override file contents
-  -m, --matches <matches...>  List of pairs of team names that have already played against each other
-                              e.g. "Alice,Bob" "Charlie,David"
-  -h, --help                  display help for command
+  -t, --teams <names...>                   List of team names in order from top standing to bottom, with optional
+                                           squad in square brackets
+                                           e.g. "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"
+  -n, --num-rounds <number>                Number of rounds to generate
+                                           (default: 1)
+  -s, --start-round <number>               Name the generated rounds starting with this number
+                                           (default: 1)
+  -o, --order <top-down|bottom-up|random>  The sequence in which teams should be paired
+                                           (default: top-down)
+  --format <text|json-plain|json-pretty>   Output format
+                                           (default: text)
+  --file <path.csv|.json>                  Path to input file. Options provided via cli override file contents
+  -m, --matches <matches...>               List of pairs of team names that have already played against each other
+                                           e.g. "Alice,Bob" "Charlie,David"
+  -h, --help                               display help for command
 
 Examples:
 
-1. Generate random pairings for 4 teams:
+1. Generate random pairings for 4 teams with squads:
 
-  swiss-pairing --teams Alice Bob Charlie David --order random
+  swiss-pairing --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]" --order random
 
-2. Generate pairings for 4 teams, on round 2, with some matches already played:
+2. Generate swiss pairings for 4 teams without squads, on round two, with round one matches already played:
 
   swiss-pairing --teams Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
 
@@ -62,15 +68,26 @@ Examples:
 
   swiss-pairing --file tournament_data.csv
 
-4. Generate pairings using a JSON file, overriding the pairing order:
+4. Generate pairings using a JSON file, overriding the pairing order and the output format:
 
-  swiss-pairing --file tournament_data.json --order bottom-up
+  swiss-pairing --file tournament_data.json --order bottom-up --format json-pretty
 
-5. Generate multiple rounds of pairings:
+5. Generate multiple rounds of random pairings:
 
-  swiss-pairing --teams Alice Bob Charlie David --num-rounds 3```
+  swiss-pairing --teams Alice Bob Charlie David --num-rounds 3 --order random
+```
 
 <!-- CLI_USAGE_END -->
+
+### Using Squads
+
+To use squads, you can specify them after the team names using square brackets. For example:
+
+```bash
+swiss-pairing --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"
+```
+
+This will ensure that teams from the same squad (e.g., Alice and Charlie, or Bob and David) are not paired against each other.
 
 ### Using Input Files
 
@@ -78,7 +95,7 @@ You can provide tournament data using CSV or JSON files. To use a file, use the 
 
 ```bash
 swiss-pairing --file path/to/your/input.csv
-````
+```
 
 or
 
@@ -93,16 +110,18 @@ Note: When using an input file, any options provided will be overridden by the m
 The CSV file should have the following structure:
 
 ```csv
-teams,num-rounds,start-round,order,matches-home,matches-away
-Team1,3,1,random,Team2,Team3
-Team2,,,,
-Team3,,,,
-Team4,,,,
+teams,squads,num-rounds,start-round,order,matches-home,matches-away
+Alice,Home,3,2,random,Bob,Charlie
+Bob,Home,,,,Charlie,David
+Charlie,Away,,,,
+David,Away,,,,
 ```
 
 - The first row must be a header
-- Column headers correspond to the CLI options except matches which is split into two columns: `matches-home` and `matches-away`
-- The `teams` column is required
+- Column headers correspond to the CLI options except:
+  - `teams` which is split into two columns: `teams` and `squads`
+  - `matches` which is split into two columns: `matches-home` and `matches-away`
+- The `teams` column is required, all others are optional
 
 #### JSON File Format
 
@@ -110,19 +129,27 @@ The JSON file should have the following structure:
 
 ```json
 {
-  "teams": ["Team1", "Team2", "Team3", "Team4"],
+  "teams": [
+    { "name": "Alice", "squad": "Home" },
+    { "name": "Bob", "squad": "Home" },
+    { "name": "Charlie", "squad": "Away" },
+    { "name": "David", "squad": "Away" }
+  ],
   "num-rounds": 3,
-  "start-round": 1,
+  "start-round": 2,
   "order": "random",
   "matches": [
-    ["Team1", "Team2"],
-    ["Team3", "Team4"]
+    ["Alice", "Bob"],
+    ["Charlie", "David"]
   ]
 }
 ```
 
 - Fields in the JSON file correspond to the CLI options
-- The `teams` column is required
+- `teams` can be either:
+  1. an array of strings e.g. `["Alice", "Bob"]`
+  2. or an array of objects with `name` and `squad` properties e.g `[{"name": "Alice", "squad": "Home"}, {"name": "Bob", "squad": "Away"}]`
+- The `teams` field is required, all others are optional
 
 ## Development
 

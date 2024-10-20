@@ -13,7 +13,7 @@ const startMarker = '<!-- CLI_USAGE_START -->';
 const endMarker = '<!-- CLI_USAGE_END -->';
 
 // Replace the content between the markers
-const newContent = `${startMarker}\n\n\`\`\`bash\n${usage}\`\`\`\n\n${endMarker}`;
+const newContent = `${startMarker}\n\n\`\`\`bash\n${usage}\n\`\`\`\n\n${endMarker}`;
 
 readme = readme.replace(new RegExp(`${startMarker}[\\s\\S]*${endMarker}`), newContent);
 

@@ -63,7 +63,9 @@ export const SUPPORTED_FILE_TYPE_JSON = '.json';
 export const SUPPORTED_FILE_TYPES = [SUPPORTED_FILE_TYPE_CSV, SUPPORTED_FILE_TYPE_JSON] as const;
 
 export const PROGRAM_NAME = 'swiss-pairing';
+export const EXAMPLE_TEAMS_COUNT = '4';
 export const EXAMPLE_TEAMS = 'Alice Bob Charlie David';
+export const EXAMPLE_TEAMS_WITH_SQUADS = '"Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"';
 export const EXAMPLE_MATCHES = '"Alice,Bob" "Charlie,David"';
 export const EXAMPLE_FILE_CSV = 'tournament_data.csv';
 export const EXAMPLE_FILE_JSON = 'tournament_data.json';

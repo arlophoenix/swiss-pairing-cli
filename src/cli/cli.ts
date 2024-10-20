@@ -11,14 +11,21 @@ import {
   ARG_START_ROUND_SHORT,
   ARG_TEAMS,
   ARG_TEAMS_SHORT,
+  CLI_OPTION_FORMAT,
   CLI_OPTION_FORMAT_DEFAULT,
+  CLI_OPTION_FORMAT_JSON_PRETTY,
   CLI_OPTION_NUM_ROUND_DEFAULT,
+  CLI_OPTION_ORDER,
+  CLI_OPTION_ORDER_BOTOM_UP,
   CLI_OPTION_ORDER_DEFAULT,
+  CLI_OPTION_ORDER_RANDOM,
   CLI_OPTION_START_ROUND_DEFAULT,
   EXAMPLE_FILE_CSV,
   EXAMPLE_FILE_JSON,
   EXAMPLE_MATCHES,
   EXAMPLE_TEAMS,
+  EXAMPLE_TEAMS_COUNT,
+  EXAMPLE_TEAMS_WITH_SQUADS,
   PROGRAM_NAME,
   SUPPORTED_FILE_TYPES,
 } from '../constants.js';
@@ -35,24 +42,27 @@ export function createCLI(): Command {
     .description('A CLI tool for generating Swiss-style tournament pairings')
     .option(
       `-${ARG_TEAMS_SHORT}, --${ARG_TEAMS} <names...>`,
-      `List of team names in order from top standing to bottom\ne.g. ${EXAMPLE_TEAMS}`
+      `List of team names in order from top standing to bottom, with optional squad in square brackets\ne.g. ${EXAMPLE_TEAMS_WITH_SQUADS}`
     )
     .option(
       `-${ARG_NUM_ROUNDS_SHORT}, --${ARG_NUM_ROUNDS} <number>`,
-      `Number of rounds to generate (default: ${String(CLI_OPTION_NUM_ROUND_DEFAULT)})`
+      `Number of rounds to generate\n(default: ${String(CLI_OPTION_NUM_ROUND_DEFAULT)})`
     )
     .option(
       `-${ARG_START_ROUND_SHORT}, --${ARG_START_ROUND} <number>`,
-      `Name the generated rounds starting with this number (default: ${String(CLI_OPTION_START_ROUND_DEFAULT)})`
+      `Name the generated rounds starting with this number\n(default: ${String(CLI_OPTION_START_ROUND_DEFAULT)})`
     )
     .option(
-      `-${ARG_ORDER_SHORT}, --${ARG_ORDER} <order>`,
-      `The sequence in which teams should be paired (default: ${CLI_OPTION_ORDER_DEFAULT})`
+      `-${ARG_ORDER_SHORT}, --${ARG_ORDER} <${CLI_OPTION_ORDER.join('|')}>`,
+      `The sequence in which teams should be paired\n(default: ${CLI_OPTION_ORDER_DEFAULT})`
     )
-    .option(`--${ARG_FORMAT} <format>`, `Output format (default: ${CLI_OPTION_FORMAT_DEFAULT})`)
     .option(
-      `--${ARG_FILE} <path>`,
-      `Path to input file (${SUPPORTED_FILE_TYPES.join(', ')}). Options provided via cli override file contents`
+      `--${ARG_FORMAT} <${CLI_OPTION_FORMAT.join('|')}>`,
+      `Output format\n(default: ${CLI_OPTION_FORMAT_DEFAULT})`
+    )
+    .option(
+      `--${ARG_FILE} <path${SUPPORTED_FILE_TYPES.join('|')}>`,
+      `Path to input file. Options provided via cli override file contents`
     )
     .option(
       `-${ARG_MATCHES_SHORT}, --${ARG_MATCHES} <matches...>`,
@@ -83,23 +93,23 @@ export function helpWithExamples(): string {
 export function exampleUsage(): string {
   return `Examples:
 
-1. Generate random pairings for 4 teams:
+1. Generate random pairings for ${EXAMPLE_TEAMS_COUNT} teams with squads:
 
-  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_ORDER} random
+  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS_WITH_SQUADS} --${ARG_ORDER} ${CLI_OPTION_ORDER_RANDOM}
 
-2. Generate pairings for 4 teams, on round 2, with some matches already played:
+2. Generate swiss pairings for ${EXAMPLE_TEAMS_COUNT} teams without squads, on round two, with round one matches already played:
 
   ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_START_ROUND} 2 --${ARG_MATCHES} ${EXAMPLE_MATCHES}
 
 3. Generate pairings using a CSV file:
 
-  ${PROGRAM_NAME} --file ${EXAMPLE_FILE_CSV}
+  ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_CSV}
 
-4. Generate pairings using a JSON file, overriding the pairing order:
+4. Generate pairings using a JSON file, overriding the pairing order and the output format:
 
-  ${PROGRAM_NAME} --file ${EXAMPLE_FILE_JSON} --${ARG_ORDER} bottom-up
+  ${PROGRAM_NAME} --${ARG_FILE} ${EXAMPLE_FILE_JSON} --${ARG_ORDER} ${CLI_OPTION_ORDER_BOTOM_UP} --${ARG_FORMAT} ${CLI_OPTION_FORMAT_JSON_PRETTY}
 
-5. Generate multiple rounds of pairings:
+5. Generate multiple rounds of random pairings:
 
-  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_NUM_ROUNDS} 3`;
+  ${PROGRAM_NAME} --${ARG_TEAMS} ${EXAMPLE_TEAMS} --${ARG_NUM_ROUNDS} 3 --${ARG_ORDER} ${CLI_OPTION_ORDER_RANDOM}`;
 }

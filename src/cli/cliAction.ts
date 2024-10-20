@@ -38,6 +38,7 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
     return roundMatchesResult;
   }
 
+  // TODO: should the squad names be included in the output?
   const formattedOutput = formatOutput({
     roundMatches: roundMatchesResult.value,
     format,
