@@ -1,13 +1,13 @@
-// utils/utils.test.ts
-
-import { PlayedOpponents, ReadonlyPlayedOpponents } from '../types/types.js';
+import { PlayedOpponents, ReadonlyPlayedOpponents, Team } from '../types/types.js';
 import {
   createBidirectionalMap,
+  isValidTeamString,
   mutableCloneBidirectionalMap,
   parseStringLiteral,
   reverse,
   shuffle,
   stringToTeam,
+  teamToString,
 } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
@@ -193,49 +193,104 @@ describe('utils', () => {
     });
   });
 
-  describe('stringToTeam', () => {
-    it('should parse a valid team string with squad', () => {
-      expect(stringToTeam('Alice [A]')).toEqual({ name: 'Alice', squad: 'A' });
+  describe('Team string utilities', () => {
+    const validCases: readonly (readonly [string, Team])[] = [
+      ['Alice', { name: 'Alice', squad: undefined }],
+      ['Bob [B]', { name: 'Bob', squad: 'B' }],
+      ['Charlie [Team C]', { name: 'Charlie', squad: 'Team C' }],
+      ['David [D ]', { name: 'David', squad: 'D' }],
+      ['Eve [ E]', { name: 'Eve', squad: 'E' }],
+      ['Frank [F F]', { name: 'Frank', squad: 'F F' }],
+      ['  George   [G]  ', { name: 'George', squad: 'G' }],
+      ['Harry [H] ', { name: 'Harry', squad: 'H' }],
+      ['Ivy   [Team I]   ', { name: 'Ivy', squad: 'Team I' }],
+      ['John Doe [Team A]', { name: 'John Doe', squad: 'Team A' }],
+      ['Rachel Parker [Team R]', { name: 'Rachel Parker', squad: 'Team R' }],
+      ['Uma [Team U V]', { name: 'Uma', squad: 'Team U V' }],
+      ['Victor [ Team V ]', { name: 'Victor', squad: 'Team V' }],
+      ['Team1', { name: 'Team1', squad: undefined }],
+      ['Team2 [Squad1]', { name: 'Team2', squad: 'Squad1' }],
+    ];
+
+    const invalidCases = [
+      'Jack [J] [Team J]',
+      'Kelly [K] [L] [M]',
+      'Liam [L',
+      'Mary] [M]',
+      '[N] Noah',
+      'Olivia [O] extra',
+      'Peter []',
+      'Quinn [ ]',
+      'Sam [S] Parker',
+      '[]',
+      '[Team]',
+      ' [Team]',
+      'Tina [ ]',
+      ' ',
+    ];
+
+    describe('stringToTeam', () => {
+      // eslint-disable-next-line max-params
+      it.each(validCases)('should correctly parse "%s"', (input, expected) => {
+        expect(stringToTeam(input)).toEqual(expected);
+      });
+
+      it.each(invalidCases)('should handle invalid input "%s"', (input) => {
+        const result = stringToTeam(input);
+        expect(result).toEqual({ name: input.trim(), squad: undefined });
+      });
+
+      it('should handle team string without squad', () => {
+        expect(stringToTeam('Bob')).toEqual({ name: 'Bob', squad: undefined });
+      });
     });
 
-    it('should parse a team string without squad', () => {
-      expect(stringToTeam('Bob')).toEqual({ name: 'Bob', squad: undefined });
+    describe('isValidTeamString', () => {
+      it.each(validCases)('should return true for valid input "%s"', (input) => {
+        expect(isValidTeamString(input)).toBe(true);
+      });
+
+      it.each(invalidCases)('should return false for invalid input "%s"', (input) => {
+        expect(isValidTeamString(input)).toBe(false);
+      });
+
+      it('should return true for valid team string without squad', () => {
+        expect(isValidTeamString('Bob')).toBe(true);
+      });
     });
 
-    it('should handle extra spaces', () => {
-      expect(stringToTeam('  Charlie   [C]  ')).toEqual({ name: 'Charlie', squad: 'C' });
-    });
+    describe('teamToString', () => {
+      it.each(validCases)(
+        'should correctly convert team object to string and back again for "%s"',
+        // eslint-disable-next-line max-params
+        (_expected, input) => {
+          expect(stringToTeam(teamToString(input))).toEqual(input);
+        }
+      );
 
-    it('should handle squad names with spaces', () => {
-      expect(stringToTeam('David [Team D]')).toEqual({ name: 'David', squad: 'Team D' });
-    });
+      it('should handle team without squad', () => {
+        expect(teamToString({ name: 'Alice', squad: undefined })).toBe('Alice');
+      });
 
-    it('should handle malformed input with missing closing bracket', () => {
-      expect(stringToTeam('Eve [E')).toEqual({ name: 'Eve [E', squad: undefined });
-    });
+      it('should handle team with empty squad', () => {
+        expect(teamToString({ name: 'Bob', squad: '' })).toBe('Bob');
+      });
 
-    it('should handle malformed input with extra closing bracket', () => {
-      expect(stringToTeam('Frank] [F]')).toEqual({ name: 'Frank]', squad: 'F' });
-    });
+      it('should handle team with whitespace-only squad', () => {
+        expect(teamToString({ name: 'Charlie', squad: '  ' })).toBe('Charlie');
+      });
 
-    it('should handle empty squad brackets', () => {
-      expect(stringToTeam('George []')).toEqual({ name: 'George', squad: undefined });
-    });
+      it('should handle team name with spaces', () => {
+        expect(teamToString({ name: 'John Doe', squad: 'A' })).toBe('John Doe [A]');
+      });
 
-    it('should handle whitespace-only squad', () => {
-      expect(stringToTeam('Harry [ ]')).toEqual({ name: 'Harry', squad: undefined });
-    });
+      it('should handle squad with spaces', () => {
+        expect(teamToString({ name: 'Jane', squad: 'Team B' })).toBe('Jane [Team B]');
+      });
 
-    it('should handle extra text after squad', () => {
-      expect(stringToTeam('Ivy [I] extra')).toEqual({ name: 'Ivy [I] extra', squad: undefined });
-    });
-
-    it('should handle team name with spaces', () => {
-      expect(stringToTeam('John Doe [Team A]')).toEqual({ name: 'John Doe', squad: 'Team A' });
-    });
-
-    it('should handle team name with brackets not at the end', () => {
-      expect(stringToTeam('Jane [Doe] [Team B]')).toEqual({ name: 'Jane [Doe]', squad: 'Team B' });
+      it('should not add extra spaces around squad', () => {
+        expect(teamToString({ name: 'David', squad: 'D' })).toBe('David [D]');
+      });
     });
   });
 });

@@ -66,6 +66,7 @@ export function reverse<T>(array: readonly T[]): readonly T[] {
   return [...array].reverse();
 }
 
+// TODO: this errorInfo seems like a bad pattern. The error should be created in the function that calls this one.
 export function parseStringLiteral<T extends string>({
   input,
   options,
@@ -103,7 +104,22 @@ export function parseStringLiteral<T extends string>({
  * @returns {string} A string representation of the team
  */
 export function teamToString(team: Team): string {
-  return team.squad ? `${team.name} [${team.squad}]` : team.name;
+  return team.squad && team.squad.trim().length > 0 ? `${team.name} [${team.squad}]` : team.name;
+}
+
+const TEAM_STRING_REGEX = /^\s*([^\[\]]+)\s*(\[\s*([^\[\]]+)\s*\])?\s*$/;
+
+/**
+ * Validates a string representation of a team.
+ * @param {string} str - The string to validate
+ * @returns {boolean} true if the string can be converted to a Team object, false otherwise
+ */
+export function isValidTeamString(str: string): boolean {
+  const match = TEAM_STRING_REGEX.exec(str.trim());
+  if (!match) return false;
+
+  const [_0, _name, _2, squad] = match;
+  return !squad || squad.trim() !== '';
 }
 
 /**
@@ -112,14 +128,14 @@ export function teamToString(team: Team): string {
  * @returns {Team} A Team object
  */
 export function stringToTeam(str: string): Team {
-  const match = /^(.*)\s+\[([^\[\]]*)\]\s*$/.exec(str.trim());
-  if (match) {
-    const [, name, squad] = match;
-    const trimmedSquad = squad.trim();
-    return {
-      name: name.trim(),
-      squad: trimmedSquad === '' ? undefined : trimmedSquad,
-    };
+  const match = TEAM_STRING_REGEX.exec(str.trim());
+  if (!match || !isValidTeamString(str)) {
+    return { name: str.trim(), squad: undefined };
   }
-  return { name: str.trim(), squad: undefined };
+
+  const [_0, name, _2, squad] = match;
+  return {
+    name: name.trim(),
+    squad: squad ? squad.trim() : undefined,
+  };
 }
