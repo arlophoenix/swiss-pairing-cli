@@ -113,6 +113,30 @@ exports[`Fixtures CLI Output - four-teams-with-matches-top-down.txt 1`] = `
 "
 `;
 
+exports[`Fixtures CLI Output - four-teams-with-squads.csv 1`] = `
+"**Round 1**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+"
+`;
+
+exports[`Fixtures CLI Output - four-teams-with-squads.json 1`] = `
+"**Round 1**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+"
+`;
+
+exports[`Fixtures CLI Output - four-teams-with-squads.txt 1`] = `
+"**Round 1**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+"
+`;
+
 exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
 "**Round 6**
 
