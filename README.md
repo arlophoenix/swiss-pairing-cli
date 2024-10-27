@@ -52,31 +52,85 @@ Options:
   -m, --matches <matches...>                                      List of pairs of team names that have already played against each other
   e.g. "Alice,Bob" "Charlie,David"
   -h, --help                                                      display help for command
-
-Examples:
-
-1. Generate random pairings for 4 teams with squads:
-
-  swiss-pairing --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]" --order random
-
-2. Generate swiss pairings for 4 teams without squads, on round two, with round one matches already played:
-
-  swiss-pairing --teams Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
-
-3. Generate pairings using a CSV file:
-
-  swiss-pairing --file tournament_data.csv
-
-4. Generate pairings using a JSON file, overriding the pairing order and the output format:
-
-  swiss-pairing --file tournament_data.json --order bottom-up --format json-pretty
-
-5. Generate multiple rounds of random pairings:
-
-  swiss-pairing --teams Alice Bob Charlie David --num-rounds 3 --order random
 ```
 
 <!-- CLI_USAGE_END -->
+
+<!-- CLI_EXAMPLES_START -->
+
+**Examples:**
+
+1. Generate random pairings for 4 teams with squads
+
+```bash
+>swiss-pairing --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]" --order random
+**Round 1**
+
+1. Bob vs Charlie
+2. Alice vs David
+```
+
+2. Generate swiss pairings for 4 teams without squads, on round two, with round one matches already played
+
+```bash
+>swiss-pairing --teams Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
+**Round 2**
+
+1. Alice vs Charlie
+2. Bob vs David
+```
+
+3. Generate pairings using a CSV file
+
+```bash
+>swiss-pairing --file example_data/tournament_round1.csv
+**Round 1**
+
+1. Alice vs Bob
+2. Charlie vs David
+```
+
+4. Generate pairings using a JSON file, overriding the pairing order and the output format
+
+```bash
+>swiss-pairing --file example_data/tournament_round2.json --order bottom-up --format json-pretty
+{
+  "Round 2": [
+    [
+      "David",
+      "Bob"
+    ],
+    [
+      "Charlie",
+      "Alice"
+    ]
+  ]
+}
+```
+
+5. Generate multiple rounds of random pairings
+
+```bash
+>swiss-pairing --teams Alice Bob Charlie David --num-rounds 3 --order random
+# Matches
+
+**Round 1**
+
+1. David vs Charlie
+2. Alice vs Bob
+
+**Round 2**
+
+1. David vs Alice
+2. Charlie vs Bob
+
+**Round 3**
+
+1. David vs Bob
+2. Charlie vs Alice
+```
+
+<!-- CLI_EXAMPLES_END -->
 
 ### Using Squads
 

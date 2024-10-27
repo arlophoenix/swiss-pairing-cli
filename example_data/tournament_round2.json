@@ -1,0 +1,10 @@
+{
+  "teams": ["Alice", "Bob", "Charlie", "David"],
+  "order": "top-down",
+  "matches": [
+    ["Alice", "Bob"],
+    ["Charlie", "David"]
+  ],
+  "format": "text-plain",
+  "start-round": 2
+}

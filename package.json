@@ -45,7 +45,7 @@
     "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md",
     "update-nvmrc": "tsx scripts/update-nvmrc.ts",
     "usage": "tsx src/index.js --help",
-    "usage:update-readme": "tsx scripts/update-readme-usage.ts"
+    "usage:update-readme": "tsx scripts/update-readme.ts"
   },
   "lint-staged": {
     "$npm_package_config_sourceGlob": "npm run eslint:fix",
