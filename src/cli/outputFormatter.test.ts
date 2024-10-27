@@ -81,4 +81,15 @@ describe('outputFormatter', () => {
       expect(result).toBe(expected);
     });
   });
+
+  it('should format output as plain text', () => {
+    const result = formatOutput({ roundMatches: sampleRoundMatches, format: 'text-plain' });
+    const expected = `Round 1:
+Alice vs Bob
+Charlie vs David
+Round 2:
+Alice vs Charlie
+Bob vs David`;
+    expect(result).toBe(expected);
+  });
 });

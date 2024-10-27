@@ -4,6 +4,7 @@ import {
   CLI_OPTION_FORMAT_JSON_PLAIN,
   CLI_OPTION_FORMAT_JSON_PRETTY,
   CLI_OPTION_FORMAT_TEXT_MARKDOWN,
+  CLI_OPTION_FORMAT_TEXT_PLAIN,
 } from '../constants.js';
 
 export function formatOutput({
@@ -22,6 +23,8 @@ export function formatOutput({
       return JSON.stringify(roundMatches, null, 2);
     case CLI_OPTION_FORMAT_TEXT_MARKDOWN:
       return formatRoundMatchesAsMarkdown(roundMatches);
+    case CLI_OPTION_FORMAT_TEXT_PLAIN:
+      return formatRoundMatchesAsText(roundMatches);
   }
 }
 
@@ -53,4 +56,13 @@ function formatRoundMatchesAsMarkdown(roundMatches: ReadonlyRoundMatches): strin
   });
 
   return output.trim();
+}
+
+function formatRoundMatchesAsText(roundMatches: ReadonlyRoundMatches): string {
+  return Object.entries(roundMatches)
+    .map(([round, matches]) => {
+      const matchList = matches.map((match) => `${match[0]} vs ${match[1]}`).join('\n');
+      return `${round}:\n${matchList}`;
+    })
+    .join('\n');
 }
