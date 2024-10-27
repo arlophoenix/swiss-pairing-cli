@@ -7,6 +7,7 @@
 - standardise error messages in swissPairing/validation
 - rename JSONRecord and CSVRecord to something more clear
 - add more integration tests which cover the whole range of arguments
+- prevent pushing directly to remote master branch
 
 ## Project Configuration
 
@@ -18,3 +19,4 @@
 
 - [ ] Commitlint for enforcing consistent commit messages (works well with 📦 Semantic Release)
 - [ ] Semantic Release for automating version management and package publishing
+- [ ] Telemetry to understand usage
