@@ -12,7 +12,7 @@ describe('csvValidator', () => {
           'num-rounds': '3',
           'start-round': '1',
           order: 'random',
-          format: 'text',
+          format: 'text-markdown',
           'matches-home': 'Alice',
           'matches-away': 'Bob',
         },
@@ -29,7 +29,7 @@ describe('csvValidator', () => {
           numRounds: 3,
           startRound: 1,
           order: 'random',
-          format: 'text',
+          format: 'text-markdown',
           matches: [['Alice', 'Bob']],
         });
       }
@@ -82,7 +82,7 @@ describe('csvValidator', () => {
           'num-rounds': '3',
           'start-round': '1',
           order: 'random',
-          format: 'text',
+          format: 'text-markdown',
           'matches-home': 'Alice',
           'matches-away': 'Bob',
         },
@@ -101,7 +101,7 @@ describe('csvValidator', () => {
           numRounds: 3,
           startRound: 1,
           order: 'random',
-          format: 'text',
+          format: 'text-markdown',
           matches: [['Alice', 'Bob']],
         });
       }

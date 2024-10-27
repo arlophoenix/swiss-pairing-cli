@@ -27,7 +27,7 @@ describe('outputFormatter', () => {
     });
 
     it('should format output as text (markdown)', () => {
-      const result = formatOutput({ roundMatches: sampleRoundMatches, format: 'text' });
+      const result = formatOutput({ roundMatches: sampleRoundMatches, format: 'text-markdown' });
       const expected = `# Matches
 
 **Round 1**
@@ -73,7 +73,7 @@ describe('outputFormatter', () => {
           ['Charlie', 'David'],
         ],
       };
-      const result = formatOutput({ roundMatches: singleRoundMatch, format: 'text' });
+      const result = formatOutput({ roundMatches: singleRoundMatch, format: 'text-markdown' });
       const expected = `**Round 1**
 
 1. Alice vs Bob

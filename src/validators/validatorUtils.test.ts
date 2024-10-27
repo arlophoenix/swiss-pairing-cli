@@ -18,7 +18,7 @@ describe('validatorUtils', () => {
         numRounds: '3',
         startRound: '1',
         order: 'random',
-        format: 'text',
+        format: 'text-markdown',
         matches: [['Alice', 'Bob']],
       };
       const result = validateAllOptions({ input, origin: 'CLI' });
@@ -32,7 +32,7 @@ describe('validatorUtils', () => {
           numRounds: 3,
           startRound: 1,
           order: 'random',
-          format: 'text',
+          format: 'text-markdown',
           matches: [['Alice', 'Bob']],
         });
       }
@@ -230,10 +230,10 @@ describe('validatorUtils', () => {
 
   describe('validateFormat', () => {
     it('should return success for valid format', () => {
-      const result = validateFormat({ format: 'text', origin: 'CLI' });
+      const result = validateFormat({ format: 'text-markdown', origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value).toBe('text');
+        expect(result.value).toBe('text-markdown');
       }
     });
 

@@ -24,7 +24,7 @@ describe('jsonParser', () => {
       'num-rounds': 3,
       'start-round': 1,
       order: 'random',
-      format: 'text',
+      format: 'text-markdown',
       matches: [['Alice', 'Bob']],
     });
 
@@ -38,7 +38,7 @@ describe('jsonParser', () => {
         numRounds: 3,
         startRound: 1,
         order: 'random',
-        format: 'text',
+        format: 'text-markdown',
         matches: [['Alice', 'Bob']],
       },
     });
@@ -55,7 +55,7 @@ describe('jsonParser', () => {
         numRounds: 3,
         startRound: 1,
         order: 'random',
-        format: 'text',
+        format: 'text-markdown',
         matches: [['Alice', 'Bob']],
       });
     }

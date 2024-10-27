@@ -38,24 +38,26 @@ Usage: swiss-pairing [options]
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -t, --teams <names...>                      List of team names in order from top standing to bottom,
-                                              with optional squad in square brackets
-                                              e.g. "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David
-                                              [Away]"
-  -n, --num-rounds <number>                   Number of rounds to generate
-                                              (default: 1)
-  -s, --start-round <number>                  Name the generated rounds starting with this number
-                                              (default: 1)
-  -o, --order <top-down|bottom-up|random>     The sequence in which teams should be paired
-                                              (default: top-down)
-  --format <csv|json-plain|json-pretty|text>  Output format
-                                              (default: text)
-  --file <path.csv|.json>                     Path to input file. Options provided via cli override
-                                              file contents
-  -m, --matches <matches...>                  List of pairs of team names that have already played
-                                              against each other
-                                              e.g. "Alice,Bob" "Charlie,David"
-  -h, --help                                  display help for command
+  -t, --teams <names...>                               List of team names in order from top standing
+                                                       to bottom, with optional squad in square
+                                                       brackets
+                                                       e.g. "Alice [Home]" "Bob [Home]" "Charlie
+                                                       [Away]" "David [Away]"
+  -n, --num-rounds <number>                            Number of rounds to generate
+                                                       (default: 1)
+  -s, --start-round <number>                           Name the generated rounds starting with this
+                                                       number
+                                                       (default: 1)
+  -o, --order <top-down|bottom-up|random>              The sequence in which teams should be paired
+                                                       (default: top-down)
+  --format <csv|json-plain|json-pretty|text-markdown>  Output format
+                                                       (default: text-markdown)
+  --file <path.csv|.json>                              Path to input file. Options provided via cli
+                                                       override file contents
+  -m, --matches <matches...>                           List of pairs of team names that have already
+                                                       played against each other
+                                                       e.g. "Alice,Bob" "Charlie,David"
+  -h, --help                                           display help for command
 
 Examples:
 

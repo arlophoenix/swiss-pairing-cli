@@ -58,7 +58,7 @@ describe('handleCLIAction', () => {
       startRound: 1,
       order: 'top-down',
       matches: [],
-      format: 'text',
+      format: 'text-markdown',
       file: 'input.txt',
     } as ValidatedCLIOptions);
     mockPrepareTeams.mockReturnValue(['Alice', 'Bob']);
@@ -196,7 +196,7 @@ describe('handleCLIAction', () => {
       startRound: 1,
       order: 'top-down',
       matches: [],
-      format: 'text',
+      format: 'text-markdown',
       file: '',
     } as ValidatedCLIOptions);
     mockPrepareTeams.mockReturnValue(['Alice', 'Bob', 'Charlie', 'David']);

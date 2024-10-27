@@ -3,7 +3,7 @@
   "num-rounds": 2,
   "start-round": 3,
   "order": "bottom-up",
-  "format": "text",
+  "format": "text-markdown",
   "matches": [
     ["Alice", "Bob"],
     ["Alice", "David"],

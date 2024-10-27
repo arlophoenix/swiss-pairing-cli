@@ -3,7 +3,7 @@ import {
   CLI_OPTION_FORMAT_CSV,
   CLI_OPTION_FORMAT_JSON_PLAIN,
   CLI_OPTION_FORMAT_JSON_PRETTY,
-  CLI_OPTION_FORMAT_TEXT,
+  CLI_OPTION_FORMAT_TEXT_MARKDOWN,
 } from '../constants.js';
 
 export function formatOutput({
@@ -20,7 +20,7 @@ export function formatOutput({
       return JSON.stringify(roundMatches);
     case CLI_OPTION_FORMAT_JSON_PRETTY:
       return JSON.stringify(roundMatches, null, 2);
-    case CLI_OPTION_FORMAT_TEXT:
+    case CLI_OPTION_FORMAT_TEXT_MARKDOWN:
       return formatRoundMatchesAsMarkdown(roundMatches);
   }
 }
