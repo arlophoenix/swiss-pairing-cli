@@ -42,6 +42,30 @@ describe('outputFormatter', () => {
       expect(result).toBe(expected);
     });
 
+    it('should format output as CSV', () => {
+      const result = formatOutput({ roundMatches: sampleRoundMatches, format: 'csv' });
+      const expected = `Round,Match,Home Team,Away Team
+1,1,Alice,Bob
+1,2,Charlie,David
+2,1,Alice,Charlie
+2,2,Bob,David`;
+      expect(result).toBe(expected);
+    });
+
+    it('should format single round output as CSV', () => {
+      const singleRoundMatch: ReadonlyRoundMatches = {
+        'Round 1': [
+          ['Alice', 'Bob'],
+          ['Charlie', 'David'],
+        ],
+      };
+      const result = formatOutput({ roundMatches: singleRoundMatch, format: 'csv' });
+      const expected = `Round,Match,Home Team,Away Team
+1,1,Alice,Bob
+1,2,Charlie,David`;
+      expect(result).toBe(expected);
+    });
+
     it('should format single round output as text without title', () => {
       const singleRoundMatch: ReadonlyRoundMatches = {
         'Round 1': [

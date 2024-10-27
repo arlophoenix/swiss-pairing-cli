@@ -33,13 +33,15 @@ export const CLI_OPTION_ORDER = [
   CLI_OPTION_ORDER_RANDOM,
 ] as const;
 
-export const CLI_OPTION_FORMAT_TEXT = 'text';
+export const CLI_OPTION_FORMAT_CSV = 'csv';
 export const CLI_OPTION_FORMAT_JSON_PLAIN = 'json-plain';
 export const CLI_OPTION_FORMAT_JSON_PRETTY = 'json-pretty';
+export const CLI_OPTION_FORMAT_TEXT = 'text';
 export const CLI_OPTION_FORMAT = [
-  CLI_OPTION_FORMAT_TEXT,
+  CLI_OPTION_FORMAT_CSV,
   CLI_OPTION_FORMAT_JSON_PLAIN,
   CLI_OPTION_FORMAT_JSON_PRETTY,
+  CLI_OPTION_FORMAT_TEXT,
 ] as const;
 
 export const CLI_OPTION_FORMAT_DEFAULT: CLIOptionFormat = CLI_OPTION_FORMAT_TEXT;
