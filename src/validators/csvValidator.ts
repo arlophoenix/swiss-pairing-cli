@@ -1,14 +1,16 @@
 import { Result, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
 import { teamToString, validateAllOptions } from './validatorUtils.js';
 
-import { CSVRecord } from '../parsers/csvParserUtils.js';
+import { UnvalidatedCSVRow } from '../parsers/csvParserUtils.js';
 
-export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Partial<ValidatedCLIOptions>> {
-  if (csvRecords.length === 0) {
+export function validateCSVOptions(
+  csvRows: readonly UnvalidatedCSVRow[]
+): Result<Partial<ValidatedCLIOptions>> {
+  if (csvRows.length === 0) {
     return { success: true, value: {} };
   }
 
-  const teams = csvRecords
+  const teams = csvRows
     .map((record) => {
       const name = record.teams;
       const squad = record.squads;
@@ -16,7 +18,7 @@ export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Par
     })
     .filter((team): team is string => team !== undefined);
 
-  const matches = csvRecords
+  const matches = csvRows
     .map((record) => [record['matches-home'], record['matches-away']])
     .filter(
       // eslint-disable-next-line functional/prefer-readonly-type
@@ -26,10 +28,10 @@ export function validateCSVOptions(csvRecords: readonly CSVRecord[]): Result<Par
 
   const input: UnvalidatedCLIOptions = {
     teams: teams.length > 0 ? teams : undefined,
-    numRounds: csvRecords[0]['num-rounds'],
-    startRound: csvRecords[0]['start-round'],
-    order: csvRecords[0].order,
-    format: csvRecords[0].format,
+    numRounds: csvRows[0]['num-rounds'],
+    startRound: csvRows[0]['start-round'],
+    order: csvRows[0].order,
+    format: csvRows[0].format,
     matches: matches.length > 0 ? matches : undefined,
   };
 

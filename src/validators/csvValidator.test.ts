@@ -1,12 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { CSVRecord } from '../parsers/csvParserUtils.js';
+import { UnvalidatedCSVRow } from '../parsers/csvParserUtils.js';
 import { validateCSVOptions } from './csvValidator.js';
 
 describe('csvValidator', () => {
   describe('validateCSVOptions', () => {
     it('should return success for valid CSV records', () => {
-      const csvRecords: readonly CSVRecord[] = [
+      const csvRows: readonly UnvalidatedCSVRow[] = [
         {
           teams: 'Alice',
           'num-rounds': '3',
@@ -18,7 +18,7 @@ describe('csvValidator', () => {
         },
         { teams: 'Bob' },
       ];
-      const result = validateCSVOptions(csvRecords);
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
@@ -36,7 +36,7 @@ describe('csvValidator', () => {
     });
 
     it('should return failure for invalid CSV records', () => {
-      const csvRecords: readonly CSVRecord[] = [
+      const csvRows: readonly UnvalidatedCSVRow[] = [
         {
           teams: 'Alice',
           'num-rounds': '-1',
@@ -46,13 +46,13 @@ describe('csvValidator', () => {
           'matches-home': 'Alice',
         },
       ];
-      const result = validateCSVOptions(csvRecords);
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(false);
     });
 
     it('should handle partial CSV records', () => {
-      const csvRecords: readonly CSVRecord[] = [{ teams: 'Alice', 'num-rounds': '3' }, { teams: 'Bob' }];
-      const result = validateCSVOptions(csvRecords);
+      const csvRows: readonly UnvalidatedCSVRow[] = [{ teams: 'Alice', 'num-rounds': '3' }, { teams: 'Bob' }];
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
@@ -66,8 +66,8 @@ describe('csvValidator', () => {
     });
 
     it('should handle empty CSV records', () => {
-      const csvRecords: readonly CSVRecord[] = [];
-      const result = validateCSVOptions(csvRecords);
+      const csvRows: readonly UnvalidatedCSVRow[] = [];
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({});
@@ -75,7 +75,7 @@ describe('csvValidator', () => {
     });
 
     it('should return success for valid CSV records with teams and squads', () => {
-      const csvRecords: readonly CSVRecord[] = [
+      const csvRows: readonly UnvalidatedCSVRow[] = [
         {
           teams: 'Alice',
           squads: 'A',
@@ -89,7 +89,7 @@ describe('csvValidator', () => {
         { teams: 'Bob', squads: 'B' },
         { teams: 'Charlie' }, // Team without squad
       ];
-      const result = validateCSVOptions(csvRecords);
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toEqual({
@@ -108,12 +108,12 @@ describe('csvValidator', () => {
     });
 
     it('should handle teams without squads', () => {
-      const csvRecords: readonly CSVRecord[] = [
+      const csvRows: readonly UnvalidatedCSVRow[] = [
         { teams: 'Alice', 'num-rounds': '3' },
         { teams: 'Bob', squads: 'B' },
         { teams: 'Charlie' },
       ];
-      const result = validateCSVOptions(csvRecords);
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value.teams).toEqual([
@@ -125,12 +125,12 @@ describe('csvValidator', () => {
     });
 
     it('should return failure for duplicate team names, even with different squads', () => {
-      const csvRecords: readonly CSVRecord[] = [
+      const csvRows: readonly UnvalidatedCSVRow[] = [
         { teams: 'Alice', squads: 'A' },
         { teams: 'Bob' },
         { teams: 'Alice', squads: 'B' },
       ];
-      const result = validateCSVOptions(csvRecords);
+      const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.message).toContain('unique team names');

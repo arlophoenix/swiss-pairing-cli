@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { CSVRecord, parseCSV } from './csvParserUtils.js';
+import { UnvalidatedCSVRow, parseCSV } from './csvParserUtils.js';
 import * as papa from 'papaparse';
 
 jest.mock('papaparse');
@@ -9,10 +9,10 @@ function createMockPapaParseResult({
   errors = [],
 }: {
   // eslint-disable-next-line functional/prefer-readonly-type
-  data?: CSVRecord[];
+  data?: UnvalidatedCSVRow[];
   // eslint-disable-next-line functional/prefer-readonly-type
   errors?: papa.ParseError[];
-}): papa.ParseResult<CSVRecord> {
+}): papa.ParseResult<UnvalidatedCSVRow> {
   return {
     data,
     errors,
@@ -21,11 +21,11 @@ function createMockPapaParseResult({
 }
 
 describe('csvParserUtils', () => {
-  let mockPapaParse: jest.MockedFunction<typeof papa.parse<CSVRecord>>;
+  let mockPapaParse: jest.MockedFunction<typeof papa.parse<UnvalidatedCSVRow>>;
 
   beforeEach(() => {
     // unsure why the typing isn't working here
-    mockPapaParse = papa.parse as unknown as jest.MockedFunction<typeof papa.parse<CSVRecord>>;
+    mockPapaParse = papa.parse as unknown as jest.MockedFunction<typeof papa.parse<UnvalidatedCSVRow>>;
   });
 
   afterEach(() => {

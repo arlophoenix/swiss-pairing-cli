@@ -2,7 +2,11 @@ import { ARG_NUM_ROUNDS, ARG_START_ROUND } from '../constants.js';
 import { Result, Team, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
 import { teamToString, validateAllOptions } from './validatorUtils.js';
 
-interface JSONRecord {
+/**
+ * Represents unvalidated JSON data containing Swiss pairing configuration.
+ * Maps closely to CLI arguments but allows team objects instead of just strings.
+ */
+interface UnvalidatedJSONOptions {
   readonly teams?: readonly (string | Team)[];
   readonly 'num-rounds'?: number;
   readonly 'start-round'?: number;
@@ -11,8 +15,10 @@ interface JSONRecord {
   readonly matches?: readonly (readonly string[])[];
 }
 
-export function validateJSONOptions(jsonRecord: JSONRecord): Result<Partial<ValidatedCLIOptions>> {
-  const teams = jsonRecord.teams?.map((team) => {
+export function validateJSONOptions(
+  jsonOptions: UnvalidatedJSONOptions
+): Result<Partial<ValidatedCLIOptions>> {
+  const teams = jsonOptions.teams?.map((team) => {
     if (typeof team === 'string') {
       return team;
     } else {
@@ -22,11 +28,11 @@ export function validateJSONOptions(jsonRecord: JSONRecord): Result<Partial<Vali
 
   const input: UnvalidatedCLIOptions = {
     teams,
-    numRounds: jsonRecord[ARG_NUM_ROUNDS] ? String(jsonRecord[ARG_NUM_ROUNDS]) : undefined,
-    startRound: jsonRecord[ARG_START_ROUND] ? String(jsonRecord[ARG_START_ROUND]) : undefined,
-    order: jsonRecord.order,
-    format: jsonRecord.format,
-    matches: jsonRecord.matches,
+    numRounds: jsonOptions[ARG_NUM_ROUNDS] ? String(jsonOptions[ARG_NUM_ROUNDS]) : undefined,
+    startRound: jsonOptions[ARG_START_ROUND] ? String(jsonOptions[ARG_START_ROUND]) : undefined,
+    order: jsonOptions.order,
+    format: jsonOptions.format,
+    matches: jsonOptions.matches,
   };
 
   return validateAllOptions({ input, origin: 'JSON' });

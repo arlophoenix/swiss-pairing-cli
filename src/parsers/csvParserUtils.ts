@@ -3,8 +3,11 @@ import { ARG_FORMAT, ARG_NUM_ROUNDS, ARG_ORDER, ARG_START_ROUND, ARG_TEAMS } fro
 import { Result } from '../types/types.js';
 import papa from 'papaparse';
 
-// TODO: rename this type to something more explanatory
-export interface CSVRecord {
+/**
+ * Represents a single unvalidated row from a CSV file containing Swiss pairing data.
+ * Maps to CLI arguments but uses a different structure for matches (home/away columns) and squads.
+ */
+export interface UnvalidatedCSVRow {
   readonly [ARG_TEAMS]?: string;
   readonly squads?: string;
   readonly [ARG_NUM_ROUNDS]?: string;
@@ -15,8 +18,11 @@ export interface CSVRecord {
   readonly 'matches-away'?: string;
 }
 
-export function parseCSV(csv: string): Result<readonly CSVRecord[]> {
-  const parseResult = papa.parse<CSVRecord>(csv, {
+/**
+ * Parses a CSV string into an array of unvalidated rows.
+ */
+export function parseCSV(csv: string): Result<readonly UnvalidatedCSVRow[]> {
+  const parseResult = papa.parse<UnvalidatedCSVRow>(csv, {
     header: true,
     skipEmptyLines: true,
     transformHeader: (header) => header.trim().toLowerCase(),

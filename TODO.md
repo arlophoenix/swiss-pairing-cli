@@ -5,7 +5,6 @@
 ## Code Quality
 
 - standardise error messages in swissPairing/validation
-- rename JSONRecord and CSVRecord to something more clear
 - add more integration tests which cover the whole range of arguments
 - prevent pushing directly to remote master branch
 
