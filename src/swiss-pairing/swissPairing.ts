@@ -6,7 +6,7 @@ import {
   Result,
 } from '../types/types.js';
 import { createBidirectionalMap, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
-import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
+import { validateRoundMatchesInput, validateRoundMatchesOutput } from './swissValidator.js';
 
 /**
  * Generates multiple rounds of matches for a Swiss-style tournament.

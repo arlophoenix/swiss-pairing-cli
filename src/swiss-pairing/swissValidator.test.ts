@@ -1,6 +1,6 @@
 import { ReadonlyPlayedOpponents, RoundMatches } from '../types/types.js';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { validateRoundMatchesInput, validateRoundMatchesOutput } from './validation.js';
+import { validateRoundMatchesInput, validateRoundMatchesOutput } from './swissValidator.js';
 
 describe('Validation', () => {
   describe('validateRoundMatchesInput', () => {

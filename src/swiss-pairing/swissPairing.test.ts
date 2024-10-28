@@ -1,4 +1,4 @@
-import * as validation from './validation.js';
+import * as swissValidator from './swissValidator.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
@@ -7,15 +7,15 @@ import { generateRoundMatches } from './swissPairing.js';
 
 describe('index', () => {
   describe('generateRoundMatches', () => {
-    let mockValidateInput: SpyInstance<typeof validation.validateRoundMatchesInput>;
-    let mockValidateOutput: SpyInstance<typeof validation.validateRoundMatchesOutput>;
+    let mockValidateInput: SpyInstance<typeof swissValidator.validateRoundMatchesInput>;
+    let mockValidateOutput: SpyInstance<typeof swissValidator.validateRoundMatchesOutput>;
 
     beforeEach(() => {
       mockValidateInput = jest
-        .spyOn(validation, 'validateRoundMatchesInput')
+        .spyOn(swissValidator, 'validateRoundMatchesInput')
         .mockReturnValue({ success: true });
       mockValidateOutput = jest
-        .spyOn(validation, 'validateRoundMatchesOutput')
+        .spyOn(swissValidator, 'validateRoundMatchesOutput')
         .mockReturnValue({ success: true });
     });
 
