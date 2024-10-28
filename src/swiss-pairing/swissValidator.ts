@@ -75,11 +75,13 @@ export function validateRoundMatchesInput({
     }
   }
 
-  if (!Array.from(allTeamsInPlayedMatches).every((team) => teams.includes(team))) {
-    return {
-      success: false,
-      error: { type: 'InvalidInput', message: `${ARG_MATCHES} contains invalid team names.` },
-    };
+  for (const team of allTeamsInPlayedMatches.keys()) {
+    if (!teams.includes(team)) {
+      return {
+        success: false,
+        error: { type: 'InvalidInput', message: `${ARG_MATCHES} contains invalid team name: '${team}'.` },
+      };
+    }
   }
 
   // Check if playedMatches is symmetrical
@@ -99,7 +101,7 @@ export function validateRoundMatchesInput({
     if (!teams.includes(team)) {
       return {
         success: false,
-        error: { type: 'InvalidInput', message: `squadMap contains invalid team name: ${team}.` },
+        error: { type: 'InvalidInput', message: `squadMap contains invalid team name: '${team}'.` },
       };
     }
   }

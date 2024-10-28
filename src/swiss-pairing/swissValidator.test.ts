@@ -116,7 +116,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('matches contains invalid team names.');
+        expect(result.error.message).toBe("matches contains invalid team name: 'InvalidTeam'.");
       }
     });
 
@@ -154,7 +154,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('squadMap contains invalid team name: InvalidTeam.');
+        expect(result.error.message).toBe("squadMap contains invalid team name: 'InvalidTeam'.");
       }
     });
   });
