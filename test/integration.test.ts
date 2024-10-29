@@ -62,6 +62,21 @@ async function runCLI(args: string): Promise<CLIResult> {
   }
 }
 
+function validateCLIResult({
+  result,
+  isErrorCase,
+}: {
+  readonly result: CLIResult;
+  readonly isErrorCase: boolean;
+}): void {
+  // print the output for unexpected errors
+  if (result.success === isErrorCase) {
+    console.log(result.message);
+  }
+  expect(result.success).toBe(!isErrorCase);
+  expect(result).toMatchSnapshot();
+}
+
 describe('Integration Tests', () => {
   // Filter for only our test files, excluding hidden files and system files
   const fixtures = fs
@@ -78,15 +93,15 @@ describe('Integration Tests', () => {
     const fixturePath = path.join(fixturesDir, fixture);
     const isErrorCase = fixture.startsWith('invalid-');
 
+    // text files contain arguments to be run directly in the CLI
     if (ext === '.txt') {
       const input = await readFileContent(fixturePath);
       const result = await runCLI(input);
-      expect(result.success).toBe(!isErrorCase);
-      expect(result).toMatchSnapshot();
+      validateCLIResult({ result, isErrorCase });
+      // JSON or CSV files are expected to be provided as a file argument
     } else if (SUPPORTED_FILE_TYPES.includes(ext as SupportedFileTypes)) {
       const result = await runCLI(`--file ${fixturePath}`);
-      expect(result.success).toBe(!isErrorCase);
-      expect(result).toMatchSnapshot();
+      validateCLIResult({ result, isErrorCase });
 
       // Compare file input with direct CLI args if both exist
       const txtPath = fixturePath.replace(ext, '.txt');
@@ -95,6 +110,8 @@ describe('Integration Tests', () => {
         const resultWithArgs = await runCLI(inputWithArgs);
         expect(result).toEqual(resultWithArgs);
       }
+    } else {
+      throw new Error(`Unsupported file type: ${ext}`);
     }
   });
 });

@@ -1,11 +1,176 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Integration Tests CLI Output - all-arguments.csv 1`] = `
+{
+  "message": "{
+  "Round 3": [
+    [
+      "Team4",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team1"
+    ]
+  ],
+  "Round 4": [
+    [
+      "Team4",
+      "Team1"
+    ],
+    [
+      "Team3",
+      "Team2"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - all-arguments.json 1`] = `
+{
+  "message": "{
+  "Round 3": [
+    [
+      "Team4",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team1"
+    ]
+  ],
+  "Round 4": [
+    [
+      "Team4",
+      "Team1"
+    ],
+    [
+      "Team3",
+      "Team2"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - all-arguments.txt 1`] = `
+{
+  "message": "{
+  "Round 3": [
+    [
+      "Team4",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team1"
+    ]
+  ],
+  "Round 4": [
+    [
+      "Team4",
+      "Team1"
+    ],
+    [
+      "Team3",
+      "Team2"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
 exports[`Integration Tests CLI Output - duplicate-match-in-history.txt 1`] = `
 {
   "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - file-csv.txt 1`] = `
+{
+  "message": "{
+  "Round 3": [
+    [
+      "Team4",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team1"
+    ]
+  ],
+  "Round 4": [
+    [
+      "Team4",
+      "Team1"
+    ],
+    [
+      "Team3",
+      "Team2"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - file-csv-overrides.txt 1`] = `
+{
+  "message": "Round 2:
+Alice vs Charlie
+Bob vs David
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - file-json.txt 1`] = `
+{
+  "message": "{
+  "Round 3": [
+    [
+      "Team4",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team1"
+    ]
+  ],
+  "Round 4": [
+    [
+      "Team4",
+      "Team1"
+    ],
+    [
+      "Team3",
+      "Team2"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - file-json-overrides.txt 1`] = `
+{
+  "message": "Round 2:
+Alice vs Charlie
+Bob vs David
 ",
   "success": true,
 }
@@ -26,6 +191,164 @@ exports[`Integration Tests CLI Output - five-teams-three-rounds-start-two-bottom
 1. BYE vs David
 2. Elvis vs Alice
 3. Charlie vs Bob
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-csv.txt 1`] = `
+{
+  "message": "Round,Match,Home Team,Away Team
+1,1,Team1,Team2
+1,2,Team3,Team4
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-csv-multi-round.txt 1`] = `
+{
+  "message": "Round,Match,Home Team,Away Team
+1,1,Team1,Team2
+1,2,Team3,Team4
+2,1,Team1,Team3
+2,2,Team2,Team4
+3,1,Team1,Team4
+3,2,Team2,Team3
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-json-plain.txt 1`] = `
+{
+  "message": "{"Round 1":[["Team1","Team2"],["Team3","Team4"]]}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-json-plain-multi-round.txt 1`] = `
+{
+  "message": "{"Round 1":[["Team1","Team2"],["Team3","Team4"]],"Round 2":[["Team1","Team3"],["Team2","Team4"]],"Round 3":[["Team1","Team4"],["Team2","Team3"]]}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-json-pretty.txt 1`] = `
+{
+  "message": "{
+  "Round 1": [
+    [
+      "Team1",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team4"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-json-pretty-multi-round.txt 1`] = `
+{
+  "message": "{
+  "Round 1": [
+    [
+      "Team1",
+      "Team2"
+    ],
+    [
+      "Team3",
+      "Team4"
+    ]
+  ],
+  "Round 2": [
+    [
+      "Team1",
+      "Team3"
+    ],
+    [
+      "Team2",
+      "Team4"
+    ]
+  ],
+  "Round 3": [
+    [
+      "Team1",
+      "Team4"
+    ],
+    [
+      "Team2",
+      "Team3"
+    ]
+  ]
+}
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-text-markdown.txt 1`] = `
+{
+  "message": "**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-text-markdown-multi-round.txt 1`] = `
+{
+  "message": "# Matches
+
+**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+
+**Round 2**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+
+**Round 3**
+
+1. Team1 vs Team4
+2. Team2 vs Team3
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-text-plain.txt 1`] = `
+{
+  "message": "Round 1:
+Team1 vs Team2
+Team3 vs Team4
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - format-text-plain-multi-round.txt 1`] = `
+{
+  "message": "Round 1:
+Team1 vs Team2
+Team3 vs Team4
+Round 2:
+Team1 vs Team3
+Team2 vs Team4
+Round 3:
+Team1 vs Team4
+Team2 vs Team3
 ",
   "success": true,
 }
@@ -492,6 +815,108 @@ exports[`Integration Tests CLI Output - invalid-start-round.txt 1`] = `
   "message": "Invalid CLI argument "--start-round": "0". Expected a positive integer
 ",
   "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output - num-rounds.csv 1`] = `
+{
+  "message": "# Matches
+
+**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+
+**Round 2**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+
+**Round 3**
+
+1. Team1 vs Team4
+2. Team2 vs Team3
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - num-rounds.json 1`] = `
+{
+  "message": "# Matches
+
+**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+
+**Round 2**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+
+**Round 3**
+
+1. Team1 vs Team4
+2. Team2 vs Team3
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - num-rounds.txt 1`] = `
+{
+  "message": "# Matches
+
+**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+
+**Round 2**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+
+**Round 3**
+
+1. Team1 vs Team4
+2. Team2 vs Team3
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - start-round.csv 1`] = `
+{
+  "message": "**Round 3**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - start-round.json 1`] = `
+{
+  "message": "**Round 3**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - start-round.txt 1`] = `
+{
+  "message": "**Round 3**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+",
+  "success": true,
 }
 `;
 

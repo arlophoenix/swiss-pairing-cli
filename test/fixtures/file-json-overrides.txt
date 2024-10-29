@@ -1,0 +1,1 @@
+--file 'test/fixtures/all-arguments.json' -t "Alice [A]" "Bob [B]" "Charlie" "David" -n 1 -s 2 -o top-down --format text-plain -m "Alice,Bob"

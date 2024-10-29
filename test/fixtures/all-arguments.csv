@@ -1,0 +1,5 @@
+teams,squads,num-rounds,start-round,order,format,matches-home,matches-away
+Team1,A,2,3,bottom-up,json-pretty,Team1,Team2
+Team2,B,,,,,,
+Team3,,,,,,,
+Team4,,,,,,,

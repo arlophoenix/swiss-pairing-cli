@@ -10,7 +10,6 @@
 - refactor the output type to an array of objects
   - include round #, label etc
   - consider including the squad names in the output?
-- add more integration tests which cover the whole range of arguments
 - prevent pushing directly to remote master branch
 
 ## Project Configuration
