@@ -7,7 +7,7 @@ import * as validator from '../validators/cliValidator.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { ReadonlyPlayedOpponents } from '../types/types.js';
+import { ReadonlyPlayedTeams } from '../types/types.js';
 import { handleCLIAction } from './cliAction.js';
 
 describe('handleCLIAction', () => {
@@ -45,7 +45,7 @@ describe('handleCLIAction', () => {
     });
 
     jest.spyOn(cliUtils, 'prepareTeams').mockReturnValue(['Alice', 'Bob']);
-    jest.spyOn(utils, 'createBidirectionalMap').mockReturnValue(new Map() as ReadonlyPlayedOpponents);
+    jest.spyOn(utils, 'createBidirectionalMap').mockReturnValue(new Map() as ReadonlyPlayedTeams);
     jest.spyOn(cliUtils, 'createSquadMap').mockReturnValue(new Map());
 
     jest.spyOn(swissValidator, 'validateRoundMatchesInput').mockReturnValue({
@@ -244,11 +244,11 @@ describe('handleCLIAction', () => {
         file: '',
       });
 
-      const playedOpponents = new Map([
+      const playedTeams = new Map([
         ['Alice', new Set(['Bob'])],
         ['Bob', new Set(['Alice'])],
       ]);
-      jest.spyOn(utils, 'createBidirectionalMap').mockReturnValue(playedOpponents);
+      jest.spyOn(utils, 'createBidirectionalMap').mockReturnValue(playedTeams);
 
       await handleCLIAction({
         teams: ['Alice', 'Bob', 'Charlie', 'David'],
@@ -259,7 +259,7 @@ describe('handleCLIAction', () => {
       expect(utils.createBidirectionalMap).toHaveBeenCalledWith([['Alice', 'Bob']]);
       expect(swissPairing.generateRoundMatches).toHaveBeenCalledWith(
         expect.objectContaining({
-          playedOpponents,
+          playedTeams,
         })
       );
     });

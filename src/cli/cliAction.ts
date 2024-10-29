@@ -28,13 +28,13 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   });
 
   const preparedTeams = prepareTeams({ teams: teams.map((t) => t.name), order });
-  const playedOpponents = createBidirectionalMap(matches);
+  const playedTeams = createBidirectionalMap(matches);
   const squadMap = createSquadMap(teams);
 
   const validateInput = validateRoundMatchesInput({
     teams: preparedTeams,
     numRounds,
-    playedOpponents,
+    playedTeams,
     squadMap,
   });
 
@@ -49,7 +49,7 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
     teams: preparedTeams,
     numRounds,
     startRound,
-    playedOpponents,
+    playedTeams,
     squadMap,
   });
 
@@ -64,7 +64,7 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
     roundMatches: roundMatchesResult.value,
     teams: preparedTeams,
     numRounds,
-    playedOpponents,
+    playedTeams,
     squadMap,
   });
 

@@ -8,7 +8,7 @@ describe('generateRoundMatches', () => {
       teams: ['p1', 'p2', 'p3', 'p4'],
       numRounds: 1,
       startRound: 1,
-      playedOpponents: new Map(),
+      playedTeams: new Map(),
     });
 
     expect(result.success).toBe(true);
@@ -27,7 +27,7 @@ describe('generateRoundMatches', () => {
       teams: ['p1', 'p2', 'p3', 'p4'],
       numRounds: 3,
       startRound: 1,
-      playedOpponents: new Map(),
+      playedTeams: new Map(),
     });
 
     expect(result.success).toBe(true);
@@ -54,7 +54,7 @@ describe('generateRoundMatches', () => {
       teams: ['p1', 'p2', 'p3', 'p4'],
       numRounds: 1,
       startRound: 1,
-      playedOpponents: new Map([
+      playedTeams: new Map([
         ['p1', new Set(['p2'])],
         ['p2', new Set(['p1'])],
       ]),
@@ -73,7 +73,7 @@ describe('generateRoundMatches', () => {
       teams: ['p1', 'p2', 'p3', 'p4'],
       numRounds: 1,
       startRound: 1,
-      playedOpponents: new Map(),
+      playedTeams: new Map(),
       squadMap: new Map([
         ['p1', 'A'],
         ['p2', 'A'],
@@ -95,7 +95,7 @@ describe('generateRoundMatches', () => {
       teams: ['p1', 'p2', 'p3', 'p4'],
       numRounds: 1,
       startRound: 1,
-      playedOpponents: new Map([
+      playedTeams: new Map([
         ['p1', new Set(['p2', 'p3', 'p4'])],
         ['p2', new Set(['p1'])],
         ['p3', new Set(['p1'])],
@@ -114,7 +114,7 @@ describe('generateRoundMatches', () => {
       teams: ['p1', 'p2', 'p3', 'p4'],
       numRounds: 2,
       startRound: 3,
-      playedOpponents: new Map(),
+      playedTeams: new Map(),
     });
 
     expect(result.success).toBe(true);

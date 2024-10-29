@@ -1,4 +1,4 @@
-import { ReadonlyPlayedOpponents, RoundMatches } from '../types/types.js';
+import { ReadonlyPlayedTeams, RoundMatches } from '../types/types.js';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './swissValidator.js';
 
@@ -9,7 +9,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 3,
         startRound: 1,
-        playedOpponents: new Map([
+        playedTeams: new Map([
           ['Team1', new Set(['Team2'])],
           ['Team2', new Set(['Team1'])],
         ]),
@@ -25,7 +25,7 @@ describe('swissValidator', () => {
         teams: ['Team1'],
         numRounds: 1,
         startRound: 1,
-        playedOpponents: new Map(),
+        playedTeams: new Map(),
         squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
@@ -41,7 +41,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team3'],
         numRounds: 1,
         startRound: 1,
-        playedOpponents: new Map(),
+        playedTeams: new Map(),
         squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
@@ -57,7 +57,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team1', 'Team3'],
         numRounds: 2,
         startRound: 1,
-        playedOpponents: new Map(),
+        playedTeams: new Map(),
         squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
@@ -73,7 +73,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 0,
         startRound: 1,
-        playedOpponents: new Map(),
+        playedTeams: new Map(),
         squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
@@ -89,7 +89,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 4,
         startRound: 1,
-        playedOpponents: new Map(),
+        playedTeams: new Map(),
         squadMap: new Map(),
       };
       const result = validateRoundMatchesInput(invalidInput);
@@ -105,7 +105,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,
-        playedOpponents: new Map([
+        playedTeams: new Map([
           ['Team1', new Set(['Team2'])],
           ['Team2', new Set(['Team1'])],
           ['InvalidTeam', new Set(['Team3'])],
@@ -124,7 +124,7 @@ describe('swissValidator', () => {
       const validInput = {
         teams: ['Team1', 'Team2'],
         numRounds: 1,
-        playedOpponents: new Map([
+        playedTeams: new Map([
           ['Team1', new Set(['Team2'])],
           ['Team2', new Set(['Team1'])],
         ]),
@@ -139,7 +139,7 @@ describe('swissValidator', () => {
       const result = validateRoundMatchesInput({
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
-        playedOpponents: new Map([
+        playedTeams: new Map([
           ['Team1', new Set(['Team1'])], // Self-play
           ['Team2', new Set(['Team3'])],
           ['Team3', new Set(['Team2'])],
@@ -153,12 +153,12 @@ describe('swissValidator', () => {
       }
     });
 
-    it('should return invalid if playedMatches is not symmetrical', () => {
+    it('should return invalid if playedTeams is not symmetrical', () => {
       const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,
-        playedOpponents: new Map([
+        playedTeams: new Map([
           ['Team1', new Set(['Team2'])],
           ['Team2', new Set(['Team3'])], // Should be ['Team1']
         ]),
@@ -179,7 +179,7 @@ describe('swissValidator', () => {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         startRound: 1,
-        playedOpponents: new Map() as ReadonlyPlayedOpponents,
+        playedTeams: new Map() as ReadonlyPlayedTeams,
         squadMap: new Map([
           ['Team1', 'SquadA'],
           ['InvalidTeam', 'SquadB'],
@@ -197,13 +197,13 @@ describe('swissValidator', () => {
   describe('validateRoundMatchesOutput', () => {
     let teams: readonly string[];
     let numRounds: number;
-    let playedOpponents: ReadonlyPlayedOpponents;
+    let playedTeams: ReadonlyPlayedTeams;
     let squadMap: ReadonlyMap<string, string>;
 
     beforeEach(() => {
       teams = ['p1', 'p2', 'p3', 'p4'];
       numRounds = 2;
-      playedOpponents = new Map();
+      playedTeams = new Map();
       squadMap = new Map();
     });
 
@@ -222,7 +222,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds,
-        playedOpponents,
+        playedTeams,
         squadMap,
       });
 
@@ -240,7 +240,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds,
-        playedOpponents,
+        playedTeams,
         squadMap,
       });
 
@@ -262,7 +262,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds,
-        playedOpponents,
+        playedTeams,
         squadMap,
       });
 
@@ -287,7 +287,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds: 1,
-        playedOpponents: existingMatches,
+        playedTeams: existingMatches,
         squadMap,
       });
 
@@ -312,7 +312,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds,
-        playedOpponents,
+        playedTeams,
         squadMap,
       });
 
@@ -333,7 +333,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds: 1,
-        playedOpponents,
+        playedTeams,
         squadMap: new Map([
           ['p1', 'A'],
           ['p2', 'A'],
@@ -359,7 +359,7 @@ describe('swissValidator', () => {
         roundMatches,
         teams,
         numRounds: 1,
-        playedOpponents,
+        playedTeams,
         squadMap,
       });
 

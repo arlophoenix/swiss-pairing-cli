@@ -31,7 +31,7 @@ function runPerformanceTest({
       teams,
       numRounds: roundCount,
       startRound: 1,
-      playedOpponents: new Map(),
+      playedTeams: new Map(),
     });
 
     const endTime = performance.now();

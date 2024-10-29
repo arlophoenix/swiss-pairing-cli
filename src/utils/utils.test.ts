@@ -1,4 +1,4 @@
-import { PlayedOpponents, ReadonlyPlayedOpponents, Team } from '../types/types.js';
+import { PlayedTeams, ReadonlyPlayedTeams, Team } from '../types/types.js';
 import {
   createBidirectionalMap,
   isValidTeamString,
@@ -44,18 +44,18 @@ describe('utils', () => {
 
   describe('mutableCloneBidirectionalMap', () => {
     it('should create a new Map instance', () => {
-      const original: ReadonlyPlayedOpponents = new Map();
-      const clone: PlayedOpponents = mutableCloneBidirectionalMap(original);
+      const original: ReadonlyPlayedTeams = new Map();
+      const clone: PlayedTeams = mutableCloneBidirectionalMap(original);
       expect(clone).not.toBe(original);
       expect(clone).toBeInstanceOf(Map);
     });
 
     it('should create a deep clone of the map', () => {
-      const original: ReadonlyPlayedOpponents = new Map([
+      const original: ReadonlyPlayedTeams = new Map([
         ['team1', new Set(['opponent1', 'opponent2'])],
         ['team2', new Set(['opponent3'])],
       ]);
-      const clone: PlayedOpponents = mutableCloneBidirectionalMap(original);
+      const clone: PlayedTeams = mutableCloneBidirectionalMap(original);
 
       expect(clone).toEqual(original);
       expect(clone.get('team1')).not.toBe(original.get('team1'));
@@ -63,7 +63,7 @@ describe('utils', () => {
     });
 
     it('should allow mutations on the cloned map', () => {
-      const original: ReadonlyPlayedOpponents = new Map([['team1', new Set(['opponent1'])]]);
+      const original: ReadonlyPlayedTeams = new Map([['team1', new Set(['opponent1'])]]);
       const clone = mutableCloneBidirectionalMap(original);
 
       clone.set('team2', new Set(['opponent2']));
@@ -76,7 +76,7 @@ describe('utils', () => {
     });
 
     it('should handle an empty map', () => {
-      const original: ReadonlyPlayedOpponents = new Map();
+      const original: ReadonlyPlayedTeams = new Map();
       const clone = mutableCloneBidirectionalMap(original);
       expect(clone.size).toBe(0);
     });

@@ -37,8 +37,8 @@ export interface Team {
 export type Match = [string, string];
 export type ReadonlyMatch = readonly [string, string];
 // eslint-disable-next-line functional/prefer-readonly-type
-export type PlayedOpponents = Map<string, Set<string>>;
-export type ReadonlyPlayedOpponents = ReadonlyMap<string, ReadonlySet<string>>;
+export type PlayedTeams = Map<string, Set<string>>;
+export type ReadonlyPlayedTeams = ReadonlyMap<string, ReadonlySet<string>>;
 
 export type SupportedFileTypes = (typeof SUPPORTED_FILE_TYPES)[number];
 

@@ -1,4 +1,4 @@
-import { BooleanResult, ReadonlyPlayedOpponents, ReadonlyRoundMatches } from '../types/types.js';
+import { BooleanResult, ReadonlyPlayedTeams, ReadonlyRoundMatches } from '../types/types.js';
 
 import { mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 
@@ -7,19 +7,19 @@ import { mutableCloneBidirectionalMap } from './swissPairingUtils.js';
  * @param {Object} params - The parameters to validate
  * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds to generate
- * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
+ * @param {ReadonlyPlayedTeams} params.playedTeams - The matches already played
  * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
  * @returns {BooleanResult} The result of the validation
  */
 export function validateRoundMatchesInput({
   teams,
   numRounds,
-  playedOpponents,
+  playedTeams,
   squadMap,
 }: {
   readonly teams: readonly string[];
   readonly numRounds: number;
-  readonly playedOpponents: ReadonlyPlayedOpponents;
+  readonly playedTeams: ReadonlyPlayedTeams;
   readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   if (teams.length < 2) {
@@ -45,21 +45,21 @@ export function validateRoundMatchesInput({
     };
   }
 
-  const allTeamsInPlayedMatches = new Set<string>();
-  for (const [team, opponents] of playedOpponents.entries()) {
-    allTeamsInPlayedMatches.add(team);
+  const allTeamsInPlayedTeams = new Set<string>();
+  for (const [team, opponents] of playedTeams.entries()) {
+    allTeamsInPlayedTeams.add(team);
     for (const opponent of opponents) {
-      allTeamsInPlayedMatches.add(opponent);
+      allTeamsInPlayedTeams.add(opponent);
     }
   }
 
-  for (const team of allTeamsInPlayedMatches.keys()) {
+  for (const team of allTeamsInPlayedTeams.keys()) {
     if (!teams.includes(team)) {
       return { success: false, message: `Unknown team in match history: "${team}"` };
     }
   }
 
-  for (const [team, opponents] of playedOpponents.entries()) {
+  for (const [team, opponents] of playedTeams.entries()) {
     for (const opponent of opponents) {
       if (team === opponent) {
         return {
@@ -67,7 +67,7 @@ export function validateRoundMatchesInput({
           message: `${team} cannot play against itself`,
         };
       }
-      if (!playedOpponents.get(opponent)?.has(team)) {
+      if (!playedTeams.get(opponent)?.has(team)) {
         return {
           success: false,
           message: `Match history must be symmetrical - found ${team} vs ${opponent} but not ${opponent} vs ${team}`,
@@ -91,7 +91,7 @@ export function validateRoundMatchesInput({
  * @param {ReadonlyRoundMatches} params.roundMatches - The generated round matches
  * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds generated
- * @param {ReadonlyPlayedOpponents} params.playedMatches - The matches already played
+ * @param {ReadonlyPlayedTeams} params.playedTeams - The matches already played
  * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
  * @returns {BooleanResult} The result of the validation
  */
@@ -99,13 +99,13 @@ export function validateRoundMatchesOutput({
   roundMatches,
   teams,
   numRounds,
-  playedOpponents,
+  playedTeams,
   squadMap,
 }: {
   readonly roundMatches: ReadonlyRoundMatches;
   readonly teams: readonly string[];
   readonly numRounds: number;
-  readonly playedOpponents: ReadonlyPlayedOpponents;
+  readonly playedTeams: ReadonlyPlayedTeams;
   readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   const numGamesPerRound = teams.length / 2;
@@ -118,7 +118,7 @@ export function validateRoundMatchesOutput({
     };
   }
 
-  const currentPlayedMatches = mutableCloneBidirectionalMap(playedOpponents);
+  const currentPlayedTeams = mutableCloneBidirectionalMap(playedTeams);
 
   for (const [roundLabel, matches] of Object.entries(roundMatches)) {
     if (matches.length !== numGamesPerRound) {
@@ -138,21 +138,21 @@ export function validateRoundMatchesOutput({
         };
       }
 
-      if (currentPlayedMatches.get(team1)?.has(team2)) {
+      if (currentPlayedTeams.get(team1)?.has(team2)) {
         return {
           success: false,
           message: `Duplicate match found in history: ${team1} vs ${team2}`,
         };
       }
 
-      if (currentPlayedMatches.get(team1) === undefined) {
-        currentPlayedMatches.set(team1, new Set());
+      if (currentPlayedTeams.get(team1) === undefined) {
+        currentPlayedTeams.set(team1, new Set());
       }
-      if (currentPlayedMatches.get(team2) === undefined) {
-        currentPlayedMatches.set(team2, new Set());
+      if (currentPlayedTeams.get(team2) === undefined) {
+        currentPlayedTeams.set(team2, new Set());
       }
-      currentPlayedMatches.get(team1)?.add(team2);
-      currentPlayedMatches.get(team2)?.add(team1);
+      currentPlayedTeams.get(team1)?.add(team2);
+      currentPlayedTeams.get(team2)?.add(team1);
 
       if (teamsInRound.has(team1) || teamsInRound.has(team2)) {
         return {
