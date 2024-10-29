@@ -287,7 +287,7 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.message).toBe(
-          'Invalid CLI argument "--file": "data.txt". Expected extension to be one of .csv, .json.'
+          'Invalid CLI argument "file": "data.txt". Expected extension to be one of .csv, .json.'
         );
       }
     });
@@ -297,7 +297,7 @@ describe('validatorUtils', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.message).toBe(
-          'Invalid CLI argument "--file": "data". Expected extension to be one of .csv, .json.'
+          'Invalid CLI argument "file": "data". Expected extension to be one of .csv, .json.'
         );
       }
     });

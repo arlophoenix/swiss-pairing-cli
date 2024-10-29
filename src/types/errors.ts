@@ -1,10 +1,11 @@
-export type Result<T> =
-  | { readonly success: true; readonly value: T }
-  | { readonly success: false; readonly message: string };
+export interface FailureResult {
+  readonly success: false;
+  readonly message: string;
+}
 
-export type BooleanResult =
-  | { readonly success: true }
-  | { readonly success: false; readonly message: string };
+export type Result<T> = { readonly success: true; readonly value: T } | FailureResult;
+
+export type BooleanResult = { readonly success: true } | FailureResult;
 
 export type ErrorType = 'InvalidInput' | 'InvalidOutput' | 'NoValidSolution';
 

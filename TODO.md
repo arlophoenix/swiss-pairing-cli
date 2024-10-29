@@ -2,8 +2,6 @@
 
 ## Functionality
 
-- use the term match history instead of played matches
-
 ## Code Quality
 
 - standardise error messages in swissPairing/validation
