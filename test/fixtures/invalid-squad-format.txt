@@ -1,0 +1,1 @@
+-t "Team1 [A" "Team2 []" "Team3 A]" "Team4 [A] [B]"

@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fixtures CLI Output - five-teams-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
-"# Matches
+exports[`Integration Tests CLI Output - five-teams-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
+{
+  "message": "# Matches
 
 **Round 3**
 
@@ -14,155 +15,212 @@ exports[`Fixtures CLI Output - five-teams-three-rounds-start-two-bottom-up-forma
 1. BYE vs David
 2. Elvis vs Alice
 3. Charlie vs Bob
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-bottom-up.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-bottom-up.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team4 vs Team3
 2. Team2 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-bottom-up.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-bottom-up.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team4 vs Team3
 2. Team2 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-bottom-up.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-bottom-up.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team4 vs Team3
 2. Team2 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-top-down.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-top-down.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-top-down.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-top-down.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-top-down.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-top-down.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-matches-bottom-up.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team4 vs Team2
 2. Team3 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-matches-bottom-up.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team4 vs Team2
 2. Team3 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-matches-bottom-up.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team4 vs Team2
 2. Team3 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-matches-top-down.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-matches-top-down.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-matches-top-down.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-squads.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-squads.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-squads.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-squads.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - four-teams-with-squads.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - four-teams-with-squads.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs Team4
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
+{
+  "message": "**Round 6**
 
 1. Morgath vs Pauldog
 2. Nzdaemon vs GreyGhost
@@ -170,11 +228,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
 4. Arlo vs Colain
 5. armydan vs LCYig
 6. iso.evil vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
+{
+  "message": "**Round 6**
 
 1. LCYig vs armydan
 2. Clin vs iso.evil
@@ -182,11 +243,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
 4. GreyGhost vs Nzdaemon
 5. Pauldog vs Morgath
 6. lilme vs Saravock
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.json 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.json 1`] = `
+{
+  "message": "**Round 6**
 
 1. LCYig vs armydan
 2. Clin vs iso.evil
@@ -194,11 +258,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.json 1`] = `
 4. GreyGhost vs Nzdaemon
 5. Pauldog vs Morgath
 6. lilme vs Saravock
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
+{
+  "message": "**Round 6**
 
 1. LCYig vs armydan
 2. Clin vs iso.evil
@@ -206,11 +273,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
 4. GreyGhost vs Nzdaemon
 5. Pauldog vs Morgath
 6. lilme vs Saravock
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-2-win-gg.txt 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-2-win-gg.txt 1`] = `
+{
+  "message": "**Round 6**
 
 1. Morgath vs Pauldog
 2. Nzdaemon vs GreyGhost
@@ -218,11 +288,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-2-win-gg.txt 1`] = `
 4. Arlo vs Colain
 5. armydan vs LCYig
 6. iso.evil vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-3-win-ad.txt 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-3-win-ad.txt 1`] = `
+{
+  "message": "**Round 6**
 
 1. Morgath vs armydan
 2. Nzdaemon vs Pauldog
@@ -230,11 +303,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-3-win-ad.txt 1`] = `
 4. Arlo vs LCYig
 5. GreyGhost vs Colain
 6. iso.evil vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R6-4-draw.txt 1`] = `
-"**Round 6**
+exports[`Integration Tests CLI Output - hawbbl24S2R6-4-draw.txt 1`] = `
+{
+  "message": "**Round 6**
 
 1. Morgath vs Pauldog
 2. Nzdaemon vs GreyGhost
@@ -242,11 +318,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R6-4-draw.txt 1`] = `
 4. Arlo vs Colain
 5. armydan vs LCYig
 6. iso.evil vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R7.txt 1`] = `
-"**Round 7**
+exports[`Integration Tests CLI Output - hawbbl24S2R7.txt 1`] = `
+{
+  "message": "**Round 7**
 
 1. Morgath vs armydan
 2. Nzdaemon vs Pauldog
@@ -254,11 +333,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R7.txt 1`] = `
 4. lilme vs iso.evil
 5. Arlo vs LCYig
 6. GreyGhost vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified.txt 1`] = `
-"**Round 8**
+exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified.txt 1`] = `
+{
+  "message": "**Round 8**
 
 1. Nzdaemon vs armydan
 2. Morgath vs Colain
@@ -266,11 +348,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified.txt 1`] = `
 4. Arlo vs iso.evil
 5. lilme vs GreyGhost
 6. Pauldog vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified-team-names.csv 1`] = `
-"**Round 8**
+exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified-team-names.csv 1`] = `
+{
+  "message": "**Round 8**
 
 1. Howl-Terrroa vs The High Life
 2. Morgath Marauders vs The Good Runts
@@ -278,11 +363,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified-team-names.csv 1`] = `
 4. Under Where? vs Mean & Green
 5. Friendly Unit vs Dark Accolytes
 6. The Barrowtown Brawlers vs AttackAttack
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified-team-names.txt 1`] = `
-"**Round 8**
+exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified-team-names.txt 1`] = `
+{
+  "message": "**Round 8**
 
 1. Howl-Terrroa vs The High Life
 2. Morgath Marauders vs The Good Runts
@@ -290,11 +378,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-1-unmodified-team-names.txt 1`] = `
 4. Under Where? vs Mean & Green
 5. Friendly Unit vs Dark Accolytes
 6. The Barrowtown Brawlers vs AttackAttack
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
-"**Round 8**
+exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
+{
+  "message": "**Round 8**
 
 1. Morgath vs LCYig
 2. Nzdaemon vs Colain
@@ -302,11 +393,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
 4. Arlo vs armydan
 5. lilme vs iso.evil
 6. Pauldog vs Clin
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.csv 1`] = `
-"**Round 8**
+exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.csv 1`] = `
+{
+  "message": "**Round 8**
 
 1. Morgath Marauders vs Mean & Green
 2. Howl-Terrroa vs The Good Runts
@@ -314,11 +408,14 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.csv 1`] =
 4. Under Where? vs The High Life
 5. Friendly Unit vs Dark Accolytes
 6. The Barrowtown Brawlers vs AttackAttack
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] = `
-"**Round 8**
+exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] = `
+{
+  "message": "**Round 8**
 
 1. Morgath Marauders vs Mean & Green
 2. Howl-Terrroa vs The Good Runts
@@ -326,101 +423,195 @@ exports[`Fixtures CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] =
 4. Under Where? vs The High Life
 5. Friendly Unit vs Dark Accolytes
 6. The Barrowtown Brawlers vs AttackAttack
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-bottom-up.csv 1`] = `
-"**Round 1**
-
-1. BYE vs Team3
-2. Team2 vs Team1
-"
+exports[`Integration Tests CLI Output - invalid-duplicate-teams.txt 1`] = `
+{
+  "message": "Invalid CLI argument "--teams": "Team1,Team2,Team1,Team3". Expected unique team names
+",
+  "success": false,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-bottom-up.json 1`] = `
-"**Round 1**
-
-1. BYE vs Team3
-2. Team2 vs Team1
-"
+exports[`Integration Tests CLI Output - invalid-match-format.txt 1`] = `
+{
+  "message": "Invalid CLI argument "--matches": "["Team1",null]". Expected an array of two team names
+",
+  "success": false,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-bottom-up.txt 1`] = `
-"**Round 1**
-
-1. BYE vs Team3
-2. Team2 vs Team1
-"
+exports[`Integration Tests CLI Output - invalid-num-rounds.txt 1`] = `
+{
+  "message": "Invalid input: Number of rounds (4) must be less than number of teams (4)
+",
+  "success": false,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-top-down.csv 1`] = `
-"**Round 1**
-
-1. Team1 vs Team2
-2. Team3 vs BYE
-"
-`;
-
-exports[`Fixtures CLI Output - three-teams-top-down.json 1`] = `
+exports[`Integration Tests CLI Output - invalid-played-self.txt 1`] = `
 "**Round 1**
 
 1. Team1 vs Team2
-2. Team3 vs BYE
+2. Team3 vs Team4
 "
 `;
 
-exports[`Fixtures CLI Output - three-teams-top-down.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - invalid-single-team.txt 1`] = `
+{
+  "message": "Invalid CLI argument "--teams": "Team1". Expected at least two teams
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output - invalid-squad-format.txt 1`] = `
+{
+  "message": "Invalid CLI argument "--teams": "Team1 [A". Expected valid team name, optionally followed by [squad] e.g."Alice [Home]"
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output - invalid-start-round.txt 1`] = `
+{
+  "message": "Invalid CLI argument "--start-round": "0". Expected a positive integer
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output - three-teams-bottom-up.csv 1`] = `
+{
+  "message": "**Round 1**
+
+1. BYE vs Team3
+2. Team2 vs Team1
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - three-teams-bottom-up.json 1`] = `
+{
+  "message": "**Round 1**
+
+1. BYE vs Team3
+2. Team2 vs Team1
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - three-teams-bottom-up.txt 1`] = `
+{
+  "message": "**Round 1**
+
+1. BYE vs Team3
+2. Team2 vs Team1
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - three-teams-top-down.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team2
 2. Team3 vs BYE
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-with-matches-bottom-up.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - three-teams-top-down.json 1`] = `
+{
+  "message": "**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs BYE
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - three-teams-top-down.txt 1`] = `
+{
+  "message": "**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs BYE
+",
+  "success": true,
+}
+`;
+
+exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. BYE vs Team2
 2. Team3 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-with-matches-bottom-up.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. BYE vs Team2
 2. Team3 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-with-matches-bottom-up.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. BYE vs Team2
 2. Team3 vs Team1
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-with-matches-top-down.csv 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.csv 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs BYE
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-with-matches-top-down.json 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.json 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs BYE
-"
+",
+  "success": true,
+}
 `;
 
-exports[`Fixtures CLI Output - three-teams-with-matches-top-down.txt 1`] = `
-"**Round 1**
+exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.txt 1`] = `
+{
+  "message": "**Round 1**
 
 1. Team1 vs Team3
 2. Team2 vs BYE
-"
+",
+  "success": true,
+}
 `;

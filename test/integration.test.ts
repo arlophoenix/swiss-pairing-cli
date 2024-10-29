@@ -12,56 +12,88 @@ const execAsync = util.promisify(exec);
 const fixturesDir = path.join(__dirname, 'fixtures');
 
 const fileCache: Record<string, string> = {};
-const cliResultCache: Record<string, string> = {};
+const cliResultCache = new Map<string, CLIResult>();
 
-const readFileContent = async (filePath: string): Promise<string> => {
+interface ExecError extends Error {
+  readonly stdout: string;
+  readonly stderr: string;
+  readonly code: number;
+}
+
+interface CLIResult {
+  readonly success: boolean;
+  readonly message: string;
+}
+
+function isExecError(error: unknown): error is ExecError {
+  return (
+    typeof error === 'object' && error !== null && 'stderr' in error && 'stdout' in error && 'code' in error
+  );
+}
+
+async function readFileContent(filePath: string): Promise<string> {
   if (!fileCache[filePath]) {
     // eslint-disable-next-line functional/immutable-data
     fileCache[filePath] = await fsPromise.readFile(filePath, 'utf-8');
   }
   return fileCache[filePath];
-};
+}
 
-const runCLIWithArgs = async (args: string): Promise<string> => {
+async function runCLI(args: string): Promise<CLIResult> {
   const cacheKey = `args:${args}`;
-  if (!cliResultCache[cacheKey]) {
-    const { stdout } = await execAsync(`node dist/index.js ${args}`);
-    // eslint-disable-next-line functional/immutable-data
-    cliResultCache[cacheKey] = stdout;
+  const cliResult = cliResultCache.get(cacheKey);
+  if (cliResult) {
+    return cliResult;
   }
-  return cliResultCache[cacheKey];
-};
 
-const runCLIWithFile = async (filePath: string): Promise<string> => {
-  const cacheKey = `file:${filePath}`;
-  if (!cliResultCache[cacheKey]) {
-    const { stdout } = await execAsync(`node dist/index.js --file ${filePath}`);
-    // eslint-disable-next-line functional/immutable-data
-    cliResultCache[cacheKey] = stdout;
+  try {
+    const { stdout, stderr } = await execAsync(`node dist/index.js ${args}`);
+    const result = { success: stderr === '', message: stdout };
+
+    cliResultCache.set(cacheKey, result);
+    return result;
+  } catch (error) {
+    if (isExecError(error)) {
+      const result = { success: false, message: error.stderr };
+      cliResultCache.set(cacheKey, result);
+      return result;
+    }
+    throw error;
   }
-  return cliResultCache[cacheKey];
-};
+}
 
-describe('Fixtures', () => {
-  const fixtures = fs.readdirSync(fixturesDir);
+describe('Integration Tests', () => {
+  // Filter for only our test files, excluding hidden files and system files
+  const fixtures = fs
+    .readdirSync(fixturesDir)
+    .filter(
+      (file) =>
+        !file.startsWith('.') &&
+        (SUPPORTED_FILE_TYPES.includes(path.extname(file) as SupportedFileTypes) ||
+          path.extname(file) === '.txt')
+    );
 
   test.each(fixtures)('CLI Output - %s', async (fixture) => {
     const ext = path.extname(fixture);
     const fixturePath = path.join(fixturesDir, fixture);
+    const isErrorCase = fixture.startsWith('invalid-');
 
     if (ext === '.txt') {
       const input = await readFileContent(fixturePath);
-      const output = await runCLIWithArgs(input);
-      expect(output).toMatchSnapshot();
+      const result = await runCLI(input);
+      expect(result.success).toBe(!isErrorCase);
+      expect(result).toMatchSnapshot();
     } else if (SUPPORTED_FILE_TYPES.includes(ext as SupportedFileTypes)) {
-      const output = await runCLIWithFile(fixturePath);
-      expect(output).toMatchSnapshot();
+      const result = await runCLI(`--file ${fixturePath}`);
+      expect(result.success).toBe(!isErrorCase);
+      expect(result).toMatchSnapshot();
 
+      // Compare file input with direct CLI args if both exist
       const txtPath = fixturePath.replace(ext, '.txt');
       if (fixtures.includes(path.basename(txtPath))) {
         const inputWithArgs = await readFileContent(txtPath);
-        const outputWithArgs = await runCLIWithArgs(inputWithArgs);
-        expect(output).toEqual(outputWithArgs);
+        const resultWithArgs = await runCLI(inputWithArgs);
+        expect(result).toEqual(resultWithArgs);
       }
     }
   });
