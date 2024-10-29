@@ -37,7 +37,7 @@ describe('fileParser', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.message).toBe('Invalid CLI argument "file": "missing.csv". Expected file not found.');
+      expect(result.message).toBe('File not found: "missing.csv"');
     }
   });
 

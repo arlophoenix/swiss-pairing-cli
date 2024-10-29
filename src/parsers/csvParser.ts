@@ -1,3 +1,4 @@
+import { ErrorTemplate, formatError, wrapErrorWithOrigin } from './parserUtils.js';
 import { Result, ValidatedCLIOptions } from '../types/types.js';
 
 import { parseCSV } from './csvParserUtils.js';
@@ -11,8 +12,19 @@ export function parseOptionsFromCSV(content: string): Result<Partial<ValidatedCL
 
   const records = parseResult.value;
   if (records.length === 0) {
-    return { success: false, message: 'No data found in CSV' };
+    return {
+      success: false,
+      message: formatError({
+        template: ErrorTemplate.NO_DATA,
+        values: { source: 'CSV' },
+      }),
+    };
   }
 
-  return validateCSVOptions(records);
+  const result = validateCSVOptions(records);
+  if (!result.success) {
+    return wrapErrorWithOrigin({ error: result, origin: 'CSV' });
+  }
+
+  return result;
 }

@@ -5,7 +5,7 @@ import {
   SUPPORTED_FILE_TYPE_JSON,
 } from '../constants.js';
 import { BooleanResult, Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
-import { createInvalidValueMessage, parseStringLiteral } from './parserUtils.js';
+import { ErrorTemplate, createInvalidValueMessage, formatError, parseStringLiteral } from './parserUtils.js';
 
 import { existsSync } from 'fs';
 import { extname } from 'path';
@@ -33,17 +33,19 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
         return parseOptionsFromJSON(fileContent);
     }
   } catch (error) {
-    const errorMessage = (error as Error).message;
     return {
       success: false,
-      message: `Error reading file: ${errorMessage}`,
+      message: formatError({
+        template: ErrorTemplate.FILE_READ_ERROR,
+        values: { error: (error as Error).message },
+      }),
     };
   }
 }
 
 function getFileType(filePath: string): Result<SupportedFileTypes> {
   const ext = extname(filePath).toLowerCase();
-  const result = parseStringLiteral<SupportedFileTypes>({
+  const result = parseStringLiteral({
     input: ext,
     options: SUPPORTED_FILE_TYPES,
   });
@@ -65,11 +67,9 @@ function fileExists(filePath: string): BooleanResult {
   if (!existsSync(filePath)) {
     return {
       success: false,
-      message: createInvalidValueMessage({
-        origin: 'CLI',
-        argName: ARG_FILE,
-        inputValue: filePath,
-        expectedValue: `file not found.`,
+      message: formatError({
+        template: ErrorTemplate.FILE_NOT_FOUND,
+        values: { path: filePath },
       }),
     };
   }

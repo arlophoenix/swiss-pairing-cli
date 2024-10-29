@@ -85,7 +85,7 @@ describe('csvParser', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.message).toBe('Invalid teams');
+      expect(result.message).toBe('Invalid CSV data: Invalid teams');
     }
   });
 });

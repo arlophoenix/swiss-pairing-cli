@@ -1,3 +1,5 @@
+import { ErrorTemplate, formatError } from '../utils/errorUtils.js';
+
 import { Result } from '../types/types.js';
 import papa from 'papaparse';
 
@@ -31,7 +33,10 @@ export function parseCSV(csv: string): Result<readonly UnvalidatedCSVRow[]> {
   if (errors.length > 0) {
     return {
       success: false,
-      message: `CSV parsing error: ${parseResult.errors[0].message}`,
+      message: formatError({
+        template: ErrorTemplate.PARSE_CSV_ERROR,
+        values: { error: parseResult.errors[0].message },
+      }),
     };
   }
 

@@ -63,7 +63,7 @@ describe('jsonParser', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.message).toBe('Invalid teams');
+      expect(result.message).toBe('Invalid JSON data: Invalid teams');
     }
   });
 });

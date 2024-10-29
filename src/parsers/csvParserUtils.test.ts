@@ -84,7 +84,7 @@ describe('csvParserUtils', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('CSV parsing error: Quoted field unterminated');
+        expect(result.message).toBe('Invalid CSV: Quoted field unterminated');
       }
       expect(mockPapaParse).toHaveBeenCalledWith(mockCSV, expect.any(Object));
     });
