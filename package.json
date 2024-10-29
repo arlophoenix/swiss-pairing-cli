@@ -41,11 +41,12 @@
     "eslint:fix": "eslint \"$npm_package_config_sourceGlob\" --fix",
     "format": "prettier --check --ignore-unknown **/*",
     "format:fix": "prettier --write --ignore-unknown **/*",
+    "readme:update-usage": "tsx scripts/update-readme-usage.ts",
+    "readme:update-examples": "tsx scripts/update-readme-examples.ts",
     "todo": "leasot \"$npm_package_config_sourceGlob\"",
     "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md",
     "update-nvmrc": "tsx scripts/update-nvmrc.ts",
-    "usage": "tsx src/index.js --help",
-    "usage:update-readme": "tsx scripts/update-readme.ts"
+    "usage": "tsx src/index.js --help"
   },
   "lint-staged": {
     "$npm_package_config_sourceGlob": "npm run eslint:fix",

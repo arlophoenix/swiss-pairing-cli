@@ -1,22 +1,13 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-import { createCLI } from '../src/cli/cli.js';
 import { examples } from '../src/cli/cliExamples.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-async function updateReadme() {
+async function updateReadmeExamples() {
   let readme = readFileSync('README.md', 'utf8');
-
-  // Update usage
-  const usage = createCLI().helpInformation();
-  readme = readme.replace(
-    /<!-- CLI_USAGE_START -->[\s\S]*<!-- CLI_USAGE_END -->/,
-    `<!-- CLI_USAGE_START -->\n\n\`\`\`bash\n${usage}\`\`\`\n\n<!-- CLI_USAGE_END -->`
-  );
-
   // Update examples with output
   const outputs = await Promise.all(
     // eslint-disable-next-line max-params
@@ -35,8 +26,8 @@ async function updateReadme() {
   );
 
   writeFileSync('README.md', readme);
-  console.log('README.md updated with latest CLI usage and examples');
+  console.log('Updated README.md with latest CLI examples');
 }
 
 // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
-updateReadme().catch(console.error);
+updateReadmeExamples().catch(console.error);

@@ -3,9 +3,12 @@
 
 npm run lint-staged
 
-# Check if cli.ts (the file that defines the interface) has changed
-if git diff --cached --name-only | grep -qE "src/cli\.ts"; then
-  npm run usage:update-readme
+npm run readme:update-usage
+git add README.md
+
+# Check if cliExamples.ts has changed
+if git diff --cached --name-only | grep -qE "src/cliExamples\.ts"; then
+  npm run readme:update-examples
   git add README.md
 fi
 
