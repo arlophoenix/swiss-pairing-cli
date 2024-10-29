@@ -61,6 +61,12 @@ export function validateRoundMatchesInput({
 
   for (const [team, opponents] of playedOpponents.entries()) {
     for (const opponent of opponents) {
+      if (team === opponent) {
+        return {
+          success: false,
+          message: `${team} cannot play against itself`,
+        };
+      }
       if (!playedOpponents.get(opponent)?.has(team)) {
         return {
           success: false,
@@ -125,10 +131,17 @@ export function validateRoundMatchesOutput({
     const teamsInRound = new Set<string>();
 
     for (const [team1, team2] of matches) {
+      if (team1 === team2) {
+        return {
+          success: false,
+          message: `${team1} cannot play against itself`,
+        };
+      }
+
       if (currentPlayedMatches.get(team1)?.has(team2)) {
         return {
           success: false,
-          message: `${team1} and ${team2} have already played each other`,
+          message: `Duplicate match found in history: ${team1} vs ${team2}`,
         };
       }
 

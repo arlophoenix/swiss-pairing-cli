@@ -135,6 +135,24 @@ describe('swissValidator', () => {
       expect(result.success).toBe(true);
     });
 
+    it('should return invalid if match history contains self-play', () => {
+      const result = validateRoundMatchesInput({
+        teams: ['Team1', 'Team2', 'Team3', 'Team4'],
+        numRounds: 2,
+        playedOpponents: new Map([
+          ['Team1', new Set(['Team1'])], // Self-play
+          ['Team2', new Set(['Team3'])],
+          ['Team3', new Set(['Team2'])],
+        ]),
+        squadMap: new Map(),
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Team1 cannot play against itself');
+      }
+    });
+
     it('should return invalid if playedMatches is not symmetrical', () => {
       const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
@@ -275,7 +293,7 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('p1 and p2 have already played each other');
+        expect(result.message).toBe('Duplicate match found in history: p1 vs p2');
       }
     });
 
@@ -327,6 +345,27 @@ describe('swissValidator', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.message).toBe('p1 and p2 cannot play each other - they are in the same squad');
+      }
+    });
+
+    it('should return invalid if a team plays against itself', () => {
+      const roundMatches: RoundMatches = {
+        'Round 1': [
+          ['p1', 'p1'], // Self-play
+          ['p3', 'p4'],
+        ],
+      };
+      const result = validateRoundMatchesOutput({
+        roundMatches,
+        teams,
+        numRounds: 1,
+        playedOpponents,
+        squadMap,
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('p1 cannot play against itself');
       }
     });
   });

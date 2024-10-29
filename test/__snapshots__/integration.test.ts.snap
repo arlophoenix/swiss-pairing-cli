@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Integration Tests CLI Output - duplicate-match-in-history.txt 1`] = `
+{
+  "message": "**Round 1**
+
+1. Team1 vs Team3
+2. Team2 vs Team4
+",
+  "success": true,
+}
+`;
+
 exports[`Integration Tests CLI Output - five-teams-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
 {
   "message": "# Matches
@@ -453,11 +464,11 @@ exports[`Integration Tests CLI Output - invalid-num-rounds.txt 1`] = `
 `;
 
 exports[`Integration Tests CLI Output - invalid-played-self.txt 1`] = `
-"**Round 1**
-
-1. Team1 vs Team2
-2. Team3 vs Team4
-"
+{
+  "message": "Invalid input: Team1 cannot play against itself
+",
+  "success": false,
+}
 `;
 
 exports[`Integration Tests CLI Output - invalid-single-team.txt 1`] = `
