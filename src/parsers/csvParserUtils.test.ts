@@ -69,6 +69,32 @@ describe('csvParserUtils', () => {
       const mockParseResult = createMockPapaParseResult({
         errors: [
           {
+            type: 'Quotes',
+            code: 'MissingQuotes',
+            message: 'Quoted field unterminated',
+            row: 0,
+          },
+        ],
+      });
+
+      // eslint-disable-next-line max-params, @typescript-eslint/no-explicit-any
+      mockPapaParse.mockImplementation((_input: any, _config?: any) => mockParseResult);
+
+      const result = parseCSV(mockCSV);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('CSV parsing error: Quoted field unterminated');
+      }
+      expect(mockPapaParse).toHaveBeenCalledWith(mockCSV, expect.any(Object));
+    });
+
+    it('should ignore UndetectableDelimiter warnings', () => {
+      const mockCSV = 'Teams\nTeam1\nTeam2';
+      const mockParseResult = createMockPapaParseResult({
+        data: [{ teams: 'Team1' }, { teams: 'Team2' }],
+        errors: [
+          {
             type: 'Delimiter',
             code: 'UndetectableDelimiter',
             message: "Unable to auto-detect delimiting character; defaulted to ','",
@@ -81,9 +107,9 @@ describe('csvParserUtils', () => {
 
       const result = parseCSV(mockCSV);
 
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.message).toContain('CSV parsing error');
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toEqual([{ teams: 'Team1' }, { teams: 'Team2' }]);
       }
       expect(mockPapaParse).toHaveBeenCalledWith(mockCSV, expect.any(Object));
     });

@@ -25,7 +25,10 @@ export function parseCSV(csv: string): Result<readonly UnvalidatedCSVRow[]> {
     transformHeader: (header) => header.trim().toLowerCase(),
   });
 
-  if (parseResult.errors.length > 0) {
+  // Filter out UndetectableDelimiter warnings as PapaParse handles these cases correctly
+  const errors = parseResult.errors.filter((error) => error.code !== 'UndetectableDelimiter');
+
+  if (errors.length > 0) {
     return {
       success: false,
       message: `CSV parsing error: ${parseResult.errors[0].message}`,

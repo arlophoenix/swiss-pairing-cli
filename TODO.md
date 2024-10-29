@@ -3,7 +3,6 @@
 ## Functionality
 
 - use the term match history instead of played matches
-- test that it works with a single column CSV file ie just teams
 
 ## Code Quality
 

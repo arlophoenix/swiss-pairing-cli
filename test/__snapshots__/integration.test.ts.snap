@@ -17,6 +17,30 @@ exports[`Fixtures CLI Output - five-teams-three-rounds-start-two-bottom-up-forma
 "
 `;
 
+exports[`Fixtures CLI Output - four-teams.csv 1`] = `
+"**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+"
+`;
+
+exports[`Fixtures CLI Output - four-teams.json 1`] = `
+"**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+"
+`;
+
+exports[`Fixtures CLI Output - four-teams.txt 1`] = `
+"**Round 1**
+
+1. Team1 vs Team2
+2. Team3 vs Team4
+"
+`;
+
 exports[`Fixtures CLI Output - four-teams-bottom-up.csv 1`] = `
 "**Round 1**
 
