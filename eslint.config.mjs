@@ -22,6 +22,8 @@ const jsConfig = {
     'arrow-body-style': ['error', 'as-needed'],
     // Enforce single object argument
     'max-params': ['error', 1],
+    // style
+    curly: ['error', 'all'],
   },
 };
 

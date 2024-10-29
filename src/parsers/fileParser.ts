@@ -15,11 +15,15 @@ import { readFile } from 'fs/promises';
 
 export async function parseFile(filePath: string): Promise<Result<Partial<ValidatedCLIOptions>>> {
   const fileTypeResult = getFileType(filePath);
-  if (!fileTypeResult.success) return fileTypeResult;
+  if (!fileTypeResult.success) {
+    return fileTypeResult;
+  }
 
   try {
     const fileExistsResult = fileExists(filePath);
-    if (!fileExistsResult.success) return fileExistsResult;
+    if (!fileExistsResult.success) {
+      return fileExistsResult;
+    }
 
     const fileContent = await readFile(filePath, 'utf-8');
     switch (fileTypeResult.value) {

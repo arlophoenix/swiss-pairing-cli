@@ -60,7 +60,9 @@ export function validateAllOptions({
   const firstError = Object.values(results).find(
     (result): result is { readonly success: false; readonly error: ValidationError } => !result.success
   );
-  if (firstError) return firstError;
+  if (firstError) {
+    return firstError;
+  }
 
   const validatedOptions: Partial<ValidatedCLIOptions> = Object.fromEntries(
     Object.entries(results)
@@ -90,7 +92,9 @@ export function validateTeams({
   readonly origin: InputOrigin;
 }): Result<readonly Team[] | undefined> {
   // return success because the teams may be provided by either CLI or file input and be blank in the other
-  if (teams === undefined) return { success: true, value: undefined };
+  if (teams === undefined) {
+    return { success: true, value: undefined };
+  }
 
   const createError = ({ input, expected }: { readonly input?: string; readonly expected: string }) =>
     createInvalidInputError({
@@ -134,7 +138,9 @@ function validatePositiveInteger({
   readonly argName: CLIArg;
   readonly origin: InputOrigin;
 }): Result<number | undefined> {
-  if (value === undefined) return { success: true, value: undefined };
+  if (value === undefined) {
+    return { success: true, value: undefined };
+  }
 
   const createError = () =>
     createInvalidInputError({
@@ -181,7 +187,9 @@ export function validateOrder({
   readonly order: string | undefined;
   readonly origin: InputOrigin;
 }): Result<(typeof CLI_OPTION_ORDER)[number] | undefined> {
-  if (order === undefined) return { success: true, value: undefined };
+  if (order === undefined) {
+    return { success: true, value: undefined };
+  }
   return parseStringLiteral({
     input: order,
     options: CLI_OPTION_ORDER,
@@ -199,7 +207,9 @@ export function validateFormat({
   readonly format: string | undefined;
   readonly origin: InputOrigin;
 }): Result<(typeof CLI_OPTION_FORMAT)[number] | undefined> {
-  if (format === undefined) return { success: true, value: undefined };
+  if (format === undefined) {
+    return { success: true, value: undefined };
+  }
   return parseStringLiteral({
     input: format,
     options: CLI_OPTION_FORMAT,
@@ -217,7 +227,9 @@ export function validateFile({
   readonly file: string | undefined;
   readonly origin: InputOrigin;
 }): Result<(typeof SUPPORTED_FILE_TYPES)[number] | undefined> {
-  if (file === undefined) return { success: true, value: undefined };
+  if (file === undefined) {
+    return { success: true, value: undefined };
+  }
   return parseStringLiteral({
     input: file,
     options: SUPPORTED_FILE_TYPES,
@@ -235,7 +247,9 @@ export function validateMatches({
   readonly matches: readonly (readonly string[])[] | undefined;
   readonly origin: InputOrigin;
 }): Result<readonly ReadonlyMatch[] | undefined> {
-  if (matches === undefined) return { success: true, value: undefined };
+  if (matches === undefined) {
+    return { success: true, value: undefined };
+  }
 
   const createError = (match: readonly string[]) =>
     createInvalidInputError({

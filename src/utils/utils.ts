@@ -116,7 +116,9 @@ const TEAM_STRING_REGEX = /^\s*([^\[\]]+)\s*(\[\s*([^\[\]]+)\s*\])?\s*$/;
  */
 export function isValidTeamString(str: string): boolean {
   const match = TEAM_STRING_REGEX.exec(str.trim());
-  if (!match) return false;
+  if (!match) {
+    return false;
+  }
 
   const [_0, _name, _2, squad] = match;
   return !squad || squad.trim() !== '';

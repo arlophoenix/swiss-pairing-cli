@@ -9,7 +9,9 @@ export * from '../utils/utils.js';
 export async function validateFileOptions(
   filePath: string | undefined
 ): Promise<Result<Partial<ValidatedCLIOptions>>> {
-  if (filePath === undefined) return { success: true, value: {} };
+  if (filePath === undefined) {
+    return { success: true, value: {} };
+  }
   return await parseFile(filePath);
 }
 

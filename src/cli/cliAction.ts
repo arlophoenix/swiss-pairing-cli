@@ -13,9 +13,13 @@ import { validateCLIOptions } from '../validators/cliValidator.js';
 
 export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promise<Result<string>> {
   const validateCLIOptionsResult = validateCLIOptions(cliOptions);
-  if (!validateCLIOptionsResult.success) return validateCLIOptionsResult;
+  if (!validateCLIOptionsResult.success) {
+    return validateCLIOptionsResult;
+  }
   const validateFileOptionsResult = await validateFileOptions(cliOptions.file);
-  if (!validateFileOptionsResult.success) return validateFileOptionsResult;
+  if (!validateFileOptionsResult.success) {
+    return validateFileOptionsResult;
+  }
 
   const { teams, numRounds, startRound, order, matches, format } = mergeOptions({
     cliOptions: validateCLIOptionsResult.value,
