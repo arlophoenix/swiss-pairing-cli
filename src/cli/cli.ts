@@ -46,15 +46,15 @@ export function createCLI(): Command {
       `Name the generated rounds starting with this number\n(default: ${String(CLI_OPTION_START_ROUND_DEFAULT)})`
     )
     .option(
-      `-${ARG_ORDER_SHORT}, --${ARG_ORDER} <${CLI_OPTION_ORDER.join('|')}>`,
-      `The sequence in which teams should be paired\n(default: ${CLI_OPTION_ORDER_DEFAULT})`
+      `-${ARG_ORDER_SHORT}, --${ARG_ORDER} <order-enum>`,
+      `The sequence in which teams should be paired; one of: ${CLI_OPTION_ORDER.join('|')}\n(default: ${CLI_OPTION_ORDER_DEFAULT})`
     )
     .option(
-      `--${ARG_FORMAT} <${CLI_OPTION_FORMAT.join('|')}>`,
-      `Output format\n(default: ${CLI_OPTION_FORMAT_DEFAULT})`
+      `--${ARG_FORMAT} <format-enum>`,
+      `Output format; one of: ${CLI_OPTION_FORMAT.join('|')}\n(default: ${CLI_OPTION_FORMAT_DEFAULT})`
     )
     .option(
-      `--${ARG_FILE} <path${SUPPORTED_FILE_TYPES.join('|')}>`,
+      `--${ARG_FILE} <path{${SUPPORTED_FILE_TYPES.join('|')}}>`,
       `Path to input file. Options provided via cli override file contents`
     )
     .option(
