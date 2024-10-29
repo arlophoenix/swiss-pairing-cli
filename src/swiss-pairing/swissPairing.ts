@@ -6,7 +6,6 @@ import {
   Result,
 } from '../types/types.js';
 import { createBidirectionalMap, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
-import { validateRoundMatchesInput, validateRoundMatchesOutput } from './swissValidator.js';
 
 /**
  * Generates multiple rounds of matches for a Swiss-style tournament.
@@ -31,16 +30,9 @@ export function generateRoundMatches({
   readonly playedOpponents: ReadonlyPlayedOpponents;
   readonly squadMap?: ReadonlyMap<string, string>;
 }): Result<ReadonlyRoundMatches> {
-  // Validate input parameters
-  const inputValidation = validateRoundMatchesInput({ teams, numRounds, playedOpponents, squadMap });
-  if (!inputValidation.success) {
-    return inputValidation;
-  }
-
   const roundMatches: ReadonlyRoundMatches = {};
   let currentPlayedOpponents = mutableCloneBidirectionalMap(playedOpponents);
 
-  // Generate matches for each round
   for (let roundNumber = 0; roundNumber < numRounds; roundNumber++) {
     const roundLabel = `Round ${String(startRound + roundNumber)}`;
     const newMatches = generateSingleRoundMatches({
@@ -49,34 +41,16 @@ export function generateRoundMatches({
       squadMap,
     });
 
-    // If unable to generate valid matches for a round, return an error
     if (!newMatches) {
       return {
         success: false,
-        error: {
-          type: 'NoValidSolution',
-          message: `unable to generate valid matches for ${roundLabel}.`,
-        },
+        message: `No valid pairings possible for ${roundLabel}`,
       };
     }
+
     // eslint-disable-next-line functional/immutable-data
     roundMatches[roundLabel] = newMatches;
-
-    // Update played opponents for the next round
     currentPlayedOpponents = updatePlayedOpponents({ currentPlayedOpponents, newMatches });
-  }
-
-  // Validate the generated matches
-  const resultValidation = validateRoundMatchesOutput({
-    teams,
-    roundMatches,
-    numRounds,
-    playedOpponents,
-    squadMap,
-  });
-
-  if (!resultValidation.success) {
-    return resultValidation;
   }
 
   return { success: true, value: roundMatches };

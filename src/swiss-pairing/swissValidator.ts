@@ -1,4 +1,3 @@
-import { ARG_MATCHES, ARG_NUM_ROUNDS, ARG_TEAMS } from '../constants.js';
 import { BooleanResult, ReadonlyPlayedOpponents, ReadonlyRoundMatches } from '../types/types.js';
 
 import { mutableCloneBidirectionalMap } from './swissPairingUtils.js';
@@ -23,50 +22,29 @@ export function validateRoundMatchesInput({
   readonly playedOpponents: ReadonlyPlayedOpponents;
   readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
-  // Check if there are at least two teams
   if (teams.length < 2) {
-    return {
-      success: false,
-      error: { type: 'InvalidInput', message: `there must be at least two ${ARG_TEAMS}.` },
-    };
+    return { success: false, message: 'Must have at least 2 teams' };
   }
 
-  // Check there is an even number of teams
   if (teams.length % 2 !== 0) {
-    return {
-      success: false,
-      error: { type: 'InvalidInput', message: `there must be an even number of ${ARG_TEAMS}.` },
-    };
+    return { success: false, message: 'Must have an even number of teams' };
   }
 
-  // Check for duplicate teams
   if (new Set(teams).size !== teams.length) {
-    return {
-      success: false,
-      error: { type: 'InvalidInput', message: `duplicate ${ARG_TEAMS} are not allowed.` },
-    };
+    return { success: false, message: 'All team names must be unique' };
   }
 
-  // Check if rounds is at least 1
   if (numRounds < 1) {
-    return {
-      success: false,
-      error: { type: 'InvalidInput', message: `${ARG_NUM_ROUNDS} to generate must be at least 1.` },
-    };
+    return { success: false, message: 'Must generate at least one round' };
   }
 
-  // Check if rounds is not greater than teams minus 1
   if (numRounds >= teams.length) {
     return {
       success: false,
-      error: {
-        type: 'InvalidInput',
-        message: `${ARG_NUM_ROUNDS} to generate must be fewer than the number of ${ARG_TEAMS}.`,
-      },
+      message: `Number of rounds (${String(numRounds)}) must be less than number of teams (${String(teams.length)})`,
     };
   }
 
-  // Check if all teams in playedMatches are valid
   const allTeamsInPlayedMatches = new Set<string>();
   for (const [team, opponents] of playedOpponents.entries()) {
     allTeamsInPlayedMatches.add(team);
@@ -77,36 +55,27 @@ export function validateRoundMatchesInput({
 
   for (const team of allTeamsInPlayedMatches.keys()) {
     if (!teams.includes(team)) {
-      return {
-        success: false,
-        error: { type: 'InvalidInput', message: `${ARG_MATCHES} contains invalid team name: '${team}'.` },
-      };
+      return { success: false, message: `Unknown team in match history: "${team}"` };
     }
   }
 
-  // Check if playedMatches is symmetrical
   for (const [team, opponents] of playedOpponents.entries()) {
     for (const opponent of opponents) {
       if (!playedOpponents.get(opponent)?.has(team)) {
         return {
           success: false,
-          error: { type: 'InvalidInput', message: `${ARG_MATCHES} are not symmetrical.` },
+          message: `Match history must be symmetrical - found ${team} vs ${opponent} but not ${opponent} vs ${team}`,
         };
       }
     }
   }
 
-  // Check if all teams in squadMap are valid
   for (const team of squadMap.keys()) {
     if (!teams.includes(team)) {
-      return {
-        success: false,
-        error: { type: 'InvalidInput', message: `squadMap contains invalid team name: '${team}'.` },
-      };
+      return { success: false, message: `Unknown team in squad assignments: "${team}"` };
     }
   }
 
-  // If all checks pass, return true
   return { success: true };
 }
 
@@ -134,44 +103,32 @@ export function validateRoundMatchesOutput({
   readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   const numGamesPerRound = teams.length / 2;
-
-  // 1. There is one key per round in the record
   const resultNumRounds = Object.keys(roundMatches).length;
+
   if (resultNumRounds !== numRounds) {
     return {
       success: false,
-      error: {
-        type: 'InvalidOutput',
-        message: `invalid number of rounds in the result. Expected ${String(numRounds)}, got ${String(resultNumRounds)}.`,
-      },
+      message: `Generated ${String(resultNumRounds)} rounds but expected ${String(numRounds)}`,
     };
   }
 
   const currentPlayedMatches = mutableCloneBidirectionalMap(playedOpponents);
 
   for (const [roundLabel, matches] of Object.entries(roundMatches)) {
-    // 2. There are num teams / 2 values per round
     if (matches.length !== numGamesPerRound) {
       return {
         success: false,
-        error: {
-          type: 'InvalidOutput',
-          message: `invalid number of matches in ${roundLabel}. Expected ${String(numGamesPerRound)}, got ${String(matches.length)}.`,
-        },
+        message: `${roundLabel} has ${String(matches.length)} matches but expected ${String(numGamesPerRound)}`,
       };
     }
 
     const teamsInRound = new Set<string>();
 
     for (const [team1, team2] of matches) {
-      // 3. No round contains a match of teams who are already listed in playedMatches
       if (currentPlayedMatches.get(team1)?.has(team2)) {
         return {
           success: false,
-          error: {
-            type: 'InvalidOutput',
-            message: `invalid match in ${roundLabel}: ${team1} and ${team2} have already played.`,
-          },
+          message: `${team1} and ${team2} have already played each other`,
         };
       }
 
@@ -184,27 +141,19 @@ export function validateRoundMatchesOutput({
       currentPlayedMatches.get(team1)?.add(team2);
       currentPlayedMatches.get(team2)?.add(team1);
 
-      // 4. No team appears more than once in the values for a round
       if (teamsInRound.has(team1) || teamsInRound.has(team2)) {
         return {
           success: false,
-          error: {
-            type: 'InvalidOutput',
-            message: `invalid match in ${roundLabel}: ${team1} or ${team2} appears more than once.`,
-          },
+          message: `${team1} or ${team2} is scheduled multiple times in ${roundLabel}`,
         };
       }
       teamsInRound.add(team1);
       teamsInRound.add(team2);
 
-      // 5. No teams from the same squad are paired
       if (squadMap.get(team1) === squadMap.get(team2) && squadMap.get(team1) !== undefined) {
         return {
           success: false,
-          error: {
-            type: 'InvalidOutput',
-            message: `invalid match in ${roundLabel}: ${team1} and ${team2} are from the same squad.`,
-          },
+          message: `${team1} and ${team2} cannot play each other - they are in the same squad`,
         };
       }
     }

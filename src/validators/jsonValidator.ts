@@ -2,10 +2,6 @@ import { ARG_NUM_ROUNDS, ARG_START_ROUND } from '../constants.js';
 import { Result, Team, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
 import { teamToString, validateAllOptions } from './validatorUtils.js';
 
-/**
- * Represents unvalidated JSON data containing Swiss pairing configuration.
- * Maps closely to CLI arguments but allows team objects instead of just strings.
- */
 interface UnvalidatedJSONOptions {
   readonly teams?: readonly (string | Team)[];
   readonly 'num-rounds'?: number;
@@ -18,12 +14,12 @@ interface UnvalidatedJSONOptions {
 export function validateJSONOptions(
   jsonOptions: UnvalidatedJSONOptions
 ): Result<Partial<ValidatedCLIOptions>> {
+  // Convert team format to consistent string representation
   const teams = jsonOptions.teams?.map((team) => {
     if (typeof team === 'string') {
       return team;
-    } else {
-      return teamToString(team);
     }
+    return teamToString(team);
   });
 
   const input: UnvalidatedCLIOptions = {
@@ -35,5 +31,13 @@ export function validateJSONOptions(
     matches: jsonOptions.matches,
   };
 
-  return validateAllOptions({ input, origin: 'JSON' });
+  const result = validateAllOptions({ input, origin: 'JSON' });
+  if (!result.success) {
+    return {
+      success: false,
+      message: `Invalid JSON data: ${result.message}`,
+    };
+  }
+
+  return result;
 }

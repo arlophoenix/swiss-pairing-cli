@@ -11,7 +11,7 @@ export function parseOptionsFromCSV(content: string): Result<Partial<ValidatedCL
 
   const records = parseResult.value;
   if (records.length === 0) {
-    return { success: false, error: { type: 'InvalidInput', message: 'No data found in CSV' } };
+    return { success: false, message: 'No data found in CSV' };
   }
 
   return validateCSVOptions(records);

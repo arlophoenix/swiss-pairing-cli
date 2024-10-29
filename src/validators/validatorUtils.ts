@@ -18,20 +18,31 @@ import {
   Team,
   UnvalidatedCLIOptions,
   ValidatedCLIOptions,
-  ValidationError,
 } from '../types/types.js';
 import {
-  createInvalidInputError,
+  createInvalidValueMessage,
   isValidTeamString,
   parseStringLiteral,
   stringToTeam,
 } from '../utils/utils.js';
+
+import { extname } from 'path';
+
 export * from '../utils/utils.js';
 
 type Validator<K extends keyof ValidatedCLIOptions> = (
   input: UnvalidatedCLIOptions
 ) => Result<ValidatedCLIOptions[K] | undefined>;
 
+/**
+ * Validates all CLI options using individual validators.
+ * Processes and combines results for all options.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {UnvalidatedCLIOptions} params.input - The raw CLI input to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<Partial<ValidatedCLIOptions>>} Success with validated options or failure with message
+ */
 export function validateAllOptions({
   input,
   origin,
@@ -58,7 +69,7 @@ export function validateAllOptions({
   ) as ValidatorResult;
 
   const firstError = Object.values(results).find(
-    (result): result is { readonly success: false; readonly error: ValidationError } => !result.success
+    (result): result is { readonly success: false; readonly message: string } => !result.success
   );
   if (firstError) {
     return firstError;
@@ -84,6 +95,14 @@ export function validateAllOptions({
   return { success: true, value: validatedOptions };
 }
 
+/**
+ * Validates a list of team names and their optional squad assignments.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {readonly string[] | undefined} params.teams - Array of team names to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<readonly Team[] | undefined>} Success with validated teams or failure with message
+ */
 export function validateTeams({
   teams,
   origin,
@@ -96,25 +115,27 @@ export function validateTeams({
     return { success: true, value: undefined };
   }
 
-  const createError = ({ input, expected }: { readonly input?: string; readonly expected: string }) =>
-    createInvalidInputError({
-      origin,
-      argName: ARG_TEAMS,
-      inputValue: input ?? teams.join(','),
-      expectedValue: expected,
-    });
-
   if (teams.length < 2) {
-    return { success: false, error: createError({ expected: 'at least two teams' }) };
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin,
+        argName: ARG_TEAMS,
+        inputValue: teams.join(','),
+        expectedValue: 'at least two teams',
+      }),
+    };
   }
 
   for (const team of teams) {
     if (!isValidTeamString(team)) {
       return {
         success: false,
-        error: createError({
-          input: team,
-          expected: 'valid team name, optionally followed by [squad] e.g."Alice [Home]"',
+        message: createInvalidValueMessage({
+          origin,
+          argName: ARG_TEAMS,
+          inputValue: team,
+          expectedValue: 'valid team name, optionally followed by [squad] e.g."Alice [Home]"',
         }),
       };
     }
@@ -123,12 +144,30 @@ export function validateTeams({
   const teamObjects: readonly Team[] = teams.map(stringToTeam);
   const uniqueTeamNames = new Set(teamObjects.map((team) => team.name));
   if (uniqueTeamNames.size !== teamObjects.length) {
-    return { success: false, error: createError({ expected: 'unique team names' }) };
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin,
+        argName: ARG_TEAMS,
+        inputValue: teams.join(','),
+        expectedValue: 'unique team names',
+      }),
+    };
   }
 
   return { success: true, value: teamObjects };
 }
 
+/**
+ * Common validation for number parameters (numRounds and startRound).
+ * Ensures values are positive integers.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {string | number | undefined} params.value - The number value to validate
+ * @param {CLIArg} params.argName - The name of the argument for error messaging
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<number | undefined>} Success with validated number or failure with message
+ */
 function validatePositiveInteger({
   value,
   argName,
@@ -142,24 +181,30 @@ function validatePositiveInteger({
     return { success: true, value: undefined };
   }
 
-  const createError = () =>
-    createInvalidInputError({
-      origin,
-      argName,
-      inputValue: String(value),
-      expectedValue: 'a positive integer',
-    });
-
   const parsedValue = typeof value === 'string' ? parseInt(value, 10) : value;
-  if (isNaN(parsedValue)) {
-    return { success: false, error: createError() };
+  if (isNaN(parsedValue) || !Number.isInteger(parsedValue) || parsedValue < 1) {
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin,
+        argName,
+        inputValue: String(value),
+        expectedValue: 'a positive integer',
+      }),
+    };
   }
-  if (!Number.isInteger(parsedValue) || parsedValue < 1) {
-    return { success: false, error: createError() };
-  }
+
   return { success: true, value: parsedValue };
 }
 
+/**
+ * Validates the number of rounds parameter.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {string | number | undefined} params.numRounds - The number of rounds to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<number | undefined>} Success with validated number or failure with message
+ */
 export function validateNumRounds({
   numRounds,
   origin,
@@ -170,6 +215,14 @@ export function validateNumRounds({
   return validatePositiveInteger({ value: numRounds, argName: ARG_NUM_ROUNDS, origin });
 }
 
+/**
+ * Validates the starting round number parameter.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {string | number | undefined} params.startRound - The starting round number to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<number | undefined>} Success with validated number or failure with message
+ */
 export function validateStartRound({
   startRound,
   origin,
@@ -180,6 +233,14 @@ export function validateStartRound({
   return validatePositiveInteger({ value: startRound, argName: ARG_START_ROUND, origin });
 }
 
+/**
+ * Validates the pairing order parameter against allowed values.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {string | undefined} params.order - The order value to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<CLIOptionOrder | undefined>} Success with validated order or failure with message
+ */
 export function validateOrder({
   order,
   origin,
@@ -190,16 +251,34 @@ export function validateOrder({
   if (order === undefined) {
     return { success: true, value: undefined };
   }
-  return parseStringLiteral({
+  const result = parseStringLiteral({
     input: order,
     options: CLI_OPTION_ORDER,
-    errorInfo: {
-      origin,
-      argName: ARG_ORDER,
-    },
   });
+
+  if (!result.success) {
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin,
+        argName: ARG_ORDER,
+        inputValue: order,
+        expectedValue: CLI_OPTION_ORDER,
+      }),
+    };
+  }
+
+  return result;
 }
 
+/**
+ * Validates the output format parameter against allowed values.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {string | undefined} params.format - The format value to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<CLIOptionFormat | undefined>} Success with validated format or failure with message
+ */
 export function validateFormat({
   format,
   origin,
@@ -210,16 +289,34 @@ export function validateFormat({
   if (format === undefined) {
     return { success: true, value: undefined };
   }
-  return parseStringLiteral({
+  const result = parseStringLiteral({
     input: format,
     options: CLI_OPTION_FORMAT,
-    errorInfo: {
-      origin,
-      argName: ARG_FORMAT,
-    },
   });
+
+  if (!result.success) {
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin,
+        argName: ARG_FORMAT,
+        inputValue: format,
+        expectedValue: CLI_OPTION_FORMAT,
+      }),
+    };
+  }
+
+  return result;
 }
 
+/**
+ * Validates the input file type against supported file types.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {string | undefined} params.file - The file path to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<(typeof SUPPORTED_FILE_TYPES)[number] | undefined>} Success with validated file type or failure with message
+ */
 export function validateFile({
   file,
   origin,
@@ -230,16 +327,36 @@ export function validateFile({
   if (file === undefined) {
     return { success: true, value: undefined };
   }
-  return parseStringLiteral({
-    input: file,
+  const ext = extname(file).toLowerCase();
+  const result = parseStringLiteral({
+    input: ext,
     options: SUPPORTED_FILE_TYPES,
-    errorInfo: {
-      origin,
-      argName: ARG_FILE,
-    },
   });
+
+  if (!result.success) {
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin,
+        argName: ARG_FILE,
+        inputValue: file,
+        expectedValue: `extension to be one of ${SUPPORTED_FILE_TYPES.join(', ')}.`,
+      }),
+    };
+  }
+
+  return result;
 }
 
+/**
+ * Validates an array of played matches.
+ * Ensures each match consists of exactly two team names.
+ *
+ * @param {Object} params - The parameters for validation
+ * @param {readonly (readonly string[])[] | undefined} params.matches - Array of matches to validate
+ * @param {InputOrigin} params.origin - The source of the input for error messaging
+ * @returns {Result<readonly ReadonlyMatch[] | undefined>} Success with validated matches or failure with message
+ */
 export function validateMatches({
   matches,
   origin,
@@ -251,14 +368,6 @@ export function validateMatches({
     return { success: true, value: undefined };
   }
 
-  const createError = (match: readonly string[]) =>
-    createInvalidInputError({
-      origin,
-      argName: ARG_MATCHES,
-      inputValue: JSON.stringify(match),
-      expectedValue: 'an array of two team names',
-    });
-
   for (const match of matches) {
     if (
       !Array.isArray(match) ||
@@ -266,7 +375,15 @@ export function validateMatches({
       typeof match[0] !== 'string' ||
       typeof match[1] !== 'string'
     ) {
-      return { success: false, error: createError(match) };
+      return {
+        success: false,
+        message: createInvalidValueMessage({
+          origin,
+          argName: ARG_MATCHES,
+          inputValue: JSON.stringify(match),
+          expectedValue: 'an array of two team names',
+        }),
+      };
     }
   }
   return { success: true, value: matches as readonly ReadonlyMatch[] };

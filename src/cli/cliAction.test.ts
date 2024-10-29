@@ -1,55 +1,37 @@
 import * as cliUtils from './cliUtils.js';
-import * as cliValidator from '../validators/cliValidator.js';
 import * as outputFormatter from './outputFormatter.js';
 import * as swissPairing from '../swiss-pairing/swissPairing.js';
+import * as swissValidator from '../swiss-pairing/swissValidator.js';
+import * as utils from '../utils/utils.js';
+import * as validator from '../validators/cliValidator.js';
 
-import {
-  ReadonlyPlayedOpponents,
-  ReadonlyRoundMatches,
-  Result,
-  UnvalidatedCLIOptions,
-  ValidatedCLIOptions,
-} from '../types/types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import type { SpyInstance } from 'jest-mock';
+import { ReadonlyPlayedOpponents } from '../types/types.js';
 import { handleCLIAction } from './cliAction.js';
 
-jest.mock('../validators/cliValidator.js');
-jest.mock('./cliUtils.js');
-jest.mock('../swiss-pairing/swissPairing.js');
-jest.mock('./outputFormatter.js');
-
 describe('handleCLIAction', () => {
-  let mockValidateCLIOptions: SpyInstance<typeof cliValidator.validateCLIOptions>;
-  let mockValidateFileOptions: SpyInstance<typeof cliUtils.validateFileOptions>;
-  let mockMergeOptions: SpyInstance<typeof cliUtils.mergeOptions>;
-  let mockPrepareTeams: SpyInstance<typeof cliUtils.prepareTeams>;
-  let mockCreateBidirectionalMap: jest.MockedFunction<typeof cliUtils.createBidirectionalMap>;
-  let mockCreateSquadMap: SpyInstance<typeof cliUtils.createSquadMap>;
-  let mockGenerateRoundMatches: SpyInstance<typeof swissPairing.generateRoundMatches>;
-  let mockFormatOutput: SpyInstance<typeof outputFormatter.formatOutput>;
-
+  // Setup mocks
   beforeEach(() => {
-    mockValidateCLIOptions = jest.spyOn(cliValidator, 'validateCLIOptions');
-    mockValidateFileOptions = jest.spyOn(cliUtils, 'validateFileOptions');
-    mockMergeOptions = jest.spyOn(cliUtils, 'mergeOptions');
-    mockPrepareTeams = jest.spyOn(cliUtils, 'prepareTeams');
-    mockCreateBidirectionalMap = cliUtils.createBidirectionalMap as jest.MockedFunction<
-      typeof cliUtils.createBidirectionalMap
-    >;
-    mockCreateSquadMap = jest.spyOn(cliUtils, 'createSquadMap');
-    mockGenerateRoundMatches = jest.spyOn(swissPairing, 'generateRoundMatches');
-    mockFormatOutput = jest.spyOn(outputFormatter, 'formatOutput');
+    // Default success responses
+    jest.spyOn(validator, 'validateCLIOptions').mockReturnValue({
+      success: true,
+      value: {
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+        numRounds: 1,
+        startRound: 1,
+      },
+    });
 
-    // Default mock implementations with typed return values
-    mockValidateCLIOptions.mockReturnValue({ success: true, value: {} } as Result<
-      Partial<ValidatedCLIOptions>
-    >);
-    mockValidateFileOptions.mockResolvedValue({ success: true, value: {} } as Result<
-      Partial<ValidatedCLIOptions>
-    >);
-    mockMergeOptions.mockReturnValue({
+    jest.spyOn(cliUtils, 'validateFileOptions').mockResolvedValue({
+      success: true,
+      value: {},
+    });
+
+    jest.spyOn(cliUtils, 'mergeOptions').mockReturnValue({
       teams: [
         { name: 'Alice', squad: undefined },
         { name: 'Bob', squad: undefined },
@@ -59,174 +41,227 @@ describe('handleCLIAction', () => {
       order: 'top-down',
       matches: [],
       format: 'text-markdown',
-      file: 'input.txt',
-    } as ValidatedCLIOptions);
-    mockPrepareTeams.mockReturnValue(['Alice', 'Bob']);
-    mockCreateBidirectionalMap.mockReturnValue(new Map() as ReadonlyPlayedOpponents);
-    mockCreateSquadMap.mockReturnValue(new Map());
-    mockGenerateRoundMatches.mockReturnValue({
+      file: '',
+    });
+
+    jest.spyOn(cliUtils, 'prepareTeams').mockReturnValue(['Alice', 'Bob']);
+    jest.spyOn(utils, 'createBidirectionalMap').mockReturnValue(new Map() as ReadonlyPlayedOpponents);
+    jest.spyOn(cliUtils, 'createSquadMap').mockReturnValue(new Map());
+
+    jest.spyOn(swissValidator, 'validateRoundMatchesInput').mockReturnValue({
+      success: true,
+    });
+
+    jest.spyOn(swissPairing, 'generateRoundMatches').mockReturnValue({
       success: true,
       value: { 'Round 1': [['Alice', 'Bob']] },
-    } as Result<ReadonlyRoundMatches>);
-    mockFormatOutput.mockReturnValue('Formatted output');
+    });
+
+    jest.spyOn(swissValidator, 'validateRoundMatchesOutput').mockReturnValue({
+      success: true,
+    });
+
+    jest.spyOn(outputFormatter, 'formatOutput').mockReturnValue('Round 1:\nAlice vs Bob');
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  it('should process valid input and generate matches', async () => {
-    const options: UnvalidatedCLIOptions = {
+  it('should successfully generate matches', async () => {
+    const result = await handleCLIAction({
       teams: ['Alice', 'Bob'],
       numRounds: '1',
-    };
-
-    const result = await handleCLIAction(options);
-
-    expect(result).toEqual({ success: true, value: 'Formatted output' });
-    expect(mockValidateCLIOptions).toHaveBeenCalledWith(options);
-    expect(mockValidateFileOptions).toHaveBeenCalled();
-    expect(mockMergeOptions).toHaveBeenCalled();
-    expect(mockPrepareTeams).toHaveBeenCalled();
-    expect(mockCreateBidirectionalMap).toHaveBeenCalled();
-    expect(mockCreateSquadMap).toHaveBeenCalled();
-    expect(mockGenerateRoundMatches).toHaveBeenCalled();
-    expect(mockFormatOutput).toHaveBeenCalled();
-  });
-
-  it('should return error if CLI options validation fails', async () => {
-    mockValidateCLIOptions.mockReturnValue({
-      success: false,
-      error: { type: 'InvalidInput', message: 'Invalid CLI options' },
-    } as Result<Partial<ValidatedCLIOptions>>);
-
-    const result = await handleCLIAction({});
-
-    expect(result).toEqual({
-      success: false,
-      error: { type: 'InvalidInput', message: 'Invalid CLI options' },
     });
-    expect(mockValidateFileOptions).not.toHaveBeenCalled();
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.value).toBe('Round 1:\nAlice vs Bob');
+    }
   });
 
-  it('should return error if file options validation fails', async () => {
-    mockValidateFileOptions.mockResolvedValue({
-      success: false,
-      error: { type: 'InvalidInput', message: 'Invalid file options' },
-    } as Result<Partial<ValidatedCLIOptions>>);
+  describe('input validation', () => {
+    it('should fail on invalid CLI options', async () => {
+      jest.spyOn(validator, 'validateCLIOptions').mockReturnValue({
+        success: false,
+        message: 'Invalid number of teams',
+      });
 
-    const result = await handleCLIAction({ file: 'invalid.csv' });
+      const result = await handleCLIAction({ teams: ['Alice'] });
 
-    expect(result).toEqual({
-      success: false,
-      error: { type: 'InvalidInput', message: 'Invalid file options' },
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Invalid number of teams');
+      }
     });
-    expect(mockMergeOptions).not.toHaveBeenCalled();
-  });
 
-  it('should return error if generateRoundMatches fails', async () => {
-    mockGenerateRoundMatches.mockReturnValue({
-      success: false,
-      error: { type: 'NoValidSolution', message: 'Unable to generate valid matches' },
-    } as Result<ReadonlyRoundMatches>);
+    it('should fail on invalid file input', async () => {
+      jest.spyOn(cliUtils, 'validateFileOptions').mockResolvedValue({
+        success: false,
+        message: 'Invalid file format',
+      });
 
-    const result = await handleCLIAction({});
+      const result = await handleCLIAction({ file: 'invalid.txt' });
 
-    expect(result).toEqual({
-      success: false,
-      error: { type: 'NoValidSolution', message: 'Unable to generate valid matches' },
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Invalid file format');
+      }
     });
-    expect(mockFormatOutput).not.toHaveBeenCalled();
+
+    it('should fail on invalid input', async () => {
+      jest.spyOn(swissValidator, 'validateRoundMatchesInput').mockReturnValue({
+        success: false,
+        message: 'Must have an even number of teams',
+      });
+
+      const result = await handleCLIAction({
+        teams: ['Alice', 'Bob', 'Charlie'],
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Invalid input: Must have an even number of teams');
+      }
+    });
   });
 
-  it('should handle different output formats', async () => {
-    mockMergeOptions.mockReturnValue({
-      teams: [
-        { name: 'Alice', squad: undefined },
-        { name: 'Bob', squad: undefined },
-      ],
-      numRounds: 1,
-      startRound: 1,
-      order: 'top-down',
-      matches: [],
-      format: 'json-pretty',
-      file: 'input.txt',
-    } as ValidatedCLIOptions);
+  describe('match generation', () => {
+    it('should fail when no valid pairings possible', async () => {
+      jest.spyOn(swissPairing, 'generateRoundMatches').mockReturnValue({
+        success: false,
+        message: 'No valid pairings possible for Round 1',
+      });
 
-    await handleCLIAction({});
+      const result = await handleCLIAction({
+        teams: ['Alice', 'Bob'],
+        numRounds: '1',
+      });
 
-    expect(mockFormatOutput).toHaveBeenCalledWith(expect.objectContaining({ format: 'json-pretty' }));
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Failed to generate matches: No valid pairings possible for Round 1');
+      }
+    });
+
+    it('should fail if generated matches are invalid', async () => {
+      jest.spyOn(swissValidator, 'validateRoundMatchesOutput').mockReturnValue({
+        success: false,
+        message: 'Alice and Bob have already played each other',
+      });
+
+      const result = await handleCLIAction({
+        teams: ['Alice', 'Bob'],
+        numRounds: '1',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe(
+          'Failed to generate matches: Alice and Bob have already played each other'
+        );
+      }
+    });
   });
 
-  it('should handle file input', async () => {
-    const options: UnvalidatedCLIOptions = { file: 'input.csv' };
+  describe('squad constraints', () => {
+    it('should handle team squads correctly', async () => {
+      // Override default mocks with squad-specific data
+      jest.spyOn(validator, 'validateCLIOptions').mockReturnValue({
+        success: true,
+        value: {
+          teams: [
+            { name: 'Alice', squad: 'A' },
+            { name: 'Bob', squad: 'B' },
+          ],
+        },
+      });
 
-    await handleCLIAction(options);
-
-    expect(mockValidateFileOptions).toHaveBeenCalledWith('input.csv');
-  });
-
-  it('should create squadMap and pass it to generateRoundMatches', async () => {
-    const options: UnvalidatedCLIOptions = {
-      teams: ['Alice [A]', 'Bob [B]', 'Charlie [A]', 'David [B]'],
-      numRounds: '2',
-    };
-
-    mockValidateCLIOptions.mockReturnValue({
-      success: true,
-      value: {
+      jest.spyOn(cliUtils, 'mergeOptions').mockReturnValue({
         teams: [
           { name: 'Alice', squad: 'A' },
           { name: 'Bob', squad: 'B' },
-          { name: 'Charlie', squad: 'A' },
-          { name: 'David', squad: 'B' },
         ],
-        numRounds: 2,
-      },
-    });
-    mockValidateFileOptions.mockResolvedValue({ success: true, value: {} });
-    mockMergeOptions.mockReturnValue({
-      teams: [
-        { name: 'Alice', squad: 'A' },
-        { name: 'Bob', squad: 'B' },
-        { name: 'Charlie', squad: 'A' },
-        { name: 'David', squad: 'B' },
-      ],
-      numRounds: 2,
-      startRound: 1,
-      order: 'top-down',
-      matches: [],
-      format: 'text-markdown',
-      file: '',
-    } as ValidatedCLIOptions);
-    mockPrepareTeams.mockReturnValue(['Alice', 'Bob', 'Charlie', 'David']);
-    mockCreateSquadMap.mockReturnValue(
-      new Map([
+        numRounds: 1,
+        startRound: 1,
+        order: 'top-down',
+        matches: [],
+        format: 'text-markdown',
+        file: '',
+      });
+
+      const squadMap = new Map([
         ['Alice', 'A'],
         ['Bob', 'B'],
-        ['Charlie', 'A'],
-        ['David', 'B'],
-      ])
-    );
+      ]);
+      jest.spyOn(cliUtils, 'createSquadMap').mockReturnValue(squadMap);
 
-    await handleCLIAction(options);
+      await handleCLIAction({
+        teams: ['Alice [A]', 'Bob [B]'],
+      });
 
-    expect(mockGenerateRoundMatches).toHaveBeenCalledWith(
-      expect.objectContaining({
-        squadMap: new Map([
-          ['Alice', 'A'],
-          ['Bob', 'B'],
-          ['Charlie', 'A'],
-          ['David', 'B'],
-        ]),
-      })
-    );
+      expect(cliUtils.createSquadMap).toHaveBeenCalledWith([
+        { name: 'Alice', squad: 'A' },
+        { name: 'Bob', squad: 'B' },
+      ]);
 
-    expect(mockCreateSquadMap).toHaveBeenCalledWith([
-      { name: 'Alice', squad: 'A' },
-      { name: 'Bob', squad: 'B' },
-      { name: 'Charlie', squad: 'A' },
-      { name: 'David', squad: 'B' },
-    ]);
+      expect(swissPairing.generateRoundMatches).toHaveBeenCalledWith(
+        expect.objectContaining({
+          squadMap,
+        })
+      );
+    });
+  });
+
+  describe('previous matches', () => {
+    it('should handle previously played matches', async () => {
+      // Override mocks with match-specific data
+      jest.spyOn(validator, 'validateCLIOptions').mockReturnValue({
+        success: true,
+        value: {
+          teams: [
+            { name: 'Alice', squad: undefined },
+            { name: 'Bob', squad: undefined },
+            { name: 'Charlie', squad: undefined },
+            { name: 'David', squad: undefined },
+          ],
+          matches: [['Alice', 'Bob']],
+        },
+      });
+
+      jest.spyOn(cliUtils, 'mergeOptions').mockReturnValue({
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+          { name: 'Charlie', squad: undefined },
+          { name: 'David', squad: undefined },
+        ],
+        numRounds: 1,
+        startRound: 1,
+        order: 'top-down',
+        matches: [['Alice', 'Bob']],
+        format: 'text-markdown',
+        file: '',
+      });
+
+      const playedOpponents = new Map([
+        ['Alice', new Set(['Bob'])],
+        ['Bob', new Set(['Alice'])],
+      ]);
+      jest.spyOn(utils, 'createBidirectionalMap').mockReturnValue(playedOpponents);
+
+      await handleCLIAction({
+        teams: ['Alice', 'Bob', 'Charlie', 'David'],
+        matches: [['Alice', 'Bob']],
+      });
+
+      // Verify played matches were created correctly
+      expect(utils.createBidirectionalMap).toHaveBeenCalledWith([['Alice', 'Bob']]);
+      expect(swissPairing.generateRoundMatches).toHaveBeenCalledWith(
+        expect.objectContaining({
+          playedOpponents,
+        })
+      );
+    });
   });
 });

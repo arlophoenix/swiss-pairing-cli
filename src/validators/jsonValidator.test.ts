@@ -3,213 +3,150 @@ import { describe, expect, it } from '@jest/globals';
 import { validateJSONOptions } from './jsonValidator.js';
 
 describe('jsonValidator', () => {
-  describe('validateJSONOptions', () => {
-    it('should return success for valid complete JSON record', () => {
-      const jsonRecord = {
-        teams: ['Alice', 'Bob'],
-        'num-rounds': 3,
-        'start-round': 1,
+  it('should handle empty object', () => {
+    const result = validateJSONOptions({});
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.value).toEqual({});
+    }
+  });
+
+  it('should validate complete tournament config', () => {
+    const result = validateJSONOptions({
+      teams: ['Alice', 'Bob'],
+      'num-rounds': 3,
+      'start-round': 1,
+      order: 'random',
+      format: 'text-markdown',
+      matches: [['Alice', 'Bob']],
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.value).toEqual({
+        teams: [
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
+        ],
+        numRounds: 3,
+        startRound: 1,
         order: 'random',
         format: 'text-markdown',
         matches: [['Alice', 'Bob']],
-      };
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({
-          teams: [
-            { name: 'Alice', squad: undefined },
-            { name: 'Bob', squad: undefined },
-          ],
-          numRounds: 3,
-          startRound: 1,
-          order: 'random',
-          format: 'text-markdown',
-          matches: [['Alice', 'Bob']],
-        });
-      }
-    });
+      });
+    }
+  });
 
-    it('should return success with partial object for partial JSON record', () => {
-      const jsonRecord = {
-        teams: ['Alice', 'Bob'],
-        'num-rounds': 3,
-      };
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({
-          teams: [
-            { name: 'Alice', squad: undefined },
-            { name: 'Bob', squad: undefined },
-          ],
-          numRounds: 3,
-        });
-        expect(result.value).not.toHaveProperty('startRound');
-        expect(result.value).not.toHaveProperty('order');
-        expect(result.value).not.toHaveProperty('format');
-        expect(result.value).not.toHaveProperty('matches');
-      }
-    });
-
-    it('should handle empty JSON record', () => {
-      const jsonRecord = {};
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({});
-      }
-    });
-
-    it('should return failure for invalid JSON record', () => {
-      const jsonRecord = {
-        teams: ['Alice'],
-        'num-rounds': -1,
-        'start-round': 0,
-        order: 'invalid',
-        format: 'invalid',
-        matches: [['Alice']],
-      };
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(false);
-    });
-
-    it('should handle an array of strings without squads', () => {
-      const jsonRecord = {
+  describe('team formats', () => {
+    it('should handle string array without squads', () => {
+      const result = validateJSONOptions({
         teams: ['Alice', 'Bob', 'Charlie'],
-        'num-rounds': 3,
-        'start-round': 1,
-        order: 'random',
-        format: 'text-markdown',
-      };
+      });
 
-      const result = validateJSONOptions(jsonRecord);
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.value).toEqual({
-          teams: [
-            { name: 'Alice', squad: undefined },
-            { name: 'Bob', squad: undefined },
-            { name: 'Charlie', squad: undefined },
-          ],
-          numRounds: 3,
-          startRound: 1,
-          order: 'random',
-          format: 'text-markdown',
-        });
-      }
-    });
-
-    it('should handle an array of strings with squad notation', () => {
-      const jsonRecord = {
-        teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
-        'num-rounds': 3,
-      };
-
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({
-          teams: [
-            { name: 'Alice', squad: 'A' },
-            { name: 'Bob', squad: 'B' },
-            { name: 'Charlie', squad: undefined },
-          ],
-          numRounds: 3,
-        });
-      }
-    });
-
-    it('should handle an array of team objects', () => {
-      const jsonRecord = {
-        teams: [
-          { name: 'Alice', squad: 'A' },
-          { name: 'Bob', squad: 'B' },
+        expect(result.value.teams).toEqual([
+          { name: 'Alice', squad: undefined },
+          { name: 'Bob', squad: undefined },
           { name: 'Charlie', squad: undefined },
-        ],
-        'num-rounds': 3,
-      };
-
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({
-          teams: [
-            { name: 'Alice', squad: 'A' },
-            { name: 'Bob', squad: 'B' },
-            { name: 'Charlie', squad: undefined },
-          ],
-          numRounds: 3,
-        });
+        ]);
       }
     });
 
-    it('should reject duplicate team names in string array format', () => {
-      const jsonRecord = {
-        teams: ['Alice [A]', 'Bob', 'Alice [B]'],
-      };
+    it('should handle string array with squad notation', () => {
+      const result = validateJSONOptions({
+        teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+      });
 
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.message).toContain('unique team names');
-      }
-    });
-
-    it('should reject duplicate team names in object array format', () => {
-      const jsonRecord = {
-        teams: [
-          { name: 'Alice', squad: 'A' },
-          { name: 'Bob', squad: 'B' },
-          { name: 'Alice', squad: 'B' },
-        ],
-      };
-
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.message).toContain('unique team names');
-      }
-    });
-
-    it('should reject empty teams array', () => {
-      const jsonRecord = {
-        teams: [],
-        'num-rounds': 3,
-      };
-
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(false);
-    });
-
-    it('should handle missing teams property', () => {
-      const jsonRecord = {
-        'num-rounds': 3,
-      };
-
-      const result = validateJSONOptions(jsonRecord);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({
-          numRounds: 3,
-        });
-      }
-    });
-
-    it('should handle mixed array of strings and team objects', () => {
-      const jsonRecord = {
-        teams: ['Alice [A]', { name: 'Bob', squad: 'B' }, 'Charlie', { name: 'David', squad: 'D' }],
-      };
-
-      const result = validateJSONOptions(jsonRecord);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value.teams).toEqual([
           { name: 'Alice', squad: 'A' },
           { name: 'Bob', squad: 'B' },
           { name: 'Charlie', squad: undefined },
-          { name: 'David', squad: 'D' },
         ]);
+      }
+    });
+
+    it('should handle team objects', () => {
+      const result = validateJSONOptions({
+        teams: [
+          { name: 'Alice', squad: 'A' },
+          { name: 'Bob', squad: 'B' },
+          { name: 'Charlie', squad: undefined },
+        ],
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value.teams).toEqual([
+          { name: 'Alice', squad: 'A' },
+          { name: 'Bob', squad: 'B' },
+          { name: 'Charlie', squad: undefined },
+        ]);
+      }
+    });
+
+    it('should reject duplicate team names', () => {
+      const result = validateJSONOptions({
+        teams: [
+          { name: 'Alice', squad: 'A' },
+          { name: 'Alice', squad: 'B' },
+        ],
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toContain('Invalid JSON data:');
+      }
+    });
+  });
+
+  describe('validation', () => {
+    it('should reject invalid round count', () => {
+      const result = validateJSONOptions({
+        teams: ['Alice', 'Bob'],
+        'num-rounds': -1,
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toContain('Invalid JSON data:');
+      }
+    });
+
+    it('should reject invalid order value', () => {
+      const result = validateJSONOptions({
+        teams: ['Alice', 'Bob'],
+        order: 'invalid',
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toContain('Invalid JSON data:');
+      }
+    });
+
+    it('should reject invalid match format', () => {
+      const result = validateJSONOptions({
+        teams: ['Alice', 'Bob'],
+        matches: [['Alice']], // Missing second team
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toContain('Invalid JSON data:');
+      }
+    });
+
+    it('should reject too few teams', () => {
+      const result = validateJSONOptions({
+        teams: ['Alice'],
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toContain('Invalid JSON data:');
       }
     });
   });

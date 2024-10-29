@@ -1,6 +1,7 @@
-import { createCLI, examples } from '../src/cli/cli.js';
 import { readFileSync, writeFileSync } from 'fs';
 
+import { createCLI } from '../src/cli/cli.js';
+import { examples } from '../src/cli/cliExamples.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 

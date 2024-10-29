@@ -2,6 +2,7 @@ import { CLI_OPTION_FORMAT, CLI_OPTION_ORDER } from '../constants.js';
 import { describe, expect, it } from '@jest/globals';
 import {
   validateAllOptions,
+  validateFile,
   validateFormat,
   validateMatches,
   validateNumRounds,
@@ -101,6 +102,9 @@ describe('validatorUtils', () => {
       };
       const result = validateAllOptions({ input, origin: 'CLI' });
       expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toContain('Expected at least two teams');
+      }
     });
   });
 
@@ -127,27 +131,27 @@ describe('validatorUtils', () => {
       }
     });
 
-    it('should return failure for less than two teams', () => {
+    it('should return invalid if less than two teams', () => {
       const result = validateTeams({ teams: ['Alice'], origin: 'CLI' });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toContain('at least two teams');
+        expect(result.message).toContain('Expected at least two teams');
       }
     });
 
-    it('should return failure for invalid team names', () => {
+    it('should return invalid for invalid team names', () => {
       const result = validateTeams({ teams: ['Alice', 'Bob [C] [D]'], origin: 'CLI' });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toContain('valid team name');
+        expect(result.message).toContain('Expected valid team name, optionally followed by [squad]');
       }
     });
 
-    it('should return failure for duplicate team names', () => {
+    it('should return invalid for duplicate team names', () => {
       const result = validateTeams({ teams: ['Alice', 'Bob', 'Alice [A]'], origin: 'CLI' });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toContain('unique team names');
+        expect(result.message).toContain('Expected unique team names');
       }
     });
 
@@ -250,6 +254,52 @@ describe('validatorUtils', () => {
           expect(result.value).toBe(format);
         }
       });
+    });
+  });
+
+  describe('validateFile', () => {
+    it('should return undefined for undefined input', () => {
+      const result = validateFile({ file: undefined, origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toBeUndefined();
+      }
+    });
+
+    it('should accept .csv files', () => {
+      const result = validateFile({ file: 'data.csv', origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toBe('.csv');
+      }
+    });
+
+    it('should accept .json files', () => {
+      const result = validateFile({ file: 'data.json', origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toBe('.json');
+      }
+    });
+
+    it('should reject unsupported file types', () => {
+      const result = validateFile({ file: 'data.txt', origin: 'CLI' });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe(
+          'Invalid CLI argument "--file": "data.txt". Expected extension to be one of .csv, .json.'
+        );
+      }
+    });
+
+    it('should reject files without extensions', () => {
+      const result = validateFile({ file: 'data', origin: 'CLI' });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe(
+          'Invalid CLI argument "--file": "data". Expected extension to be one of .csv, .json.'
+        );
+      }
     });
   });
 

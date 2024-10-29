@@ -7,11 +7,11 @@ import { createCLI } from './cli.js';
 
 jest.mock('./cliAction.js');
 
-describe('Swiss Pairing CLI', () => {
+describe('CLI', () => {
   let mockHandleCLIAction: SpyInstance<typeof cliAction.handleCLIAction>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
-  let _mockProcessExit: SpyInstance<typeof process.exit>;
+  let mockProcessExit: SpyInstance<typeof process.exit>;
 
   beforeEach(() => {
     mockHandleCLIAction = jest
@@ -23,7 +23,7 @@ describe('Swiss Pairing CLI', () => {
     mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {
       // do nothing
     });
-    _mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
+    mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
       throw new Error(`Process exited with code ${String(code)}`);
     });
   });
@@ -32,26 +32,34 @@ describe('Swiss Pairing CLI', () => {
     jest.resetAllMocks();
   });
 
-  it('should handle valid input correctly', async () => {
+  it('should handle successful case', async () => {
     const program = createCLI();
-    await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob', '--num-rounds', '3']);
+    await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
 
-    expect(mockHandleCLIAction).toHaveBeenCalledWith({ teams: ['Alice', 'Bob'], numRounds: '3' });
+    expect(cliAction.handleCLIAction).toHaveBeenCalledWith(
+      expect.objectContaining({ teams: ['Alice', 'Bob'] })
+    );
     expect(mockConsoleLog).toHaveBeenCalledWith('Matches generated successfully');
+    expect(mockConsoleError).not.toHaveBeenCalled();
+    expect(mockProcessExit).not.toHaveBeenCalled();
   });
 
-  it('should handle CLI action errors', async () => {
-    mockHandleCLIAction.mockResolvedValue({
+  it('should handle errors', async () => {
+    jest.spyOn(cliAction, 'handleCLIAction').mockResolvedValue({
       success: false,
-      error: { type: 'NoValidSolution', message: 'Unable to generate valid matches' },
+      message: 'Invalid input',
     });
 
     const program = createCLI();
-    await expect(program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob'])).rejects.toThrow();
-    expect(mockConsoleError).toHaveBeenCalledWith('NoValidSolution: Unable to generate valid matches');
+    await expect(program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice'])).rejects.toThrow(
+      'Process exited with code 1'
+    );
+
+    expect(mockConsoleError).toHaveBeenCalledWith('Invalid input');
+    expect(mockProcessExit).toHaveBeenCalledWith(1);
   });
 
-  it('should pass all options to validateCLIOptions', async () => {
+  it('should pass through all options', async () => {
     const program = createCLI();
     await program.parseAsync([
       'node',
@@ -70,7 +78,7 @@ describe('Swiss Pairing CLI', () => {
       '--matches',
       'Alice,Bob',
       '--file',
-      'tournament-data.csv',
+      'data.csv',
     ]);
 
     expect(mockHandleCLIAction).toHaveBeenCalledWith({
@@ -80,7 +88,7 @@ describe('Swiss Pairing CLI', () => {
       order: 'random',
       format: 'json-pretty',
       matches: [['Alice', 'Bob']],
-      file: 'tournament-data.csv',
+      file: 'data.csv',
     });
   });
 });

@@ -83,8 +83,7 @@ describe('csvParserUtils', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.type).toBe('InvalidInput');
-        expect(result.error.message).toContain('CSV parsing error');
+        expect(result.message).toContain('CSV parsing error');
       }
       expect(mockPapaParse).toHaveBeenCalledWith(mockCSV, expect.any(Object));
     });

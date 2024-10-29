@@ -1,6 +1,4 @@
-import { CLIArg, InputOrigin, Result, Team } from '../types/types.js';
-
-import { createInvalidInputError } from './errorUtils.js';
+import { Result, Team } from '../types/types.js';
 
 export * from './errorUtils.js';
 
@@ -66,35 +64,35 @@ export function reverse<T>(array: readonly T[]): readonly T[] {
   return [...array].reverse();
 }
 
-// TODO: this errorInfo seems like a bad pattern. The error should be created in the function that calls this one.
+/**
+ * Validates that a string value exists within a set of allowed options.
+ * Returns a success result with the validated value, or a failure result with a simple error message.
+ *
+ * @template T - The string literal type of valid options
+ * @param {Object} params - The parameters for validation
+ * @param {string} params.input - The string value to validate
+ * @param {readonly T[]} params.options - Array of valid options
+ * @returns {Result<T>} Success with validated value or failure with message
+ *
+ * @example
+ * parseStringLiteral({
+ *   input: 'green',
+ *   options: ['red', 'green', 'blue'] as const
+ * })
+ */
 export function parseStringLiteral<T extends string>({
   input,
   options,
-  errorInfo,
 }: {
   readonly input: string;
   readonly options: readonly T[];
-  readonly errorInfo?: {
-    readonly origin: InputOrigin;
-    readonly argName: CLIArg;
-  };
 }): Result<T> {
   if (options.includes(input as T)) {
     return { success: true, value: input as T };
   }
   return {
     success: false,
-    error: errorInfo
-      ? createInvalidInputError({
-          origin: errorInfo.origin,
-          argName: errorInfo.argName,
-          inputValue: input,
-          expectedValue: options,
-        })
-      : {
-          type: 'InvalidInput',
-          message: `Invalid value: "${input}". Expected one of "${options.join(',')}".`,
-        },
+    message: `Invalid value: "${input}". Expected one of "${options.join(', ')}"`,
   };
 }
 

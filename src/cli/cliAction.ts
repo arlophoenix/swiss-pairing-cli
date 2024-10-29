@@ -6,6 +6,7 @@ import {
   prepareTeams,
   validateFileOptions,
 } from './cliUtils.js';
+import { validateRoundMatchesInput, validateRoundMatchesOutput } from '../swiss-pairing/swissValidator.js';
 
 import { formatOutput } from './outputFormatter.js';
 import { generateRoundMatches } from '../swiss-pairing/swissPairing.js';
@@ -30,6 +31,20 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   const playedOpponents = createBidirectionalMap(matches);
   const squadMap = createSquadMap(teams);
 
+  const validateInput = validateRoundMatchesInput({
+    teams: preparedTeams,
+    numRounds,
+    playedOpponents,
+    squadMap,
+  });
+
+  if (!validateInput.success) {
+    return {
+      success: false,
+      message: `Invalid input: ${validateInput.message}`,
+    };
+  }
+
   const roundMatchesResult = generateRoundMatches({
     teams: preparedTeams,
     numRounds,
@@ -39,10 +54,27 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   });
 
   if (!roundMatchesResult.success) {
-    return roundMatchesResult;
+    return {
+      success: false,
+      message: `Failed to generate matches: ${roundMatchesResult.message}`,
+    };
   }
 
-  // TODO: should the squad names be included in the output?
+  const validateOutput = validateRoundMatchesOutput({
+    roundMatches: roundMatchesResult.value,
+    teams: preparedTeams,
+    numRounds,
+    playedOpponents,
+    squadMap,
+  });
+
+  if (!validateOutput.success) {
+    return {
+      success: false,
+      message: `Failed to generate matches: ${validateOutput.message}`,
+    };
+  }
+
   const formattedOutput = formatOutput({
     roundMatches: roundMatchesResult.value,
     format,

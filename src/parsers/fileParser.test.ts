@@ -5,7 +5,6 @@ import * as jsonParser from './jsonParser.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import type { SpyInstance } from 'jest-mock';
 import { parseFile } from './fileParser.js';
 
 jest.mock('fs/promises');
@@ -14,113 +13,71 @@ jest.mock('./csvParser.js');
 jest.mock('./jsonParser.js');
 
 describe('fileParser', () => {
-  let mockExistsSync: SpyInstance<typeof fs.existsSync>;
-  // unable to get the types of SpyInstance to work for this one
-  let mockReadFile: jest.MockedFunction<typeof fsPromises.readFile>;
-  let mockParseCSV: SpyInstance<typeof csvParser.parseOptionsFromCSV>;
-  let mockParseJSON: SpyInstance<typeof jsonParser.parseOptionsFromJSON>;
-
   beforeEach(() => {
-    mockExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-    mockReadFile = fsPromises.readFile as jest.MockedFunction<typeof fsPromises.readFile>;
-    mockParseCSV = jest.spyOn(csvParser, 'parseOptionsFromCSV');
-    mockParseJSON = jest.spyOn(jsonParser, 'parseOptionsFromJSON');
+    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+    jest.spyOn(fsPromises, 'readFile').mockResolvedValue('mock content');
+    jest.spyOn(csvParser, 'parseOptionsFromCSV').mockReturnValue({
+      success: true,
+      value: { teams: [{ name: 'Alice', squad: undefined }] },
+    });
+    jest.spyOn(jsonParser, 'parseOptionsFromJSON').mockReturnValue({
+      success: true,
+      value: { teams: [{ name: 'Bob', squad: undefined }] },
+    });
   });
 
   afterEach(() => {
     jest.resetAllMocks();
-    jest.resetAllMocks();
   });
 
-  it('should parse CSV file correctly', async () => {
-    const mockContent = 'mock,csv,content';
-    mockReadFile.mockResolvedValue(mockContent);
-    mockParseCSV.mockReturnValue({
-      success: true,
-      value: {
-        teams: [
-          { name: 'Alice', squad: undefined },
-          { name: 'Bob', squad: undefined },
-        ],
-      },
-    });
+  it('should reject non-existent files', async () => {
+    jest.spyOn(fs, 'existsSync').mockReturnValue(false);
 
-    const result = await parseFile('test.csv');
+    const result = await parseFile('missing.csv');
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.message).toBe('Invalid CLI argument "--file": "missing.csv". Expected file not found.');
+    }
+  });
+
+  it('should reject unsupported file types', async () => {
+    const result = await parseFile('data.txt');
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.message).toContain('Expected extension to be one of .csv, .json');
+    }
+  });
+
+  it('should parse CSV files', async () => {
+    const result = await parseFile('data.csv');
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({
-        teams: [
-          { name: 'Alice', squad: undefined },
-          { name: 'Bob', squad: undefined },
-        ],
-      });
+      expect(result.value).toEqual({ teams: [{ name: 'Alice' }] });
     }
-    expect(mockParseCSV).toHaveBeenCalledWith(mockContent);
+    expect(csvParser.parseOptionsFromCSV).toHaveBeenCalledWith('mock content');
   });
 
-  it('should parse JSON file correctly', async () => {
-    const mockContent = '{"teams": ["Alice", "Bob"]}';
-    mockReadFile.mockResolvedValue(mockContent);
-    mockParseJSON.mockReturnValue({
-      success: true,
-      value: {
-        teams: [
-          { name: 'Alice', squad: undefined },
-          { name: 'Bob', squad: undefined },
-        ],
-      },
-    });
-
-    const result = await parseFile('test.json');
+  it('should parse JSON files', async () => {
+    const result = await parseFile('data.json');
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.value).toEqual({
-        teams: [
-          { name: 'Alice', squad: undefined },
-          { name: 'Bob', squad: undefined },
-        ],
-      });
+      expect(result.value).toEqual({ teams: [{ name: 'Bob' }] });
     }
-    expect(mockParseJSON).toHaveBeenCalledWith(mockContent);
+    expect(jsonParser.parseOptionsFromJSON).toHaveBeenCalledWith('mock content');
   });
 
-  it('should handle unsupported file types', async () => {
-    const result = await parseFile('test.txt');
+  it('should handle file read errors', async () => {
+    jest.spyOn(fsPromises, 'readFile').mockRejectedValue(new Error('Read failed'));
+
+    const result = await parseFile('data.csv');
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.type).toBe('InvalidInput');
-      expect(result.error.message).toContain(
-        'Invalid CLI value "--file": ".txt". Expected one of ".csv, .json".'
-      );
-    }
-  });
-
-  it('should handle file reading errors', async () => {
-    mockReadFile.mockRejectedValue(new Error('File read error'));
-
-    const result = await parseFile('test.csv');
-
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.type).toBe('InvalidInput');
-      expect(result.error.message).toContain('Error reading file: File read error');
-    }
-  });
-
-  it('should handle non-existent files', async () => {
-    mockExistsSync.mockReturnValue(false);
-
-    const result = await parseFile('nonexistent.csv');
-
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.type).toBe('InvalidInput');
-      expect(result.error.message).toContain(
-        'Invalid CLI value "--file": "nonexistent.csv". Expected file does not exist.'
-      );
+      expect(result.message).toBe('Error reading file: Read failed');
     }
   });
 });

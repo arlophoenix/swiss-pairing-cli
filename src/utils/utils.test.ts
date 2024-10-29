@@ -11,8 +11,6 @@ import {
 } from './utils.js';
 import { describe, expect, it } from '@jest/globals';
 
-import { ARG_FORMAT } from '../constants.js';
-
 describe('utils', () => {
   describe('createBidirectionalMap', () => {
     it('should correctly build played matches Map', () => {
@@ -163,33 +161,18 @@ describe('utils', () => {
 
     it('should return failure for an invalid option', () => {
       const result = parseStringLiteral({ input: 'yellow', options: colors });
-      expect(result).toEqual({
-        success: false,
-        error: {
-          message: 'Invalid value: "yellow". Expected one of "red,green,blue".',
-          type: 'InvalidInput',
-        },
-      });
-    });
-
-    it('should use a custom error message when provided', () => {
-      const result = parseStringLiteral({
-        input: 'yellow',
-        options: colors,
-        errorInfo: { origin: 'CLI', argName: ARG_FORMAT },
-      });
-      expect(result).toEqual({
-        success: false,
-        error: {
-          type: 'InvalidInput',
-          message: 'Invalid CLI value "--format": "yellow". Expected one of "red, green, blue".',
-        },
-      });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Invalid value: "yellow". Expected one of "red, green, blue"');
+      }
     });
 
     it('should be case-sensitive', () => {
       const result = parseStringLiteral({ input: 'RED', options: colors });
       expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Invalid value: "RED". Expected one of "red, green, blue"');
+      }
     });
   });
 

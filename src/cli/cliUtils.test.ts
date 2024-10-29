@@ -64,13 +64,17 @@ describe('cliUtils', () => {
       expect(mockParseFile).toHaveBeenCalledWith('test.csv');
     });
 
-    it('should return error when parseFile fails', async () => {
-      mockParseFile.mockResolvedValue({
+    it('should return failure when file parsing fails', async () => {
+      jest.spyOn(fileParser, 'parseFile').mockResolvedValue({
         success: false,
-        error: { type: 'InvalidInput', message: 'File not found' },
+        message: 'File not found',
       });
+
       const result = await validateFileOptions('nonexistent.csv');
-      expect(result).toEqual({ success: false, error: { type: 'InvalidInput', message: 'File not found' } });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('File not found');
+      }
     });
   });
 

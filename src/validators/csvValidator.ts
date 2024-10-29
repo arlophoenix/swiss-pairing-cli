@@ -35,5 +35,13 @@ export function validateCSVOptions(
     matches: matches.length > 0 ? matches : undefined,
   };
 
-  return validateAllOptions({ input, origin: 'CSV' });
+  const result = validateAllOptions({ input, origin: 'CSV' });
+  if (!result.success) {
+    return {
+      success: false,
+      message: `Invalid CSV data: ${result.message}`,
+    };
+  }
+
+  return result;
 }

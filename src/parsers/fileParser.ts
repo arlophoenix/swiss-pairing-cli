@@ -5,7 +5,7 @@ import {
   SUPPORTED_FILE_TYPE_JSON,
 } from '../constants.js';
 import { BooleanResult, Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
-import { createInvalidInputError, parseStringLiteral } from './parserUtils.js';
+import { createInvalidValueMessage, parseStringLiteral } from './parserUtils.js';
 
 import { existsSync } from 'fs';
 import { extname } from 'path';
@@ -36,35 +36,40 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
     const errorMessage = (error as Error).message;
     return {
       success: false,
-      error: {
-        type: 'InvalidInput',
-        message: `Error reading file: ${errorMessage}`,
-      },
+      message: `Error reading file: ${errorMessage}`,
     };
   }
 }
 
 function getFileType(filePath: string): Result<SupportedFileTypes> {
   const ext = extname(filePath).toLowerCase();
-  return parseStringLiteral<SupportedFileTypes>({
+  const result = parseStringLiteral<SupportedFileTypes>({
     input: ext,
     options: SUPPORTED_FILE_TYPES,
-    errorInfo: {
-      origin: 'CLI',
-      argName: ARG_FILE,
-    },
   });
+  if (!result.success) {
+    return {
+      success: false,
+      message: createInvalidValueMessage({
+        origin: 'CLI',
+        argName: ARG_FILE,
+        inputValue: filePath,
+        expectedValue: `extension to be one of ${SUPPORTED_FILE_TYPES.join(', ')}`,
+      }),
+    };
+  }
+  return result;
 }
 
 function fileExists(filePath: string): BooleanResult {
   if (!existsSync(filePath)) {
     return {
       success: false,
-      error: createInvalidInputError({
+      message: createInvalidValueMessage({
         origin: 'CLI',
         argName: ARG_FILE,
         inputValue: filePath,
-        expectedValue: 'file does not exist',
+        expectedValue: `file not found.`,
       }),
     };
   }

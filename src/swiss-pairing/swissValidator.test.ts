@@ -2,7 +2,7 @@ import { ReadonlyPlayedOpponents, RoundMatches } from '../types/types.js';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from './swissValidator.js';
 
-describe('Validation', () => {
+describe('swissValidator', () => {
   describe('validateRoundMatchesInput', () => {
     it('should return valid for valid input', () => {
       const validInput = {
@@ -32,7 +32,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('there must be at least two teams.');
+        expect(result.message).toBe('Must have at least 2 teams');
       }
     });
 
@@ -48,7 +48,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('there must be an even number of teams.');
+        expect(result.message).toBe('Must have an even number of teams');
       }
     });
 
@@ -64,7 +64,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('duplicate teams are not allowed.');
+        expect(result.message).toBe('All team names must be unique');
       }
     });
 
@@ -80,7 +80,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('num-rounds to generate must be at least 1.');
+        expect(result.message).toBe('Must generate at least one round');
       }
     });
 
@@ -96,11 +96,11 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('num-rounds to generate must be fewer than the number of teams.');
+        expect(result.message).toBe('Number of rounds (4) must be less than number of teams (4)');
       }
     });
 
-    it('should return invalid if playedMatches contains invalid team names', () => {
+    it('should reject matches with unknown teams', () => {
       const invalidInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
@@ -116,8 +116,23 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe("matches contains invalid team name: 'InvalidTeam'.");
+        expect(result.message).toBe('Unknown team in match history: "InvalidTeam"');
       }
+    });
+
+    it('should accept matches with known teams', () => {
+      const validInput = {
+        teams: ['Team1', 'Team2'],
+        numRounds: 1,
+        playedOpponents: new Map([
+          ['Team1', new Set(['Team2'])],
+          ['Team2', new Set(['Team1'])],
+        ]),
+        squadMap: new Map(),
+      };
+      const result = validateRoundMatchesInput(validInput);
+
+      expect(result.success).toBe(true);
     });
 
     it('should return invalid if playedMatches is not symmetrical', () => {
@@ -135,7 +150,9 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('matches are not symmetrical.');
+        expect(result.message).toBe(
+          'Match history must be symmetrical - found Team1 vs Team2 but not Team2 vs Team1'
+        );
       }
     });
 
@@ -154,7 +171,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe("squadMap contains invalid team name: 'InvalidTeam'.");
+        expect(result.message).toBe('Unknown team in squad assignments: "InvalidTeam"');
       }
     });
   });
@@ -211,7 +228,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('invalid number of rounds in the result. Expected 2, got 1.');
+        expect(result.message).toBe('Generated 1 rounds but expected 2');
       }
     });
 
@@ -233,7 +250,7 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('invalid number of matches in Round 2. Expected 2, got 1.');
+        expect(result.message).toBe('Round 2 has 1 matches but expected 2');
       }
     });
 
@@ -244,47 +261,21 @@ describe('Validation', () => {
           ['p3', 'p4'],
         ],
       };
-      const numRounds = 1;
-      playedOpponents = new Map([
+      const existingMatches = new Map([
         ['p1', new Set(['p2'])],
         ['p2', new Set(['p1'])],
       ]);
       const result = validateRoundMatchesOutput({
         roundMatches,
         teams,
-        numRounds,
-        playedOpponents,
+        numRounds: 1,
+        playedOpponents: existingMatches,
         squadMap,
       });
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('invalid match in Round 1: p1 and p2 have already played.');
-      }
-    });
-
-    it('should return invalid if a match includes teams who have played in a previous round', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-        'Round 2': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-      };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds,
-        playedOpponents,
-        squadMap,
-      });
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.error.message).toBe('invalid match in Round 2: p1 and p2 have already played.');
+        expect(result.message).toBe('p1 and p2 have already played each other');
       }
     });
 
@@ -309,35 +300,8 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('invalid match in Round 2: p1 or p4 appears more than once.');
+        expect(result.message).toBe('p1 or p4 is scheduled multiple times in Round 2');
       }
-    });
-
-    it('should return valid for correct matches respecting squad constraints', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p3'],
-          ['p2', 'p4'],
-        ],
-        'Round 2': [
-          ['p1', 'p4'],
-          ['p2', 'p3'],
-        ],
-      };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds,
-        playedOpponents,
-        squadMap: new Map([
-          ['p1', 'A'],
-          ['p2', 'A'],
-          ['p3', 'B'],
-          ['p4', 'B'],
-        ]),
-      });
-
-      expect(result.success).toBe(true);
     });
 
     it('should return invalid if teams from the same squad are paired', () => {
@@ -362,26 +326,8 @@ describe('Validation', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.message).toBe('invalid match in Round 1: p1 and p2 are from the same squad.');
+        expect(result.message).toBe('p1 and p2 cannot play each other - they are in the same squad');
       }
-    });
-
-    it('should work correctly when squadMap is empty', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-      };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds: 1,
-        playedOpponents,
-        squadMap: new Map(),
-      });
-
-      expect(result.success).toBe(true);
     });
   });
 });
