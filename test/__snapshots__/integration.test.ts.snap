@@ -764,7 +764,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.
 
 exports[`Integration Tests CLI Output - invalid-duplicate-teams.txt 1`] = `
 {
-  "message": "Invalid CLI argument "--teams": "Team1,Team2,Team1,Team3". Expected unique team names
+  "message": "Invalid CLI argument "teams": "Team1,Team2,Team1,Team3". Expected unique team names
 ",
   "success": false,
 }
@@ -772,7 +772,7 @@ exports[`Integration Tests CLI Output - invalid-duplicate-teams.txt 1`] = `
 
 exports[`Integration Tests CLI Output - invalid-match-format.txt 1`] = `
 {
-  "message": "Invalid CLI argument "--matches": "["Team1",null]". Expected an array of two team names
+  "message": "Invalid CLI argument "matches": "["Team1",null]". Expected an array of two team names
 ",
   "success": false,
 }
@@ -788,7 +788,7 @@ exports[`Integration Tests CLI Output - invalid-num-rounds.txt 1`] = `
 
 exports[`Integration Tests CLI Output - invalid-played-self.txt 1`] = `
 {
-  "message": "Invalid input: Team1 cannot play against itself
+  "message": "Invalid input: Team "Team1" cannot play against itself
 ",
   "success": false,
 }
@@ -796,7 +796,7 @@ exports[`Integration Tests CLI Output - invalid-played-self.txt 1`] = `
 
 exports[`Integration Tests CLI Output - invalid-single-team.txt 1`] = `
 {
-  "message": "Invalid CLI argument "--teams": "Team1". Expected at least two teams
+  "message": "Invalid CLI argument "teams": "Team1". Expected at least two teams
 ",
   "success": false,
 }
@@ -804,7 +804,7 @@ exports[`Integration Tests CLI Output - invalid-single-team.txt 1`] = `
 
 exports[`Integration Tests CLI Output - invalid-squad-format.txt 1`] = `
 {
-  "message": "Invalid CLI argument "--teams": "Team1 [A". Expected valid team name, optionally followed by [squad] e.g."Alice [Home]"
+  "message": "Invalid CLI argument "teams": "Team1 [A". Expected valid team name, optionally followed by [squad] e.g."Alice [Home]"
 ",
   "success": false,
 }
@@ -812,7 +812,7 @@ exports[`Integration Tests CLI Output - invalid-squad-format.txt 1`] = `
 
 exports[`Integration Tests CLI Output - invalid-start-round.txt 1`] = `
 {
-  "message": "Invalid CLI argument "--start-round": "0". Expected a positive integer
+  "message": "Invalid CLI argument "start-round": "0". Expected a positive integer
 ",
   "success": false,
 }

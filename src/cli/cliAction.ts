@@ -1,11 +1,13 @@
-import { Result, UnvalidatedCLIOptions } from '../types/types.js';
 import {
+  ErrorTemplate,
   createBidirectionalMap,
   createSquadMap,
+  formatError,
   mergeOptions,
   prepareTeams,
   validateFileOptions,
 } from './cliUtils.js';
+import { Result, UnvalidatedCLIOptions } from '../types/types.js';
 import { validateRoundMatchesInput, validateRoundMatchesOutput } from '../swiss-pairing/swissValidator.js';
 
 import { formatOutput } from './outputFormatter.js';
@@ -41,7 +43,10 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   if (!validateInput.success) {
     return {
       success: false,
-      message: `Invalid input: ${validateInput.message}`,
+      message: formatError({
+        template: ErrorTemplate.INVALID_INPUT,
+        values: { message: validateInput.message },
+      }),
     };
   }
 
@@ -56,7 +61,10 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   if (!roundMatchesResult.success) {
     return {
       success: false,
-      message: `Failed to generate matches: ${roundMatchesResult.message}`,
+      message: formatError({
+        template: ErrorTemplate.GENERATION_FAILED,
+        values: { message: roundMatchesResult.message },
+      }),
     };
   }
 
@@ -71,7 +79,10 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   if (!validateOutput.success) {
     return {
       success: false,
-      message: `Failed to generate matches: ${validateOutput.message}`,
+      message: formatError({
+        template: ErrorTemplate.GENERATION_FAILED,
+        values: { message: validateOutput.message },
+      }),
     };
   }
 

@@ -46,6 +46,10 @@ export const enum ErrorTemplate {
   DUPLICATE_MATCH = 'Duplicate match found: "${team1}" vs "${team2}"',
   MULTIPLE_MATCHES = 'Teams "${team1}" or "${team2}" are scheduled multiple times in ${round}',
   NO_VALID_PAIRINGS = 'No valid pairings possible for ${round}',
+
+  // CLI Action errors
+  INVALID_INPUT = 'Invalid input: ${message}',
+  GENERATION_FAILED = 'Failed to generate matches: ${message}',
 }
 
 /**
