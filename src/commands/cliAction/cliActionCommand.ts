@@ -10,12 +10,12 @@
  * @module cliActionCommand
  */
 
-import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from './cliUtils.js';
+import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from '../../cli/cliUtils.js';
 
-import { Result } from '../types/types.js';
-import { formatOutput } from './outputFormatter.js';
-import { handleGenerateRounds } from '../commands/generateRounds.js';
-import { validateCLIOptions } from '../validators/cliValidator.js';
+import { Result } from '../../types/types.js';
+import { formatOutput } from '../../cli/outputFormatter.js';
+import { handleGenerateRounds } from '../generateRounds.js';
+import { validateCLIOptions } from '../../validators/cliValidator.js';
 
 /**
  * Raw command input from CLI

@@ -37,7 +37,7 @@ import {
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
-import { handleCLIActionCommand } from './cliActionCommand.js';
+import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
 
 /**
  * Creates and configures the CLI command parser.
