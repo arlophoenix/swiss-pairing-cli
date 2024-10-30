@@ -38,25 +38,20 @@ Usage: swiss-pairing [options]
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -t, --teams <names...>      List of team names in order from top standing to
-                              bottom, with optional squad in square brackets
-                              e.g. "Alice [Home]" "Bob [Home]" "Charlie [Away]"
-                              "David [Away]"
+  -t, --teams <names...>      List of team names in order from top standing to bottom, with optional
+                              squad in square brackets
+                              e.g. "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"
   -n, --num-rounds <number>   Number of rounds to generate
                               (default: 1)
-  -s, --start-round <number>  Name the generated rounds starting with this
-                              number
+  -s, --start-round <number>  Name the generated rounds starting with this number
                               (default: 1)
-  -o, --order <order-enum>    The sequence in which teams should be paired; one
-                              of: top-down|bottom-up|random
+  -o, --order <order-enum>    The sequence in which teams should be paired; one of:
+                              top-down|bottom-up|random
                               (default: top-down)
-  --format <format-enum>      Output format; one of:
-                              csv|json-plain|json-pretty|text-markdown|text-plain
+  --format <format-enum>      Output format; one of: csv|json-plain|json-pretty|text-markdown|text-plain
                               (default: text-markdown)
-  --file <path{.csv|.json}>   Path to input file. Options provided via cli
-                              override file contents
-  -m, --matches <matches...>  List of pairs of team names that have already
-                              played against each other
+  --file <path{.csv|.json}>   Path to input file. Options provided via cli override file contents
+  -m, --matches <matches...>  List of pairs of team names that have already played against each other
                               e.g. "Alice,Bob" "Charlie,David"
   -h, --help                  display help for command
 ```
