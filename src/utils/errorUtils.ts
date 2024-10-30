@@ -46,6 +46,7 @@ export const enum ErrorTemplate {
   DUPLICATE_MATCH = 'Duplicate match found: "${team1}" vs "${team2}"',
   MULTIPLE_MATCHES = 'Teams "${team1}" or "${team2}" are scheduled multiple times in ${round}',
   NO_VALID_PAIRINGS = 'No valid pairings possible for ${round}',
+  ROUND_NUMBER_SEQUENCE = '${round} has incorrect number ${actual} (should be ${expected})',
 
   // CLI Action errors
   INVALID_INPUT = 'Invalid input: ${message}',
@@ -96,7 +97,7 @@ export function createInvalidValueMessage({
 /**
  * Wraps an error message with its source context
  */
-export function wrapErrorWithOrigin<T>({
+export function wrapErrorWithOrigin({
   error,
   origin,
 }: {

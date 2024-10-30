@@ -1,9 +1,9 @@
-import { ReadonlyPlayedTeams, RoundMatches } from '../types/types.js';
+import { ReadonlyPlayedTeams, Round } from '../types/types.js';
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { validateRoundMatchesInput, validateRoundMatchesOutput } from './swissValidator.js';
+import { validateGenerateRoundsInput, validateGenerateRoundsOutput } from './swissValidator.js';
 
 describe('swissValidator', () => {
-  describe('validateRoundMatchesInput', () => {
+  describe('validateGenerateRoundsInput', () => {
     it('should return valid for valid input', () => {
       const validInput = {
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
@@ -15,7 +15,7 @@ describe('swissValidator', () => {
         ]),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(validInput);
+      const result = validateGenerateRoundsInput(validInput);
 
       expect(result.success).toBe(true);
     });
@@ -28,7 +28,7 @@ describe('swissValidator', () => {
         playedTeams: new Map(),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -44,7 +44,7 @@ describe('swissValidator', () => {
         playedTeams: new Map(),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -60,7 +60,7 @@ describe('swissValidator', () => {
         playedTeams: new Map(),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -76,7 +76,7 @@ describe('swissValidator', () => {
         playedTeams: new Map(),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -92,7 +92,7 @@ describe('swissValidator', () => {
         playedTeams: new Map(),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -112,7 +112,7 @@ describe('swissValidator', () => {
         ]),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -130,13 +130,13 @@ describe('swissValidator', () => {
         ]),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(validInput);
+      const result = validateGenerateRoundsInput(validInput);
 
       expect(result.success).toBe(true);
     });
 
     it('should return invalid if match history contains self-play', () => {
-      const result = validateRoundMatchesInput({
+      const result = validateGenerateRoundsInput({
         teams: ['Team1', 'Team2', 'Team3', 'Team4'],
         numRounds: 2,
         playedTeams: new Map([
@@ -164,7 +164,7 @@ describe('swissValidator', () => {
         ]),
         squadMap: new Map(),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -185,7 +185,7 @@ describe('swissValidator', () => {
           ['InvalidTeam', 'SquadB'],
         ]),
       };
-      const result = validateRoundMatchesInput(invalidInput);
+      const result = validateGenerateRoundsInput(invalidInput);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -194,55 +194,52 @@ describe('swissValidator', () => {
     });
   });
 
-  describe('validateRoundMatchesOutput', () => {
+  describe('validateGenerateRoundsOutput', () => {
     let teams: readonly string[];
-    let numRounds: number;
-    let playedTeams: ReadonlyPlayedTeams;
-    let squadMap: ReadonlyMap<string, string>;
+    let exampleOutput: {
+      readonly rounds: readonly Round[];
+      readonly teams: readonly string[];
+      readonly numRounds: number;
+      readonly startRound: number;
+      readonly playedTeams: ReadonlyPlayedTeams;
+      readonly squadMap: ReadonlyMap<string, string>;
+    };
 
     beforeEach(() => {
       teams = ['p1', 'p2', 'p3', 'p4'];
-      numRounds = 2;
-      playedTeams = new Map();
-      squadMap = new Map();
+      exampleOutput = {
+        rounds: [
+          {
+            label: 'Round 1',
+            number: 1,
+            matches: [['p1', 'p2'] as const, ['p3', 'p4'] as const],
+          },
+          {
+            label: 'Round 2',
+            number: 2,
+            matches: [['p1', 'p3'] as const, ['p2', 'p4'] as const],
+          },
+        ],
+        teams,
+        numRounds: 2,
+        startRound: 1,
+        playedTeams: new Map<string, ReadonlySet<string>>(),
+        squadMap: new Map<string, string>(),
+      };
     });
 
     it('should return valid for correct matches', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-        'Round 2': [
-          ['p1', 'p3'],
-          ['p2', 'p4'],
-        ],
-      };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds,
-        playedTeams,
-        squadMap,
-      });
-
+      const result = validateGenerateRoundsOutput(exampleOutput);
       expect(result.success).toBe(true);
     });
 
     it('should return invalid if number of rounds is incorrect', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
+      const output = {
+        ...exampleOutput,
+        rounds: [exampleOutput.rounds[0]], // Only one round
       };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds,
-        playedTeams,
-        squadMap,
-      });
+
+      const result = validateGenerateRoundsOutput(output);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -251,20 +248,23 @@ describe('swissValidator', () => {
     });
 
     it('should return invalid if number of matches in a round is incorrect', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
+      const output = {
+        ...exampleOutput,
+        rounds: [
+          {
+            label: 'Round 1',
+            number: 1,
+            matches: [['p1', 'p2'] as const, ['p3', 'p4'] as const],
+          },
+          {
+            label: 'Round 2',
+            number: 2,
+            matches: [['p1', 'p3'] as const], // Missing a match
+          },
         ],
-        'Round 2': [['p1', 'p3']],
       };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds,
-        playedTeams,
-        squadMap,
-      });
+
+      const result = validateGenerateRoundsOutput(output);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -273,23 +273,17 @@ describe('swissValidator', () => {
     });
 
     it('should return invalid if a match includes teams who have already played', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-      };
-      const existingMatches = new Map([
+      const playedTeams = new Map([
         ['p1', new Set(['p2'])],
         ['p2', new Set(['p1'])],
       ]);
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds: 1,
-        playedTeams: existingMatches,
-        squadMap,
-      });
+
+      const output = {
+        ...exampleOutput,
+        playedTeams,
+      };
+
+      const result = validateGenerateRoundsOutput(output);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -297,50 +291,20 @@ describe('swissValidator', () => {
       }
     });
 
-    it('should return invalid if a team appears more than once in a round', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
-        'Round 2': [
-          ['p1', 'p3'],
-          ['p1', 'p4'],
-        ],
-      };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds,
-        playedTeams,
-        squadMap,
-      });
-
-      expect(result.success).toBe(false);
-      if (!result.success) {
-        expect(result.message).toBe('Teams "p1" or "p4" are scheduled multiple times in Round 2');
-      }
-    });
-
     it('should return invalid if teams from the same squad are paired', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p2'],
-          ['p3', 'p4'],
-        ],
+      const squadMap = new Map([
+        ['p1', 'A'],
+        ['p2', 'A'],
+        ['p3', 'B'],
+        ['p4', 'B'],
+      ]);
+
+      const output = {
+        ...exampleOutput,
+        squadMap,
       };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
-        numRounds: 1,
-        playedTeams,
-        squadMap: new Map([
-          ['p1', 'A'],
-          ['p2', 'A'],
-          ['p3', 'B'],
-          ['p4', 'B'],
-        ]),
-      });
+
+      const result = validateGenerateRoundsOutput(output);
 
       expect(result.success).toBe(false);
       if (!result.success) {
@@ -350,24 +314,71 @@ describe('swissValidator', () => {
       }
     });
 
-    it('should return invalid if a team plays against itself', () => {
-      const roundMatches: RoundMatches = {
-        'Round 1': [
-          ['p1', 'p1'], // Self-play
-          ['p3', 'p4'],
+    it('should return invalid if a team appears more than once in a round', () => {
+      const output = {
+        ...exampleOutput,
+        rounds: [
+          {
+            label: 'Round 1',
+            number: 1,
+            matches: [['p1', 'p2'] as const, ['p1', 'p3'] as const], // p1 appears twice
+          },
         ],
-      };
-      const result = validateRoundMatchesOutput({
-        roundMatches,
-        teams,
         numRounds: 1,
-        playedTeams,
-        squadMap,
-      });
+      };
+
+      const result = validateGenerateRoundsOutput(output);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Teams "p1" or "p3" are scheduled multiple times in Round 1');
+      }
+    });
+
+    it('should return invalid if a team plays against itself', () => {
+      const output = {
+        ...exampleOutput,
+        rounds: [
+          {
+            label: 'Round 1',
+            number: 1,
+            matches: [['p1', 'p1'] as const, ['p3', 'p4'] as const],
+          },
+        ],
+        numRounds: 1,
+      };
+
+      const result = validateGenerateRoundsOutput(output);
 
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.message).toBe('Team "p1" cannot play against itself');
+      }
+    });
+
+    it('should return invalid if round numbers are not sequential starting from startRound', () => {
+      const output = {
+        ...exampleOutput,
+        startRound: 2,
+        rounds: [
+          {
+            label: 'Round 2',
+            number: 2,
+            matches: [['p1', 'p2'] as const, ['p3', 'p4'] as const],
+          },
+          {
+            label: 'Round 4', // Should be Round 3
+            number: 4,
+            matches: [['p1', 'p3'] as const, ['p2', 'p4'] as const],
+          },
+        ],
+      };
+
+      const result = validateGenerateRoundsOutput(output);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toBe('Round 4 has incorrect number 4 (should be 3)');
       }
     });
   });

@@ -1,4 +1,4 @@
-import { CLIOptionFormat, ReadonlyRoundMatches } from '../types/types.js';
+import { CLIOptionFormat, ReadonlyMatch, Round, SwissPairingResult } from '../types/types.js';
 import {
   CLI_OPTION_FORMAT_CSV,
   CLI_OPTION_FORMAT_JSON_PLAIN,
@@ -8,48 +8,52 @@ import {
 } from '../constants.js';
 
 export function formatOutput({
-  roundMatches,
+  results,
   format,
 }: {
-  readonly roundMatches: ReadonlyRoundMatches;
+  readonly results: SwissPairingResult;
   readonly format: CLIOptionFormat;
 }): string {
+  // eslint-disable-next-line max-params
+  const roundMatches = results.rounds.reduce<Record<string, readonly ReadonlyMatch[]>>((acc, round) => {
+    // eslint-disable-next-line functional/immutable-data
+    acc[round.label] = round.matches;
+    return acc;
+  }, {});
+
   switch (format) {
     case CLI_OPTION_FORMAT_CSV:
-      return formatRoundMatchesAsCSV(roundMatches);
+      return formatRoundsAsCSV(results.rounds);
     case CLI_OPTION_FORMAT_JSON_PLAIN:
       return JSON.stringify(roundMatches);
     case CLI_OPTION_FORMAT_JSON_PRETTY:
       return JSON.stringify(roundMatches, null, 2);
     case CLI_OPTION_FORMAT_TEXT_MARKDOWN:
-      return formatRoundMatchesAsMarkdown(roundMatches);
+      return formatRoundsAsMarkdown(results.rounds);
     case CLI_OPTION_FORMAT_TEXT_PLAIN:
-      return formatRoundMatchesAsText(roundMatches);
+      return formatRoundsAsText(results.rounds);
   }
 }
 
-function formatRoundMatchesAsCSV(roundMatches: ReadonlyRoundMatches): string {
+export function formatRoundsAsCSV(rounds: readonly Round[]): string {
   const header = 'Round,Match,Home Team,Away Team';
-  const rows = Object.entries(roundMatches).flatMap(([round, matches]) => {
-    const roundNumber = parseInt(round.split(' ')[1]);
-    return matches.map(
+  const rows = rounds.flatMap((round) =>
+    round.matches.map(
       // eslint-disable-next-line max-params
-      (match, index) => `${String(roundNumber)},${String(index + 1)},${match[0]},${match[1]}`
-    );
-  });
+      (match, index) => `${String(round.number)},${String(index + 1)},${match[0]},${match[1]}`
+    )
+  );
   return [header, ...rows].join('\n');
 }
 
-function formatRoundMatchesAsMarkdown(roundMatches: ReadonlyRoundMatches): string {
-  const rounds = Object.entries(roundMatches);
+export function formatRoundsAsMarkdown(rounds: readonly Round[]): string {
   const multipleRounds = rounds.length > 1;
-
   let output = multipleRounds ? '# Matches\n\n' : '';
 
-  rounds.forEach(([round, matches]) => {
-    output += `**${round}**\n\n`;
+  rounds.forEach((round) => {
+    output += `**${round.label}**\n\n`;
     // eslint-disable-next-line max-params
-    matches.forEach((match, index) => {
+    round.matches.forEach((match, index) => {
       output += `${String(index + 1)}. ${match[0]} vs ${match[1]}\n`;
     });
     output += '\n';
@@ -58,11 +62,11 @@ function formatRoundMatchesAsMarkdown(roundMatches: ReadonlyRoundMatches): strin
   return output.trim();
 }
 
-function formatRoundMatchesAsText(roundMatches: ReadonlyRoundMatches): string {
-  return Object.entries(roundMatches)
-    .map(([round, matches]) => {
-      const matchList = matches.map((match) => `${match[0]} vs ${match[1]}`).join('\n');
-      return `${round}:\n${matchList}`;
+export function formatRoundsAsText(rounds: readonly Round[]): string {
+  return rounds
+    .map((round) => {
+      const matchList = round.matches.map((match) => `${match[0]} vs ${match[1]}`).join('\n');
+      return `${round.label}:\n${matchList}`;
     })
     .join('\n');
 }

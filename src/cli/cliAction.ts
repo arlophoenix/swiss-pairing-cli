@@ -8,10 +8,13 @@ import {
   validateFileOptions,
 } from './cliUtils.js';
 import { Result, UnvalidatedCLIOptions } from '../types/types.js';
-import { validateRoundMatchesInput, validateRoundMatchesOutput } from '../swiss-pairing/swissValidator.js';
+import {
+  validateGenerateRoundsInput,
+  validateGenerateRoundsOutput,
+} from '../swiss-pairing/swissValidator.js';
 
 import { formatOutput } from './outputFormatter.js';
-import { generateRoundMatches } from '../swiss-pairing/swissPairing.js';
+import { generateRounds } from '../swiss-pairing/swissPairing.js';
 import { validateCLIOptions } from '../validators/cliValidator.js';
 
 export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promise<Result<string>> {
@@ -33,24 +36,24 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   const playedTeams = createBidirectionalMap(matches);
   const squadMap = createSquadMap(teams);
 
-  const validateInput = validateRoundMatchesInput({
+  const validateInputResult = validateGenerateRoundsInput({
     teams: preparedTeams,
     numRounds,
     playedTeams,
     squadMap,
   });
 
-  if (!validateInput.success) {
+  if (!validateInputResult.success) {
     return {
       success: false,
       message: formatError({
         template: ErrorTemplate.INVALID_INPUT,
-        values: { message: validateInput.message },
+        values: { message: validateInputResult.message },
       }),
     };
   }
 
-  const roundMatchesResult = generateRoundMatches({
+  const generateRoundsResult = generateRounds({
     teams: preparedTeams,
     numRounds,
     startRound,
@@ -58,36 +61,37 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
     squadMap,
   });
 
-  if (!roundMatchesResult.success) {
+  if (!generateRoundsResult.success) {
     return {
       success: false,
       message: formatError({
         template: ErrorTemplate.GENERATION_FAILED,
-        values: { message: roundMatchesResult.message },
+        values: { message: generateRoundsResult.message },
       }),
     };
   }
 
-  const validateOutput = validateRoundMatchesOutput({
-    roundMatches: roundMatchesResult.value,
+  const validateOutputResult = validateGenerateRoundsOutput({
+    rounds: generateRoundsResult.value.rounds,
     teams: preparedTeams,
     numRounds,
+    startRound,
     playedTeams,
     squadMap,
   });
 
-  if (!validateOutput.success) {
+  if (!validateOutputResult.success) {
     return {
       success: false,
       message: formatError({
         template: ErrorTemplate.GENERATION_FAILED,
-        values: { message: validateOutput.message },
+        values: { message: validateOutputResult.message },
       }),
     };
   }
 
   const formattedOutput = formatOutput({
-    roundMatches: roundMatchesResult.value,
+    results: generateRoundsResult.value,
     format,
   });
 

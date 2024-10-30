@@ -8,21 +8,23 @@ import {
   PlayedTeams,
   ReadonlyMatch,
   ReadonlyPlayedTeams,
-  ReadonlyRoundMatches,
   Result,
+  Round,
+  SwissPairingResult,
 } from '../types/types.js';
 
 /**
  * Generates multiple rounds of matches for a Swiss-style tournament.
+ *
  * @param {Object} params - The input parameters
  * @param {readonly string[]} params.teams - The list of teams.
- * @param {readonly number} params.numRounds - The number of rounds of matches to generate.
+ * @param {readonly number} params.numRounds - The number of rounds to generate.
  * @param {readonly number} params.startRound - The number with which to label the first round generated.
  * @param {ReadonlyPlayedTeams} params.playedTeams - The teams already played.
  * @param {ReadonlyMap<string, string>} [params.squadMap] - A map of team names to squad names.
- * @returns {Result<ReadonlyRoundMatches>} The generated matches or an error.
+ * @returns {Result<validateGenerateRoundsOutput>} The generated rounds or an error.
  */
-export function generateRoundMatches({
+export function generateRounds({
   teams,
   numRounds,
   startRound,
@@ -34,13 +36,16 @@ export function generateRoundMatches({
   readonly startRound: number;
   readonly playedTeams: ReadonlyPlayedTeams;
   readonly squadMap?: ReadonlyMap<string, string>;
-}): Result<ReadonlyRoundMatches> {
-  const roundMatches: ReadonlyRoundMatches = {};
+}): Result<SwissPairingResult> {
   let currentPlayedTeams = mutableCloneBidirectionalMap(playedTeams);
+  // eslint-disable-next-line functional/prefer-readonly-type
+  const rounds: Round[] = [];
 
   for (let roundNumber = 0; roundNumber < numRounds; roundNumber++) {
-    const roundLabel = `Round ${String(startRound + roundNumber)}`;
-    const newMatches = generateSingleRoundMatches({
+    const number = startRound + roundNumber;
+    const label = `Round ${String(number)}`;
+
+    const newMatches = generateSingleRound({
       teams,
       playedTeams: currentPlayedTeams,
       squadMap,
@@ -51,17 +56,22 @@ export function generateRoundMatches({
         success: false,
         message: formatError({
           template: ErrorTemplate.NO_VALID_PAIRINGS,
-          values: { round: roundLabel },
+          values: { round: label },
         }),
       };
     }
 
     // eslint-disable-next-line functional/immutable-data
-    roundMatches[roundLabel] = newMatches;
+    rounds.push({ label, number, matches: newMatches });
     currentPlayedTeams = updatePlayedTeams({ currentPlayedTeams, newMatches });
   }
 
-  return { success: true, value: roundMatches };
+  return {
+    success: true,
+    value: {
+      rounds,
+    },
+  };
 }
 
 /**
@@ -102,7 +112,7 @@ function updatePlayedTeams({
  * @param {ReadonlyMap<string, string>} [params.squadMap] - A map of team names to squad names.
  * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible.
  */
-function generateSingleRoundMatches({
+function generateSingleRound({
   teams,
   playedTeams,
   squadMap,
@@ -127,7 +137,7 @@ function generateSingleRoundMatches({
       (!currentSquad || currentSquad !== squadMap.get(opponent))
     ) {
       // Recursively generate matches for the remaining teams
-      const newMatches = generateSingleRoundMatches({
+      const newMatches = generateSingleRound({
         teams: remainingTeams.filter((p) => p !== opponent),
         playedTeams,
         squadMap,

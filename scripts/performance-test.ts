@@ -1,4 +1,4 @@
-import { generateRoundMatches } from '../src/swiss-pairing/swissPairing.js';
+import { generateRounds } from '../src/swiss-pairing/swissPairing.js';
 import { performance } from 'perf_hooks';
 
 function generateRandomTeams(count: number): readonly string[] {
@@ -27,7 +27,7 @@ function runPerformanceTest({
   for (let i = 0; i < iterations; i++) {
     const startTime = performance.now();
 
-    generateRoundMatches({
+    generateRounds({
       teams,
       numRounds: roundCount,
       startRound: 1,

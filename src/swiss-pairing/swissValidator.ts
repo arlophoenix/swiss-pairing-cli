@@ -1,4 +1,4 @@
-import { BooleanResult, ReadonlyPlayedTeams, ReadonlyRoundMatches } from '../types/types.js';
+import { BooleanResult, ReadonlyPlayedTeams, Round } from '../types/types.js';
 import { ErrorTemplate, formatError, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 
 /**
@@ -10,7 +10,7 @@ import { ErrorTemplate, formatError, mutableCloneBidirectionalMap } from './swis
  * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
  * @returns {BooleanResult} The result of the validation
  */
-export function validateRoundMatchesInput({
+export function validateGenerateRoundsInput({
   teams,
   numRounds,
   playedTeams,
@@ -127,30 +127,33 @@ export function validateRoundMatchesInput({
 }
 
 /**
- * Validates the result of generating round matches
+ * Validates the result of generating rounds
  * @param {Object} params - The parameters to validate
- * @param {ReadonlyRoundMatches} params.roundMatches - The generated round matches
+ * @param {readonly Round[]} params.rounds - The generated rounds
  * @param {readonly string[]} params.teams - The list of teams
  * @param {number} params.numRounds - The number of rounds generated
+ * @param {readonly number} params.startRound - The number with which to label the first round generated.
  * @param {ReadonlyPlayedTeams} params.playedTeams - The matches already played
  * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
  * @returns {BooleanResult} The result of the validation
  */
-export function validateRoundMatchesOutput({
-  roundMatches,
+export function validateGenerateRoundsOutput({
+  rounds,
   teams,
   numRounds,
+  startRound,
   playedTeams,
   squadMap,
 }: {
-  readonly roundMatches: ReadonlyRoundMatches;
+  readonly rounds: readonly Round[];
   readonly teams: readonly string[];
   readonly numRounds: number;
+  readonly startRound: number;
   readonly playedTeams: ReadonlyPlayedTeams;
   readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   const numGamesPerRound = teams.length / 2;
-  const resultNumRounds = Object.keys(roundMatches).length;
+  const resultNumRounds = rounds.length;
 
   if (resultNumRounds !== numRounds) {
     return {
@@ -167,15 +170,30 @@ export function validateRoundMatchesOutput({
 
   const currentPlayedTeams = mutableCloneBidirectionalMap(playedTeams);
 
-  for (const [roundLabel, matches] of Object.entries(roundMatches)) {
-    if (matches.length !== numGamesPerRound) {
+  let expectedRoundNumber = startRound;
+  for (const round of rounds) {
+    if (round.number !== expectedRoundNumber) {
+      return {
+        success: false,
+        message: formatError({
+          template: ErrorTemplate.ROUND_NUMBER_SEQUENCE,
+          values: {
+            round: round.label,
+            actual: round.number,
+            expected: expectedRoundNumber,
+          },
+        }),
+      };
+    }
+    expectedRoundNumber++;
+    if (round.matches.length !== numGamesPerRound) {
       return {
         success: false,
         message: formatError({
           template: ErrorTemplate.MATCH_COUNT_MISMATCH,
           values: {
-            round: roundLabel,
-            actual: matches.length,
+            round: round.label,
+            actual: round.matches.length,
             expected: numGamesPerRound,
           },
         }),
@@ -184,7 +202,7 @@ export function validateRoundMatchesOutput({
 
     const teamsInRound = new Set<string>();
 
-    for (const [team1, team2] of matches) {
+    for (const [team1, team2] of round.matches) {
       if (team1 === team2) {
         return {
           success: false,
@@ -213,7 +231,7 @@ export function validateRoundMatchesOutput({
             values: {
               team1,
               team2,
-              round: roundLabel,
+              round: round.label,
             },
           }),
         };

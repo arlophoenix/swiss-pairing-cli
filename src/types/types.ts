@@ -25,12 +25,21 @@ export interface ValidatedCLIOptions {
 export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
 export type CLIOptionFormat = (typeof CLI_OPTION_FORMAT)[number];
 
-export type RoundMatches = Record<string, readonly Match[]>;
-export type ReadonlyRoundMatches = Record<string, readonly ReadonlyMatch[]>;
+export type validateGenerateRoundsOutput = Record<string, readonly ReadonlyMatch[]>;
 
 export interface Team {
   readonly name: string;
   readonly squad: string | undefined;
+}
+
+export interface Round {
+  readonly label: string;
+  readonly number: number;
+  readonly matches: readonly ReadonlyMatch[];
+}
+
+export interface SwissPairingResult {
+  readonly rounds: readonly Round[];
 }
 
 // eslint-disable-next-line functional/prefer-readonly-type
