@@ -1,6 +1,6 @@
 import * as cliUtils from '../../cli/cliUtils.js';
 import * as generateRoundsCommand from '../generateRounds/generateRoundsCommand.js';
-import * as outputFormatter from '../../cli/outputFormatter.js';
+import * as outputFormatter from '../../formatters/outputFormatter.js';
 import * as validator from '../../validators/cliValidator.js';
 
 import { Round, ValidatedCLIOptions } from '../../types/types.js';
@@ -11,7 +11,7 @@ import { handleCLIActionCommand } from './cliActionCommand.js';
 jest.mock('../../validators/cliValidator.js');
 jest.mock('../../cli/cliUtils.js');
 jest.mock('../generateRounds/generateRoundsCommand.js');
-jest.mock('../../cli/outputFormatter.js');
+jest.mock('../../formatters/outputFormatter.js');
 
 describe('handleCLIActionCommand', () => {
   const defaultValidatedOptions: ValidatedCLIOptions = {

@@ -13,7 +13,7 @@
 import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from '../../cli/cliUtils.js';
 
 import { Result } from '../../types/types.js';
-import { formatOutput } from '../../cli/outputFormatter.js';
+import { formatOutput } from '../../formatters/outputFormatter.js';
 import { handleGenerateRounds } from '../generateRounds/generateRoundsCommand.js';
 import { validateCLIOptions } from '../../validators/cliValidator.js';
 

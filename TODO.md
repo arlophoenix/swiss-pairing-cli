@@ -4,7 +4,6 @@
 
 ## Code Quality
 
-- move outputFormatter to formatters directory
 - prevent pushing directly to remote master branch
 
 ## Project Configuration
