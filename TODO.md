@@ -4,7 +4,6 @@
 
 ## Code Quality
 
-- review documentation for updates after the SwissPairingResult refactor
 - prevent pushing directly to remote master branch
 
 ## Project Configuration

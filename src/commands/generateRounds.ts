@@ -1,3 +1,14 @@
+/**
+ * Tournament generation command handling.
+ * Implements the core tournament generation workflow:
+ * 1. Input validation
+ * 2. Round generation
+ * 3. Output validation
+ * 4. Result formatting
+ *
+ * @module generateRounds
+ */
+
 import { CLIOptionFormat, ReadonlyMatch, Result } from '../types/types.js';
 import { ErrorTemplate, formatError } from '../utils/errorUtils.js';
 import {
@@ -10,7 +21,11 @@ import { formatOutput } from '../cli/outputFormatter.js';
 import { generateRounds } from '../swiss-pairing/swissPairing.js';
 
 /**
- * Command to generate Swiss-style tournament rounds
+ * Command parameters for tournament generation.
+ * Provides validated and prepared inputs:
+ * - Teams in desired pairing order
+ * - Tournament settings (rounds, format)
+ * - Constraints (matches, squads)
  */
 export interface GenerateRoundsCommand {
   readonly teams: readonly string[];
@@ -22,7 +37,21 @@ export interface GenerateRoundsCommand {
 }
 
 /**
- * Handles the generate rounds command
+ * Handles tournament generation command.
+ * Ensures all validation steps pass before
+ * attempting to generate pairings.
+ *
+ * Note: Teams must already be in desired pairing order
+ * and any BYE team must be added before calling.
+ *
+ * @example
+ * const result = handleGenerateRounds({
+ *   teams: ["Team1", "Team2", "Team3", "BYE"],
+ *   numRounds: 2,
+ *   startRound: 1,
+ *   format: "text-markdown",
+ *   squadMap: new Map([["Team1", "A"], ["Team2", "B"]])
+ * });
  */
 export function handleGenerateRounds(command: GenerateRoundsCommand): Result<string> {
   const playedTeams = createBidirectionalMap(command.matches);

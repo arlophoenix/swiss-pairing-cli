@@ -13,6 +13,16 @@ import { parseOptionsFromCSV } from './csvParser.js';
 import { parseOptionsFromJSON } from './jsonParser.js';
 import { readFile } from 'fs/promises';
 
+/**
+ * Parses tournament configuration from file.
+ * Validates file type before attempting to read.
+ *
+ * Note: File reading is asynchronous but parsing is synchronous
+ * to maintain consistent error handling with CLI validation.
+ *
+ * @param filePath - Path to configuration file
+ * @returns Parsed and validated options or error message
+ */
 export async function parseFile(filePath: string): Promise<Result<Partial<ValidatedCLIOptions>>> {
   const fileTypeResult = getFileType(filePath);
   if (!fileTypeResult.success) {
@@ -26,6 +36,8 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
     }
 
     const fileContent = await readFile(filePath, 'utf-8');
+
+    // Type-specific parsing based on extension
     switch (fileTypeResult.value) {
       case SUPPORTED_FILE_TYPE_CSV:
         return parseOptionsFromCSV(fileContent);
@@ -43,6 +55,10 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
   }
 }
 
+/**
+ * Validates file extension against supported types.
+ * Case-insensitive comparison of extensions.
+ */
 function getFileType(filePath: string): Result<SupportedFileTypes> {
   const ext = extname(filePath).toLowerCase();
   const result = parseStringLiteral({
@@ -63,6 +79,10 @@ function getFileType(filePath: string): Result<SupportedFileTypes> {
   return result;
 }
 
+/**
+ * Checks if file exists before attempting to read.
+ * Separate from type check to give specific error message.
+ */
 function fileExists(filePath: string): BooleanResult {
   if (!existsSync(filePath)) {
     return {

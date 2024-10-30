@@ -1,10 +1,23 @@
+/**
+ * CSV parsing utilities using Papa Parse.
+ * Handles CSV-specific parsing challenges:
+ * - Header case sensitivity
+ * - Empty lines
+ * - Column mapping
+ * - Type detection
+ *
+ * @module csvParserUtils
+ */
+
 import { ErrorTemplate, formatError } from '../utils/errorUtils.js';
 
 import { Result } from '../types/types.js';
 import papa from 'papaparse';
 
 /**
- * Represents a single unvalidated row from a CSV file containing Swiss pairing data.
+ * Raw CSV row after header mapping but before validation.
+ * Optional fields map to CLI option names where possible.
+ * Matches must split into home/away columns.
  */
 export interface UnvalidatedCSVRow {
   readonly teams?: string;
@@ -18,7 +31,15 @@ export interface UnvalidatedCSVRow {
 }
 
 /**
- * Parses a CSV string into an array of unvalidated rows.
+ * Parses CSV content to row objects.
+ * Automatically handles common CSV issues:
+ * - Trims whitespace from headers
+ * - Converts headers to lowercase
+ * - Skips empty lines
+ * - Ignores delimiter detection warnings
+ *
+ * @param csv - Raw CSV content
+ * @returns Parsed rows or error message
  */
 export function parseCSV(csv: string): Result<readonly UnvalidatedCSVRow[]> {
   const parseResult = papa.parse<UnvalidatedCSVRow>(csv, {
@@ -27,7 +48,7 @@ export function parseCSV(csv: string): Result<readonly UnvalidatedCSVRow[]> {
     transformHeader: (header) => header.trim().toLowerCase(),
   });
 
-  // Filter out UndetectableDelimiter warnings as PapaParse handles these cases correctly
+  // Ignore delimiter warnings - Papa Parse handles these cases correctly
   const errors = parseResult.errors.filter((error) => error.code !== 'UndetectableDelimiter');
 
   if (errors.length > 0) {

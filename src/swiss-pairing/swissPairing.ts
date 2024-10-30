@@ -1,3 +1,16 @@
+/**
+ * Swiss tournament pairing algorithm implementation.
+ *
+ * Generates optimal pairings for tournament rounds based on:
+ * - Previous match history (teams shouldn't play each other twice)
+ * - Squad constraints (teams in same squad cannot play each other)
+ * - Swiss tournament rules (matches generated in rank order)
+ *
+ * Uses recursive backtracking to find valid pairings.
+ *
+ * @module swiss-pairing
+ */
+
 import {
   ErrorTemplate,
   createBidirectionalMap,
@@ -14,15 +27,23 @@ import {
 } from '../types/types.js';
 
 /**
- * Generates multiple rounds of matches for a Swiss-style tournament.
+ * Generates multiple rounds of Swiss tournament pairings.
  *
- * @param {Object} params - The input parameters
- * @param {readonly string[]} params.teams - The list of teams.
- * @param {readonly number} params.numRounds - The number of rounds to generate.
- * @param {readonly number} params.startRound - The number with which to label the first round generated.
- * @param {ReadonlyPlayedTeams} params.playedTeams - The teams already played.
- * @param {ReadonlyMap<string, string>} [params.squadMap] - A map of team names to squad names.
- * @returns {Result<validateGenerateRoundsOutput>} The generated rounds or an error.
+ * @param teams - List of team names in rank order
+ * @param numRounds - Number of rounds to generate
+ * @param startRound - Starting round number for labeling
+ * @param playedTeams - Map of previous matches between teams
+ * @param squadMap - Optional map of team names to squad names
+ * @returns Generated rounds or error message
+ *
+ * @example
+ * const result = generateRounds({
+ *   teams: ['Team1', 'Team2', 'Team3', 'Team4'],
+ *   numRounds: 2,
+ *   startRound: 1,
+ *   playedTeams: new Map(),
+ *   squadMap: new Map([['Team1', 'A'], ['Team2', 'A']])
+ * });
  */
 export function generateRounds({
   teams,
@@ -76,10 +97,11 @@ export function generateRounds({
 
 /**
  * Updates the played teams map with new matches.
- * @param {Object} params - The input parameters
- * @param {ReadonlyPlayedTeams} params.currentPlayedTeams - The current played teams map.
- * @param {readonly ReadonlyMatch[]} params.newMatches - The new matches to add.
- * @returns {PlayedTeams} The updated played teams map.
+ * Creates bidirectional relationships between paired teams.
+ *
+ * @param currentPlayedTeams - Current map of played matches
+ * @param newMatches - New matches to add to the map
+ * @returns Updated played teams map
  */
 function updatePlayedTeams({
   currentPlayedTeams,
@@ -105,12 +127,13 @@ function updatePlayedTeams({
 }
 
 /**
- * Generates matches for a single round using a recursive backtracking algorithm.
- * @param {Object} params - The parameters for generating matches.
- * @param {readonly string[]} params.teams - The list of teams.
- * @param {ReadonlyPlayedTeams} params.playedTeams - The matches already played.
- * @param {ReadonlyMap<string, string>} [params.squadMap] - A map of team names to squad names.
- * @returns {readonly ReadonlyMatch[] | null} The generated matches or null if no valid matches are possible.
+ * Generates matches for a single round using recursive backtracking.
+ * Ensures no teams play against previous opponents or squadmates.
+ *
+ * @param teams - Remaining teams to pair
+ * @param playedTeams - Map of previous matches
+ * @param squadMap - Optional squad assignments
+ * @returns Generated matches or null if no valid pairings possible
  */
 function generateSingleRound({
   teams,

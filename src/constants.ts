@@ -1,5 +1,22 @@
+/**
+ * Project-wide constants.
+ * Defines:
+ * - CLI argument names and shortcuts
+ * - Default values
+ * - Valid option values
+ * - Example values
+ *
+ * Used to ensure consistency across the application.
+ *
+ * @module constants
+ */
+
 import { CLIOptionFormat, CLIOptionOrder, ValidatedCLIOptions } from './types/types.js';
 
+/**
+ * CLI argument names and shortcuts.
+ * Short versions are first character of long name.
+ */
 export const ARG_FILE = 'file';
 export const ARG_FORMAT = 'format';
 export const ARG_MATCHES = 'matches';
@@ -12,6 +29,11 @@ export const ARG_TEAMS = 'teams';
 export const ARG_TEAMS_SHORT = ARG_TEAMS.charAt(0);
 export const ARG_START_ROUND = 'start-round';
 export const ARG_START_ROUND_SHORT = ARG_START_ROUND.charAt(0);
+
+/**
+ * All valid CLI argument names.
+ * Used for type safety in error messages.
+ */
 export const ARGS = [
   ARG_FILE,
   ARG_FORMAT,
@@ -22,8 +44,16 @@ export const ARGS = [
   ARG_START_ROUND,
 ] as const;
 
+/**
+ * Special team name for odd-numbered tournaments.
+ * Teams paired with BYE get automatic win.
+ */
 export const BYE_TEAM = 'BYE';
 
+/**
+ * Valid team pairing orders.
+ * Affects how teams are paired each round.
+ */
 export const CLI_OPTION_ORDER_BOTOM_UP = 'bottom-up';
 export const CLI_OPTION_ORDER_RANDOM = 'random';
 export const CLI_OPTION_ORDER_TOP_DOWN = 'top-down';
@@ -33,6 +63,14 @@ export const CLI_OPTION_ORDER = [
   CLI_OPTION_ORDER_RANDOM,
 ] as const;
 
+/**
+ * Valid output formats.
+ * Each format has specific use cases:
+ * - CSV: Spreadsheet import
+ * - JSON: API integration
+ * - Markdown: Documentation
+ * - Plain text: Console output
+ */
 export const CLI_OPTION_FORMAT_CSV = 'csv';
 export const CLI_OPTION_FORMAT_JSON_PLAIN = 'json-plain';
 export const CLI_OPTION_FORMAT_JSON_PRETTY = 'json-pretty';
@@ -46,6 +84,10 @@ export const CLI_OPTION_FORMAT = [
   CLI_OPTION_FORMAT_TEXT_PLAIN,
 ] as const;
 
+/**
+ * Default values for all options.
+ * Used when option not provided in any input.
+ */
 export const CLI_OPTION_FORMAT_DEFAULT: CLIOptionFormat = CLI_OPTION_FORMAT_TEXT_MARKDOWN;
 export const CLI_OPTION_MATCHES_DEFAULT = [];
 export const CLI_OPTION_NUM_ROUND_DEFAULT = 1;
@@ -62,10 +104,17 @@ export const CLI_OPTION_DEFAULTS: ValidatedCLIOptions = {
   startRound: CLI_OPTION_START_ROUND_DEFAULT,
 };
 
+/**
+ * Supported input file types.
+ * Each type has specific parser and validator.
+ */
 export const SUPPORTED_FILE_TYPE_CSV = '.csv';
 export const SUPPORTED_FILE_TYPE_JSON = '.json';
 export const SUPPORTED_FILE_TYPES = [SUPPORTED_FILE_TYPE_CSV, SUPPORTED_FILE_TYPE_JSON] as const;
 
+/**
+ * Program information and examples for CLI help.
+ */
 export const PROGRAM_NAME = 'swiss-pairing';
 export const EXAMPLE_TEAMS_COUNT = '4';
 export const EXAMPLE_TEAMS = 'Alice Bob Charlie David';

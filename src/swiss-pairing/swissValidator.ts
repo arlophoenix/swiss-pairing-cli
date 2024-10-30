@@ -1,14 +1,25 @@
+/**
+ * Swiss tournament rule validation.
+ * Enforces tournament-specific constraints:
+ * - Even number of teams
+ * - No repeat matches
+ * - No intra-squad matches
+ * - Sequential round numbers
+ * - Complete round matching
+ *
+ * @module swissValidator
+ */
+
 import { BooleanResult, ReadonlyPlayedTeams, Round } from '../types/types.js';
 import { ErrorTemplate, formatError, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 
 /**
- * Validates the input for generating round matches
- * @param {Object} params - The parameters to validate
- * @param {readonly string[]} params.teams - The list of teams
- * @param {number} params.numRounds - The number of rounds to generate
- * @param {ReadonlyPlayedTeams} params.playedTeams - The matches already played
- * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
- * @returns {BooleanResult} The result of the validation
+ * Validates input for round generation.
+ * Must pass before attempting generation to ensure
+ * all tournament rules can be satisfied.
+ *
+ * Note: Validates both technical constraints (even teams)
+ * and game rules (no self-play, squad constraints).
  */
 export function validateGenerateRoundsInput({
   teams,
@@ -35,6 +46,7 @@ export function validateGenerateRoundsInput({
     };
   }
 
+  // Unique team names required for matching
   if (new Set(teams).size !== teams.length) {
     return {
       success: false,
@@ -42,6 +54,7 @@ export function validateGenerateRoundsInput({
     };
   }
 
+  // Can't generate more rounds than possible unique opponents
   if (numRounds < 1) {
     return {
       success: false,
@@ -62,6 +75,7 @@ export function validateGenerateRoundsInput({
     };
   }
 
+  // Validate played matches
   const allTeamsInPlayedTeams = new Set<string>();
   for (const [team, opponents] of playedTeams.entries()) {
     allTeamsInPlayedTeams.add(team);
@@ -70,6 +84,7 @@ export function validateGenerateRoundsInput({
     }
   }
 
+  // All referenced teams must exist
   for (const team of allTeamsInPlayedTeams.keys()) {
     if (!teams.includes(team)) {
       return {
@@ -85,7 +100,9 @@ export function validateGenerateRoundsInput({
     }
   }
 
+  // Match history must be valid
   for (const [team, opponents] of playedTeams.entries()) {
+    // No self-play allowed
     for (const opponent of opponents) {
       if (team === opponent) {
         return {
@@ -96,6 +113,7 @@ export function validateGenerateRoundsInput({
           }),
         };
       }
+      // Match history must be symmetric
       if (!playedTeams.get(opponent)?.has(team)) {
         return {
           success: false,
@@ -108,6 +126,7 @@ export function validateGenerateRoundsInput({
     }
   }
 
+  // All squads must reference real teams
   for (const team of squadMap.keys()) {
     if (!teams.includes(team)) {
       return {
@@ -127,15 +146,15 @@ export function validateGenerateRoundsInput({
 }
 
 /**
- * Validates the result of generating rounds
- * @param {Object} params - The parameters to validate
- * @param {readonly Round[]} params.rounds - The generated rounds
- * @param {readonly string[]} params.teams - The list of teams
- * @param {number} params.numRounds - The number of rounds generated
- * @param {readonly number} params.startRound - The number with which to label the first round generated.
- * @param {ReadonlyPlayedTeams} params.playedTeams - The matches already played
- * @param {ReadonlyMap<string, string>} params.squadMap - The map of teams to squads
- * @returns {BooleanResult} The result of the validation
+ * Validates generated rounds.
+ * Ensures output satisfies all tournament rules:
+ * - All teams matched each round
+ * - No repeat matches
+ * - Squad constraints respected
+ * - Sequential round numbers
+ *
+ * Note: Validation updates played teams map to track
+ * cumulative matches while checking.
  */
 export function validateGenerateRoundsOutput({
   rounds,
@@ -186,6 +205,7 @@ export function validateGenerateRoundsOutput({
       };
     }
     expectedRoundNumber++;
+
     if (round.matches.length !== numGamesPerRound) {
       return {
         success: false,
@@ -203,6 +223,7 @@ export function validateGenerateRoundsOutput({
     const teamsInRound = new Set<string>();
 
     for (const [team1, team2] of round.matches) {
+      // Check core rules
       if (team1 === team2) {
         return {
           success: false,
@@ -239,6 +260,7 @@ export function validateGenerateRoundsOutput({
       teamsInRound.add(team1);
       teamsInRound.add(team2);
 
+      // Check squad constraints
       if (squadMap.get(team1) === squadMap.get(team2) && squadMap.get(team1) !== undefined) {
         return {
           success: false,
@@ -249,10 +271,11 @@ export function validateGenerateRoundsOutput({
         };
       }
 
-      if (currentPlayedTeams.get(team1) === undefined) {
+      // Track matches for future validation
+      if (!currentPlayedTeams.has(team1)) {
         currentPlayedTeams.set(team1, new Set());
       }
-      if (currentPlayedTeams.get(team2) === undefined) {
+      if (!currentPlayedTeams.has(team2)) {
         currentPlayedTeams.set(team2, new Set());
       }
       currentPlayedTeams.get(team1)?.add(team2);

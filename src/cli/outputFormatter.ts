@@ -1,3 +1,14 @@
+/**
+ * Output formatting for tournament pairings.
+ * Supports multiple output formats:
+ * - CSV for spreadsheet compatibility
+ * - JSON (plain and pretty) for API responses
+ * - Markdown for documentation
+ * - Plain text for console output
+ *
+ * @module outputFormatter
+ */
+
 import { CLIOptionFormat, ReadonlyMatch, Round, SwissPairingResult } from '../types/types.js';
 import {
   CLI_OPTION_FORMAT_CSV,
@@ -7,6 +18,19 @@ import {
   CLI_OPTION_FORMAT_TEXT_PLAIN,
 } from '../constants.js';
 
+/**
+ * Formats tournament results in the specified output format.
+ *
+ * @param results - Generated tournament rounds and matches
+ * @param format - Desired output format
+ * @returns Formatted string representation
+ *
+ * @example
+ * const output = formatOutput({
+ *   results: { rounds: [{ label: "Round 1", matches: [["A", "B"]] }] },
+ *   format: "text-markdown"
+ * });
+ */
 export function formatOutput({
   results,
   format,
@@ -35,6 +59,13 @@ export function formatOutput({
   }
 }
 
+/**
+ * Formats rounds as CSV with headers.
+ * Format: Round,Match,Home Team,Away Team
+ *
+ * @param rounds - Tournament rounds to format
+ * @returns CSV string with headers
+ */
 export function formatRoundsAsCSV(rounds: readonly Round[]): string {
   const header = 'Round,Match,Home Team,Away Team';
   const rows = rounds.flatMap((round) =>
@@ -46,6 +77,13 @@ export function formatRoundsAsCSV(rounds: readonly Round[]): string {
   return [header, ...rows].join('\n');
 }
 
+/**
+ * Formats rounds as Markdown with headers.
+ * Includes title for multiple rounds.
+ *
+ * @param rounds - Tournament rounds to format
+ * @returns Markdown formatted string
+ */
 export function formatRoundsAsMarkdown(rounds: readonly Round[]): string {
   const multipleRounds = rounds.length > 1;
   let output = multipleRounds ? '# Matches\n\n' : '';
@@ -62,6 +100,13 @@ export function formatRoundsAsMarkdown(rounds: readonly Round[]): string {
   return output.trim();
 }
 
+/**
+ * Formats rounds as plain text.
+ * One round per line, matches indented.
+ *
+ * @param rounds - Tournament rounds to format
+ * @returns Plain text formatted string
+ */
 export function formatRoundsAsText(rounds: readonly Round[]): string {
   return rounds
     .map((round) => {

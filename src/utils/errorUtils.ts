@@ -1,35 +1,45 @@
+/**
+ * Error handling utilities for consistent error messages.
+ * Uses template system to ensure error format consistency
+ * while allowing for variable content.
+ *
+ * @module errorUtils
+ */
+
 import { CLIArg, FailureResult, InputOrigin } from '../types/types.js';
 
+// Extract variables from template strings for type safety
 type ExtractVariables<T extends string> = T extends `${string}\${${infer Var}}${infer Rest}`
   ? Var | ExtractVariables<Rest>
   : never;
 
+// Ensure all template variables are provided
 type TemplateVariables<T extends ErrorTemplate> = Record<ExtractVariables<T>, string | number>;
 
 /**
- * Error message template strings. Using const enum for better performance and tree-shaking.
- * All messages should:
- * 1. Start with a capital letter
- * 2. Not end with a period
- * 3. Use double quotes for string literals
- * 4. Use consistent placeholder format ${value}
+ * Error message templates.
+ * All messages must:
+ * - Start with capital letter
+ * - Not end with period
+ * - Use double quotes for literals
+ * - Use ${name} for variables
  */
 export const enum ErrorTemplate {
-  // File handling errors
+  // File handling
   FILE_NOT_FOUND = 'File not found: "${path}"',
   FILE_READ_ERROR = 'Error reading file: ${error}',
   INVALID_FILE_TYPE = 'Invalid file type: expected one of ${types}',
 
-  // Parse errors
+  // Parsing
   PARSE_CSV_ERROR = 'Invalid CSV: ${error}',
   PARSE_JSON_ERROR = 'Invalid JSON: ${error}',
   NO_DATA = 'No data found in ${source}',
 
-  // Validation errors
+  // Validation
   INVALID_ARGUMENT = 'Invalid ${origin} argument "${name}": "${value}". Expected ${expected}',
   INVALID_VALUE = 'Invalid value: "${value}". Expected one of "${options}"',
 
-  // Teams validation
+  // Teams
   MIN_TEAMS = 'Must have at least 2 teams',
   EVEN_TEAMS = 'Must have an even number of teams',
   UNIQUE_TEAMS = 'All team names must be unique',
@@ -38,7 +48,7 @@ export const enum ErrorTemplate {
   ASYMMETRIC_MATCH = 'Match history must be symmetrical - found ${team1} vs ${team2} but not ${team2} vs ${team1}',
   SAME_SQUAD = 'Teams "${team1}" and "${team2}" cannot play each other - they are in the same squad',
 
-  // Round validation
+  // Rounds
   MIN_ROUNDS = 'Must generate at least one round',
   MAX_ROUNDS = 'Number of rounds (${rounds}) must be less than number of teams (${teams})',
   ROUND_COUNT_MISMATCH = 'Generated ${actual} rounds but expected ${expected}',
@@ -48,13 +58,14 @@ export const enum ErrorTemplate {
   NO_VALID_PAIRINGS = 'No valid pairings possible for ${round}',
   ROUND_NUMBER_SEQUENCE = '${round} has incorrect number ${actual} (should be ${expected})',
 
-  // CLI Action errors
+  // CLI Actions
   INVALID_INPUT = 'Invalid input: ${message}',
   GENERATION_FAILED = 'Failed to generate matches: ${message}',
 }
 
 /**
- * Creates a standardized error message by interpolating values into a template
+ * Creates error message from template and variables.
+ * Type system ensures all required variables are provided.
  */
 export function formatError<T extends ErrorTemplate>({
   template,
@@ -68,7 +79,8 @@ export function formatError<T extends ErrorTemplate>({
 }
 
 /**
- * Creates a standard validation error message for CLI arguments and options
+ * Creates validation error for CLI arguments.
+ * Used when input value doesn't match expected format.
  */
 export function createInvalidValueMessage({
   origin,
@@ -95,7 +107,8 @@ export function createInvalidValueMessage({
 }
 
 /**
- * Wraps an error message with its source context
+ * Wraps error with context about its source.
+ * Used when converting between input formats.
  */
 export function wrapErrorWithOrigin({
   error,
@@ -105,7 +118,6 @@ export function wrapErrorWithOrigin({
   readonly origin: InputOrigin;
 }): FailureResult {
   const message = typeof error === 'string' ? error : error.message;
-
   return {
     success: false,
     message: `Invalid ${origin} data: ${message}`,

@@ -1,3 +1,18 @@
+/**
+ * Common validation utilities.
+ * Provides core validation functions for:
+ * - Teams and squads
+ * - Round numbers
+ * - Match history
+ * - File types
+ * - Output formats
+ *
+ * Used by CLI, CSV, and JSON validators to ensure
+ * consistent validation across input sources.
+ *
+ * @module validatorUtils
+ */
+
 import {
   ARG_FILE,
   ARG_FORMAT,
@@ -35,13 +50,17 @@ type Validator<K extends keyof ValidatedCLIOptions> = (
 ) => Result<ValidatedCLIOptions[K] | undefined>;
 
 /**
- * Validates all CLI options using individual validators.
- * Processes and combines results for all options.
+ * Core validation pipeline for all tournament options.
+ * Validates each option independently and combines results.
  *
- * @param {Object} params - The parameters for validation
- * @param {UnvalidatedCLIOptions} params.input - The raw CLI input to validate
- * @param {InputOrigin} params.origin - The source of the input for error messaging
- * @returns {Result<Partial<ValidatedCLIOptions>>} Success with validated options or failure with message
+ * Note: Undefined values are allowed and treated as unset.
+ * This enables partial configuration from different sources.
+ *
+ * @example
+ * const result = validateAllOptions({
+ *   input: { teams: ["A", "B"], numRounds: "2" },
+ *   origin: "CLI"
+ * });
  */
 export function validateAllOptions({
   input,
@@ -61,6 +80,7 @@ export function validateAllOptions({
     file: (i) => validateFile({ file: i.file, origin }),
   };
 
+  // Run all validators
   type ValidatorResult = {
     readonly [K in keyof ValidatedCLIOptions]: Result<ValidatedCLIOptions[K] | undefined>;
   };
@@ -68,6 +88,7 @@ export function validateAllOptions({
     Object.entries(validators).map(([key, validator]) => [key, validator(input)])
   ) as ValidatorResult;
 
+  // Return first error or combine successful results
   const firstError = Object.values(results).find(
     (result): result is { readonly success: false; readonly message: string } => !result.success
   );
