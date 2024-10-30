@@ -4,6 +4,10 @@
 
 ## Code Quality
 
+- rename cliAction to cliActionCommand
+- move cliActionCommand to commands directory
+- rename generateRounds to generateRoundsCommand
+- move outputFormatter to formatters directory
 - prevent pushing directly to remote master branch
 
 ## Project Configuration

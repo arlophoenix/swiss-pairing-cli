@@ -9,15 +9,14 @@
  * @module generateRounds
  */
 
-import { CLIOptionFormat, ReadonlyMatch, Result } from '../types/types.js';
 import { ErrorTemplate, formatError } from '../utils/errorUtils.js';
+import { ReadonlyMatch, Result, SwissPairingResult } from '../types/types.js';
 import {
   validateGenerateRoundsInput,
   validateGenerateRoundsOutput,
 } from '../swiss-pairing/swissValidator.js';
 
 import { createBidirectionalMap } from '../utils/utils.js';
-import { formatOutput } from '../cli/outputFormatter.js';
 import { generateRounds } from '../swiss-pairing/swissPairing.js';
 
 /**
@@ -32,7 +31,6 @@ export interface GenerateRoundsCommand {
   readonly numRounds: number;
   readonly startRound: number;
   readonly matches?: readonly ReadonlyMatch[];
-  readonly format: CLIOptionFormat;
   readonly squadMap: ReadonlyMap<string, string>;
 }
 
@@ -53,7 +51,7 @@ export interface GenerateRoundsCommand {
  *   squadMap: new Map([["Team1", "A"], ["Team2", "B"]])
  * });
  */
-export function handleGenerateRounds(command: GenerateRoundsCommand): Result<string> {
+export function handleGenerateRounds(command: GenerateRoundsCommand): Result<SwissPairingResult> {
   const playedTeams = createBidirectionalMap(command.matches);
 
   const validateInputResult = validateGenerateRoundsInput({
@@ -110,11 +108,5 @@ export function handleGenerateRounds(command: GenerateRoundsCommand): Result<str
     };
   }
 
-  return {
-    success: true,
-    value: formatOutput({
-      results: roundsResult.value,
-      format: command.format,
-    }),
-  };
+  return roundsResult;
 }

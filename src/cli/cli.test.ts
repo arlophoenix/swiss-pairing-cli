@@ -8,14 +8,14 @@ import { createCLI } from './cli.js';
 jest.mock('./cliAction.js');
 
 describe('CLI', () => {
-  let mockHandleCLIAction: SpyInstance<typeof cliAction.handleCLIAction>;
+  let mockHandleCLIAction: SpyInstance<typeof cliAction.handleCLICommand>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   let mockProcessExit: SpyInstance<typeof process.exit>;
 
   beforeEach(() => {
     mockHandleCLIAction = jest
-      .spyOn(cliAction, 'handleCLIAction')
+      .spyOn(cliAction, 'handleCLICommand')
       .mockResolvedValue({ success: true, value: 'Matches generated successfully' });
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {
       // do nothing
@@ -36,7 +36,7 @@ describe('CLI', () => {
     const program = createCLI();
     await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
 
-    expect(cliAction.handleCLIAction).toHaveBeenCalledWith(
+    expect(cliAction.handleCLICommand).toHaveBeenCalledWith(
       expect.objectContaining({ teams: ['Alice', 'Bob'] })
     );
     expect(mockConsoleLog).toHaveBeenCalledWith('Matches generated successfully');
@@ -45,7 +45,7 @@ describe('CLI', () => {
   });
 
   it('should handle errors', async () => {
-    jest.spyOn(cliAction, 'handleCLIAction').mockResolvedValue({
+    jest.spyOn(cliAction, 'handleCLICommand').mockResolvedValue({
       success: false,
       message: 'Invalid input',
     });

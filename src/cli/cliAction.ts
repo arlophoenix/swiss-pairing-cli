@@ -10,11 +10,25 @@
  * @module cliAction
  */
 
-import { Result, UnvalidatedCLIOptions } from '../types/types.js';
 import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from './cliUtils.js';
 
+import { Result } from '../types/types.js';
+import { formatOutput } from './outputFormatter.js';
 import { handleGenerateRounds } from '../commands/generateRounds.js';
 import { validateCLIOptions } from '../validators/cliValidator.js';
+
+/**
+ * Raw command input from CLI
+ */
+export interface CLICommand {
+  readonly teams?: readonly string[];
+  readonly numRounds?: string;
+  readonly startRound?: string;
+  readonly matches?: readonly (readonly string[])[];
+  readonly order?: string;
+  readonly format?: string;
+  readonly file?: string;
+}
 
 /**
  * Processes CLI input through the tournament generation pipeline.
@@ -36,13 +50,13 @@ import { validateCLIOptions } from '../validators/cliValidator.js';
  *   console.log(result.value);
  * }
  */
-export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promise<Result<string>> {
-  const validateCLIOptionsResult = validateCLIOptions(cliOptions);
+export async function handleCLICommand(command: CLICommand): Promise<Result<string>> {
+  const validateCLIOptionsResult = validateCLIOptions(command);
   if (!validateCLIOptionsResult.success) {
     return validateCLIOptionsResult;
   }
 
-  const validateFileOptionsResult = await validateFileOptions(cliOptions.file);
+  const validateFileOptionsResult = await validateFileOptions(command.file);
   if (!validateFileOptionsResult.success) {
     return validateFileOptionsResult;
   }
@@ -56,12 +70,23 @@ export async function handleCLIAction(cliOptions: UnvalidatedCLIOptions): Promis
   const preparedTeams = prepareTeams({ teams: teams.map((t) => t.name), order });
   const squadMap = createSquadMap(teams);
 
-  return handleGenerateRounds({
+  const roundsResult = handleGenerateRounds({
     teams: preparedTeams,
     numRounds,
     startRound,
     matches,
-    format,
     squadMap,
   });
+
+  if (!roundsResult.success) {
+    return roundsResult;
+  }
+
+  return {
+    success: true,
+    value: formatOutput({
+      results: roundsResult.value,
+      format,
+    }),
+  };
 }

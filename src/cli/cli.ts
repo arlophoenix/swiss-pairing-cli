@@ -37,7 +37,7 @@ import {
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
-import { handleCLIAction } from './cliAction.js';
+import { handleCLICommand } from './cliAction.js';
 
 /**
  * Creates and configures the CLI command parser.
@@ -96,7 +96,7 @@ export function createCLI(): Command {
       }
     )
     .action(async (options: UnvalidatedCLIOptions) => {
-      const result = await handleCLIAction(options);
+      const result = await handleCLICommand(options);
       if (result.success) {
         console.log(result.value);
       } else {
