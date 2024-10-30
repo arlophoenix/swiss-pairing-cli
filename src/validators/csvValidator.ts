@@ -1,5 +1,5 @@
+import { ErrorTemplate, formatError, teamToString, validateAllOptions } from './validatorUtils.js';
 import { Result, UnvalidatedCLIOptions, ValidatedCLIOptions } from '../types/types.js';
-import { teamToString, validateAllOptions } from './validatorUtils.js';
 
 import { UnvalidatedCSVRow } from '../parsers/csvParserUtils.js';
 
@@ -7,7 +7,13 @@ export function validateCSVOptions(
   csvRows: readonly UnvalidatedCSVRow[]
 ): Result<Partial<ValidatedCLIOptions>> {
   if (csvRows.length === 0) {
-    return { success: true, value: {} };
+    return {
+      success: false,
+      message: formatError({
+        template: ErrorTemplate.NO_DATA,
+        values: { source: 'CSV' },
+      }),
+    };
   }
 
   const teams = csvRows
@@ -35,13 +41,5 @@ export function validateCSVOptions(
     matches: matches.length > 0 ? matches : undefined,
   };
 
-  const result = validateAllOptions({ input, origin: 'CSV' });
-  if (!result.success) {
-    return {
-      success: false,
-      message: `Invalid CSV data: ${result.message}`,
-    };
-  }
-
-  return result;
+  return validateAllOptions({ input, origin: 'CSV' });
 }

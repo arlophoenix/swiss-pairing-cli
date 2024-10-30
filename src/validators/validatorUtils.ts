@@ -340,7 +340,7 @@ export function validateFile({
         origin,
         argName: ARG_FILE,
         inputValue: file,
-        expectedValue: `extension to be one of ${SUPPORTED_FILE_TYPES.join(', ')}.`,
+        expectedValue: `extension to be one of ${SUPPORTED_FILE_TYPES.join(', ')}`,
       }),
     };
   }

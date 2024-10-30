@@ -8,9 +8,9 @@ describe('csvValidator', () => {
     it('should handle empty CSV records', () => {
       const csvRows: readonly UnvalidatedCSVRow[] = [];
       const result = validateCSVOptions(csvRows);
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.value).toEqual({});
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.message).toEqual('No data found in CSV');
       }
     });
 
@@ -87,7 +87,9 @@ describe('csvValidator', () => {
       const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toContain('Invalid CSV data:');
+        expect(result.message).toContain(
+          'Invalid CSV argument "num-rounds": "-1". Expected a positive integer'
+        );
       }
     });
 
@@ -96,7 +98,9 @@ describe('csvValidator', () => {
       const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toContain('Invalid CSV data:');
+        expect(result.message).toContain(
+          'Invalid CSV argument "teams": "Alice [A] [B]". Expected valid team name, optionally followed by [squad] e.g."Alice [Home]"'
+        );
       }
     });
 
@@ -108,7 +112,9 @@ describe('csvValidator', () => {
       const result = validateCSVOptions(csvRows);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toContain('Invalid CSV data:');
+        expect(result.message).toContain(
+          'Invalid CSV argument "teams": "Alice [A],Alice [B]". Expected unique team names'
+        );
       }
     });
   });
