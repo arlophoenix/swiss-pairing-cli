@@ -4,7 +4,7 @@ import * as swissValidator from '../../swiss-pairing/swissValidator.js';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { SwissPairingResult } from '../../types/types.js';
-import { handleGenerateRounds } from './generateRounds.js';
+import { handleGenerateRounds } from './generateRoundsCommand.js';
 
 jest.mock('../../swiss-pairing/swissPairing.js');
 jest.mock('../../swiss-pairing/swissValidator.js');
