@@ -280,6 +280,144 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 Please ensure your code adheres to the existing style and passes all tests.
 
+## Architecture
+
+### Design Principles
+
+The project follows functional programming principles:
+
+- Immutable data using readonly types
+- Pure functions with explicit dependencies
+- Error handling via Result type pattern
+- Side effects isolated to system boundaries
+
+### Core Components
+
+#### CLI Layer (`cli/`)
+
+Handles command parsing, file I/O, option validation, and output formatting.
+
+#### Tournament Logic (`swiss-pairing/`)
+
+Implements the Swiss pairing algorithm with support for:
+
+- Match history tracking
+- Squad constraints
+- Round validation
+
+#### Error Handling
+
+Uses discriminated union Result type for error handling:
+
+```typescript
+type Result<T> =
+  | { readonly success: true; readonly value: T }
+  | { readonly success: false; readonly message: string };
+```
+
+### Validation Pipeline
+
+1. Parse CLI/File input into raw options
+2. Validate options (types, ranges, etc)
+3. Validate tournament rules (team counts, etc)
+4. Generate and validate pairings
+5. Format output
+
+## Documentation Principles
+
+### File Level
+
+Each file should start with a TSDoc comment explaining:
+
+- Purpose of the module
+- Key exports and their relationships
+- Any important implementation details
+
+Example:
+
+```typescript
+/**
+ * Swiss tournament pairing core algorithm.
+ *
+ * Generates optimal pairings for tournament rounds based on:
+ * - Previous match history
+ * - Squad constraints
+ * - Swiss tournament rules
+ *
+ * @module swiss-pairing
+ */
+```
+
+### Function Level
+
+Functions should have JSDoc comments with:
+
+- Clear description of purpose
+- @param descriptions including constraints
+- @returns description
+- @throws if applicable
+- @example for non-obvious usage
+
+Example:
+
+```typescript
+/**
+ * Generates matches for the next tournament round.
+ *
+ * @param teams - List of team names ordered by rank
+ * @param playedTeams - Map of previous matchups
+ * @param squadMap - Optional squad assignments
+ * @returns Generated matches or error message
+ * @throws Never - Uses Result type for errors
+ *
+ * @example
+ * const result = generateRound({
+ *   teams: ['A','B','C','D'],
+ *   playedTeams: new Map([['A', new Set(['B'])]])
+ * });
+ */
+```
+
+### Interface/Type Level
+
+Interfaces and types should document:
+
+- Purpose of the type
+- Constraints on fields
+- Relationships to other types
+
+Example:
+
+```typescript
+/**
+ * Represents a tournament team with optional squad assignment.
+ * Team names must be unique within a tournament.
+ * Teams in the same squad cannot play each other.
+ */
+interface Team {
+  /** Unique identifier for the team */
+  readonly name: string;
+
+  /** Optional squad grouping */
+  readonly squad?: string;
+}
+```
+
+### Inline Comments
+
+- Use sparingly - prefer self-documenting code
+- Explain complex algorithms
+- Document non-obvious constraints
+- Note edge cases and workarounds
+
+Example:
+
+```typescript
+// Fisher-Yates shuffle to randomize team order
+// Note: Math.random() is sufficient for this use case
+function shuffle<T>(array: readonly T[]): readonly T[] {
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
