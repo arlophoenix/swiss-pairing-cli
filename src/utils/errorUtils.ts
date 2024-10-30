@@ -43,8 +43,8 @@ export const enum ErrorTemplate {
   MAX_ROUNDS = 'Number of rounds (${rounds}) must be less than number of teams (${teams})',
   ROUND_COUNT_MISMATCH = 'Generated ${actual} rounds but expected ${expected}',
   MATCH_COUNT_MISMATCH = '${round} has ${actual} matches but expected ${expected}',
-  DUPLICATE_MATCH = 'Duplicate match found: ${team1} vs ${team2}',
-  MULTIPLE_MATCHES = 'Teams ${team1} or ${team2} scheduled multiple times in ${round}',
+  DUPLICATE_MATCH = 'Duplicate match found: "${team1}" vs "${team2}"',
+  MULTIPLE_MATCHES = 'Teams "${team1}" or "${team2}" are scheduled multiple times in ${round}',
   NO_VALID_PAIRINGS = 'No valid pairings possible for ${round}',
 }
 

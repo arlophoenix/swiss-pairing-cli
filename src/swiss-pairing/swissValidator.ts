@@ -1,6 +1,5 @@
 import { BooleanResult, ReadonlyPlayedTeams, ReadonlyRoundMatches } from '../types/types.js';
-
-import { mutableCloneBidirectionalMap } from './swissPairingUtils.js';
+import { ErrorTemplate, formatError, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 
 /**
  * Validates the input for generating round matches
@@ -23,25 +22,43 @@ export function validateRoundMatchesInput({
   readonly squadMap: ReadonlyMap<string, string>;
 }): BooleanResult {
   if (teams.length < 2) {
-    return { success: false, message: 'Must have at least 2 teams' };
+    return {
+      success: false,
+      message: ErrorTemplate.MIN_TEAMS,
+    };
   }
 
   if (teams.length % 2 !== 0) {
-    return { success: false, message: 'Must have an even number of teams' };
+    return {
+      success: false,
+      message: ErrorTemplate.EVEN_TEAMS,
+    };
   }
 
   if (new Set(teams).size !== teams.length) {
-    return { success: false, message: 'All team names must be unique' };
+    return {
+      success: false,
+      message: ErrorTemplate.UNIQUE_TEAMS,
+    };
   }
 
   if (numRounds < 1) {
-    return { success: false, message: 'Must generate at least one round' };
+    return {
+      success: false,
+      message: ErrorTemplate.MIN_ROUNDS,
+    };
   }
 
   if (numRounds >= teams.length) {
     return {
       success: false,
-      message: `Number of rounds (${String(numRounds)}) must be less than number of teams (${String(teams.length)})`,
+      message: formatError({
+        template: ErrorTemplate.MAX_ROUNDS,
+        values: {
+          rounds: numRounds,
+          teams: teams.length,
+        },
+      }),
     };
   }
 
@@ -55,7 +72,16 @@ export function validateRoundMatchesInput({
 
   for (const team of allTeamsInPlayedTeams.keys()) {
     if (!teams.includes(team)) {
-      return { success: false, message: `Unknown team in match history: "${team}"` };
+      return {
+        success: false,
+        message: formatError({
+          template: ErrorTemplate.UNKNOWN_TEAM,
+          values: {
+            context: 'matches',
+            team,
+          },
+        }),
+      };
     }
   }
 
@@ -64,13 +90,19 @@ export function validateRoundMatchesInput({
       if (team === opponent) {
         return {
           success: false,
-          message: `${team} cannot play against itself`,
+          message: formatError({
+            template: ErrorTemplate.SELF_PLAY,
+            values: { team },
+          }),
         };
       }
       if (!playedTeams.get(opponent)?.has(team)) {
         return {
           success: false,
-          message: `Match history must be symmetrical - found ${team} vs ${opponent} but not ${opponent} vs ${team}`,
+          message: formatError({
+            template: ErrorTemplate.ASYMMETRIC_MATCH,
+            values: { team1: team, team2: opponent },
+          }),
         };
       }
     }
@@ -78,7 +110,16 @@ export function validateRoundMatchesInput({
 
   for (const team of squadMap.keys()) {
     if (!teams.includes(team)) {
-      return { success: false, message: `Unknown team in squad assignments: "${team}"` };
+      return {
+        success: false,
+        message: formatError({
+          template: ErrorTemplate.UNKNOWN_TEAM,
+          values: {
+            context: 'squad assignments',
+            team,
+          },
+        }),
+      };
     }
   }
 
@@ -114,7 +155,13 @@ export function validateRoundMatchesOutput({
   if (resultNumRounds !== numRounds) {
     return {
       success: false,
-      message: `Generated ${String(resultNumRounds)} rounds but expected ${String(numRounds)}`,
+      message: formatError({
+        template: ErrorTemplate.ROUND_COUNT_MISMATCH,
+        values: {
+          actual: resultNumRounds,
+          expected: numRounds,
+        },
+      }),
     };
   }
 
@@ -124,7 +171,14 @@ export function validateRoundMatchesOutput({
     if (matches.length !== numGamesPerRound) {
       return {
         success: false,
-        message: `${roundLabel} has ${String(matches.length)} matches but expected ${String(numGamesPerRound)}`,
+        message: formatError({
+          template: ErrorTemplate.MATCH_COUNT_MISMATCH,
+          values: {
+            round: roundLabel,
+            actual: matches.length,
+            expected: numGamesPerRound,
+          },
+        }),
       };
     }
 
@@ -134,14 +188,46 @@ export function validateRoundMatchesOutput({
       if (team1 === team2) {
         return {
           success: false,
-          message: `${team1} cannot play against itself`,
+          message: formatError({
+            template: ErrorTemplate.SELF_PLAY,
+            values: { team: team1 },
+          }),
         };
       }
 
       if (currentPlayedTeams.get(team1)?.has(team2)) {
         return {
           success: false,
-          message: `Duplicate match found in history: ${team1} vs ${team2}`,
+          message: formatError({
+            template: ErrorTemplate.DUPLICATE_MATCH,
+            values: { team1, team2 },
+          }),
+        };
+      }
+
+      if (teamsInRound.has(team1) || teamsInRound.has(team2)) {
+        return {
+          success: false,
+          message: formatError({
+            template: ErrorTemplate.MULTIPLE_MATCHES,
+            values: {
+              team1,
+              team2,
+              round: roundLabel,
+            },
+          }),
+        };
+      }
+      teamsInRound.add(team1);
+      teamsInRound.add(team2);
+
+      if (squadMap.get(team1) === squadMap.get(team2) && squadMap.get(team1) !== undefined) {
+        return {
+          success: false,
+          message: formatError({
+            template: ErrorTemplate.SAME_SQUAD,
+            values: { team1, team2 },
+          }),
         };
       }
 
@@ -153,22 +239,6 @@ export function validateRoundMatchesOutput({
       }
       currentPlayedTeams.get(team1)?.add(team2);
       currentPlayedTeams.get(team2)?.add(team1);
-
-      if (teamsInRound.has(team1) || teamsInRound.has(team2)) {
-        return {
-          success: false,
-          message: `${team1} or ${team2} is scheduled multiple times in ${roundLabel}`,
-        };
-      }
-      teamsInRound.add(team1);
-      teamsInRound.add(team2);
-
-      if (squadMap.get(team1) === squadMap.get(team2) && squadMap.get(team1) !== undefined) {
-        return {
-          success: false,
-          message: `${team1} and ${team2} cannot play each other - they are in the same squad`,
-        };
-      }
     }
   }
 

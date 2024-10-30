@@ -116,7 +116,7 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('Unknown team in match history: "InvalidTeam"');
+        expect(result.message).toBe('Unknown team in matches: "InvalidTeam"');
       }
     });
 
@@ -149,7 +149,7 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('Team1 cannot play against itself');
+        expect(result.message).toBe('Team "Team1" cannot play against itself');
       }
     });
 
@@ -293,7 +293,7 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('Duplicate match found in history: p1 vs p2');
+        expect(result.message).toBe('Duplicate match found: "p1" vs "p2"');
       }
     });
 
@@ -318,7 +318,7 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('p1 or p4 is scheduled multiple times in Round 2');
+        expect(result.message).toBe('Teams "p1" or "p4" are scheduled multiple times in Round 2');
       }
     });
 
@@ -344,7 +344,9 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('p1 and p2 cannot play each other - they are in the same squad');
+        expect(result.message).toBe(
+          'Teams "p1" and "p2" cannot play each other - they are in the same squad'
+        );
       }
     });
 
@@ -365,7 +367,7 @@ describe('swissValidator', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.message).toBe('p1 cannot play against itself');
+        expect(result.message).toBe('Team "p1" cannot play against itself');
       }
     });
   });

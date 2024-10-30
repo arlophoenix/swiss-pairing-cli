@@ -1,11 +1,16 @@
 import {
+  ErrorTemplate,
+  createBidirectionalMap,
+  formatError,
+  mutableCloneBidirectionalMap,
+} from './swissPairingUtils.js';
+import {
   PlayedTeams,
   ReadonlyMatch,
   ReadonlyPlayedTeams,
   ReadonlyRoundMatches,
   Result,
 } from '../types/types.js';
-import { createBidirectionalMap, mutableCloneBidirectionalMap } from './swissPairingUtils.js';
 
 /**
  * Generates multiple rounds of matches for a Swiss-style tournament.
@@ -44,7 +49,10 @@ export function generateRoundMatches({
     if (!newMatches) {
       return {
         success: false,
-        message: `No valid pairings possible for ${roundLabel}`,
+        message: formatError({
+          template: ErrorTemplate.NO_VALID_PAIRINGS,
+          values: { round: roundLabel },
+        }),
       };
     }
 
