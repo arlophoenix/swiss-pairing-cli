@@ -1,15 +1,15 @@
-import * as fileParser from '../parsers/fileParser.js';
-import * as utils from '../utils/utils.js';
+import * as fileParser from '../../parsers/fileParser.js';
+import * as utils from '../../utils/utils.js';
 
-import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
-import { Result, Team, ValidatedCLIOptions } from '../types/types.js';
+import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../../constants.js';
+import { Result, Team, ValidatedCLIOptions } from '../../types/types.js';
 import {
   addByeTeamIfNecessary,
   createSquadMap,
   mergeOptions,
   prepareTeams,
   validateFileOptions,
-} from './cliUtils.js';
+} from './cliActionUtils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';

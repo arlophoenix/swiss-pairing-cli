@@ -10,7 +10,7 @@
  * @module cliActionCommand
  */
 
-import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from '../../cli/cliUtils.js';
+import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from './cliActionUtils.js';
 
 import { Result } from '../../types/types.js';
 import { formatOutput } from '../../formatters/outputFormatter.js';

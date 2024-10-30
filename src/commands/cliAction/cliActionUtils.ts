@@ -8,13 +8,13 @@
  * @module cliUtils
  */
 
-import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../constants.js';
-import { CLIOptionOrder, Result, Team, ValidatedCLIOptions } from '../types/types.js';
-import { reverse, shuffle } from '../utils/utils.js';
+import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../../constants.js';
+import { CLIOptionOrder, Result, Team, ValidatedCLIOptions } from '../../types/types.js';
+import { reverse, shuffle } from '../../utils/utils.js';
 
-import { parseFile } from '../parsers/fileParser.js';
+import { parseFile } from '../../parsers/fileParser.js';
 
-export * from '../utils/utils.js';
+export * from '../../utils/utils.js';
 
 /**
  * Validates options from input file.
