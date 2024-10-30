@@ -1,5 +1,5 @@
 import * as cliUtils from '../../cli/cliUtils.js';
-import * as generateRoundsCommand from '../generateRounds.js';
+import * as generateRoundsCommand from '../generateRounds/generateRounds.js';
 import * as outputFormatter from '../../cli/outputFormatter.js';
 import * as validator from '../../validators/cliValidator.js';
 
@@ -10,7 +10,7 @@ import { handleCLIActionCommand } from './cliActionCommand.js';
 
 jest.mock('../../validators/cliValidator.js');
 jest.mock('../../cli/cliUtils.js');
-jest.mock('../generateRounds.js');
+jest.mock('../generateRounds/generateRounds.js');
 jest.mock('../../cli/outputFormatter.js');
 
 describe('handleCLIActionCommand', () => {

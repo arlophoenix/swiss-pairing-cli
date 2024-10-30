@@ -1,13 +1,13 @@
-import * as swissPairing from '../swiss-pairing/swissPairing.js';
-import * as swissValidator from '../swiss-pairing/swissValidator.js';
+import * as swissPairing from '../../swiss-pairing/swissPairing.js';
+import * as swissValidator from '../../swiss-pairing/swissValidator.js';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { SwissPairingResult } from '../types/types.js';
+import { SwissPairingResult } from '../../types/types.js';
 import { handleGenerateRounds } from './generateRounds.js';
 
-jest.mock('../swiss-pairing/swissPairing.js');
-jest.mock('../swiss-pairing/swissValidator.js');
+jest.mock('../../swiss-pairing/swissPairing.js');
+jest.mock('../../swiss-pairing/swissValidator.js');
 
 describe('Generate Rounds Command', () => {
   const defaultCommand = {

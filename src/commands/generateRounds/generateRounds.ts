@@ -9,15 +9,15 @@
  * @module generateRounds
  */
 
-import { ErrorTemplate, formatError } from '../utils/errorUtils.js';
-import { ReadonlyMatch, Result, SwissPairingResult } from '../types/types.js';
+import { ErrorTemplate, formatError } from '../../utils/errorUtils.js';
+import { ReadonlyMatch, Result, SwissPairingResult } from '../../types/types.js';
 import {
   validateGenerateRoundsInput,
   validateGenerateRoundsOutput,
-} from '../swiss-pairing/swissValidator.js';
+} from '../../swiss-pairing/swissValidator.js';
 
-import { createBidirectionalMap } from '../utils/utils.js';
-import { generateRounds } from '../swiss-pairing/swissPairing.js';
+import { createBidirectionalMap } from '../../utils/utils.js';
+import { generateRounds } from '../../swiss-pairing/swissPairing.js';
 
 /**
  * Command parameters for tournament generation.

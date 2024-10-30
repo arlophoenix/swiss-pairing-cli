@@ -14,7 +14,7 @@ import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from 
 
 import { Result } from '../../types/types.js';
 import { formatOutput } from '../../cli/outputFormatter.js';
-import { handleGenerateRounds } from '../generateRounds.js';
+import { handleGenerateRounds } from '../generateRounds/generateRounds.js';
 import { validateCLIOptions } from '../../validators/cliValidator.js';
 
 /**
