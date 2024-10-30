@@ -6,14 +6,14 @@ import * as validator from '../validators/cliValidator.js';
 import { Round, ValidatedCLIOptions } from '../types/types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { handleCLICommand } from './cliAction.js';
+import { handleCLIActionCommand } from './cliActionCommand.js';
 
 jest.mock('../validators/cliValidator.js');
 jest.mock('./cliUtils.js');
 jest.mock('../commands/generateRounds.js');
 jest.mock('./outputFormatter.js');
 
-describe('handleCLIAction', () => {
+describe('handleCLIActionCommand', () => {
   const defaultValidatedOptions: ValidatedCLIOptions = {
     teams: [
       { name: 'Alice', squad: 'A' },
@@ -70,7 +70,7 @@ describe('handleCLIAction', () => {
   });
 
   it('should handle command successfully', async () => {
-    const result = await handleCLICommand({
+    const result = await handleCLIActionCommand({
       teams: ['Alice [A]', 'Bob [B]'],
     });
 
@@ -109,7 +109,7 @@ describe('handleCLIAction', () => {
       message: 'Invalid teams',
     });
 
-    const result = await handleCLICommand({
+    const result = await handleCLIActionCommand({
       teams: ['Alice'],
     });
 
@@ -129,7 +129,7 @@ describe('handleCLIAction', () => {
       message: 'Invalid file',
     });
 
-    const result = await handleCLICommand({
+    const result = await handleCLIActionCommand({
       teams: ['Alice', 'Bob'],
       file: 'invalid.csv',
     });
@@ -150,7 +150,7 @@ describe('handleCLIAction', () => {
       message: 'Cannot generate rounds',
     });
 
-    const result = await handleCLICommand({
+    const result = await handleCLIActionCommand({
       teams: ['Alice', 'Bob'],
     });
 
@@ -168,7 +168,7 @@ describe('handleCLIAction', () => {
       order: 'random',
     });
 
-    await handleCLICommand({
+    await handleCLIActionCommand({
       teams: ['Alice', 'Bob'],
       order: 'random',
     });
@@ -187,7 +187,7 @@ describe('handleCLIAction', () => {
       startRound: 2,
     });
 
-    await handleCLICommand({
+    await handleCLIActionCommand({
       teams: ['Alice', 'Bob'],
       numRounds: '3',
       startRound: '2',

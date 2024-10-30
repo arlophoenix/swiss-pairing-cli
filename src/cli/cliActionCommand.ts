@@ -7,7 +7,7 @@
  * 4. Prepares team pairings
  * 5. Generates tournament rounds
  *
- * @module cliAction
+ * @module cliActionCommand
  */
 
 import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from './cliUtils.js';
@@ -20,7 +20,7 @@ import { validateCLIOptions } from '../validators/cliValidator.js';
 /**
  * Raw command input from CLI
  */
-export interface CLICommand {
+export interface CLIActionCommand {
   readonly teams?: readonly string[];
   readonly numRounds?: string;
   readonly startRound?: string;
@@ -50,7 +50,7 @@ export interface CLICommand {
  *   console.log(result.value);
  * }
  */
-export async function handleCLICommand(command: CLICommand): Promise<Result<string>> {
+export async function handleCLIActionCommand(command: CLIActionCommand): Promise<Result<string>> {
   const validateCLIOptionsResult = validateCLIOptions(command);
   if (!validateCLIOptionsResult.success) {
     return validateCLIOptionsResult;

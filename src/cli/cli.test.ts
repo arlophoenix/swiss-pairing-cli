@@ -1,21 +1,21 @@
-import * as cliAction from './cliAction.js';
+import * as cliActionCommand from './cliActionCommand.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
 import { createCLI } from './cli.js';
 
-jest.mock('./cliAction.js');
+jest.mock('./cliActionCommand.js');
 
 describe('CLI', () => {
-  let mockHandleCLIAction: SpyInstance<typeof cliAction.handleCLICommand>;
+  let mockHandleCLIActionCommand: SpyInstance<typeof cliActionCommand.handleCLIActionCommand>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   let mockProcessExit: SpyInstance<typeof process.exit>;
 
   beforeEach(() => {
-    mockHandleCLIAction = jest
-      .spyOn(cliAction, 'handleCLICommand')
+    mockHandleCLIActionCommand = jest
+      .spyOn(cliActionCommand, 'handleCLIActionCommand')
       .mockResolvedValue({ success: true, value: 'Matches generated successfully' });
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {
       // do nothing
@@ -36,7 +36,7 @@ describe('CLI', () => {
     const program = createCLI();
     await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
 
-    expect(cliAction.handleCLICommand).toHaveBeenCalledWith(
+    expect(cliActionCommand.handleCLIActionCommand).toHaveBeenCalledWith(
       expect.objectContaining({ teams: ['Alice', 'Bob'] })
     );
     expect(mockConsoleLog).toHaveBeenCalledWith('Matches generated successfully');
@@ -45,7 +45,7 @@ describe('CLI', () => {
   });
 
   it('should handle errors', async () => {
-    jest.spyOn(cliAction, 'handleCLICommand').mockResolvedValue({
+    jest.spyOn(cliActionCommand, 'handleCLIActionCommand').mockResolvedValue({
       success: false,
       message: 'Invalid input',
     });
@@ -81,7 +81,7 @@ describe('CLI', () => {
       'data.csv',
     ]);
 
-    expect(mockHandleCLIAction).toHaveBeenCalledWith({
+    expect(mockHandleCLIActionCommand).toHaveBeenCalledWith({
       teams: ['Alice', 'Bob'],
       numRounds: '3',
       startRound: '2',
