@@ -1,5 +1,16 @@
 # TODO: Project Enhancements
 
+## In Progress
+
+- Telemetry using PostHog
+  - stricter typing for events
+  - discriminate between test/dev and production users
+  - simplify point of use
+  - add tests
+  - rename files in telemetry module
+  - add code documentation
+  - mention telemetry in readme
+
 ## Functionality
 
 ## Code Quality
@@ -16,4 +27,3 @@
 
 - [ ] Commitlint for enforcing consistent commit messages (works well with 📦 Semantic Release)
 - [ ] Semantic Release for automating version management and package publishing
-- [ ] Telemetry to understand usage

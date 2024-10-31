@@ -24,6 +24,7 @@
     "prepublishOnly": "npm run lint && npm test",
     "prestart": "npm run build",
     "pretest": "npm run build",
+    "setup-env": "tsx scripts/setup-env.ts",
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "npm run pretest && jest --watch --testPathIgnorePatterns=integration.test.ts",
@@ -55,6 +56,7 @@
   "keywords": [],
   "devDependencies": {
     "@eslint/js": "^9.10.0",
+    "@types/debug": "^4.1.12",
     "@types/eslint__js": "^8.42.3",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.5.4",
@@ -80,7 +82,10 @@
   "type": "module",
   "dependencies": {
     "commander": "^12.1.0",
+    "debug": "^4.3.7",
+    "dotenv": "^16.4.5",
     "file-type": "^19.5.0",
-    "papaparse": "^5.4.1"
+    "papaparse": "^5.4.1",
+    "posthog-node": "^4.2.1"
   }
 }

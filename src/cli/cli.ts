@@ -38,6 +38,8 @@ import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
+import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
+import { telemetry } from '../telemetry/Telemetry.js';
 
 /**
  * Creates and configures the CLI command parser.
@@ -96,11 +98,72 @@ export function createCLI(): Command {
       }
     )
     .action(async (options: UnvalidatedCLIOptions) => {
-      const result = await handleCLIActionCommand(options);
-      if (result.success) {
-        console.log(result.value);
-      } else {
+      const startTime = Date.now();
+      showTelemetryNoticeIfNecessary();
+
+      // Record command invocation with provided args
+      telemetry.record({
+        name: 'command_invoked',
+        properties: {
+          command_name: 'generate',
+          args_provided: {
+            file: options.file != undefined,
+            format: options.format != undefined,
+            matches: options.matches != undefined,
+            numRounds: options.numRounds != undefined,
+            order: options.order != undefined,
+            startRound: options.startRound != undefined,
+            teams: options.teams != undefined,
+          },
+          teams_count: options.teams?.length,
+          squad_count: options.teams?.filter((t) => t.includes('[') && t.includes(']')).length,
+          rounds_count: Number(options.numRounds),
+          start_round: Number(options.startRound),
+          order: CLI_OPTION_ORDER.some((o) => o === options.order) ? options.order : undefined,
+          format: CLI_OPTION_FORMAT.some((o) => o === options.format) ? options.format : undefined,
+        },
+      });
+
+      try {
+        const result = await handleCLIActionCommand(options);
+
+        if (result.success) {
+          telemetry.record({
+            name: 'command_succeeded',
+            properties: {
+              command_name: 'generate',
+              duration_ms: Date.now() - startTime,
+            },
+          });
+          await telemetry.shutdown();
+          console.log(result.value);
+          return;
+        }
+
+        // Handle validation failure
+        telemetry.record({
+          name: 'command_failed',
+          properties: {
+            command_name: 'generate',
+            duration_ms: Date.now() - startTime,
+          },
+        });
+        await telemetry.shutdown();
         console.error(result.message);
+        process.exit(1);
+      } catch (error) {
+        // Handle unexpected errors
+        telemetry.record({
+          name: 'command_error',
+          properties: {
+            command_name: 'generate',
+            error_name: error instanceof Error ? error.name : 'unknown',
+            error_message: error instanceof Error ? error.message : String(error),
+            duration_ms: Date.now() - startTime,
+          },
+        });
+        await telemetry.shutdown();
+        console.error(error);
         process.exit(1);
       }
     });
