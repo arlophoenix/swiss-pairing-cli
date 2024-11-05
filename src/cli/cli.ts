@@ -145,6 +145,8 @@ export function createCLI(): Command {
           name: 'command_failed',
           properties: {
             command_name: 'generate',
+            error_name: 'validation_failed',
+            error_message: result.message,
             duration_ms: Date.now() - startTime,
           },
         });

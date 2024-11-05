@@ -3,7 +3,6 @@
 ## In Progress
 
 - Telemetry using PostHog
-  - stricter typing for events
   - discriminate between test/dev and production users
   - simplify point of use
   - add tests

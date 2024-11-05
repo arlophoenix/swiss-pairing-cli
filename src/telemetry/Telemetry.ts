@@ -1,9 +1,9 @@
+import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
 import { POSTHOG_API_KEY, TELEMETRY_OPT_OUT } from '../config.js';
 
 import { DEBUG_TELEMETRY } from '../constants.js';
 import { FirstRunManager } from './FirstRunManager.js';
 import { PostHog } from 'posthog-node';
-import { UnvalidatedCLIOptions } from '../types/types.js';
 import { createHash } from 'crypto';
 import debug from 'debug';
 import fs from 'fs';
@@ -12,52 +12,13 @@ import path from 'path';
 
 const log = debug(DEBUG_TELEMETRY);
 
-export interface TelemetryEvent {
-  // Core event types
-  readonly name:
-    | 'command_invoked' // When CLI starts
-    | 'command_succeeded' // Success completion
-    | 'command_failed' // Failure states
-    | 'command_error' // Unhandled exceptions
-    | 'command_cancelled'; // Ctrl+C etc
-
-  // Safe metadata that helps improve the tool
-  readonly properties: {
-    // Command info
-    readonly command_name: string;
-    readonly args_provided?: Record<keyof UnvalidatedCLIOptions, boolean>;
-
-    // System context
-    readonly node_version?: string;
-    readonly cli_version?: string | undefined;
-    readonly os_name?: string;
-    readonly ci?: boolean;
-    readonly execution_context?: 'npx' | 'global' | 'local';
-
-    // Performance
-    readonly duration_ms?: number;
-
-    // Usage patterns (no user data)
-    readonly teams_count?: number | undefined;
-    readonly squad_count?: number | undefined;
-    readonly rounds_count?: number | undefined;
-    readonly start_round?: number | undefined;
-    readonly order?: string | undefined;
-    readonly format?: string | undefined;
-
-    // Unexpected errors (no stack traces)
-    readonly error_name?: string;
-    readonly error_message?: string;
-  };
-}
-
 export class Telemetry {
   private readonly client: PostHog | null = null;
   private readonly distinctId!: string;
   private readonly enabled: boolean = true;
   private readonly context: 'npx' | 'global' | 'local';
   // eslint-disable-next-line functional/prefer-readonly-type
-  private eventQueue: TelemetryEvent[] = [];
+  private eventQueue: AugmentedTelemetryEvent[] = [];
   // eslint-disable-next-line functional/prefer-readonly-type
   private flushTimeout: NodeJS.Timeout | null = null;
 
@@ -137,20 +98,21 @@ export class Telemetry {
       return;
     }
     log('Recording event:', event);
-    const enrichedEvent = {
-      ...event,
+    const augmentedEvent: AugmentedTelemetryEvent = {
+      name: event.name,
       properties: {
         ...event.properties,
         node_version: process.version,
         os_name: os.platform(),
         cli_version: process.env.npm_package_version,
         execution_context: this.context,
+        ci: Boolean(process.env.CI),
       },
     };
 
     // Queue the event
     // eslint-disable-next-line functional/immutable-data
-    this.eventQueue.push(enrichedEvent);
+    this.eventQueue.push(augmentedEvent);
 
     // Debounce flush
     if (this.flushTimeout) {
