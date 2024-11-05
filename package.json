@@ -21,11 +21,12 @@
   "scripts": {
     "prepare": "husky install && npm run build",
     "preinstall": "npm run update-nvmrc",
-    "prepublishOnly": "npm run lint && npm test",
+    "prepublishOnly": "npm run validate",
     "prestart": "npm run build",
     "pretest": "npm run build",
     "setup-env": "tsx scripts/setup-env.ts",
     "start": "node dist/index.js",
+    "validate": "npm run lint && npm run test:coverage",
     "test": "jest",
     "test:watch": "npm run pretest && jest --watch --testPathIgnorePatterns=integration.test.ts",
     "test:unit": "npm run pretest && jest --testPathIgnorePatterns=integration.test.ts",
