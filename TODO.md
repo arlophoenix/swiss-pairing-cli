@@ -17,6 +17,12 @@
 
 - prevent pushing directly to remote master branch
 
+## Documentation
+
+- Scripts
+  - Add a section on scripts to the readme
+  - Document the scripts
+
 ## Project Configuration
 
 - [ ] Set up CI/CD pipeline (e.g., GitHub Actions)
