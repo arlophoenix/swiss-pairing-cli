@@ -1,5 +1,5 @@
 import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
-import { POSTHOG_API_KEY, TELEMETRY_OPT_OUT } from '../config.js';
+import { getPosthogApiKey, getTelemetryOptOut, initConfig } from '../config.js';
 
 import { DEBUG_TELEMETRY } from '../constants.js';
 import { FirstRunManager } from './FirstRunManager.js';
@@ -23,12 +23,31 @@ export class Telemetry {
   // eslint-disable-next-line functional/prefer-readonly-type
   private flushTimeout: NodeJS.Timeout | null = null;
 
-  constructor() {
-    const apiKey = POSTHOG_API_KEY;
+  // eslint-disable-next-line functional/prefer-readonly-type
+  private static instance: Telemetry | null = null;
+
+  public static getInstance(): Telemetry {
+    if (!Telemetry.instance) {
+      // eslint-disable-next-line functional/immutable-data
+      Telemetry.instance = new Telemetry();
+
+      // Ensure events are flushed on process exit
+      process.on('exit', () => {
+        Telemetry.instance?.shutdown().catch(() => {
+          // nothing to do here the process has ended
+        });
+      });
+    }
+    return Telemetry.instance;
+  }
+
+  private constructor() {
+    initConfig();
+    const apiKey = getPosthogApiKey();
     const apiKeyExists = apiKey !== '';
     const firstRunManager = new FirstRunManager();
     const shouldShowTelemetryNotice = firstRunManager.shouldShowTelemetryNotice();
-    this.enabled = !TELEMETRY_OPT_OUT && !shouldShowTelemetryNotice && apiKeyExists;
+    this.enabled = !getTelemetryOptOut() && !shouldShowTelemetryNotice && apiKeyExists;
     this.context = detectExecutionContext();
 
     log('Initializing telemetry');
@@ -156,13 +175,3 @@ export class Telemetry {
     }
   }
 }
-
-// Ensure events are flushed on process exit
-const telemetry = new Telemetry();
-process.on('exit', () => {
-  telemetry.shutdown().catch(() => {
-    // nothing to do here the process has ended
-  });
-});
-
-export { telemetry };

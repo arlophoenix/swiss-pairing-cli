@@ -37,10 +37,10 @@ import {
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
+import { Telemetry } from '../telemetry/Telemetry.js';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
 import { initConfig } from '../config.js';
 import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
-import { telemetry } from '../telemetry/Telemetry.js';
 
 /**
  * Creates and configures the CLI command parser.
@@ -102,6 +102,8 @@ export function createCLI(): Command {
     .action(async (options: UnvalidatedCLIOptions) => {
       const startTime = Date.now();
       showTelemetryNoticeIfNecessary();
+
+      const telemetry = Telemetry.getInstance();
 
       // Record command invocation with provided args
       telemetry.record({
