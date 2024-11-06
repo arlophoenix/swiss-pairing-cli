@@ -6,6 +6,7 @@ import { FirstRunManager } from './FirstRunManager.js';
 import { PostHog } from 'posthog-node';
 import { createHash } from 'crypto';
 import debug from 'debug';
+import { detectExecutionContext } from './telemetryUtils.js';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -28,7 +29,7 @@ export class Telemetry {
     const firstRunManager = new FirstRunManager();
     const shouldShowTelemetryNotice = firstRunManager.shouldShowTelemetryNotice();
     this.enabled = !TELEMETRY_OPT_OUT && !shouldShowTelemetryNotice && apiKeyExists;
-    this.context = this.detectExecutionContext();
+    this.context = detectExecutionContext();
 
     log('Initializing telemetry');
     log('API Key found:', apiKeyExists);
@@ -49,17 +50,6 @@ export class Telemetry {
         this.enabled = false;
       }
     }
-  }
-
-  private detectExecutionContext(): 'npx' | 'global' | 'local' {
-    const execPath = process.env.npm_execpath ?? '';
-    if (execPath.includes('npx')) {
-      return 'npx';
-    }
-    if (execPath.includes('npm/bin')) {
-      return 'global';
-    }
-    return 'local';
   }
 
   private generateInstallId(): string {

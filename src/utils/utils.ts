@@ -168,3 +168,14 @@ export function stringToTeam(str: string): Team {
     squad: squad ? squad.trim() : undefined,
   };
 }
+
+export function detectExecutionContext(): 'npx' | 'global' | 'local' {
+  const execPath = process.env.npm_execpath ?? '';
+  if (execPath.includes('npx')) {
+    return 'npx';
+  }
+  if (execPath.includes('npm/bin')) {
+    return 'global';
+  }
+  return 'local';
+}
