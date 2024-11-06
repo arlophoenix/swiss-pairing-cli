@@ -24,7 +24,8 @@
 
 ## Project Configuration
 
-- [ ] Set up CI/CD pipeline (e.g., GitHub Actions)
+- Set up CI/CD pipeline (e.g., GitHub Actions)
+  - see first attempt in .github/workflows/ci.yml
 - [ ] Implement semantic versioning practices
 - [ ] Implement automated dependency updates (e.g., Dependabot)
 
