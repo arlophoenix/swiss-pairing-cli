@@ -127,3 +127,6 @@ export const DEBUG_TELEMETRY = 'swiss-pairing:telemetry';
 
 export const ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT = 'SWISS_PAIRING_TELEMETRY_OPT_OUT';
 export const ENV_SWISS_PAIRING_POSTHOG_API_KEY = 'SWISS_PAIRING_POSTHOG_API_KEY';
+
+export const DOTENV_DEV = '.env';
+export const DOTENV_TEST = '.env.test';

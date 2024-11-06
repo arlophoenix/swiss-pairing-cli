@@ -1,6 +1,12 @@
 import * as path from 'path';
 
-import { ENV_SWISS_PAIRING_POSTHOG_API_KEY } from '../src/constants.js';
+import {
+  DOTENV_DEV,
+  DOTENV_TEST,
+  ENV_SWISS_PAIRING_POSTHOG_API_KEY,
+  ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT,
+} from '../src/constants.js';
+
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { writeFileSync } from 'fs';
@@ -23,7 +29,7 @@ function fetchPosthogApiKey(): string {
   }
 }
 
-function setupEnv() {
+function createDevelopmentEnv() {
   const posthogApiKey = fetchPosthogApiKey();
   const envContent = `
 # Development environment config
@@ -32,14 +38,41 @@ NODE_ENV=development
 # Telemetry config
 ${ENV_SWISS_PAIRING_POSTHOG_API_KEY}=${posthogApiKey}
 `;
+  writeEnvFile({ envFileName: DOTENV_DEV, envContent });
+}
+
+function createTestEnv() {
+  const envContent = `
+# Test environment config
+NODE_ENV=test
+
+# Telemetry config
+${ENV_SWISS_PAIRING_POSTHOG_API_KEY}=''
+${ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT}=1
+`;
+  writeEnvFile({ envFileName: DOTENV_TEST, envContent });
+}
+
+function setupEnv() {
+  createDevelopmentEnv();
+  createTestEnv();
+}
+
+function writeEnvFile({
+  envFileName,
+  envContent,
+}: {
+  readonly envFileName: string;
+  readonly envContent: string;
+}) {
   try {
-    const envPath = path.resolve(__dirname, '../.env');
+    const envPath = path.resolve(__dirname, '..', envFileName);
     writeFileSync(envPath, envContent, {
       encoding: 'utf-8',
     });
-    console.log('Development environment configured successfully');
+    console.log(`Succesfully wrote to ${envPath}`);
   } catch (error) {
-    console.error('Failed to write .env file:', error);
+    console.error(`Failed to write env file:`, error);
     process.exit(1);
   }
 }
