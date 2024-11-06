@@ -1,4 +1,5 @@
 import { generateRounds } from '../src/swiss-pairing/swissPairing.js';
+import { initConfig } from '../src/config.js';
 import { performance } from 'perf_hooks';
 
 function generateRandomTeams(count: number): readonly string[] {
@@ -46,21 +47,26 @@ function runPerformanceTest({
   );
 }
 
-// Test cases
-const testCases = [
-  { teamCount: 8, roundCount: 3 },
-  { teamCount: 16, roundCount: 3 },
-  { teamCount: 16, roundCount: 5 },
-  { teamCount: 32, roundCount: 5 },
-  { teamCount: 64, roundCount: 5 },
-  { teamCount: 100, roundCount: 9 },
-  { teamCount: 1000, roundCount: 9 },
-];
+function runPerformanceTests() {
+  // Test cases
+  const testCases = [
+    { teamCount: 8, roundCount: 3 },
+    { teamCount: 16, roundCount: 3 },
+    { teamCount: 16, roundCount: 5 },
+    { teamCount: 32, roundCount: 5 },
+    { teamCount: 64, roundCount: 5 },
+    { teamCount: 100, roundCount: 9 },
+    { teamCount: 1000, roundCount: 9 },
+  ];
 
-testCases.forEach(({ teamCount, roundCount }) => {
-  console.log(`Start test with ${String(teamCount)} teams and ${String(roundCount)} rounds:`);
-  logMemoryUsage();
-  runPerformanceTest({ teamCount, roundCount, iterations: 10 });
-  console.log(`End test with ${String(teamCount)} teams and ${String(roundCount)} rounds:`);
-  logMemoryUsage();
-});
+  testCases.forEach(({ teamCount, roundCount }) => {
+    console.log(`Start test with ${String(teamCount)} teams and ${String(roundCount)} rounds:`);
+    logMemoryUsage();
+    runPerformanceTest({ teamCount, roundCount, iterations: 10 });
+    console.log(`End test with ${String(teamCount)} teams and ${String(roundCount)} rounds:`);
+    logMemoryUsage();
+  });
+}
+
+initConfig();
+runPerformanceTests();
