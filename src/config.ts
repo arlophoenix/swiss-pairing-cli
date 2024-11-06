@@ -2,7 +2,29 @@ import { ENV_SWISS_PAIRING_POSTHOG_API_KEY, ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT 
 
 import dotenv from 'dotenv';
 
-dotenv.config();
+let initialized = false;
 
-export const POSTHOG_API_KEY = process.env[ENV_SWISS_PAIRING_POSTHOG_API_KEY] ?? '';
-export const TELEMETRY_OPT_OUT = process.env[ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT] ?? '';
+export function initConfig() {
+  dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
+  initialized = true;
+}
+
+function throwIfNotInitiailized() {
+  if (!initialized) {
+    throw new Error('Config not initialized. Call initConfig() first');
+  }
+}
+
+export const getPosthogApiKey = () => {
+  throwIfNotInitiailized();
+  return process.env[ENV_SWISS_PAIRING_POSTHOG_API_KEY] ?? '';
+};
+
+export const getTelemetryOptOut = () => {
+  throwIfNotInitiailized();
+  return Boolean(process.env[ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT]);
+};
+
+export function __resetConfigForTesting() {
+  initialized = false;
+}
