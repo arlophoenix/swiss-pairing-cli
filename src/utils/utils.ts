@@ -169,6 +169,20 @@ export function stringToTeam(str: string): Team {
   };
 }
 
+/**
+ * Detects how the CLI was executed based on npm's execution path.
+ * Used to distinguish between different installation contexts.
+ *
+ * @returns 'npx' if executed via npx
+ *          'global' if installed globally via npm install -g
+ *          'local' if installed locally or run from source
+ *
+ * @example
+ * const context = detectExecutionContext();
+ * // context === 'npx' when run via: npx swiss-pairing
+ * // context === 'global' when installed via: npm install -g swiss-pairing
+ * // context === 'local' when run via: npm start
+ */
 export function detectExecutionContext(): 'npx' | 'global' | 'local' {
   const execPath = process.env.npm_execpath ?? '';
   if (execPath.includes('npx')) {

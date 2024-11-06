@@ -1,6 +1,8 @@
 import { PlayedTeams, ReadonlyPlayedTeams, Team } from '../types/types.js';
+import { afterEach, describe, expect, it } from '@jest/globals';
 import {
   createBidirectionalMap,
+  detectExecutionContext,
   isValidTeamString,
   mutableCloneBidirectionalMap,
   parseStringLiteral,
@@ -9,7 +11,6 @@ import {
   stringToTeam,
   teamToString,
 } from './utils.js';
-import { describe, expect, it } from '@jest/globals';
 
 describe('utils', () => {
   describe('createBidirectionalMap', () => {
@@ -274,6 +275,39 @@ describe('utils', () => {
       it('should not add extra spaces around squad', () => {
         expect(teamToString({ name: 'David', squad: 'D' })).toBe('David [D]');
       });
+    });
+  });
+
+  describe('detectExecutionContext', () => {
+    const originalExecPath = process.env.npm_execpath;
+
+    afterEach(() => {
+      // eslint-disable-next-line functional/immutable-data
+      process.env.npm_execpath = originalExecPath;
+    });
+
+    it('should detect npx execution', () => {
+      // eslint-disable-next-line functional/immutable-data
+      process.env.npm_execpath = '/path/to/npx/executable';
+      expect(detectExecutionContext()).toBe('npx');
+    });
+
+    it('should detect global installation', () => {
+      // eslint-disable-next-line functional/immutable-data
+      process.env.npm_execpath = '/usr/local/lib/node_modules/npm/bin/npm-cli.js';
+      expect(detectExecutionContext()).toBe('global');
+    });
+
+    it('should detect local installation', () => {
+      // eslint-disable-next-line functional/immutable-data
+      process.env.npm_execpath = '/path/to/project/node_modules/.bin/cli';
+      expect(detectExecutionContext()).toBe('local');
+    });
+
+    it('should default to local when npm_execpath is undefined', () => {
+      // eslint-disable-next-line functional/immutable-data
+      delete process.env.npm_execpath;
+      expect(detectExecutionContext()).toBe('local');
     });
   });
 });
