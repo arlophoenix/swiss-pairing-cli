@@ -39,7 +39,6 @@ import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 import { Command } from 'commander';
 import { Telemetry } from '../telemetry/Telemetry.js';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
-import { initConfig } from '../config.js';
 import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
 
 /**
@@ -53,7 +52,6 @@ import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
  * program.parse(process.argv);
  */
 export function createCLI(): Command {
-  initConfig();
   const program = new Command();
 
   program

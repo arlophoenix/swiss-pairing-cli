@@ -1,15 +1,18 @@
-import * as config from '../config.js';
-
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
+import { Config } from '../Config.js';
 import { Telemetry } from './Telemetry.js';
 import { TelemetryEvent } from './telemetryTypes.js';
 
 jest.mock('posthog-node');
 jest.mock('process');
-jest.mock('../config.js');
 
 describe('Telemetry', () => {
+  const mockConfig = {
+    getPosthogApiKey: jest.fn<() => string>().mockReturnValue('test-api-key'),
+    getTelemetryOptOut: jest.fn<() => boolean>().mockReturnValue(false),
+  } as unknown as Config;
+
   beforeEach(() => {
     // Reset singleton between tests
     // @ts-expect-error accessing private for tests
@@ -17,8 +20,7 @@ describe('Telemetry', () => {
     Telemetry.instance = null;
 
     // Mock config to enable telemetry
-    jest.spyOn(config, 'getPosthogApiKey').mockReturnValue('test-api-key');
-    jest.spyOn(config, 'getTelemetryOptOut').mockReturnValue(false);
+    jest.spyOn(Config, 'getInstance').mockReturnValue(mockConfig);
 
     // Mock FirstRunManager to not show notice
     jest.mock('./FirstRunManager.js', () => ({

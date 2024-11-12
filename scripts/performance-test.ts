@@ -1,5 +1,4 @@
 import { generateRounds } from '../src/swiss-pairing/swissPairing.js';
-import { initConfig } from '../src/config.js';
 import { performance } from 'perf_hooks';
 
 function generateRandomTeams(count: number): readonly string[] {
@@ -68,5 +67,4 @@ function runPerformanceTests() {
   });
 }
 
-initConfig();
 runPerformanceTests();

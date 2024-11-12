@@ -1,6 +1,6 @@
 import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
-import { getPosthogApiKey, getTelemetryOptOut, initConfig } from '../config.js';
 
+import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
 import { FirstRunManager } from './FirstRunManager.js';
 import { PostHog } from 'posthog-node';
@@ -42,12 +42,12 @@ export class Telemetry {
   }
 
   private constructor() {
-    initConfig();
-    const apiKey = getPosthogApiKey();
+    const config = Config.getInstance();
+    const apiKey = config.getPosthogApiKey();
     const apiKeyExists = apiKey !== '';
     const firstRunManager = new FirstRunManager();
     const shouldShowTelemetryNotice = firstRunManager.shouldShowTelemetryNotice();
-    this.enabled = !getTelemetryOptOut() && !shouldShowTelemetryNotice && apiKeyExists;
+    this.enabled = !config.getTelemetryOptOut() && !shouldShowTelemetryNotice && apiKeyExists;
     this.context = detectExecutionContext();
 
     log('Initializing telemetry');
