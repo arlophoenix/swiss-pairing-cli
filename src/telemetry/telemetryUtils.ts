@@ -13,7 +13,7 @@ export * from '../utils/utils.js';
  *
  * @returns The detected environment context
  */
-export function getEnvironmentContext(): 'test' | 'development' | 'ci' | 'production' {
+export function detectEnvironment(): 'test' | 'development' | 'ci' | 'production' {
   if (process.env.CI) {
     return 'ci';
   }

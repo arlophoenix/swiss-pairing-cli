@@ -1,5 +1,5 @@
 import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
-import { detectExecutionContext, getEnvironmentContext } from './telemetryUtils.js';
+import { detectEnvironment, detectExecutionContext } from './telemetryUtils.js';
 
 import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
@@ -114,7 +114,7 @@ export class Telemetry {
         os_name: os.platform(),
         cli_version: process.env.npm_package_version,
         execution_context: detectExecutionContext(),
-        environment: getEnvironmentContext(),
+        environment: detectEnvironment(),
       },
     };
 

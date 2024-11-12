@@ -18,7 +18,7 @@ describe('Telemetry', () => {
   } as unknown as Config;
 
   let mockDetectExecutionContext: SpyInstance<typeof utils.detectExecutionContext>;
-  let mockGetEnvironmentContext: SpyInstance<typeof telemetryUtils.getEnvironmentContext>;
+  let mockDetectEnvironment: SpyInstance<typeof telemetryUtils.detectEnvironment>;
 
   beforeEach(() => {
     // Reset singleton between tests
@@ -40,7 +40,7 @@ describe('Telemetry', () => {
     jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
 
     mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
-    mockGetEnvironmentContext = jest.spyOn(telemetryUtils, 'getEnvironmentContext');
+    mockDetectEnvironment = jest.spyOn(telemetryUtils, 'detectEnvironment');
   });
 
   afterEach(() => {
@@ -175,13 +175,13 @@ describe('Telemetry', () => {
       const executionContext = 'npx';
       const environment = 'production';
       mockDetectExecutionContext.mockReturnValue(executionContext);
-      mockGetEnvironmentContext.mockReturnValue(environment);
+      mockDetectEnvironment.mockReturnValue(environment);
 
       const instance = Telemetry.getInstance();
       instance.record(commandInvokedEvent);
 
       expect(mockDetectExecutionContext).toHaveBeenCalled();
-      expect(mockGetEnvironmentContext).toHaveBeenCalled();
+      expect(mockDetectEnvironment).toHaveBeenCalled();
 
       // @ts-expect-error accessing private for tests
       expect(instance.eventQueue[0].properties).toEqual(
