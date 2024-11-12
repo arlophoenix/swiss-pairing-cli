@@ -1,4 +1,5 @@
 import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
+import { detectExecutionContext, getEnvironmentContext } from './telemetryUtils.js';
 
 import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
@@ -6,7 +7,6 @@ import { FirstRunManager } from './FirstRunManager.js';
 import { PostHog } from 'posthog-node';
 import { createHash } from 'crypto';
 import debug from 'debug';
-import { detectExecutionContext } from './telemetryUtils.js';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -17,7 +17,6 @@ export class Telemetry {
   private readonly client: PostHog | null = null;
   private readonly distinctId!: string;
   private readonly enabled: boolean = true;
-  private readonly context: 'npx' | 'global' | 'local';
   // eslint-disable-next-line functional/prefer-readonly-type
   private eventQueue: AugmentedTelemetryEvent[] = [];
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -48,13 +47,11 @@ export class Telemetry {
     const firstRunManager = new FirstRunManager();
     const shouldShowTelemetryNotice = firstRunManager.shouldShowTelemetryNotice();
     this.enabled = !config.getTelemetryOptOut() && !shouldShowTelemetryNotice && apiKeyExists;
-    this.context = detectExecutionContext();
 
     log('Initializing telemetry');
     log('API Key found:', apiKeyExists);
     log('Should show telemetry notice:', shouldShowTelemetryNotice);
     log('Telemetry enabled:', this.enabled);
-    log('Execution context:', this.context);
 
     if (this.enabled) {
       try {
@@ -72,8 +69,10 @@ export class Telemetry {
   }
 
   private generateInstallId(): string {
+    const executionContext = detectExecutionContext();
+    log('Execution context:', executionContext);
     // For npx, create a semi-persistent ID based on machine characteristics
-    if (this.context === 'npx') {
+    if (executionContext === 'npx') {
       const machineId = [os.hostname(), os.platform(), os.arch(), os.userInfo().username].join('-');
 
       return createHash('sha256').update(machineId).digest('hex').slice(0, 8);
@@ -114,8 +113,8 @@ export class Telemetry {
         node_version: process.version,
         os_name: os.platform(),
         cli_version: process.env.npm_package_version,
-        execution_context: this.context,
-        ci: Boolean(process.env.CI),
+        execution_context: detectExecutionContext(),
+        environment: getEnvironmentContext(),
       },
     };
 

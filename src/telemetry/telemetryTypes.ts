@@ -4,7 +4,7 @@ export interface SystemContext {
   readonly node_version: string;
   readonly cli_version: string | undefined;
   readonly os_name: string;
-  readonly ci: boolean;
+  readonly environment: 'test' | 'development' | 'ci' | 'production';
   readonly execution_context: 'npx' | 'global' | 'local';
 }
 

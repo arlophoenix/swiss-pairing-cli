@@ -1,6 +1,10 @@
+import * as telemetryUtils from './telemetryUtils.js';
+import * as utils from '../utils/utils.js';
+
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from '../Config.js';
+import type { SpyInstance } from 'jest-mock';
 import { Telemetry } from './Telemetry.js';
 import { TelemetryEvent } from './telemetryTypes.js';
 
@@ -12,6 +16,9 @@ describe('Telemetry', () => {
     getPosthogApiKey: jest.fn<() => string>().mockReturnValue('test-api-key'),
     getTelemetryOptOut: jest.fn<() => boolean>().mockReturnValue(false),
   } as unknown as Config;
+
+  let mockDetectExecutionContext: SpyInstance<typeof utils.detectExecutionContext>;
+  let mockGetEnvironmentContext: SpyInstance<typeof telemetryUtils.getEnvironmentContext>;
 
   beforeEach(() => {
     // Reset singleton between tests
@@ -31,6 +38,9 @@ describe('Telemetry', () => {
 
     // eslint-disable-next-line max-params
     jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
+
+    mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
+    mockGetEnvironmentContext = jest.spyOn(telemetryUtils, 'getEnvironmentContext');
   });
 
   afterEach(() => {
@@ -162,8 +172,16 @@ describe('Telemetry', () => {
     });
 
     it('should augment events with system context', () => {
+      const executionContext = 'npx';
+      const environment = 'production';
+      mockDetectExecutionContext.mockReturnValue(executionContext);
+      mockGetEnvironmentContext.mockReturnValue(environment);
+
       const instance = Telemetry.getInstance();
       instance.record(commandInvokedEvent);
+
+      expect(mockDetectExecutionContext).toHaveBeenCalled();
+      expect(mockGetEnvironmentContext).toHaveBeenCalled();
 
       // @ts-expect-error accessing private for tests
       expect(instance.eventQueue[0].properties).toEqual(
@@ -171,8 +189,8 @@ describe('Telemetry', () => {
           node_version: expect.any(String),
           os_name: expect.any(String),
           cli_version: expect.any(String),
-          execution_context: expect.stringMatching(/npx|global|local/),
-          ci: expect.any(Boolean),
+          execution_context: executionContext,
+          environment: environment,
         })
       );
     });
