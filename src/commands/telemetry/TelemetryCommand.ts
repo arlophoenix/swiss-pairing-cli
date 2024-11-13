@@ -11,7 +11,7 @@ interface TelemetryInvocation {
  * Encapsulates all telemetry logic to keep CLI clean.
  */
 export class TelemetryCommand {
-  private readonly telemetry: TelemetryClient | undefined;
+  private readonly telemetryClient: TelemetryClient | undefined;
   private readonly invocation: TelemetryInvocation;
 
   constructor({
@@ -29,11 +29,11 @@ export class TelemetryCommand {
       // If the user is running the command for the first time, we don't record telemetry.
       return;
     }
-    this.telemetry = TelemetryClient.getInstance();
+    this.telemetryClient = TelemetryClient.getInstance();
   }
 
   recordInvocation() {
-    this.telemetry?.record({
+    this.telemetryClient?.record({
       name: 'command_invoked',
       properties: {
         args_provided: {
@@ -56,7 +56,7 @@ export class TelemetryCommand {
   }
 
   recordSuccess() {
-    this.telemetry?.record({
+    this.telemetryClient?.record({
       name: 'command_succeeded',
       properties: {
         duration_ms: Date.now() - this.invocation.startTime,
@@ -65,7 +65,7 @@ export class TelemetryCommand {
   }
 
   recordValidationFailure(message: string) {
-    this.telemetry?.record({
+    this.telemetryClient?.record({
       name: 'command_failed',
       properties: {
         error_name: 'validation_failed',
@@ -76,7 +76,7 @@ export class TelemetryCommand {
   }
 
   recordError(error: Error) {
-    this.telemetry?.record({
+    this.telemetryClient?.record({
       name: 'command_error',
       properties: {
         error_name: error.name,
@@ -87,6 +87,6 @@ export class TelemetryCommand {
   }
 
   async shutdown() {
-    await this.telemetry?.shutdown();
+    await this.telemetryClient?.shutdown();
   }
 }

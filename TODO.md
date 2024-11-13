@@ -4,7 +4,6 @@
 
 - Telemetry using PostHog
   - rename posthogclient
-  - rename telemetryclient
   - rename exitValue
   - simplify point of use
   - mention telemetry in readme
