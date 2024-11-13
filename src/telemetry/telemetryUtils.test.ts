@@ -2,9 +2,11 @@
 import * as utils from '../utils/utils.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { detectEnvironment, shouldEnableTelemetry } from './telemetryUtils.js';
+import { detectEnvironment, generateInstallId, shouldEnableTelemetry } from './telemetryUtils.js';
 
 import type { SpyInstance } from 'jest-mock';
+import fs from 'fs';
+import os from 'os';
 
 jest.mock('../utils/utils.js');
 
@@ -129,6 +131,49 @@ describe('telemetryUtils', () => {
 
         expect(result).toBe(false);
       });
+    });
+  });
+
+  describe('generateInstallId', () => {
+    let originalHomedir: typeof os.homedir;
+    let originalPlatform: typeof process.platform;
+    let _mockMkdir: SpyInstance<typeof fs.mkdirSync>;
+    let mockWriteFile: SpyInstance<typeof fs.writeFileSync>;
+    let mockReadFile: SpyInstance<typeof fs.readFileSync>;
+
+    beforeEach(() => {
+      originalHomedir = os.homedir;
+      originalPlatform = process.platform;
+      _mockMkdir = jest.spyOn(fs, 'mkdirSync');
+      mockWriteFile = jest.spyOn(fs, 'writeFileSync');
+      mockReadFile = jest.spyOn(fs, 'readFileSync') as jest.MockedFunction<typeof fs.readFileSync>;
+      os.homedir = jest.fn().mockReturnValue('/home/user') as jest.MockedFunction<typeof os.homedir>;
+    });
+
+    afterEach(() => {
+      os.homedir = originalHomedir;
+      Object.defineProperty(process, 'platform', { value: originalPlatform });
+      jest.resetAllMocks();
+    });
+
+    it('should generate machine hash for npx context', () => {
+      jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('npx');
+      jest.spyOn(os, 'hostname').mockReturnValue('test-host');
+      jest.spyOn(os, 'platform').mockReturnValue('darwin');
+      jest.spyOn(os, 'arch').mockReturnValue('x64');
+      jest.spyOn(os, 'userInfo').mockReturnValue({ username: 'testuser' } as os.UserInfo<string>);
+
+      const result = generateInstallId();
+      expect(result).toMatch(/^[a-f0-9]{8}$/);
+    });
+
+    it('should use existing ID from config file when available', () => {
+      jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+      mockReadFile.mockReturnValue('existing-id');
+
+      const result = generateInstallId();
+      expect(result).toBe('existing-id');
+      expect(mockWriteFile).not.toHaveBeenCalled();
     });
   });
 });

@@ -21,6 +21,8 @@
 - Scripts
   - Add a section on scripts to the readme
   - Document the scripts
+- Debug
+  - Add a section on debug logging to the readme
 
 ## Project Configuration
 

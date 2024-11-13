@@ -1,15 +1,17 @@
 import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
-import { detectEnvironment, detectExecutionContext, shouldEnableTelemetry } from './telemetryUtils.js';
+import {
+  detectEnvironment,
+  detectExecutionContext,
+  generateInstallId,
+  shouldEnableTelemetry,
+} from './telemetryUtils.js';
 
 import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
 import { FirstRunManager } from './FirstRunManager.js';
 import { PostHog } from 'posthog-node';
-import { createHash } from 'crypto';
 import debug from 'debug';
-import fs from 'fs';
 import os from 'os';
-import path from 'path';
 
 const log = debug(DEBUG_TELEMETRY);
 
@@ -61,44 +63,11 @@ export class Telemetry {
           flushAt: 1,
           flushInterval: 0,
         });
-        this.distinctId = this.generateInstallId();
+        this.distinctId = generateInstallId();
       } catch (error) {
         log('Failed to initialize telemetry client', error);
         this.enabled = false;
       }
-    }
-  }
-
-  private generateInstallId(): string {
-    const executionContext = detectExecutionContext();
-    log('Execution context:', executionContext);
-    // For npx, create a semi-persistent ID based on machine characteristics
-    if (executionContext === 'npx') {
-      const machineId = [os.hostname(), os.platform(), os.arch(), os.userInfo().username].join('-');
-
-      return createHash('sha256').update(machineId).digest('hex').slice(0, 8);
-    }
-
-    // For installed versions, try to use persistent storage
-    try {
-      const configDir =
-        process.platform === 'win32'
-          ? (process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'))
-          : (process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config'));
-
-      const idPath = path.join(configDir, 'swiss-pairing-cli', '.installation-id');
-
-      try {
-        return fs.readFileSync(idPath, 'utf8');
-      } catch {
-        const newId = Math.random().toString(36).substring(2);
-        fs.mkdirSync(path.dirname(idPath), { recursive: true });
-        fs.writeFileSync(idPath, newId);
-        return newId;
-      }
-    } catch {
-      // Fall back to temporary ID if we can't write to config
-      return Math.random().toString(36).substring(2);
     }
   }
 
