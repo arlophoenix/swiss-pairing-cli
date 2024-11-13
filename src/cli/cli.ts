@@ -107,7 +107,6 @@ export function createCLI(): Command {
       telemetry.record({
         name: 'command_invoked',
         properties: {
-          command_name: 'generate',
           args_provided: {
             file: options.file != undefined,
             format: options.format != undefined,
@@ -133,7 +132,6 @@ export function createCLI(): Command {
           telemetry.record({
             name: 'command_succeeded',
             properties: {
-              command_name: 'generate',
               duration_ms: Date.now() - startTime,
             },
           });
@@ -146,7 +144,6 @@ export function createCLI(): Command {
         telemetry.record({
           name: 'command_failed',
           properties: {
-            command_name: 'generate',
             error_name: 'validation_failed',
             error_message: result.message,
             duration_ms: Date.now() - startTime,
@@ -160,7 +157,6 @@ export function createCLI(): Command {
         telemetry.record({
           name: 'command_error',
           properties: {
-            command_name: 'generate',
             error_name: error instanceof Error ? error.name : 'unknown',
             error_message: error instanceof Error ? error.message : String(error),
             duration_ms: Date.now() - startTime,

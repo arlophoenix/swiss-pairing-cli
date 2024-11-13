@@ -13,11 +13,7 @@ interface BaseEvent<T extends string, P> {
   readonly properties: P;
 }
 
-interface BaseCLIEventProperties {
-  readonly command_name: string;
-}
-
-interface CommandInvokedProperties extends BaseCLIEventProperties {
+interface CommandInvokedProperties {
   readonly args_provided: Record<keyof UnvalidatedCLIOptions, boolean>;
   readonly teams_count: number | undefined;
   readonly squad_count: number | undefined;
@@ -27,17 +23,17 @@ interface CommandInvokedProperties extends BaseCLIEventProperties {
   readonly format: string | undefined;
 }
 
-interface CommandSucceededProperties extends BaseCLIEventProperties {
+interface CommandSucceededProperties {
   readonly duration_ms: number;
 }
 
-interface CommandFailedProperties extends BaseCLIEventProperties {
+interface CommandFailedProperties {
   readonly duration_ms: number;
   readonly error_name: string;
   readonly error_message: string;
 }
 
-interface CommandCancelledProperties extends BaseCLIEventProperties {
+interface CommandCancelledProperties {
   readonly duration_ms: number;
 }
 

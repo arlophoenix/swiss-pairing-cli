@@ -93,7 +93,6 @@ describe('Telemetry', () => {
       commandInvokedEvent = {
         name: 'command_invoked',
         properties: {
-          command_name: 'generate',
           args_provided: {
             file: true,
             format: true,
@@ -115,7 +114,6 @@ describe('Telemetry', () => {
       commandSucceededEvent = {
         name: 'command_succeeded',
         properties: {
-          command_name: 'generate',
           duration_ms: 123,
         },
       };
@@ -123,7 +121,6 @@ describe('Telemetry', () => {
       commandFailedEvent = {
         name: 'command_failed',
         properties: {
-          command_name: 'generate',
           error_name: 'ValidationError',
           error_message: 'Invalid team count',
           duration_ms: 45,
@@ -144,7 +141,6 @@ describe('Telemetry', () => {
         expect.objectContaining({
           name: 'command_invoked',
           properties: expect.objectContaining({
-            command_name: 'generate',
             teams_count: 4,
             squad_count: 2,
           }),
@@ -161,7 +157,6 @@ describe('Telemetry', () => {
         expect.objectContaining({
           name: 'command_succeeded',
           properties: expect.objectContaining({
-            command_name: 'generate',
             duration_ms: 123,
           }),
         })
@@ -177,7 +172,6 @@ describe('Telemetry', () => {
         expect.objectContaining({
           name: 'command_failed',
           properties: expect.objectContaining({
-            command_name: 'generate',
             error_name: 'ValidationError',
             error_message: 'Invalid team count',
           }),
@@ -233,7 +227,6 @@ describe('Telemetry', () => {
       const event: TelemetryEvent = {
         name: 'command_succeeded',
         properties: {
-          command_name: 'generate',
           duration_ms: 123,
         },
       };
@@ -246,7 +239,6 @@ describe('Telemetry', () => {
         distinctId: expect.any(String),
         event: 'command_succeeded',
         properties: expect.objectContaining({
-          command_name: 'generate',
           duration_ms: 123,
         }),
       });

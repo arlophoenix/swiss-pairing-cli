@@ -10,6 +10,7 @@
 
 ## Code Quality
 
+- Review code coverage
 - prevent pushing directly to remote master branch
 
 ## Documentation
