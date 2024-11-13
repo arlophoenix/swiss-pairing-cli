@@ -12,13 +12,10 @@ jest.mock('../utils/utils.js');
 
 describe('telemetryUtils', () => {
   describe('detectEnvironment', () => {
-    let originalEnv: NodeJS.ProcessEnv;
+    const originalEnv = { ...process.env };
     let mockDetectExecutionContext: SpyInstance;
 
     beforeEach(() => {
-      originalEnv = process.env;
-      delete process.env.CI;
-      delete process.env.NODE_ENV;
       mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
     });
 
@@ -45,22 +42,28 @@ describe('telemetryUtils', () => {
       expect(mockDetectExecutionContext).not.toHaveBeenCalled();
     });
 
-    it('should return "development" for local installs without NODE_ENV', () => {
-      mockDetectExecutionContext.mockReturnValue('local');
-      expect(detectEnvironment()).toBe('development');
-      expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
-    });
+    describe('when NODE_ENV is not set', () => {
+      beforeEach(() => {
+        delete process.env.NODE_ENV;
+      });
 
-    it('should return "production" for global installs without NODE_ENV', () => {
-      mockDetectExecutionContext.mockReturnValue('global');
-      expect(detectEnvironment()).toBe('production');
-      expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
-    });
+      it('should return "development" for local installs', () => {
+        mockDetectExecutionContext.mockReturnValue('local');
+        expect(detectEnvironment()).toBe('development');
+        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      });
 
-    it('should return "production" for npx executions without NODE_ENV', () => {
-      mockDetectExecutionContext.mockReturnValue('npx');
-      expect(detectEnvironment()).toBe('production');
-      expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      it('should return "production" for global installs', () => {
+        mockDetectExecutionContext.mockReturnValue('global');
+        expect(detectEnvironment()).toBe('production');
+        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return "production" for npx executions', () => {
+        mockDetectExecutionContext.mockReturnValue('npx');
+        expect(detectEnvironment()).toBe('production');
+        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      });
     });
   });
 

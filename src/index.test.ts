@@ -18,16 +18,10 @@ jest.mock('./cli/cli.js', () => ({
 }));
 
 describe('index', () => {
-  let originalArgv: string[];
-
-  beforeEach(() => {
-    // Store the original process.argv
-    originalArgv = process.argv;
-    // Clear all mocks before each test
-    jest.clearAllMocks();
-  });
+  const originalArgv = [...process.argv];
 
   afterEach(() => {
+    jest.clearAllMocks();
     // Restore the original process.argv after each test
     // eslint-disable-next-line functional/immutable-data
     process.argv = originalArgv;

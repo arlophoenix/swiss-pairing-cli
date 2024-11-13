@@ -1,5 +1,5 @@
 /* eslint-disable functional/immutable-data */
-import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from './Config.js';
 import dotenv from 'dotenv';
@@ -12,16 +12,12 @@ jest.mock('dotenv', () => ({
 }));
 
 describe('Config', () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    process.env = originalEnv;
-    // Reset singleton between tests with clean env
-    Config.resetForTesting({ env: null });
-  });
+  const originalEnv = { ...process.env };
 
   afterEach(() => {
     jest.clearAllMocks();
+    process.env = originalEnv;
+    Config.resetForTesting({ env: null });
   });
 
   describe('initialization', () => {

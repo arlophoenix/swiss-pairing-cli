@@ -279,11 +279,11 @@ describe('utils', () => {
   });
 
   describe('detectExecutionContext', () => {
-    const originalExecPath = process.env.npm_execpath;
+    const originalEnv = { ...process.env };
 
     afterEach(() => {
       // eslint-disable-next-line functional/immutable-data
-      process.env.npm_execpath = originalExecPath;
+      process.env = originalEnv;
     });
 
     it('should detect npx execution', () => {
