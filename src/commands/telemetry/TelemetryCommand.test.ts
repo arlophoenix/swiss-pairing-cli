@@ -27,15 +27,36 @@ describe('TelemetryCommand', () => {
   });
 
   describe('constructor', () => {
-    it('should initialize with parsed options', () => {
+    it('should initialize telemetry when shouldShowTelemetryNotice is false', () => {
       const options = {
         teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
         numRounds: '3',
         format: 'text-markdown',
       };
 
-      const command = new TelemetryCommand(options);
-      expect(command).toBeDefined();
+      const command = new TelemetryCommand({
+        options,
+        shouldShowTelemetryNotice: false,
+      });
+
+      command.recordInvocation();
+      expect(mockRecord).toHaveBeenCalled();
+    });
+
+    it('should disable telemetry when shouldShowTelemetryNotice is true', () => {
+      const options = {
+        teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+        numRounds: '3',
+        format: 'text-markdown',
+      };
+
+      const command = new TelemetryCommand({
+        options,
+        shouldShowTelemetryNotice: true,
+      });
+
+      command.recordInvocation();
+      expect(mockRecord).not.toHaveBeenCalled();
     });
   });
 
@@ -47,7 +68,7 @@ describe('TelemetryCommand', () => {
         format: 'text-markdown',
       };
 
-      const command = new TelemetryCommand(options);
+      const command = new TelemetryCommand({ options, shouldShowTelemetryNotice: false });
       command.recordInvocation();
 
       expect(mockRecord).toHaveBeenCalledWith({
@@ -75,7 +96,11 @@ describe('TelemetryCommand', () => {
 
   describe('recordSuccess', () => {
     it('should record successful command completion with duration', () => {
-      const command = new TelemetryCommand({});
+      const command = new TelemetryCommand({
+        options: {},
+        shouldShowTelemetryNotice: false,
+      });
+
       const laterTime = 1500;
       // eslint-disable-next-line functional/immutable-data
       global.Date.now = jest.fn(() => laterTime);
@@ -93,7 +118,11 @@ describe('TelemetryCommand', () => {
 
   describe('recordValidationFailure', () => {
     it('should record validation failure with error message and duration', () => {
-      const command = new TelemetryCommand({});
+      const command = new TelemetryCommand({
+        options: {},
+        shouldShowTelemetryNotice: false,
+      });
+
       const laterTime = 2000;
       // eslint-disable-next-line functional/immutable-data
       global.Date.now = jest.fn(() => laterTime);
@@ -113,7 +142,11 @@ describe('TelemetryCommand', () => {
 
   describe('recordError', () => {
     it('should record unexpected error with error details and duration', () => {
-      const command = new TelemetryCommand({});
+      const command = new TelemetryCommand({
+        options: {},
+        shouldShowTelemetryNotice: false,
+      });
+
       const laterTime = 3000;
       // eslint-disable-next-line functional/immutable-data
       global.Date.now = jest.fn(() => laterTime);
@@ -137,10 +170,24 @@ describe('TelemetryCommand', () => {
 
   describe('shutdown', () => {
     it('should call telemetry shutdown', async () => {
-      const command = new TelemetryCommand({});
+      const command = new TelemetryCommand({
+        options: {},
+        shouldShowTelemetryNotice: false,
+      });
+
       await command.shutdown();
 
       expect(mockShutdown).toHaveBeenCalled();
+    });
+
+    it('should not call shutdown when telemetry is disabled', async () => {
+      const command = new TelemetryCommand({
+        options: {},
+        shouldShowTelemetryNotice: true,
+      });
+
+      await command.shutdown();
+      expect(mockShutdown).not.toHaveBeenCalled();
     });
   });
 });

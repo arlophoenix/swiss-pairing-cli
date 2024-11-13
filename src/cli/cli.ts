@@ -38,8 +38,8 @@ import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
 import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
+import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
-import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
 
 /**
  * Creates and configures the CLI command parser.
@@ -98,15 +98,18 @@ export function createCLI(): Command {
       }
     )
     .action(async (options: UnvalidatedCLIOptions) => {
-      const telemetryCommand = new TelemetryCommand(options);
+      const notificationManager = new TelemetryNotificationManager();
+      const shouldShowTelemetryNotice = notificationManager.shouldShowTelemetryNotice();
+
+      const telemetryCommand = new TelemetryCommand({ options, shouldShowTelemetryNotice });
       telemetryCommand.recordInvocation();
 
-      // Display first-run telemetry notice after deciding whether to record any data
-      // otherwise once this notice is shown the data will be recorded immediately for that session
-      showTelemetryNoticeIfNecessary();
+      if (shouldShowTelemetryNotice) {
+        console.log(TelemetryNotificationManager.getTelemetryNotice());
+        notificationManager.markTelemetryNoticeShown();
+      }
 
       let exitValue: number;
-
       try {
         const result = await handleCLIActionCommand(options);
 
