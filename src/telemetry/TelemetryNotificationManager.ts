@@ -1,3 +1,16 @@
+/**
+ * Manages first-run telemetry notifications and user preferences.
+ *
+ * Handles:
+ * - Determining if telemetry notice needs to be shown
+ * - Storing notice acknowledgment persistently
+ * - OS-specific config paths
+ * - Error resilient file operations
+ *
+ * File locations:
+ * - Unix: ~/.config/<app-name>/.telemetry-notice-shown
+ * - Windows: %APPDATA%/<app-name>/.telemetry-notice-shown
+ */
 import { DEBUG_TELEMETRY, ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT, PROGRAM_NAME } from '../constants.js';
 
 import debug from 'debug';
@@ -11,9 +24,14 @@ export class TelemetryNotificationManager {
   private readonly configPath: string;
   private readonly telemetryNoticePath: string;
 
+  /**
+   * Creates notification manager for specified app.
+   * Resolves OS-specific config paths.
+   *
+   * @param appName - Optional app name for config path, defaults to PROGRAM_NAME
+   */
   constructor(appName = PROGRAM_NAME) {
     log('Initializing TelemetryNotificationManager');
-    // Get OS-specific config directory
     const configDir =
       process.platform === 'win32'
         ? (process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'))
@@ -25,6 +43,10 @@ export class TelemetryNotificationManager {
     log('Telemetry notice path:', this.telemetryNoticePath);
   }
 
+  /**
+   * Checks if telemetry notice needs to be shown.
+   * Returns true on first run or if notice file missing.
+   */
   shouldShowTelemetryNotice(): boolean {
     let result: boolean;
     try {
@@ -37,17 +59,26 @@ export class TelemetryNotificationManager {
     return result;
   }
 
+  /**
+   * Marks telemetry notice as shown.
+   * Creates config directory if needed.
+   * Fails silently on errors.
+   */
   markTelemetryNoticeShown() {
     try {
       fs.mkdirSync(this.configPath, { recursive: true });
       fs.writeFileSync(this.telemetryNoticePath, String(Date.now()));
-      log('Marked telemetry notice as shown:');
+      log('Marked telemetry notice as shown');
     } catch (error) {
       // Fail silently - worst case we show notice again
       log('Error marking telemetry notice shown:', error);
     }
   }
 
+  /**
+   * Gets telemetry notice text.
+   * Includes opt-out instructions.
+   */
   static getTelemetryNotice(): string {
     return `
 Telemetry Notice
