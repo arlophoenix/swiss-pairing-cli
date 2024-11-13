@@ -216,7 +216,7 @@ describe('Telemetry', () => {
       instance.initialized = true;
       // @ts-expect-error accessing private for tests
       // eslint-disable-next-line functional/immutable-data
-      instance.client = {
+      instance.postHogClient = {
         shutdown: mockShutdown,
         capture: mockCapture,
       };

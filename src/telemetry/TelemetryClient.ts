@@ -9,14 +9,13 @@ import {
 import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
 import { PostHog } from 'posthog-node';
-import { TelemetryNotificationManager } from './TelemetryNotificationManager.js';
 import debug from 'debug';
 import os from 'os';
 
 const log = debug(DEBUG_TELEMETRY);
 
 export class TelemetryClient {
-  private readonly client: PostHog | null = null;
+  private readonly postHogClient: PostHog | null = null;
   private readonly distinctId!: string;
   private readonly enabled: boolean = true;
   // eslint-disable-next-line functional/prefer-readonly-type
@@ -56,7 +55,7 @@ export class TelemetryClient {
 
     if (this.enabled) {
       try {
-        this.client = new PostHog(apiKey, {
+        this.postHogClient = new PostHog(apiKey, {
           host: 'https://us.i.posthog.com',
           flushAt: 1,
           flushInterval: 0,
@@ -70,7 +69,7 @@ export class TelemetryClient {
   }
 
   record(event: TelemetryEvent) {
-    if (!this.enabled || !this.client) {
+    if (!this.enabled || !this.postHogClient) {
       return;
     }
     log('Recording event:', event);
@@ -101,7 +100,7 @@ export class TelemetryClient {
   }
 
   private async flush(): Promise<void> {
-    if (this.client === null || this.eventQueue.length === 0) {
+    if (this.postHogClient === null || this.eventQueue.length === 0) {
       return;
     }
     log('Flushing %d events', this.eventQueue.length);
@@ -109,7 +108,7 @@ export class TelemetryClient {
       // Send all queued events in parallel
       await Promise.all(
         this.eventQueue.map((event) => {
-          this.client?.capture({
+          this.postHogClient?.capture({
             distinctId: this.distinctId,
             event: event.name,
             properties: event.properties,
@@ -133,9 +132,9 @@ export class TelemetryClient {
     // Final attempt to flush any queued events
     await this.flush();
 
-    if (this.client) {
+    if (this.postHogClient) {
       try {
-        await this.client.shutdown();
+        await this.postHogClient.shutdown();
       } catch {
         // Ignore shutdown errors
       }

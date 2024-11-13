@@ -3,7 +3,6 @@
 ## In Progress
 
 - Telemetry using PostHog
-  - rename posthogclient
   - simplify point of use
   - mention telemetry in readme
   - enable telemetry for production (how to securely store API key?)
