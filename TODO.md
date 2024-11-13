@@ -3,13 +3,18 @@
 ## In Progress
 
 - Telemetry using PostHog
+  - rename posthogclient
+  - rename telemetryclient
+  - rename exitValue
   - simplify point of use
   - mention telemetry in readme
+  - enable telemetry for production (how to securely store API key?)
 
 ## Functionality
 
 ## Code Quality
 
+- consider refactor to extract cliAction to separate command
 - Review code coverage
 - prevent pushing directly to remote master branch
 
