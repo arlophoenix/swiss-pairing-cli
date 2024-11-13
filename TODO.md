@@ -3,9 +3,10 @@
 ## In Progress
 
 - Telemetry using PostHog
-  - simplify point of use
-  - mention telemetry in readme
+  - add env variable to force telemetry notification display
+  - add integration test to test telemetry notification
   - enable telemetry for production (how to securely store API key?)
+  - mention telemetry in readme
 
 ## Functionality
 
@@ -29,6 +30,7 @@
   - see first attempt in .github/workflows/ci.yml
 - [ ] Implement semantic versioning practices
 - [ ] Implement automated dependency updates (e.g., Dependabot)
+- Add dependency visualization
 
 ## Additional Tooling to Consider
 
