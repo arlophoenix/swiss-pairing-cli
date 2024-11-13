@@ -109,7 +109,7 @@ export function createCLI(): Command {
         notificationManager.markTelemetryNoticeShown();
       }
 
-      let exitValue: number;
+      let exitCode: number;
       try {
         const result = await handleCLIActionCommand(options);
 
@@ -117,22 +117,22 @@ export function createCLI(): Command {
           // Record success and shutdown telemetry
           telemetryCommand.recordSuccess();
           console.log(result.value);
-          exitValue = 0;
+          exitCode = 0;
         } else {
           // Handle validation failure
           telemetryCommand.recordValidationFailure(result.message);
           console.error(result.message);
-          exitValue = 1;
+          exitCode = 1;
         }
       } catch (error) {
         telemetryCommand.recordError(error as Error);
         console.error(error);
-        exitValue = 1;
+        exitCode = 1;
       } finally {
         await telemetryCommand.shutdown();
       }
-      if (exitValue > 0) {
-        process.exit(exitValue);
+      if (exitCode > 0) {
+        process.exit(exitCode);
       }
     });
 
