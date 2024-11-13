@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
-import { Telemetry } from '../../telemetry/Telemetry.js';
+import { TelemetryClient } from '../../telemetry/TelemetryClient.js';
 import { TelemetryCommand } from './TelemetryCommand.js';
 
 describe('TelemetryCommand', () => {
-  let mockRecord: SpyInstance<typeof Telemetry.prototype.record>;
-  let mockShutdown: SpyInstance<typeof Telemetry.prototype.shutdown>;
+  let mockRecord: SpyInstance<typeof TelemetryClient.prototype.record>;
+  let mockShutdown: SpyInstance<typeof TelemetryClient.prototype.shutdown>;
   let realDateNow: () => number;
 
   beforeEach(() => {
-    mockRecord = jest.spyOn(Telemetry.prototype, 'record').mockReturnValue();
-    mockShutdown = jest.spyOn(Telemetry.prototype, 'shutdown').mockResolvedValue();
+    mockRecord = jest.spyOn(TelemetryClient.prototype, 'record').mockReturnValue();
+    mockShutdown = jest.spyOn(TelemetryClient.prototype, 'shutdown').mockResolvedValue();
 
     // Mock Date.now() for consistent timestamps
     realDateNow = Date.now;
@@ -27,6 +27,19 @@ describe('TelemetryCommand', () => {
   });
 
   describe('constructor', () => {
+    it('should initialize with parsed options', () => {
+      const options = {
+        teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
+        numRounds: '3',
+        format: 'text-markdown',
+      };
+
+      const command = new TelemetryCommand(options);
+      expect(command).toBeDefined();
+    });
+  });
+
+  describe('recordInvocation', () => {
     it('should record command invocation with parsed options', () => {
       const options = {
         teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
@@ -34,7 +47,8 @@ describe('TelemetryCommand', () => {
         format: 'text-markdown',
       };
 
-      new TelemetryCommand(options);
+      const command = new TelemetryCommand(options);
+      command.recordInvocation();
 
       expect(mockRecord).toHaveBeenCalledWith({
         name: 'command_invoked',

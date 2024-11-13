@@ -37,7 +37,7 @@ import {
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
-import { Telemetry } from '../telemetry/Telemetry.js';
+import { TelemetryClient } from '../telemetry/TelemetryClient.js';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
 import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
 
@@ -101,7 +101,7 @@ export function createCLI(): Command {
       const startTime = Date.now();
       showTelemetryNoticeIfNecessary();
 
-      const telemetry = Telemetry.getInstance();
+      const telemetry = TelemetryClient.getInstance();
 
       // Record command invocation with provided args
       telemetry.record({

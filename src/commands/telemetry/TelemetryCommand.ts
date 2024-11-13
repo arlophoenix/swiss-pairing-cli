@@ -1,4 +1,4 @@
-import { Telemetry } from '../../telemetry/Telemetry.js';
+import { TelemetryClient } from '../../telemetry/TelemetryClient.js';
 import { UnvalidatedCLIOptions } from '../../types/types.js';
 
 interface TelemetryInvocation {
@@ -11,21 +11,18 @@ interface TelemetryInvocation {
  * Encapsulates all telemetry logic to keep CLI clean.
  */
 export class TelemetryCommand {
-  private readonly telemetry: Telemetry;
+  private readonly telemetry: TelemetryClient;
   private readonly invocation: TelemetryInvocation;
 
   constructor(options: UnvalidatedCLIOptions) {
-    this.telemetry = Telemetry.getInstance();
+    this.telemetry = TelemetryClient.getInstance();
     this.invocation = {
       startTime: Date.now(),
       options,
     };
-
-    // Record initial command invocation
-    this.recordInvocation();
   }
 
-  private recordInvocation() {
+  recordInvocation() {
     this.telemetry.record({
       name: 'command_invoked',
       properties: {

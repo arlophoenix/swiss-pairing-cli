@@ -15,7 +15,7 @@ import os from 'os';
 
 const log = debug(DEBUG_TELEMETRY);
 
-export class Telemetry {
+export class TelemetryClient {
   private readonly client: PostHog | null = null;
   private readonly distinctId!: string;
   private readonly enabled: boolean = true;
@@ -25,21 +25,21 @@ export class Telemetry {
   private flushTimeout: NodeJS.Timeout | null = null;
 
   // eslint-disable-next-line functional/prefer-readonly-type
-  private static instance: Telemetry | null = null;
+  private static instance: TelemetryClient | null = null;
 
-  public static getInstance(): Telemetry {
-    if (!Telemetry.instance) {
+  public static getInstance(): TelemetryClient {
+    if (!TelemetryClient.instance) {
       // eslint-disable-next-line functional/immutable-data
-      Telemetry.instance = new Telemetry();
+      TelemetryClient.instance = new TelemetryClient();
 
       // Ensure events are flushed on process exit
       process.on('exit', () => {
-        Telemetry.instance?.shutdown().catch(() => {
+        TelemetryClient.instance?.shutdown().catch(() => {
           // nothing to do here the process has ended
         });
       });
     }
-    return Telemetry.instance;
+    return TelemetryClient.instance;
   }
 
   private constructor() {

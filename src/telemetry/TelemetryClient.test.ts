@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import { Config } from '../Config.js';
 import type { SpyInstance } from 'jest-mock';
-import { Telemetry } from './Telemetry.js';
+import { TelemetryClient } from './TelemetryClient.js';
 import { TelemetryEvent } from './telemetryTypes.js';
 
 jest.mock('posthog-node');
@@ -37,25 +37,25 @@ describe('Telemetry', () => {
   });
 
   afterEach(() => {
-    Telemetry.resetForTesting();
+    TelemetryClient.resetForTesting();
     jest.resetAllMocks();
   });
 
   describe('getInstance', () => {
     it('should create a new instance when first called', () => {
-      const instance = Telemetry.getInstance();
-      expect(instance).toBeInstanceOf(Telemetry);
+      const instance = TelemetryClient.getInstance();
+      expect(instance).toBeInstanceOf(TelemetryClient);
     });
 
     it('should return the same instance on subsequent calls', () => {
-      const instance1 = Telemetry.getInstance();
-      const instance2 = Telemetry.getInstance();
+      const instance1 = TelemetryClient.getInstance();
+      const instance2 = TelemetryClient.getInstance();
       expect(instance1).toBe(instance2);
     });
 
     it.each([true, false])('should use shouldEnableTelemetry result: %s', (shouldEnableTelemetry) => {
       mockShouldEnableTelemetry.mockReturnValue(shouldEnableTelemetry);
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
 
       // expect(mockConfig.getTelemetryOptOut).toHaveBeenCalled();
       expect(mockShouldEnableTelemetry).toHaveBeenCalledWith({
@@ -72,11 +72,11 @@ describe('Telemetry', () => {
     it('should register process exit handler only once', () => {
       const processOnSpy = jest.spyOn(process, 'on');
 
-      Telemetry.getInstance(); // First call
+      TelemetryClient.getInstance(); // First call
       expect(processOnSpy).toHaveBeenCalledTimes(1);
       expect(processOnSpy).toHaveBeenCalledWith('exit', expect.any(Function));
 
-      Telemetry.getInstance(); // Second call
+      TelemetryClient.getInstance(); // Second call
       expect(processOnSpy).toHaveBeenCalledTimes(1); // Still only called once
     });
   });
@@ -133,7 +133,7 @@ describe('Telemetry', () => {
     });
 
     it('should queue command invoked event', () => {
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
       instance.record(commandInvokedEvent);
 
       // @ts-expect-error accessing private for tests
@@ -149,7 +149,7 @@ describe('Telemetry', () => {
     });
 
     it('should queue command succeeded event', () => {
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
       instance.record(commandSucceededEvent);
 
       // @ts-expect-error accessing private for tests
@@ -164,7 +164,7 @@ describe('Telemetry', () => {
     });
 
     it('should queue command failed event', () => {
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
       instance.record(commandFailedEvent);
 
       // @ts-expect-error accessing private for tests
@@ -185,7 +185,7 @@ describe('Telemetry', () => {
       mockDetectExecutionContext.mockReturnValue(executionContext);
       mockDetectEnvironment.mockReturnValue(environment);
 
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
       instance.record(commandInvokedEvent);
 
       expect(mockDetectExecutionContext).toHaveBeenCalled();
@@ -208,7 +208,7 @@ describe('Telemetry', () => {
     it('should flush queued events and close client', async () => {
       const mockShutdown = jest.fn<() => Promise<void>>();
       const mockCapture = jest.fn<() => Promise<void>>().mockResolvedValue();
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
 
       // Ensure clean state and mock setup before test
       // @ts-expect-error accessing private for tests
@@ -249,7 +249,7 @@ describe('Telemetry', () => {
 
     it('should handle shutdown errors gracefully', async () => {
       const mockShutdown = jest.fn<() => Promise<void>>().mockRejectedValueOnce(new Error('Shutdown failed'));
-      const instance = Telemetry.getInstance();
+      const instance = TelemetryClient.getInstance();
       // @ts-expect-error accessing private for tests
       // eslint-disable-next-line functional/immutable-data
       instance.client = { shutdown: mockShutdown };
