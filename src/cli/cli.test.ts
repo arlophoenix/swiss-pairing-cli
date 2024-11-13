@@ -3,6 +3,8 @@ import * as cliActionCommand from '../commands/cliAction/cliActionCommand.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
+import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
+import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
 import { createCLI } from './cli.js';
 
 jest.mock('../commands/cliAction/cliActionCommand.js');
@@ -89,6 +91,39 @@ describe('CLI', () => {
       format: 'json-pretty',
       matches: [['Alice', 'Bob']],
       file: 'data.csv',
+    });
+  });
+
+  describe('telemetry flow', () => {
+    let mockShouldShowTelemetryNotice: SpyInstance<
+      typeof TelemetryNotificationManager.prototype.shouldShowTelemetryNotice
+    >;
+    let mockRecordInvocation: SpyInstance<typeof TelemetryCommand.prototype.recordInvocation>;
+
+    beforeEach(() => {
+      mockShouldShowTelemetryNotice = jest.spyOn(
+        TelemetryNotificationManager.prototype,
+        'shouldShowTelemetryNotice'
+      );
+      mockRecordInvocation = jest.spyOn(TelemetryCommand.prototype, 'recordInvocation');
+    });
+
+    it('should show notice and not collect telemetry on first run', async () => {
+      mockShouldShowTelemetryNotice.mockReturnValue(true);
+      const program = createCLI();
+      await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
+
+      expect(console.log).toHaveBeenCalledWith(TelemetryNotificationManager.getTelemetryNotice());
+      expect(mockRecordInvocation).toHaveBeenCalled();
+    });
+
+    it('should collect telemetry and not show notice on subsequent runs', async () => {
+      mockShouldShowTelemetryNotice.mockReturnValue(false);
+      const program = createCLI();
+      await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
+
+      expect(console.log).not.toHaveBeenCalledWith(TelemetryNotificationManager.getTelemetryNotice());
+      expect(mockRecordInvocation).toHaveBeenCalled();
     });
   });
 });
