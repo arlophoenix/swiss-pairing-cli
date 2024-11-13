@@ -3,10 +3,8 @@
 ## In Progress
 
 - Telemetry using PostHog
-  - discriminate between test/dev and production users
   - simplify point of use
   - add tests
-  - rename files in telemetry module
   - add code documentation
   - mention telemetry in readme
 

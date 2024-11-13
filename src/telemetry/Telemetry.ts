@@ -8,8 +8,8 @@ import {
 
 import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
-import { FirstRunManager } from './FirstRunManager.js';
 import { PostHog } from 'posthog-node';
+import { TelemetryNotificationManager } from './TelemetryNotificationManager.js';
 import debug from 'debug';
 import os from 'os';
 
@@ -45,10 +45,10 @@ export class Telemetry {
   private constructor() {
     const config = Config.getInstance();
     const apiKey = config.getPosthogApiKey();
-    const firstRunManager = new FirstRunManager();
+    const nameotificationManager = new TelemetryNotificationManager();
     this.enabled = shouldEnableTelemetry({
       telemetryOptOut: config.getTelemetryOptOut(),
-      shouldShowTelemetryNotice: firstRunManager.shouldShowTelemetryNotice(),
+      shouldShowTelemetryNotice: nameotificationManager.shouldShowTelemetryNotice(),
       apiKeyExists: apiKey !== '',
       environment: detectEnvironment(),
     });

@@ -21,9 +21,9 @@ describe('Telemetry', () => {
     jest.spyOn(Config.prototype, 'getPosthogApiKey').mockReturnValue('test-api-key');
     jest.spyOn(Config.prototype, 'getTelemetryOptOut').mockReturnValue(false);
 
-    // Mock FirstRunManager to not show notice
-    jest.mock('./FirstRunManager.js', () => ({
-      FirstRunManager: jest.fn().mockImplementation(() => ({
+    // Mock TelemetryNotificationManager to not show notice
+    jest.mock('./TelemetryNotificationManager.js', () => ({
+      TelemetryNotificationManager: jest.fn().mockImplementation(() => ({
         shouldShowTelemetryNotice: () => false,
       })),
     }));

@@ -1,10 +1,10 @@
-import { FirstRunManager } from '../telemetry/FirstRunManager.js';
+import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
 
 export function showTelemetryNoticeIfNecessary() {
-  const firstRunManager = new FirstRunManager();
+  const notificationManager = new TelemetryNotificationManager();
 
-  if (firstRunManager.shouldShowTelemetryNotice()) {
-    console.log(FirstRunManager.getTelemetryNotice());
-    firstRunManager.markTelemetryNoticeShown();
+  if (notificationManager.shouldShowTelemetryNotice()) {
+    console.log(TelemetryNotificationManager.getTelemetryNotice());
+    notificationManager.markTelemetryNoticeShown();
   }
 }

@@ -7,12 +7,12 @@ import path from 'path';
 
 const log = debug(DEBUG_TELEMETRY);
 
-export class FirstRunManager {
+export class TelemetryNotificationManager {
   private readonly configPath: string;
   private readonly telemetryNoticePath: string;
 
   constructor(appName = PROGRAM_NAME) {
-    log('Initializing FirstRunManager');
+    log('Initializing TelemetryNotificationManager');
     // Get OS-specific config directory
     const configDir =
       process.platform === 'win32'
