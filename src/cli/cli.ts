@@ -37,7 +37,7 @@ import {
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
-import { TelemetryClient } from '../telemetry/TelemetryClient.js';
+import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
 import { showTelemetryNoticeIfNecessary } from './cliUtils.js';
 
@@ -98,73 +98,38 @@ export function createCLI(): Command {
       }
     )
     .action(async (options: UnvalidatedCLIOptions) => {
-      const startTime = Date.now();
+      const telemetryCommand = new TelemetryCommand(options);
+      telemetryCommand.recordInvocation();
+
+      // Display first-run telemetry notice after deciding whether to record any data
+      // otherwise once this notice is shown the data will be recorded immediately for that session
       showTelemetryNoticeIfNecessary();
 
-      const telemetry = TelemetryClient.getInstance();
-
-      // Record command invocation with provided args
-      telemetry.record({
-        name: 'command_invoked',
-        properties: {
-          args_provided: {
-            file: options.file != undefined,
-            format: options.format != undefined,
-            matches: options.matches != undefined,
-            numRounds: options.numRounds != undefined,
-            order: options.order != undefined,
-            startRound: options.startRound != undefined,
-            teams: options.teams != undefined,
-          },
-          teams_count: options.teams?.length,
-          squad_count: options.teams?.filter((t) => t.includes('[') && t.includes(']')).length,
-          rounds_count: Number(options.numRounds),
-          start_round: Number(options.startRound),
-          order: CLI_OPTION_ORDER.some((o) => o === options.order) ? options.order : undefined,
-          format: CLI_OPTION_FORMAT.some((o) => o === options.format) ? options.format : undefined,
-        },
-      });
+      let exitValue: number;
 
       try {
         const result = await handleCLIActionCommand(options);
 
         if (result.success) {
-          telemetry.record({
-            name: 'command_succeeded',
-            properties: {
-              duration_ms: Date.now() - startTime,
-            },
-          });
-          await telemetry.shutdown();
+          // Record success and shutdown telemetry
+          telemetryCommand.recordSuccess();
           console.log(result.value);
-          return;
+          exitValue = 0;
+        } else {
+          // Handle validation failure
+          telemetryCommand.recordValidationFailure(result.message);
+          console.error(result.message);
+          exitValue = 1;
         }
-
-        // Handle validation failure
-        telemetry.record({
-          name: 'command_failed',
-          properties: {
-            error_name: 'validation_failed',
-            error_message: result.message,
-            duration_ms: Date.now() - startTime,
-          },
-        });
-        await telemetry.shutdown();
-        console.error(result.message);
-        process.exit(1);
       } catch (error) {
-        // Handle unexpected errors
-        telemetry.record({
-          name: 'command_error',
-          properties: {
-            error_name: error instanceof Error ? error.name : 'unknown',
-            error_message: error instanceof Error ? error.message : String(error),
-            duration_ms: Date.now() - startTime,
-          },
-        });
-        await telemetry.shutdown();
+        telemetryCommand.recordError(error as Error);
         console.error(error);
-        process.exit(1);
+        exitValue = 1;
+      } finally {
+        await telemetryCommand.shutdown();
+      }
+      if (exitValue > 0) {
+        process.exit(exitValue);
       }
     });
 
