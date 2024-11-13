@@ -2,9 +2,9 @@
 import * as utils from '../utils/utils.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { detectEnvironment, shouldEnableTelemetry } from './telemetryUtils.js';
 
 import type { SpyInstance } from 'jest-mock';
-import { detectEnvironment } from './telemetryUtils.js';
 
 jest.mock('../utils/utils.js');
 
@@ -59,6 +59,76 @@ describe('telemetryUtils', () => {
       mockDetectExecutionContext.mockReturnValue('npx');
       expect(detectEnvironment()).toBe('production');
       expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('shouldEnableTelemetry', () => {
+    const originalEnv = process.env;
+
+    afterEach(() => {
+      process.env = { ...originalEnv };
+    });
+
+    describe('environment based rules', () => {
+      it('should disable telemetry in CI', () => {
+        const result = shouldEnableTelemetry({
+          telemetryOptOut: false,
+          shouldShowTelemetryNotice: false,
+          apiKeyExists: true,
+          environment: 'ci',
+        });
+
+        expect(result).toBe(false);
+      });
+    });
+
+    describe('standard rules', () => {
+      it.each(['development', 'test', 'production'] as const)(
+        'should follow standard rules in %s',
+        (environment) => {
+          const result = shouldEnableTelemetry({
+            telemetryOptOut: false,
+            shouldShowTelemetryNotice: false,
+            apiKeyExists: true,
+            environment,
+          });
+
+          expect(result).toBe(true);
+        }
+      );
+
+      it('should disable telemetry when opted out', () => {
+        const result = shouldEnableTelemetry({
+          telemetryOptOut: true,
+          shouldShowTelemetryNotice: false,
+          apiKeyExists: true,
+          environment: 'development',
+        });
+
+        expect(result).toBe(false);
+      });
+
+      it('should disable telemetry on first run', () => {
+        const result = shouldEnableTelemetry({
+          telemetryOptOut: false,
+          shouldShowTelemetryNotice: true,
+          apiKeyExists: true,
+          environment: 'development',
+        });
+
+        expect(result).toBe(false);
+      });
+
+      it('should disable telemetry when API key missing', () => {
+        const result = shouldEnableTelemetry({
+          telemetryOptOut: false,
+          shouldShowTelemetryNotice: false,
+          apiKeyExists: false,
+          environment: 'development',
+        });
+
+        expect(result).toBe(false);
+      });
     });
   });
 });

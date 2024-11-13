@@ -12,22 +12,14 @@ jest.mock('posthog-node');
 jest.mock('process');
 
 describe('Telemetry', () => {
-  const mockConfig = {
-    getPosthogApiKey: jest.fn<() => string>().mockReturnValue('test-api-key'),
-    getTelemetryOptOut: jest.fn<() => boolean>().mockReturnValue(false),
-  } as unknown as Config;
-
+  let mockShouldEnableTelemetry: SpyInstance<typeof telemetryUtils.shouldEnableTelemetry>;
   let mockDetectExecutionContext: SpyInstance<typeof utils.detectExecutionContext>;
   let mockDetectEnvironment: SpyInstance<typeof telemetryUtils.detectEnvironment>;
 
   beforeEach(() => {
-    // Reset singleton between tests
-    // @ts-expect-error accessing private for tests
-    // eslint-disable-next-line functional/immutable-data
-    Telemetry.instance = null;
-
     // Mock config to enable telemetry
-    jest.spyOn(Config, 'getInstance').mockReturnValue(mockConfig);
+    jest.spyOn(Config.prototype, 'getPosthogApiKey').mockReturnValue('test-api-key');
+    jest.spyOn(Config.prototype, 'getTelemetryOptOut').mockReturnValue(false);
 
     // Mock FirstRunManager to not show notice
     jest.mock('./FirstRunManager.js', () => ({
@@ -40,10 +32,12 @@ describe('Telemetry', () => {
     jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
 
     mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
-    mockDetectEnvironment = jest.spyOn(telemetryUtils, 'detectEnvironment');
+    mockShouldEnableTelemetry = jest.spyOn(telemetryUtils, 'shouldEnableTelemetry').mockReturnValue(true);
+    mockDetectEnvironment = jest.spyOn(telemetryUtils, 'detectEnvironment').mockReturnValue('development');
   });
 
   afterEach(() => {
+    Telemetry.resetForTesting();
     jest.resetAllMocks();
   });
 
@@ -57,6 +51,22 @@ describe('Telemetry', () => {
       const instance1 = Telemetry.getInstance();
       const instance2 = Telemetry.getInstance();
       expect(instance1).toBe(instance2);
+    });
+
+    it.each([true, false])('should use shouldEnableTelemetry result: %s', (shouldEnableTelemetry) => {
+      mockShouldEnableTelemetry.mockReturnValue(shouldEnableTelemetry);
+      const instance = Telemetry.getInstance();
+
+      // expect(mockConfig.getTelemetryOptOut).toHaveBeenCalled();
+      expect(mockShouldEnableTelemetry).toHaveBeenCalledWith({
+        telemetryOptOut: false,
+        shouldShowTelemetryNotice: false,
+        apiKeyExists: true,
+        environment: 'development',
+      });
+
+      // @ts-expect-error accessing private for test
+      expect(instance.enabled).toBe(shouldEnableTelemetry);
     });
 
     it('should register process exit handler only once', () => {

@@ -1,5 +1,5 @@
 import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
-import { detectEnvironment, detectExecutionContext } from './telemetryUtils.js';
+import { detectEnvironment, detectExecutionContext, shouldEnableTelemetry } from './telemetryUtils.js';
 
 import { Config } from '../Config.js';
 import { DEBUG_TELEMETRY } from '../constants.js';
@@ -43,14 +43,15 @@ export class Telemetry {
   private constructor() {
     const config = Config.getInstance();
     const apiKey = config.getPosthogApiKey();
-    const apiKeyExists = apiKey !== '';
     const firstRunManager = new FirstRunManager();
-    const shouldShowTelemetryNotice = firstRunManager.shouldShowTelemetryNotice();
-    this.enabled = !config.getTelemetryOptOut() && !shouldShowTelemetryNotice && apiKeyExists;
+    this.enabled = shouldEnableTelemetry({
+      telemetryOptOut: config.getTelemetryOptOut(),
+      shouldShowTelemetryNotice: firstRunManager.shouldShowTelemetryNotice(),
+      apiKeyExists: apiKey !== '',
+      environment: detectEnvironment(),
+    });
 
     log('Initializing telemetry');
-    log('API Key found:', apiKeyExists);
-    log('Should show telemetry notice:', shouldShowTelemetryNotice);
     log('Telemetry enabled:', this.enabled);
 
     if (this.enabled) {
@@ -172,5 +173,10 @@ export class Telemetry {
         // Ignore shutdown errors
       }
     }
+  }
+
+  public static resetForTesting() {
+    // eslint-disable-next-line functional/immutable-data
+    this.instance = null;
   }
 }
