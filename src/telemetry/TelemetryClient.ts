@@ -3,7 +3,7 @@ import {
   detectEnvironment,
   detectExecutionContext,
   generateDistinctID,
-  shouldEnableTelemetry,
+  shouldEnableTelemetryClient,
 } from './telemetryUtils.js';
 
 import { Config } from '../Config.js';
@@ -46,7 +46,7 @@ export class TelemetryClient {
     const config = Config.getInstance();
     const apiKey = config.getPosthogApiKey();
     const notificationManager = new TelemetryNotificationManager();
-    this.enabled = shouldEnableTelemetry({
+    this.enabled = shouldEnableTelemetryClient({
       telemetryOptOut: config.getTelemetryOptOut(),
       shouldShowTelemetryNotice: notificationManager.shouldShowTelemetryNotice(),
       apiKeyExists: apiKey !== '',

@@ -12,7 +12,7 @@ jest.mock('posthog-node');
 jest.mock('process');
 
 describe('Telemetry', () => {
-  let mockShouldEnableTelemetry: SpyInstance<typeof telemetryUtils.shouldEnableTelemetry>;
+  let mockshouldEnableTelemetryClient: SpyInstance<typeof telemetryUtils.shouldEnableTelemetryClient>;
   let mockDetectExecutionContext: SpyInstance<typeof utils.detectExecutionContext>;
   let mockDetectEnvironment: SpyInstance<typeof telemetryUtils.detectEnvironment>;
 
@@ -32,7 +32,9 @@ describe('Telemetry', () => {
     jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
 
     mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
-    mockShouldEnableTelemetry = jest.spyOn(telemetryUtils, 'shouldEnableTelemetry').mockReturnValue(true);
+    mockshouldEnableTelemetryClient = jest
+      .spyOn(telemetryUtils, 'shouldEnableTelemetryClient')
+      .mockReturnValue(true);
     mockDetectEnvironment = jest.spyOn(telemetryUtils, 'detectEnvironment').mockReturnValue('development');
   });
 
@@ -53,21 +55,24 @@ describe('Telemetry', () => {
       expect(instance1).toBe(instance2);
     });
 
-    it.each([true, false])('should use shouldEnableTelemetry result: %s', (shouldEnableTelemetry) => {
-      mockShouldEnableTelemetry.mockReturnValue(shouldEnableTelemetry);
-      const instance = TelemetryClient.getInstance();
+    it.each([true, false])(
+      'should use shouldEnableTelemetryClient result: %s',
+      (shouldEnableTelemetryClient) => {
+        mockshouldEnableTelemetryClient.mockReturnValue(shouldEnableTelemetryClient);
+        const instance = TelemetryClient.getInstance();
 
-      // expect(mockConfig.getTelemetryOptOut).toHaveBeenCalled();
-      expect(mockShouldEnableTelemetry).toHaveBeenCalledWith({
-        telemetryOptOut: false,
-        shouldShowTelemetryNotice: false,
-        apiKeyExists: true,
-        environment: 'development',
-      });
+        // expect(mockConfig.getTelemetryOptOut).toHaveBeenCalled();
+        expect(mockshouldEnableTelemetryClient).toHaveBeenCalledWith({
+          telemetryOptOut: false,
+          shouldShowTelemetryNotice: false,
+          apiKeyExists: true,
+          environment: 'development',
+        });
 
-      // @ts-expect-error accessing private for test
-      expect(instance.enabled).toBe(shouldEnableTelemetry);
-    });
+        // @ts-expect-error accessing private for test
+        expect(instance.enabled).toBe(shouldEnableTelemetryClient);
+      }
+    );
 
     it('should register process exit handler only once', () => {
       const processOnSpy = jest.spyOn(process, 'on');

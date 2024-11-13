@@ -44,7 +44,7 @@ export function detectEnvironment(): 'test' | 'development' | 'ci' | 'production
  * 4. Disabled if API key missing
  * 5. Otherwise enabled
  */
-export function shouldEnableTelemetry({
+export function shouldEnableTelemetryClient({
   telemetryOptOut,
   shouldShowTelemetryNotice,
   apiKeyExists,
@@ -55,7 +55,7 @@ export function shouldEnableTelemetry({
   readonly apiKeyExists: boolean;
   readonly environment: 'test' | 'development' | 'ci' | 'production';
 }): boolean {
-  log('shouldEnableTelemetry()', {
+  log('shouldEnableTelemetryClient()', {
     telemetryOptOut,
     shouldShowTelemetryNotice,
     apiKeyExists,

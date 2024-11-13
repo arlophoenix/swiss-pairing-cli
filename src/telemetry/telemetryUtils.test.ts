@@ -2,7 +2,7 @@
 import * as utils from '../utils/utils.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { detectEnvironment, generateDistinctID, shouldEnableTelemetry } from './telemetryUtils.js';
+import { detectEnvironment, generateDistinctID, shouldEnableTelemetryClient } from './telemetryUtils.js';
 
 import type { SpyInstance } from 'jest-mock';
 import fs from 'fs';
@@ -67,7 +67,7 @@ describe('telemetryUtils', () => {
     });
   });
 
-  describe('shouldEnableTelemetry', () => {
+  describe('shouldEnableTelemetryClient', () => {
     const originalEnv = process.env;
 
     afterEach(() => {
@@ -76,7 +76,7 @@ describe('telemetryUtils', () => {
 
     describe('environment based rules', () => {
       it('should disable telemetry in CI', () => {
-        const result = shouldEnableTelemetry({
+        const result = shouldEnableTelemetryClient({
           telemetryOptOut: false,
           shouldShowTelemetryNotice: false,
           apiKeyExists: true,
@@ -91,7 +91,7 @@ describe('telemetryUtils', () => {
       it.each(['development', 'test', 'production'] as const)(
         'should follow standard rules in %s',
         (environment) => {
-          const result = shouldEnableTelemetry({
+          const result = shouldEnableTelemetryClient({
             telemetryOptOut: false,
             shouldShowTelemetryNotice: false,
             apiKeyExists: true,
@@ -103,7 +103,7 @@ describe('telemetryUtils', () => {
       );
 
       it('should disable telemetry when opted out', () => {
-        const result = shouldEnableTelemetry({
+        const result = shouldEnableTelemetryClient({
           telemetryOptOut: true,
           shouldShowTelemetryNotice: false,
           apiKeyExists: true,
@@ -114,7 +114,7 @@ describe('telemetryUtils', () => {
       });
 
       it('should disable telemetry on first run', () => {
-        const result = shouldEnableTelemetry({
+        const result = shouldEnableTelemetryClient({
           telemetryOptOut: false,
           shouldShowTelemetryNotice: true,
           apiKeyExists: true,
@@ -125,7 +125,7 @@ describe('telemetryUtils', () => {
       });
 
       it('should disable telemetry when API key missing', () => {
-        const result = shouldEnableTelemetry({
+        const result = shouldEnableTelemetryClient({
           telemetryOptOut: false,
           shouldShowTelemetryNotice: false,
           apiKeyExists: false,
