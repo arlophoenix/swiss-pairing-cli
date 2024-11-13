@@ -45,10 +45,8 @@ export class TelemetryClient {
   private constructor() {
     const config = Config.getInstance();
     const apiKey = config.getPosthogApiKey();
-    const notificationManager = new TelemetryNotificationManager();
     this.enabled = shouldEnableTelemetryClient({
       telemetryOptOut: config.getTelemetryOptOut(),
-      shouldShowTelemetryNotice: notificationManager.shouldShowTelemetryNotice(),
       apiKeyExists: apiKey !== '',
       environment: detectEnvironment(),
     });

@@ -78,7 +78,6 @@ describe('telemetryUtils', () => {
       it('should disable telemetry in CI', () => {
         const result = shouldEnableTelemetryClient({
           telemetryOptOut: false,
-          shouldShowTelemetryNotice: false,
           apiKeyExists: true,
           environment: 'ci',
         });
@@ -93,7 +92,6 @@ describe('telemetryUtils', () => {
         (environment) => {
           const result = shouldEnableTelemetryClient({
             telemetryOptOut: false,
-            shouldShowTelemetryNotice: false,
             apiKeyExists: true,
             environment,
           });
@@ -105,18 +103,6 @@ describe('telemetryUtils', () => {
       it('should disable telemetry when opted out', () => {
         const result = shouldEnableTelemetryClient({
           telemetryOptOut: true,
-          shouldShowTelemetryNotice: false,
-          apiKeyExists: true,
-          environment: 'development',
-        });
-
-        expect(result).toBe(false);
-      });
-
-      it('should disable telemetry on first run', () => {
-        const result = shouldEnableTelemetryClient({
-          telemetryOptOut: false,
-          shouldShowTelemetryNotice: true,
           apiKeyExists: true,
           environment: 'development',
         });
@@ -127,7 +113,6 @@ describe('telemetryUtils', () => {
       it('should disable telemetry when API key missing', () => {
         const result = shouldEnableTelemetryClient({
           telemetryOptOut: false,
-          shouldShowTelemetryNotice: false,
           apiKeyExists: false,
           environment: 'development',
         });
