@@ -14,30 +14,33 @@ jest.mock('../generateRounds/generateRoundsCommand.js');
 jest.mock('../../formatters/outputFormatter.js');
 
 describe('handleCLIActionCommand', () => {
-  const defaultValidatedOptions: ValidatedCLIOptions = {
-    teams: [
-      { name: 'Alice', squad: 'A' },
-      { name: 'Bob', squad: 'B' },
-    ],
-    numRounds: 1,
-    startRound: 1,
-    matches: [],
-    format: 'text-markdown',
-    file: '',
-    order: 'top-down',
-  };
+  let defaultValidatedOptions: ValidatedCLIOptions;
 
-  const mockRounds: { readonly rounds: readonly Round[] } = {
-    rounds: [
-      {
-        label: 'Round 1',
-        number: 1,
-        matches: [['Alice', 'Bob']],
-      },
-    ],
-  };
+  let mockRounds: { readonly rounds: readonly Round[] };
 
   beforeEach(() => {
+    defaultValidatedOptions = {
+      teams: [
+        { name: 'Alice', squad: 'A' },
+        { name: 'Bob', squad: 'B' },
+      ],
+      numRounds: 1,
+      startRound: 1,
+      matches: [],
+      format: 'text-markdown',
+      file: '',
+      order: 'top-down',
+    };
+
+    mockRounds = {
+      rounds: [
+        {
+          label: 'Round 1',
+          number: 1,
+          matches: [['Alice', 'Bob']],
+        },
+      ],
+    };
     jest.spyOn(validator, 'validateCLIOptions').mockReturnValue({
       success: true,
       value: defaultValidatedOptions,

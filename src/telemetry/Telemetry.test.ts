@@ -82,49 +82,53 @@ describe('Telemetry', () => {
   });
 
   describe('record', () => {
-    const commandInvokedEvent: TelemetryEvent = {
-      name: 'command_invoked',
-      properties: {
-        command_name: 'generate',
-        args_provided: {
-          file: true,
-          format: true,
-          matches: false,
-          numRounds: true,
-          order: true,
-          startRound: false,
-          teams: true,
-        },
-        teams_count: 4,
-        squad_count: 2,
-        rounds_count: 3,
-        start_round: 1,
-        order: 'random',
-        format: 'text-markdown',
-      },
-    };
-
-    const commandSucceededEvent: TelemetryEvent = {
-      name: 'command_succeeded',
-      properties: {
-        command_name: 'generate',
-        duration_ms: 123,
-      },
-    };
-
-    const commandFailedEvent: TelemetryEvent = {
-      name: 'command_failed',
-      properties: {
-        command_name: 'generate',
-        error_name: 'ValidationError',
-        error_message: 'Invalid team count',
-        duration_ms: 45,
-      },
-    };
+    let commandInvokedEvent: TelemetryEvent;
+    let commandSucceededEvent: TelemetryEvent;
+    let commandFailedEvent: TelemetryEvent;
 
     beforeEach(() => {
       // Mock setTimeout to execute immediately
       jest.useFakeTimers();
+
+      commandInvokedEvent = {
+        name: 'command_invoked',
+        properties: {
+          command_name: 'generate',
+          args_provided: {
+            file: true,
+            format: true,
+            matches: false,
+            numRounds: true,
+            order: true,
+            startRound: false,
+            teams: true,
+          },
+          teams_count: 4,
+          squad_count: 2,
+          rounds_count: 3,
+          start_round: 1,
+          order: 'random',
+          format: 'text-markdown',
+        },
+      };
+
+      commandSucceededEvent = {
+        name: 'command_succeeded',
+        properties: {
+          command_name: 'generate',
+          duration_ms: 123,
+        },
+      };
+
+      commandFailedEvent = {
+        name: 'command_failed',
+        properties: {
+          command_name: 'generate',
+          error_name: 'ValidationError',
+          error_message: 'Invalid team count',
+          duration_ms: 45,
+        },
+      };
     });
 
     afterEach(() => {

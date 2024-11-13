@@ -1,33 +1,35 @@
 import * as swissPairing from '../../swiss-pairing/swissPairing.js';
 import * as swissValidator from '../../swiss-pairing/swissValidator.js';
 
+import { GenerateRoundsCommand, handleGenerateRounds } from './generateRoundsCommand.js';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { SwissPairingResult } from '../../types/types.js';
-import { handleGenerateRounds } from './generateRoundsCommand.js';
 
 jest.mock('../../swiss-pairing/swissPairing.js');
 jest.mock('../../swiss-pairing/swissValidator.js');
 
 describe('Generate Rounds Command', () => {
-  const defaultCommand = {
-    teams: ['Alice', 'Bob'],
-    numRounds: 1,
-    startRound: 1,
-    squadMap: new Map(),
-  };
+  let defaultCommand: GenerateRoundsCommand;
 
-  const mockRounds: SwissPairingResult = {
-    rounds: [
-      {
-        label: 'Round 1',
-        number: 1,
-        matches: [['Alice', 'Bob']],
-      },
-    ],
-  };
+  let mockRounds: SwissPairingResult;
 
   beforeEach(() => {
+    defaultCommand = {
+      teams: ['Alice', 'Bob'],
+      numRounds: 1,
+      startRound: 1,
+      squadMap: new Map(),
+    };
+    mockRounds = {
+      rounds: [
+        {
+          label: 'Round 1',
+          number: 1,
+          matches: [['Alice', 'Bob']],
+        },
+      ],
+    };
     jest.spyOn(swissValidator, 'validateGenerateRoundsInput').mockReturnValue({ success: true });
 
     jest.spyOn(swissPairing, 'generateRounds').mockReturnValue({ success: true, value: mockRounds });
