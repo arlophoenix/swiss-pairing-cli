@@ -19,11 +19,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const log = debug(DEBUG_TELEMETRY);
-
 export class TelemetryNotificationManager {
   private readonly configPath: string;
   private readonly telemetryNoticePath: string;
+  private readonly log = debug(DEBUG_TELEMETRY);
 
   /**
    * Creates notification manager for specified app.
@@ -32,7 +31,7 @@ export class TelemetryNotificationManager {
    * @param appName - Optional app name for config path, defaults to PROGRAM_NAME
    */
   constructor(appName = PROGRAM_NAME) {
-    log('Initializing TelemetryNotificationManager');
+    this.log('Initializing TelemetryNotificationManager');
     const configDir =
       process.platform === 'win32'
         ? (process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'))
@@ -40,8 +39,8 @@ export class TelemetryNotificationManager {
 
     this.configPath = path.join(configDir, appName);
     this.telemetryNoticePath = path.join(this.configPath, '.telemetry-notice-shown');
-    log('Config path:', this.configPath);
-    log('Telemetry notice path:', this.telemetryNoticePath);
+    this.log('Config path:', this.configPath);
+    this.log('Telemetry notice path:', this.telemetryNoticePath);
   }
 
   /**
@@ -51,7 +50,7 @@ export class TelemetryNotificationManager {
   shouldShowTelemetryNotice(): boolean {
     const config = Config.getInstance();
     const showTelemetryNoticeOverride = config.getShowTelemetryNoticeOverride();
-    log('Telemetry notice override:', showTelemetryNoticeOverride);
+    this.log('Telemetry notice override:', showTelemetryNoticeOverride);
     switch (showTelemetryNoticeOverride) {
       case 'show':
         return true;
@@ -63,7 +62,7 @@ export class TelemetryNotificationManager {
     }
 
     const telemetryOptOut = config.getTelemetryOptOut();
-    log('Telemetry opt-out:', telemetryOptOut);
+    this.log('Telemetry opt-out:', telemetryOptOut);
     if (telemetryOptOut) {
       return false;
     }
@@ -75,7 +74,7 @@ export class TelemetryNotificationManager {
     } catch {
       result = true;
     }
-    log('Should show telemetry notice:', result);
+    this.log('Should show telemetry notice:', result);
     return result;
   }
 
@@ -88,10 +87,10 @@ export class TelemetryNotificationManager {
     try {
       fs.mkdirSync(this.configPath, { recursive: true });
       fs.writeFileSync(this.telemetryNoticePath, String(Date.now()));
-      log('Marked telemetry notice as shown');
+      this.log('Marked telemetry notice as shown');
     } catch (error) {
       // Fail silently - worst case we show notice again
-      log('Error marking telemetry notice shown:', error);
+      this.log('Error marking telemetry notice shown:', error);
     }
   }
 

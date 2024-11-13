@@ -7,8 +7,6 @@ import os from 'os';
 import path from 'path';
 export * from '../utils/utils.js';
 
-const log = debug(DEBUG_TELEMETRY);
-
 /**
  * Determines the current environment context based on environment variables
  * and execution context. Priority order:
@@ -52,6 +50,7 @@ export function shouldEnableTelemetryClient({
   readonly apiKeyExists: boolean;
   readonly environment: 'test' | 'development' | 'ci' | 'production';
 }): boolean {
+  const log = debug(DEBUG_TELEMETRY);
   log('shouldEnableTelemetryClient()', {
     telemetryOptOut,
     apiKeyExists,
@@ -94,6 +93,7 @@ export function shouldEnableTelemetryClient({
  */
 export function generateDistinctID(): string {
   const executionContext = detectExecutionContext();
+  const log = debug(DEBUG_TELEMETRY);
   log('Generating installation ID for context:', executionContext);
 
   // For npx, create semi-persistent ID from machine characteristics

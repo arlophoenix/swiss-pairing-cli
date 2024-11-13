@@ -12,8 +12,6 @@ import { PostHog } from 'posthog-node';
 import debug from 'debug';
 import os from 'os';
 
-const log = debug(DEBUG_TELEMETRY);
-
 export class TelemetryClient {
   private readonly postHogClient: PostHog | null = null;
   private readonly distinctId!: string;
@@ -22,6 +20,7 @@ export class TelemetryClient {
   private eventQueue: AugmentedTelemetryEvent[] = [];
   // eslint-disable-next-line functional/prefer-readonly-type
   private flushTimeout: NodeJS.Timeout | null = null;
+  private readonly log = debug(DEBUG_TELEMETRY);
 
   // eslint-disable-next-line functional/prefer-readonly-type
   private static instance: TelemetryClient | null = null;
@@ -50,8 +49,8 @@ export class TelemetryClient {
       environment: detectEnvironment(),
     });
 
-    log('Initializing telemetry');
-    log('Telemetry enabled:', this.enabled);
+    this.log('Initializing telemetry');
+    this.log('Telemetry enabled:', this.enabled);
 
     if (this.enabled) {
       try {
@@ -62,7 +61,7 @@ export class TelemetryClient {
         });
         this.distinctId = generateDistinctID();
       } catch (error) {
-        log('Failed to initialize telemetry client', error);
+        this.log('Failed to initialize telemetry client', error);
         this.enabled = false;
       }
     }
@@ -72,7 +71,7 @@ export class TelemetryClient {
     if (!this.enabled || !this.postHogClient) {
       return;
     }
-    log('Recording event:', event);
+    this.log('Recording event:', event);
     const augmentedEvent: AugmentedTelemetryEvent = {
       name: event.name,
       properties: {
@@ -103,7 +102,7 @@ export class TelemetryClient {
     if (this.postHogClient === null || this.eventQueue.length === 0) {
       return;
     }
-    log('Flushing %d events', this.eventQueue.length);
+    this.log('Flushing %d events', this.eventQueue.length);
     try {
       // Send all queued events in parallel
       await Promise.all(
@@ -120,7 +119,7 @@ export class TelemetryClient {
     } catch {
       // Silently fail
     } finally {
-      log('Flush complete');
+      this.log('Flush complete');
     }
   }
 
