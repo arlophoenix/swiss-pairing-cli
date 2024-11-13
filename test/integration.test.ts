@@ -1,10 +1,12 @@
-import { describe, expect, test } from '@jest/globals';
+import { DEBUG_PREFIX, SUPPORTED_FILE_TYPES } from '../src/constants.js';
+import { afterEach, beforeEach, describe, expect, it, test } from '@jest/globals';
 
-import { SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { SupportedFileTypes } from '../src/types/types.js';
+import { TelemetryClient } from '../src/telemetry/TelemetryClient.js';
 import { exec } from 'child_process';
 import fs from 'fs';
 import fsPromise from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import util from 'util';
 
@@ -48,8 +50,7 @@ async function runCLI(args: string): Promise<CLIResult> {
 
   try {
     const { stdout, stderr } = await execAsync(`node dist/index.js ${args}`);
-    const result = { success: stderr === '', message: stdout };
-
+    const result = { success: stderr === '', message: stderr === '' ? stderr : stdout };
     cliResultCache.set(cacheKey, result);
     return result;
   } catch (error) {
@@ -113,5 +114,46 @@ describe('Integration Tests', () => {
     } else {
       throw new Error(`Unsupported file type: ${ext}`);
     }
+  });
+
+  describe('Telemetry Notice Integration', () => {
+    let configDir: string;
+    let noticePath: string;
+
+    beforeEach(() => {
+      // Set up temp directory for config files
+      configDir = path.join(os.tmpdir(), `swiss-pairing-test-${String(Date.now())}`);
+      noticePath = path.join(configDir, '.telemetry-notice-shown');
+
+      cliResultCache.clear(); // Clear CLI result cache
+    });
+
+    afterEach(() => {
+      if (fs.existsSync(configDir)) {
+        fs.rmSync(configDir, { recursive: true });
+      }
+      TelemetryClient.resetForTesting();
+    });
+
+    it('should show notice on first run and create notice file', async () => {
+      // First run
+      const result1 = await runCLI('--teams Alice Bob');
+      expect(result1.success).toBe(true);
+      expect(result1.message).toContain('Telemetry Notice');
+      expect(fs.existsSync(noticePath)).toBe(true);
+
+      // Second run
+      const result2 = await runCLI('--teams Alice Bob');
+      expect(result2.success).toBe(true);
+      expect(result2.message).not.toContain('Telemetry Notice');
+    });
+
+    it('should respect telemetry opt out', async () => {
+      // eslint-disable-next-line functional/immutable-data
+      process.env.SWISS_PAIRING_TELEMETRY_OPT_OUT = '1';
+      const result = await runCLI('--teams Alice Bob');
+      expect(result.success).toBe(true);
+      expect(result.message).not.toContain('Telemetry Notice');
+    });
   });
 });

@@ -123,7 +123,8 @@ export const EXAMPLE_MATCHES = '"Alice,Bob" "Charlie,David"';
 export const EXAMPLE_FILE_CSV = 'example_data/tournament_round1.csv';
 export const EXAMPLE_FILE_JSON = 'example_data/tournament_round2.json';
 
-export const DEBUG_TELEMETRY = 'swiss-pairing:telemetry';
+export const DEBUG_PREFIX = 'swiss-pairing';
+export const DEBUG_TELEMETRY = `${DEBUG_PREFIX}:telemetry`;
 
 export const ENV_SWISS_PAIRING_POSTHOG_API_KEY = 'SWISS_PAIRING_POSTHOG_API_KEY';
 export const ENV_SWISS_PAIRING_SHOW_TELEMETRY_NOTICE = 'SWISS_PAIRING_SHOW_TELEMETRY_NOTICE';
