@@ -91,12 +91,12 @@ export function shouldEnableTelemetry({
  *
  * @example
  * // npx execution
- * generateInstallId() // => "a1b2c3d4"
+ * generateDistinctID() // => "a1b2c3d4"
  *
  * // installed version
- * generateInstallId() // => "xj7ys9" (from config file or newly generated)
+ * generateDistinctID() // => "xj7ys9" (from config file or newly generated)
  */
-export function generateInstallId(): string {
+export function generateDistinctID(): string {
   const executionContext = detectExecutionContext();
   log('Generating installation ID for context:', executionContext);
 

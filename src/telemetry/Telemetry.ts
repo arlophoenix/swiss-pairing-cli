@@ -2,7 +2,7 @@ import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
 import {
   detectEnvironment,
   detectExecutionContext,
-  generateInstallId,
+  generateDistinctID,
   shouldEnableTelemetry,
 } from './telemetryUtils.js';
 
@@ -63,7 +63,7 @@ export class Telemetry {
           flushAt: 1,
           flushInterval: 0,
         });
-        this.distinctId = generateInstallId();
+        this.distinctId = generateDistinctID();
       } catch (error) {
         log('Failed to initialize telemetry client', error);
         this.enabled = false;

@@ -2,7 +2,7 @@
 import * as utils from '../utils/utils.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { detectEnvironment, generateInstallId, shouldEnableTelemetry } from './telemetryUtils.js';
+import { detectEnvironment, generateDistinctID, shouldEnableTelemetry } from './telemetryUtils.js';
 
 import type { SpyInstance } from 'jest-mock';
 import fs from 'fs';
@@ -134,7 +134,7 @@ describe('telemetryUtils', () => {
     });
   });
 
-  describe('generateInstallId', () => {
+  describe('generateDistinctID', () => {
     let originalHomedir: typeof os.homedir;
     let originalPlatform: typeof process.platform;
     let _mockMkdir: SpyInstance<typeof fs.mkdirSync>;
@@ -163,7 +163,7 @@ describe('telemetryUtils', () => {
       jest.spyOn(os, 'arch').mockReturnValue('x64');
       jest.spyOn(os, 'userInfo').mockReturnValue({ username: 'testuser' } as os.UserInfo<string>);
 
-      const result = generateInstallId();
+      const result = generateDistinctID();
       expect(result).toMatch(/^[a-f0-9]{8}$/);
     });
 
@@ -171,7 +171,7 @@ describe('telemetryUtils', () => {
       jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
       mockReadFile.mockReturnValue('existing-id');
 
-      const result = generateInstallId();
+      const result = generateDistinctID();
       expect(result).toBe('existing-id');
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
