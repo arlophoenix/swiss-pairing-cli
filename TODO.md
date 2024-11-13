@@ -4,8 +4,6 @@
 
 - Telemetry using PostHog
   - simplify point of use
-  - add tests
-  - add code documentation
   - mention telemetry in readme
 
 ## Functionality
