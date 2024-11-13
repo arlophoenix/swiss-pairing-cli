@@ -125,8 +125,9 @@ export const EXAMPLE_FILE_JSON = 'example_data/tournament_round2.json';
 
 export const DEBUG_TELEMETRY = 'swiss-pairing:telemetry';
 
-export const ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT = 'SWISS_PAIRING_TELEMETRY_OPT_OUT';
 export const ENV_SWISS_PAIRING_POSTHOG_API_KEY = 'SWISS_PAIRING_POSTHOG_API_KEY';
+export const ENV_SWISS_PAIRING_SHOW_TELEMETRY_NOTICE = 'SWISS_PAIRING_SHOW_TELEMETRY_NOTICE';
+export const ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT = 'SWISS_PAIRING_TELEMETRY_OPT_OUT';
 
 export const DOTENV_DEV = '.env';
 export const DOTENV_TEST = '.env.test';

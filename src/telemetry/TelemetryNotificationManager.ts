@@ -13,6 +13,7 @@
  */
 import { DEBUG_TELEMETRY, ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT, PROGRAM_NAME } from '../constants.js';
 
+import { Config } from '../Config.js';
 import debug from 'debug';
 import fs from 'fs';
 import os from 'os';
@@ -48,6 +49,25 @@ export class TelemetryNotificationManager {
    * Returns true on first run or if notice file missing.
    */
   shouldShowTelemetryNotice(): boolean {
+    const config = Config.getInstance();
+    const showTelemetryNoticeOverride = config.getShowTelemetryNoticeOverride();
+    log('Telemetry notice override:', showTelemetryNoticeOverride);
+    switch (showTelemetryNoticeOverride) {
+      case 'show':
+        return true;
+      case 'hide':
+        return false;
+      case 'default':
+        // the following logic applies
+        break;
+    }
+
+    const telemetryOptOut = config.getTelemetryOptOut();
+    log('Telemetry opt-out:', telemetryOptOut);
+    if (telemetryOptOut) {
+      return false;
+    }
+
     let result: boolean;
     try {
       fs.accessSync(this.telemetryNoticePath);

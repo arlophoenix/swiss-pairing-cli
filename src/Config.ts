@@ -2,6 +2,7 @@ import {
   DOTENV_DEV,
   DOTENV_TEST,
   ENV_SWISS_PAIRING_POSTHOG_API_KEY,
+  ENV_SWISS_PAIRING_SHOW_TELEMETRY_NOTICE,
   ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT,
 } from './constants.js';
 
@@ -33,6 +34,25 @@ export class Config {
 
   public getTelemetryOptOut(): boolean {
     return Boolean(this.env[ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT]);
+  }
+
+  public getShowTelemetryNoticeOverride(): 'show' | 'hide' | 'default' {
+    const envValue = this.env[ENV_SWISS_PAIRING_SHOW_TELEMETRY_NOTICE]?.toLowerCase();
+    if (envValue === undefined) {
+      return 'default';
+    }
+    switch (envValue) {
+      case '1':
+      case 'true':
+      case 'show':
+        return 'show';
+      case '0':
+      case 'false':
+      case 'hide':
+        return 'hide';
+      default:
+        return 'default';
+    }
   }
 
   // For testing only

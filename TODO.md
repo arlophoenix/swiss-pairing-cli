@@ -3,10 +3,10 @@
 ## In Progress
 
 - Telemetry using PostHog
-  - add env variable to force telemetry notification display
   - add integration test to test telemetry notification
   - enable telemetry for production (how to securely store API key?)
   - mention telemetry in readme
+  - ensure no user data in errors
 
 ## Functionality
 

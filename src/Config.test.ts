@@ -70,4 +70,46 @@ describe('Config', () => {
       expect(Config.getInstance().getTelemetryOptOut()).toBe(true);
     });
   });
+
+  describe('getShowTelemetryNoticeOverride', () => {
+    it.each(['1', 'true', 'show'])(
+      'should return "show" when env var is %s',
+      (showTelemetryNoticeEnvValue) => {
+        Config.resetForTesting({
+          env: {
+            SWISS_PAIRING_SHOW_TELEMETRY_NOTICE: showTelemetryNoticeEnvValue,
+          },
+        });
+        expect(Config.getInstance().getShowTelemetryNoticeOverride()).toBe('show');
+      }
+    );
+
+    it.each(['0', 'false', 'hide'])(
+      'should return "hide" when env var is %s',
+      (showTelemetryNoticeEnvValue) => {
+        Config.resetForTesting({
+          env: {
+            SWISS_PAIRING_SHOW_TELEMETRY_NOTICE: showTelemetryNoticeEnvValue,
+          },
+        });
+        expect(Config.getInstance().getShowTelemetryNoticeOverride()).toBe('hide');
+      }
+    );
+
+    it('should return "default" when env var is undefined', () => {
+      Config.resetForTesting({
+        env: {},
+      });
+      expect(Config.getInstance().getShowTelemetryNoticeOverride()).toBe('default');
+    });
+
+    it('should return "default" when env var is not recognized', () => {
+      Config.resetForTesting({
+        env: {
+          SWISS_PAIRING_SHOW_TELEMETRY_NOTICE: 'foo',
+        },
+      });
+      expect(Config.getInstance().getShowTelemetryNoticeOverride()).toBe('default');
+    });
+  });
 });

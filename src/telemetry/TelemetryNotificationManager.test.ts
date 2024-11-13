@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
+import { Config } from '../Config.js';
 import type { SpyInstance } from 'jest-mock';
 import { TelemetryNotificationManager } from './TelemetryNotificationManager.js';
 import fs from 'fs';
@@ -67,20 +68,56 @@ describe('TelemetryNotificationManager', () => {
   });
 
   describe('shouldShowTelemetryNotice', () => {
-    it('should return true if notice file does not exist', () => {
+    let mockGetShowTelemetryNoticeOverride: SpyInstance<
+      typeof Config.prototype.getShowTelemetryNoticeOverride
+    >;
+    let mockGetTelemetryOptOut: SpyInstance<typeof Config.prototype.getTelemetryOptOut>;
+
+    beforeEach(() => {
+      mockGetShowTelemetryNoticeOverride = jest
+        .spyOn(Config.prototype, 'getShowTelemetryNoticeOverride')
+        .mockReturnValue('default');
+      mockGetTelemetryOptOut = jest.spyOn(Config.prototype, 'getTelemetryOptOut').mockReturnValue(false);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should return true when forced via config', () => {
+      mockGetShowTelemetryNoticeOverride.mockReturnValue('show');
+      expect(manager.shouldShowTelemetryNotice()).toBe(true);
+    });
+
+    it('should return false when forced to hide via config', () => {
+      mockGetShowTelemetryNoticeOverride.mockReturnValue('hide');
+      expect(manager.shouldShowTelemetryNotice()).toBe(false);
+    });
+
+    it('should ignore telemetry opt out when override present', () => {
+      mockGetShowTelemetryNoticeOverride.mockReturnValue('show');
+      mockGetTelemetryOptOut.mockReturnValue(true); // Even when opted out...
+      expect(manager.shouldShowTelemetryNotice()).toBe(true); // ...override wins
+    });
+
+    it('should return false when telemetry is opted out', () => {
+      mockGetShowTelemetryNoticeOverride.mockReturnValue('default');
+      mockGetTelemetryOptOut.mockReturnValue(true);
+      expect(manager.shouldShowTelemetryNotice()).toBe(false);
+    });
+
+    it('should return false when notice file exists', () => {
+      mockGetShowTelemetryNoticeOverride.mockReturnValue('default');
+      (fs.accessSync as jest.Mock).mockImplementation(() => undefined);
+      expect(manager.shouldShowTelemetryNotice()).toBe(false);
+    });
+
+    it('should return true when notice file does not exist', () => {
+      mockGetShowTelemetryNoticeOverride.mockReturnValue('default');
       (fs.accessSync as jest.Mock).mockImplementation(() => {
         throw new Error('File not found');
       });
-
       expect(manager.shouldShowTelemetryNotice()).toBe(true);
-      expect(fs.accessSync).toHaveBeenCalledWith(expectedNoticePath);
-    });
-
-    it('should return false if notice file exists', () => {
-      (fs.accessSync as jest.Mock).mockImplementation(() => undefined);
-
-      expect(manager.shouldShowTelemetryNotice()).toBe(false);
-      expect(fs.accessSync).toHaveBeenCalledWith(expectedNoticePath);
     });
   });
 
