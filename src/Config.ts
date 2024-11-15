@@ -1,9 +1,9 @@
 import {
   DOTENV_DEV,
   DOTENV_TEST,
-  ENV_SWISS_PAIRING_POSTHOG_API_KEY,
-  ENV_SWISS_PAIRING_SHOW_TELEMETRY_NOTICE,
-  ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT,
+  ENV_POSTHOG_API_KEY,
+  ENV_SHOW_TELEMETRY_NOTICE,
+  ENV_TELEMETRY_OPT_OUT,
 } from './constants.js';
 
 import dotenv from 'dotenv';
@@ -29,15 +29,15 @@ export class Config {
   }
 
   public getPosthogApiKey(): string {
-    return this.env[ENV_SWISS_PAIRING_POSTHOG_API_KEY] ?? '';
+    return this.env[ENV_POSTHOG_API_KEY] ?? '';
   }
 
   public getTelemetryOptOut(): boolean {
-    return Boolean(this.env[ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT]);
+    return Boolean(this.env[ENV_TELEMETRY_OPT_OUT]);
   }
 
   public getShowTelemetryNoticeOverride(): 'show' | 'hide' | 'default' {
-    const envValue = this.env[ENV_SWISS_PAIRING_SHOW_TELEMETRY_NOTICE]?.toLowerCase();
+    const envValue = this.env[ENV_SHOW_TELEMETRY_NOTICE]?.toLowerCase();
     if (envValue === undefined) {
       return 'default';
     }

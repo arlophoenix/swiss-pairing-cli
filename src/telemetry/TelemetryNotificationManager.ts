@@ -11,7 +11,7 @@
  * - Unix: ~/.config/<app-name>/.telemetry-notice-shown
  * - Windows: %APPDATA%/<app-name>/.telemetry-notice-shown
  */
-import { DEBUG_TELEMETRY, ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT } from '../constants.js';
+import { DEBUG_TELEMETRY, ENV_TELEMETRY_OPT_OUT } from '../constants.js';
 
 import { Config } from '../Config.js';
 import debug from 'debug';
@@ -97,7 +97,7 @@ No personal information or command arguments are collected.
 No data is collected on the first run when this notice is shown.
 
 To opt-out, set the environment variable:
-export ${ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT}=1
+export ${ENV_TELEMETRY_OPT_OUT}=1
 
 This notice will not be shown again.
 ----------------

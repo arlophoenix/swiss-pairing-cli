@@ -1,11 +1,6 @@
 import * as path from 'path';
 
-import {
-  DOTENV_DEV,
-  DOTENV_TEST,
-  ENV_SWISS_PAIRING_POSTHOG_API_KEY,
-  ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT,
-} from '../src/constants.js';
+import { DOTENV_DEV, DOTENV_TEST, ENV_POSTHOG_API_KEY, ENV_TELEMETRY_OPT_OUT } from '../src/constants.js';
 
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -36,7 +31,7 @@ function createDevelopmentEnv() {
 NODE_ENV=development
 
 # Telemetry config
-${ENV_SWISS_PAIRING_POSTHOG_API_KEY}=${posthogApiKey}
+${ENV_POSTHOG_API_KEY}=${posthogApiKey}
 `;
   writeEnvFile({ envFileName: DOTENV_DEV, envContent });
 }
@@ -47,8 +42,8 @@ function createTestEnv() {
 NODE_ENV=test
 
 # Telemetry config
-${ENV_SWISS_PAIRING_POSTHOG_API_KEY}=''
-${ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT}=1
+${ENV_POSTHOG_API_KEY}=''
+${ENV_TELEMETRY_OPT_OUT}=1
 `;
   writeEnvFile({ envFileName: DOTENV_TEST, envContent });
 }
