@@ -6,13 +6,13 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import { ProcessInputCommandOutput } from '../commandTypes.js';
 import { Round } from '../../types/types.js';
-import { handleCLIActionCommand } from './cliActionCommand.js';
+import { handleCorePipelineCommand } from './corePipelineCommand.js';
 
 jest.mock('../processInput/processInputCommand.js');
 jest.mock('../generateRounds/generateRoundsCommand.js');
 jest.mock('../../formatters/outputFormatter.js');
 
-describe('handleCLIActionCommand', () => {
+describe('handleCorePipelineCommand', () => {
   let mockProcessOutput: ProcessInputCommandOutput;
   let mockRounds: { readonly rounds: readonly Round[] };
 
@@ -57,7 +57,7 @@ describe('handleCLIActionCommand', () => {
   });
 
   it('should handle command successfully', async () => {
-    const result = await handleCLIActionCommand({
+    const result = await handleCorePipelineCommand({
       teams: ['Alice [A]', 'Bob [B]'],
     });
 
@@ -93,7 +93,7 @@ describe('handleCLIActionCommand', () => {
       message: 'Process input failed',
     });
 
-    const result = await handleCLIActionCommand({
+    const result = await handleCorePipelineCommand({
       teams: ['Alice'],
     });
 
@@ -112,7 +112,7 @@ describe('handleCLIActionCommand', () => {
       message: 'Cannot generate rounds',
     });
 
-    const result = await handleCLIActionCommand({
+    const result = await handleCorePipelineCommand({
       teams: ['Alice', 'Bob'],
     });
 

@@ -6,7 +6,6 @@
 
 ## Code Quality
 
-- consider refactor to extract cliAction to separate command
 - Improve code coverage
 
 ```

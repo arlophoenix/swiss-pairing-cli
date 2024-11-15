@@ -3,7 +3,7 @@ import { CLIOptionFormat, ReadonlyMatch } from '../types/types.js';
 /**
  * Raw command input from CLI
  */
-export interface CLIActionCommand {
+export interface CorePipelineCommand {
   readonly teams?: readonly string[];
   readonly numRounds?: string;
   readonly startRound?: string;
@@ -28,5 +28,5 @@ export interface GenerateRoundsCommand {
   readonly squadMap: ReadonlyMap<string, string>;
 }
 
-export type ProcessInputCommand = CLIActionCommand;
+export type ProcessInputCommand = CorePipelineCommand;
 export type ProcessInputCommandOutput = GenerateRoundsCommand & { readonly format: CLIOptionFormat };

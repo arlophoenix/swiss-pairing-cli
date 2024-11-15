@@ -39,7 +39,7 @@ import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 import { Command } from 'commander';
 import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
 import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
-import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
+import { handleCorePipelineCommand } from '../commands/corePipeline/corePipelineCommand.js';
 import { normalizeError } from './cliUtils.js';
 
 /**
@@ -112,7 +112,7 @@ export function createCLI(): Command {
 
       let exitCode: number;
       try {
-        const result = await handleCLIActionCommand(options);
+        const result = await handleCorePipelineCommand(options);
 
         if (result.success) {
           // Record success and shutdown telemetry

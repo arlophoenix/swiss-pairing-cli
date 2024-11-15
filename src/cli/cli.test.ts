@@ -1,4 +1,4 @@
-import * as cliActionCommand from '../commands/cliAction/cliActionCommand.js';
+import * as corePipelineCommand from '../commands/corePipeline/corePipelineCommand.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
@@ -7,17 +7,17 @@ import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
 import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
 import { createCLI } from './cli.js';
 
-jest.mock('../commands/cliAction/cliActionCommand.js');
+jest.mock('../commands/corePipeline/corePipelineCommand.js');
 
 describe('CLI', () => {
-  let mockHandleCLIActionCommand: SpyInstance<typeof cliActionCommand.handleCLIActionCommand>;
+  let mockhandleCorePipelineCommand: SpyInstance<typeof corePipelineCommand.handleCorePipelineCommand>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   let mockProcessExit: SpyInstance<typeof process.exit>;
 
   beforeEach(() => {
-    mockHandleCLIActionCommand = jest
-      .spyOn(cliActionCommand, 'handleCLIActionCommand')
+    mockhandleCorePipelineCommand = jest
+      .spyOn(corePipelineCommand, 'handleCorePipelineCommand')
       .mockResolvedValue({ success: true, value: 'Matches generated successfully' });
     mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {
       // do nothing
@@ -38,7 +38,7 @@ describe('CLI', () => {
     const program = createCLI();
     await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
 
-    expect(cliActionCommand.handleCLIActionCommand).toHaveBeenCalledWith(
+    expect(corePipelineCommand.handleCorePipelineCommand).toHaveBeenCalledWith(
       expect.objectContaining({ teams: ['Alice', 'Bob'] })
     );
     expect(mockConsoleLog).toHaveBeenCalledWith('Matches generated successfully');
@@ -47,7 +47,7 @@ describe('CLI', () => {
   });
 
   it('should handle errors', async () => {
-    jest.spyOn(cliActionCommand, 'handleCLIActionCommand').mockResolvedValue({
+    jest.spyOn(corePipelineCommand, 'handleCorePipelineCommand').mockResolvedValue({
       success: false,
       message: 'Invalid input',
     });
@@ -83,7 +83,7 @@ describe('CLI', () => {
       'data.csv',
     ]);
 
-    expect(mockHandleCLIActionCommand).toHaveBeenCalledWith({
+    expect(mockhandleCorePipelineCommand).toHaveBeenCalledWith({
       teams: ['Alice', 'Bob'],
       numRounds: '3',
       startRound: '2',
