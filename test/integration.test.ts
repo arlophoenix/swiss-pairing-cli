@@ -91,9 +91,44 @@ function validateCLIResult({
   expect(result).toMatchSnapshot();
 }
 
+async function validateFixture({
+  fileName,
+  isErrorCase,
+  allFixtures,
+}: {
+  readonly fileName: string;
+  readonly isErrorCase: boolean;
+  readonly allFixtures: readonly string[];
+}): Promise<void> {
+  const ext = path.extname(fileName);
+  const fixturePath = path.join(fixturesDir, fileName);
+
+  // text files contain arguments to be run directly in the CLI
+  if (ext === '.txt') {
+    const input = await readFileContent(fixturePath);
+    const result = await runCLI({ args: input });
+    validateCLIResult({ result, isErrorCase });
+    // JSON or CSV files are expected to be provided as a file argument
+  } else if (SUPPORTED_FILE_TYPES.includes(ext as SupportedFileTypes)) {
+    const result = await runCLI({ args: `--file ${fixturePath}` });
+    validateCLIResult({ result, isErrorCase });
+
+    // Compare file input with direct CLI args if both exist
+    const correspondingTxtFixtureName = fileName.replace(ext, '.txt');
+    if (allFixtures.includes(correspondingTxtFixtureName)) {
+      const correspondingTxtFixturePath = path.join(fixturesDir, correspondingTxtFixtureName);
+      const inputWithArgs = await readFileContent(correspondingTxtFixturePath);
+      const resultWithArgs = await runCLI({ args: inputWithArgs });
+      expect(result).toEqual(resultWithArgs);
+    }
+  } else {
+    throw new Error(`Unsupported file type: ${ext}`);
+  }
+}
+
 describe('Integration Tests', () => {
   // Filter for only our test files, excluding hidden files and system files
-  const fixtures = fs
+  const allFixtures = fs
     .readdirSync(fixturesDir)
     .filter(
       (file) =>
@@ -101,32 +136,14 @@ describe('Integration Tests', () => {
         (SUPPORTED_FILE_TYPES.includes(path.extname(file) as SupportedFileTypes) ||
           path.extname(file) === '.txt')
     );
+  const successFixtures = allFixtures.filter((file) => !file.startsWith('invalid-'));
+  const failureFixtures = allFixtures.filter((file) => file.startsWith('invalid-'));
 
-  test.each(fixtures)('CLI Output - %s', async (fixture) => {
-    const ext = path.extname(fixture);
-    const fixturePath = path.join(fixturesDir, fixture);
-    const isErrorCase = fixture.startsWith('invalid-');
-
-    // text files contain arguments to be run directly in the CLI
-    if (ext === '.txt') {
-      const input = await readFileContent(fixturePath);
-      const result = await runCLI(input);
-      validateCLIResult({ result, isErrorCase });
-      // JSON or CSV files are expected to be provided as a file argument
-    } else if (SUPPORTED_FILE_TYPES.includes(ext as SupportedFileTypes)) {
-      const result = await runCLI(`--file ${fixturePath}`);
-      validateCLIResult({ result, isErrorCase });
-
-      // Compare file input with direct CLI args if both exist
-      const txtPath = fixturePath.replace(ext, '.txt');
-      if (fixtures.includes(path.basename(txtPath))) {
-        const inputWithArgs = await readFileContent(txtPath);
-        const resultWithArgs = await runCLI(inputWithArgs);
-        expect(result).toEqual(resultWithArgs);
-      }
-    } else {
-      throw new Error(`Unsupported file type: ${ext}`);
-    }
+  test.each(successFixtures)('CLI Output: Success Case - %s', async (fixtureName) => {
+    await validateFixture({ fileName: fixtureName, isErrorCase: false, allFixtures });
+  });
+  test.each(failureFixtures)('CLI Output: Failure Case - %s', async (fixtureName) => {
+    await validateFixture({ fileName: fixtureName, isErrorCase: true, allFixtures });
   });
 
   describe('Telemetry Notice Integration', () => {

@@ -1,6 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Integration Tests CLI Output - all-arguments.csv 1`] = `
+exports[`Integration Tests CLI Output: Failure Case - invalid-duplicate-teams.txt 1`] = `
+{
+  "message": "Invalid CLI argument "teams": "Team1,Team2,Team1,Team3". Expected unique team names
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Failure Case - invalid-match-format.txt 1`] = `
+{
+  "message": "Invalid CLI argument "matches": "["Team1",null]". Expected an array of two team names
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Failure Case - invalid-num-rounds.txt 1`] = `
+{
+  "message": "Invalid input: Number of rounds (4) must be less than number of teams (4)
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Failure Case - invalid-played-self.txt 1`] = `
+{
+  "message": "Invalid input: Team "Team1" cannot play against itself
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Failure Case - invalid-single-team.txt 1`] = `
+{
+  "message": "Invalid CLI argument "teams": "Team1". Expected at least two teams
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Failure Case - invalid-squad-format.txt 1`] = `
+{
+  "message": "Invalid CLI argument "teams": "Team1 [A". Expected valid team name, optionally followed by [squad] e.g."Alice [Home]"
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Failure Case - invalid-start-round.txt 1`] = `
+{
+  "message": "Invalid CLI argument "start-round": "0". Expected a positive integer
+",
+  "success": false,
+}
+`;
+
+exports[`Integration Tests CLI Output: Success Case - all-arguments.csv 1`] = `
 {
   "message": "{
   "Round 3": [
@@ -29,7 +85,7 @@ exports[`Integration Tests CLI Output - all-arguments.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - all-arguments.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - all-arguments.json 1`] = `
 {
   "message": "{
   "Round 3": [
@@ -58,7 +114,7 @@ exports[`Integration Tests CLI Output - all-arguments.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - all-arguments.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - all-arguments.txt 1`] = `
 {
   "message": "{
   "Round 3": [
@@ -87,7 +143,7 @@ exports[`Integration Tests CLI Output - all-arguments.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - duplicate-match-in-history.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - duplicate-match-in-history.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -98,7 +154,7 @@ exports[`Integration Tests CLI Output - duplicate-match-in-history.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - file-csv.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - file-csv.txt 1`] = `
 {
   "message": "{
   "Round 3": [
@@ -127,7 +183,7 @@ exports[`Integration Tests CLI Output - file-csv.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - file-csv-overrides.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - file-csv-overrides.txt 1`] = `
 {
   "message": "Round 2:
 Alice vs Charlie
@@ -137,7 +193,7 @@ Bob vs David
 }
 `;
 
-exports[`Integration Tests CLI Output - file-json.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - file-json.txt 1`] = `
 {
   "message": "{
   "Round 3": [
@@ -166,7 +222,7 @@ exports[`Integration Tests CLI Output - file-json.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - file-json-overrides.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - file-json-overrides.txt 1`] = `
 {
   "message": "Round 2:
 Alice vs Charlie
@@ -176,7 +232,7 @@ Bob vs David
 }
 `;
 
-exports[`Integration Tests CLI Output - five-teams-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - five-teams-three-rounds-start-two-bottom-up-format-text-with-matches.json 1`] = `
 {
   "message": "# Matches
 
@@ -196,7 +252,7 @@ exports[`Integration Tests CLI Output - five-teams-three-rounds-start-two-bottom
 }
 `;
 
-exports[`Integration Tests CLI Output - format-csv.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-csv.txt 1`] = `
 {
   "message": "Round,Match,Home Team,Away Team
 1,1,Team1,Team2
@@ -206,7 +262,7 @@ exports[`Integration Tests CLI Output - format-csv.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - format-csv-multi-round.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-csv-multi-round.txt 1`] = `
 {
   "message": "Round,Match,Home Team,Away Team
 1,1,Team1,Team2
@@ -220,7 +276,7 @@ exports[`Integration Tests CLI Output - format-csv-multi-round.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - format-json-plain.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-json-plain.txt 1`] = `
 {
   "message": "{"Round 1":[["Team1","Team2"],["Team3","Team4"]]}
 ",
@@ -228,7 +284,7 @@ exports[`Integration Tests CLI Output - format-json-plain.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - format-json-plain-multi-round.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-json-plain-multi-round.txt 1`] = `
 {
   "message": "{"Round 1":[["Team1","Team2"],["Team3","Team4"]],"Round 2":[["Team1","Team3"],["Team2","Team4"]],"Round 3":[["Team1","Team4"],["Team2","Team3"]]}
 ",
@@ -236,7 +292,7 @@ exports[`Integration Tests CLI Output - format-json-plain-multi-round.txt 1`] = 
 }
 `;
 
-exports[`Integration Tests CLI Output - format-json-pretty.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-json-pretty.txt 1`] = `
 {
   "message": "{
   "Round 1": [
@@ -255,7 +311,7 @@ exports[`Integration Tests CLI Output - format-json-pretty.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - format-json-pretty-multi-round.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-json-pretty-multi-round.txt 1`] = `
 {
   "message": "{
   "Round 1": [
@@ -294,7 +350,7 @@ exports[`Integration Tests CLI Output - format-json-pretty-multi-round.txt 1`] =
 }
 `;
 
-exports[`Integration Tests CLI Output - format-text-markdown.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-text-markdown.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -305,7 +361,7 @@ exports[`Integration Tests CLI Output - format-text-markdown.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - format-text-markdown-multi-round.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-text-markdown-multi-round.txt 1`] = `
 {
   "message": "# Matches
 
@@ -328,7 +384,7 @@ exports[`Integration Tests CLI Output - format-text-markdown-multi-round.txt 1`]
 }
 `;
 
-exports[`Integration Tests CLI Output - format-text-plain.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-text-plain.txt 1`] = `
 {
   "message": "Round 1:
 Team1 vs Team2
@@ -338,7 +394,7 @@ Team3 vs Team4
 }
 `;
 
-exports[`Integration Tests CLI Output - format-text-plain-multi-round.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - format-text-plain-multi-round.txt 1`] = `
 {
   "message": "Round 1:
 Team1 vs Team2
@@ -354,7 +410,7 @@ Team2 vs Team3
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -365,7 +421,7 @@ exports[`Integration Tests CLI Output - four-teams.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -376,7 +432,7 @@ exports[`Integration Tests CLI Output - four-teams.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -387,7 +443,7 @@ exports[`Integration Tests CLI Output - four-teams.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-bottom-up.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-bottom-up.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -398,7 +454,7 @@ exports[`Integration Tests CLI Output - four-teams-bottom-up.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-bottom-up.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-bottom-up.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -409,7 +465,7 @@ exports[`Integration Tests CLI Output - four-teams-bottom-up.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-bottom-up.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-bottom-up.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -420,7 +476,7 @@ exports[`Integration Tests CLI Output - four-teams-bottom-up.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-top-down.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-top-down.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -431,7 +487,7 @@ exports[`Integration Tests CLI Output - four-teams-top-down.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-top-down.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-top-down.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -442,7 +498,7 @@ exports[`Integration Tests CLI Output - four-teams-top-down.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-top-down.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-top-down.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -453,7 +509,7 @@ exports[`Integration Tests CLI Output - four-teams-top-down.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-bottom-up.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -464,7 +520,7 @@ exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.csv 1`
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-bottom-up.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -475,7 +531,7 @@ exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.json 1
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-bottom-up.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -486,7 +542,7 @@ exports[`Integration Tests CLI Output - four-teams-with-matches-bottom-up.txt 1`
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-top-down.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -497,7 +553,7 @@ exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.csv 1`]
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-top-down.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -508,7 +564,7 @@ exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.json 1`
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-top-down.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -519,7 +575,7 @@ exports[`Integration Tests CLI Output - four-teams-with-matches-top-down.txt 1`]
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-squads.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-squads.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -530,7 +586,7 @@ exports[`Integration Tests CLI Output - four-teams-with-squads.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-squads.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-squads.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -541,7 +597,7 @@ exports[`Integration Tests CLI Output - four-teams-with-squads.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - four-teams-with-squads.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - four-teams-with-squads.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -552,7 +608,7 @@ exports[`Integration Tests CLI Output - four-teams-with-squads.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified.txt 1`] = `
 {
   "message": "**Round 6**
 
@@ -567,7 +623,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified-bottom-up.csv 1`] = `
 {
   "message": "**Round 6**
 
@@ -582,7 +638,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.csv 
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified-bottom-up.json 1`] = `
 {
   "message": "**Round 6**
 
@@ -597,7 +653,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.json
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified-bottom-up.txt 1`] = `
 {
   "message": "**Round 6**
 
@@ -612,7 +668,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-1-unmodified-bottom-up.txt 
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-2-win-gg.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-2-win-gg.txt 1`] = `
 {
   "message": "**Round 6**
 
@@ -627,7 +683,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-2-win-gg.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-3-win-ad.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-3-win-ad.txt 1`] = `
 {
   "message": "**Round 6**
 
@@ -642,7 +698,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-3-win-ad.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R6-4-draw.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-4-draw.txt 1`] = `
 {
   "message": "**Round 6**
 
@@ -657,7 +713,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R6-4-draw.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R7.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R7.txt 1`] = `
 {
   "message": "**Round 7**
 
@@ -672,7 +728,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R7.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R8-1-unmodified.txt 1`] = `
 {
   "message": "**Round 8**
 
@@ -687,7 +743,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified-team-names.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R8-1-unmodified-team-names.csv 1`] = `
 {
   "message": "**Round 8**
 
@@ -702,7 +758,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified-team-names.csv
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified-team-names.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R8-1-unmodified-team-names.txt 1`] = `
 {
   "message": "**Round 8**
 
@@ -717,7 +773,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-1-unmodified-team-names.txt
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
 {
   "message": "**Round 8**
 
@@ -732,7 +788,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R8-2-m-win-or-draw-team-names.csv 1`] = `
 {
   "message": "**Round 8**
 
@@ -747,7 +803,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.
 }
 `;
 
-exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R8-2-m-win-or-draw-team-names.txt 1`] = `
 {
   "message": "**Round 8**
 
@@ -762,63 +818,7 @@ exports[`Integration Tests CLI Output - hawbbl24S2R8-2-m-win-or-draw-team-names.
 }
 `;
 
-exports[`Integration Tests CLI Output - invalid-duplicate-teams.txt 1`] = `
-{
-  "message": "Invalid CLI argument "teams": "Team1,Team2,Team1,Team3". Expected unique team names
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - invalid-match-format.txt 1`] = `
-{
-  "message": "Invalid CLI argument "matches": "["Team1",null]". Expected an array of two team names
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - invalid-num-rounds.txt 1`] = `
-{
-  "message": "Invalid input: Number of rounds (4) must be less than number of teams (4)
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - invalid-played-self.txt 1`] = `
-{
-  "message": "Invalid input: Team "Team1" cannot play against itself
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - invalid-single-team.txt 1`] = `
-{
-  "message": "Invalid CLI argument "teams": "Team1". Expected at least two teams
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - invalid-squad-format.txt 1`] = `
-{
-  "message": "Invalid CLI argument "teams": "Team1 [A". Expected valid team name, optionally followed by [squad] e.g."Alice [Home]"
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - invalid-start-round.txt 1`] = `
-{
-  "message": "Invalid CLI argument "start-round": "0". Expected a positive integer
-",
-  "success": false,
-}
-`;
-
-exports[`Integration Tests CLI Output - num-rounds.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - num-rounds.csv 1`] = `
 {
   "message": "# Matches
 
@@ -841,7 +841,7 @@ exports[`Integration Tests CLI Output - num-rounds.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - num-rounds.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - num-rounds.json 1`] = `
 {
   "message": "# Matches
 
@@ -864,7 +864,7 @@ exports[`Integration Tests CLI Output - num-rounds.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - num-rounds.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - num-rounds.txt 1`] = `
 {
   "message": "# Matches
 
@@ -887,7 +887,7 @@ exports[`Integration Tests CLI Output - num-rounds.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - start-round.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - start-round.csv 1`] = `
 {
   "message": "**Round 3**
 
@@ -898,7 +898,7 @@ exports[`Integration Tests CLI Output - start-round.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - start-round.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - start-round.json 1`] = `
 {
   "message": "**Round 3**
 
@@ -909,7 +909,7 @@ exports[`Integration Tests CLI Output - start-round.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - start-round.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - start-round.txt 1`] = `
 {
   "message": "**Round 3**
 
@@ -920,7 +920,7 @@ exports[`Integration Tests CLI Output - start-round.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-bottom-up.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-bottom-up.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -931,7 +931,7 @@ exports[`Integration Tests CLI Output - three-teams-bottom-up.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-bottom-up.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-bottom-up.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -942,7 +942,7 @@ exports[`Integration Tests CLI Output - three-teams-bottom-up.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-bottom-up.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-bottom-up.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -953,7 +953,7 @@ exports[`Integration Tests CLI Output - three-teams-bottom-up.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-top-down.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-top-down.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -964,7 +964,7 @@ exports[`Integration Tests CLI Output - three-teams-top-down.csv 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-top-down.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-top-down.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -975,7 +975,7 @@ exports[`Integration Tests CLI Output - three-teams-top-down.json 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-top-down.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-top-down.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -986,7 +986,7 @@ exports[`Integration Tests CLI Output - three-teams-top-down.txt 1`] = `
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-bottom-up.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -997,7 +997,7 @@ exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.csv 1
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-bottom-up.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -1008,7 +1008,7 @@ exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.json 
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-bottom-up.txt 1`] = `
 {
   "message": "**Round 1**
 
@@ -1019,7 +1019,7 @@ exports[`Integration Tests CLI Output - three-teams-with-matches-bottom-up.txt 1
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.csv 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-top-down.csv 1`] = `
 {
   "message": "**Round 1**
 
@@ -1030,7 +1030,7 @@ exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.csv 1`
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.json 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-top-down.json 1`] = `
 {
   "message": "**Round 1**
 
@@ -1041,7 +1041,7 @@ exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.json 1
 }
 `;
 
-exports[`Integration Tests CLI Output - three-teams-with-matches-top-down.txt 1`] = `
+exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-top-down.txt 1`] = `
 {
   "message": "**Round 1**
 
