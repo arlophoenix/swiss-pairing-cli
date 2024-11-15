@@ -53,13 +53,9 @@ export class TelemetryNotificationManager {
       return false;
     }
 
-    let result: boolean;
-    try {
-      fs.accessSync(this.getTelemetryNoticePath());
-      result = false;
-    } catch {
-      result = true;
-    }
+    const telemetryNoticePath = TelemetryNotificationManager.getTelemetryNoticePath();
+    this.log('Attempting to read telemetry notice file:', telemetryNoticePath);
+    const result = !fs.existsSync(telemetryNoticePath);
     this.log('Should show telemetry notice:', result);
     return result;
   }
@@ -71,8 +67,9 @@ export class TelemetryNotificationManager {
    */
   markTelemetryNoticeShown() {
     try {
-      const telemetryNoticePath = this.getTelemetryNoticePath();
+      const telemetryNoticePath = TelemetryNotificationManager.getTelemetryNoticePath();
       const telemetryNoticeDir = path.dirname(telemetryNoticePath);
+      this.log('Writing telemetry notice file:', telemetryNoticePath);
       fs.mkdirSync(telemetryNoticeDir, { recursive: true });
       fs.writeFileSync(telemetryNoticePath, String(Date.now()));
       this.log('Marked telemetry notice as shown');
@@ -82,7 +79,7 @@ export class TelemetryNotificationManager {
     }
   }
 
-  getTelemetryNoticePath(): string {
+  static getTelemetryNoticePath(): string {
     const configPath = getConfigPath();
     return path.join(configPath, '.telemetry-notice-shown');
   }

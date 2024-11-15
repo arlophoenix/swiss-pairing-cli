@@ -68,15 +68,13 @@ describe('TelemetryNotificationManager', () => {
 
     it('should return false when notice file exists', () => {
       mockGetShowTelemetryNoticeOverride.mockReturnValue('default');
-      (fs.accessSync as jest.Mock).mockImplementation(() => undefined);
+      (fs.existsSync as jest.Mock).mockReturnValue(true);
       expect(manager.shouldShowTelemetryNotice()).toBe(false);
     });
 
     it('should return true when notice file does not exist', () => {
       mockGetShowTelemetryNoticeOverride.mockReturnValue('default');
-      (fs.accessSync as jest.Mock).mockImplementation(() => {
-        throw new Error('File not found');
-      });
+      (fs.existsSync as jest.Mock).mockReturnValue(false);
       expect(manager.shouldShowTelemetryNotice()).toBe(true);
     });
   });
@@ -102,7 +100,7 @@ describe('TelemetryNotificationManager', () => {
 
   describe('getTelemetryNoticePath', () => {
     it('should return the correct notice path', () => {
-      expect(manager.getTelemetryNoticePath()).toBe(expectedNoticePath);
+      expect(TelemetryNotificationManager.getTelemetryNoticePath()).toBe(expectedNoticePath);
       expect(utils.getConfigPath).toHaveBeenCalled();
       expect(mockPathJoin).toHaveBeenCalledWith(mockConfigPath, '.telemetry-notice-shown');
     });

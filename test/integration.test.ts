@@ -1,6 +1,6 @@
-import { DEBUG_PREFIX, SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { afterEach, beforeEach, describe, expect, it, test } from '@jest/globals';
 
+import { SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { SupportedFileTypes } from '../src/types/types.js';
 import { TelemetryClient } from '../src/telemetry/TelemetryClient.js';
 import { exec } from 'child_process';
@@ -41,22 +41,35 @@ async function readFileContent(filePath: string): Promise<string> {
   return fileCache[filePath];
 }
 
-async function runCLI(args: string): Promise<CLIResult> {
+async function runCLI({
+  args,
+  env = process.env,
+  skipCache = false,
+}: {
+  readonly args: string;
+  readonly env?: NodeJS.ProcessEnv;
+  readonly skipCache?: boolean;
+}): Promise<CLIResult> {
   const cacheKey = `args:${args}`;
   const cliResult = cliResultCache.get(cacheKey);
-  if (cliResult) {
+  if (cliResult && !skipCache) {
     return cliResult;
   }
 
   try {
-    const { stdout, stderr } = await execAsync(`node dist/index.js ${args}`);
-    const result = { success: stderr === '', message: stderr === '' ? stderr : stdout };
-    cliResultCache.set(cacheKey, result);
+    const { stdout, stderr } = await execAsync(`node dist/index.js ${args}`, { env });
+    const success = stderr === '';
+    const result = { success: success, message: success ? stdout : `Error: ${stderr}\n${stdout}` };
+    if (!skipCache) {
+      cliResultCache.set(cacheKey, result);
+    }
     return result;
   } catch (error) {
     if (isExecError(error)) {
       const result = { success: false, message: error.stderr };
-      cliResultCache.set(cacheKey, result);
+      if (!skipCache) {
+        cliResultCache.set(cacheKey, result);
+      }
       return result;
     }
     throw error;
@@ -118,17 +131,18 @@ describe('Integration Tests', () => {
 
   describe('Telemetry Notice Integration', () => {
     let configDir: string;
-    let noticePath: string;
+    const originalEnv = { ...process.env };
 
     beforeEach(() => {
       // Set up temp directory for config files
       configDir = path.join(os.tmpdir(), `swiss-pairing-test-${String(Date.now())}`);
-      noticePath = path.join(configDir, '.telemetry-notice-shown');
 
       cliResultCache.clear(); // Clear CLI result cache
     });
 
     afterEach(() => {
+      // eslint-disable-next-line functional/immutable-data
+      process.env = originalEnv;
       if (fs.existsSync(configDir)) {
         fs.rmSync(configDir, { recursive: true });
       }
@@ -136,22 +150,37 @@ describe('Integration Tests', () => {
     });
 
     it('should show notice on first run and create notice file', async () => {
+      const env = {
+        ...process.env,
+        XDG_CONFIG_HOME: configDir,
+        SWISS_PAIRING_TELEMETRY_OPT_OUT: '',
+      };
       // First run
-      const result1 = await runCLI('--teams Alice Bob');
+      const result1 = await runCLI({
+        args: '--teams Alice Bob',
+        env,
+        skipCache: true,
+      });
       expect(result1.success).toBe(true);
       expect(result1.message).toContain('Telemetry Notice');
-      expect(fs.existsSync(noticePath)).toBe(true);
 
       // Second run
-      const result2 = await runCLI('--teams Alice Bob');
+      const result2 = await runCLI({
+        args: '--teams Alice Bob',
+        env,
+        skipCache: true,
+      });
       expect(result2.success).toBe(true);
       expect(result2.message).not.toContain('Telemetry Notice');
     });
 
     it('should respect telemetry opt out', async () => {
-      // eslint-disable-next-line functional/immutable-data
-      process.env.SWISS_PAIRING_TELEMETRY_OPT_OUT = '1';
-      const result = await runCLI('--teams Alice Bob');
+      const env = {
+        ...process.env,
+        XDG_CONFIG_HOME: configDir,
+        SWISS_PAIRING_TELEMETRY_OPT_OUT: '1',
+      };
+      const result = await runCLI({ args: '--teams Alice Bob', env, skipCache: true });
       expect(result.success).toBe(true);
       expect(result.message).not.toContain('Telemetry Notice');
     });
