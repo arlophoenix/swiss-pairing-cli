@@ -127,13 +127,12 @@ describe('TelemetryCommand', () => {
       // eslint-disable-next-line functional/immutable-data
       global.Date.now = jest.fn(() => laterTime);
 
-      command.recordValidationFailure('Invalid input');
+      command.recordValidationFailure();
 
       expect(mockRecord).toHaveBeenCalledWith({
         name: 'command_failed',
         properties: {
           error_name: 'validation_failed',
-          error_message: 'Invalid input',
           duration_ms: 1000, // 2000 - 1000
         },
       });
@@ -158,7 +157,7 @@ describe('TelemetryCommand', () => {
       command.recordError(error);
 
       expect(mockRecord).toHaveBeenCalledWith({
-        name: 'command_error',
+        name: 'command_errored',
         properties: {
           error_name: 'TypeError',
           error_message: 'Unexpected error',

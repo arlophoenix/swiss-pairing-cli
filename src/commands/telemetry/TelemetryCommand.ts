@@ -64,12 +64,11 @@ export class TelemetryCommand {
     });
   }
 
-  recordValidationFailure(message: string) {
+  recordValidationFailure() {
     this.telemetryClient?.record({
       name: 'command_failed',
       properties: {
         error_name: 'validation_failed',
-        error_message: message,
         duration_ms: Date.now() - this.invocation.startTime,
       },
     });
@@ -77,7 +76,7 @@ export class TelemetryCommand {
 
   recordError(error: Error) {
     this.telemetryClient?.record({
-      name: 'command_error',
+      name: 'command_errored',
       properties: {
         error_name: error.name,
         error_message: error.message,

@@ -120,7 +120,7 @@ export function createCLI(): Command {
           exitCode = 0;
         } else {
           // Handle validation failure
-          telemetryCommand.recordValidationFailure(result.message);
+          telemetryCommand.recordValidationFailure();
           console.error(result.message);
           exitCode = 1;
         }

@@ -4,7 +4,6 @@
 
 - Telemetry using PostHog
   - mention telemetry in readme
-  - ensure no user data in errors
 
 ## Functionality
 

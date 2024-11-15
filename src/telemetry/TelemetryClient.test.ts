@@ -119,7 +119,6 @@ describe('Telemetry', () => {
         name: 'command_failed',
         properties: {
           error_name: 'ValidationError',
-          error_message: 'Invalid team count',
           duration_ms: 45,
         },
       };
@@ -170,7 +169,6 @@ describe('Telemetry', () => {
           name: 'command_failed',
           properties: expect.objectContaining({
             error_name: 'ValidationError',
-            error_message: 'Invalid team count',
           }),
         })
       );

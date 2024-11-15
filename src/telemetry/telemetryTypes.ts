@@ -30,6 +30,11 @@ interface CommandSucceededProperties {
 interface CommandFailedProperties {
   readonly duration_ms: number;
   readonly error_name: string;
+}
+
+interface CommandErroredProperties {
+  readonly duration_ms: number;
+  readonly error_name: string;
   readonly error_message: string;
 }
 
@@ -41,7 +46,7 @@ export type TelemetryEvent =
   | BaseEvent<'command_invoked', CommandInvokedProperties>
   | BaseEvent<'command_succeeded', CommandSucceededProperties>
   | BaseEvent<'command_failed', CommandFailedProperties>
-  | BaseEvent<'command_error', CommandFailedProperties>
+  | BaseEvent<'command_errored', CommandErroredProperties>
   | BaseEvent<'command_cancelled', CommandCancelledProperties>;
 
 export interface AugmentedTelemetryEvent<T extends TelemetryEvent = TelemetryEvent> {
