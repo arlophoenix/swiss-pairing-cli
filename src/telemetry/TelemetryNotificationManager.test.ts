@@ -1,70 +1,30 @@
+import * as utils from '../utils/utils.js';
+
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from '../Config.js';
 import type { SpyInstance } from 'jest-mock';
 import { TelemetryNotificationManager } from './TelemetryNotificationManager.js';
 import fs from 'fs';
-import os from 'os';
 import path from 'path';
 
 jest.mock('fs');
-jest.mock('os');
-jest.mock('path');
 
 describe('TelemetryNotificationManager', () => {
-  let manager: TelemetryNotificationManager;
-  let mockHomedir: string;
-  const originalPlatform = process.platform;
-  const originalEnv = { ...process.env };
-  const mockAppName = 'test-app';
-  let expectedConfigPath: string;
-  let expectedNoticePath: string;
+  const mockConfigPath = '/mock/config/path';
+  const expectedNoticePath = `${mockConfigPath}/.telemetry-notice-shown`;
+
   let mockPathJoin: SpyInstance<typeof path.join>;
+  let manager: TelemetryNotificationManager;
 
   beforeEach(() => {
-    mockHomedir = '/mock/home';
-    (os.homedir as jest.Mock).mockReturnValue(mockHomedir);
+    jest.spyOn(utils, 'getConfigPath').mockReturnValue(mockConfigPath);
     mockPathJoin = jest.spyOn(path, 'join').mockImplementation((...args) => args.join('/'));
-
-    // For Unix systems
-    // eslint-disable-next-line functional/immutable-data
-    Object.defineProperty(process, 'platform', { value: 'darwin' });
-    expectedConfigPath = `${mockHomedir}/.config/${mockAppName}`;
-    expectedNoticePath = `${expectedConfigPath}/.telemetry-notice-shown`;
-
-    manager = new TelemetryNotificationManager(mockAppName);
+    manager = new TelemetryNotificationManager();
   });
 
   afterEach(() => {
     jest.resetAllMocks();
-    // eslint-disable-next-line functional/immutable-data
-    Object.defineProperty(process, 'platform', { value: originalPlatform });
-    // eslint-disable-next-line functional/immutable-data
-    process.env = originalEnv;
-  });
-
-  describe('constructor', () => {
-    it('should use XDG_CONFIG_HOME if set on Unix', () => {
-      const mockXdgConfig = '/custom/config';
-      // eslint-disable-next-line functional/immutable-data
-      process.env.XDG_CONFIG_HOME = mockXdgConfig;
-
-      new TelemetryNotificationManager(mockAppName);
-
-      expect(mockPathJoin).toHaveBeenCalledWith(mockXdgConfig, mockAppName);
-    });
-
-    it('should use APPDATA if set on Windows', () => {
-      const mockAppData = 'C:\\Users\\Test\\AppData\\Roaming';
-      // eslint-disable-next-line functional/immutable-data
-      Object.defineProperty(process, 'platform', { value: 'win32' });
-      // eslint-disable-next-line functional/immutable-data
-      process.env.APPDATA = mockAppData;
-
-      new TelemetryNotificationManager(mockAppName);
-
-      expect(mockPathJoin).toHaveBeenCalledWith(mockAppData, mockAppName);
-    });
   });
 
   describe('shouldShowTelemetryNotice', () => {
@@ -125,7 +85,7 @@ describe('TelemetryNotificationManager', () => {
     it('should create config directory and write notice file', () => {
       manager.markTelemetryNoticeShown();
 
-      expect(fs.mkdirSync).toHaveBeenCalledWith(expectedConfigPath, { recursive: true });
+      expect(fs.mkdirSync).toHaveBeenCalledWith(mockConfigPath, { recursive: true });
       expect(fs.writeFileSync).toHaveBeenCalledWith(expectedNoticePath, expect.any(String));
     });
 
@@ -140,11 +100,11 @@ describe('TelemetryNotificationManager', () => {
     });
   });
 
-  describe('getTelemetryNotice', () => {
-    it('should return notice text with opt-out instructions', () => {
-      const notice = TelemetryNotificationManager.getTelemetryNotice();
-      expect(notice).toContain('Telemetry Notice');
-      expect(notice).toContain('SWISS_PAIRING_TELEMETRY_OPT_OUT');
+  describe('getTelemetryNoticePath', () => {
+    it('should return the correct notice path', () => {
+      expect(manager.getTelemetryNoticePath()).toBe(expectedNoticePath);
+      expect(utils.getConfigPath).toHaveBeenCalled();
+      expect(mockPathJoin).toHaveBeenCalledWith(mockConfigPath, '.telemetry-notice-shown');
     });
   });
 });

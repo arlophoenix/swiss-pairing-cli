@@ -11,36 +11,22 @@
  * - Unix: ~/.config/<app-name>/.telemetry-notice-shown
  * - Windows: %APPDATA%/<app-name>/.telemetry-notice-shown
  */
-import { DEBUG_TELEMETRY, ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT, PROGRAM_NAME } from '../constants.js';
+import { DEBUG_TELEMETRY, ENV_SWISS_PAIRING_TELEMETRY_OPT_OUT } from '../constants.js';
 
 import { Config } from '../Config.js';
 import debug from 'debug';
 import fs from 'fs';
-import os from 'os';
+import { getConfigPath } from './telemetryUtils.js';
 import path from 'path';
 
 export class TelemetryNotificationManager {
-  private readonly configPath: string;
-  private readonly telemetryNoticePath: string;
   private readonly log = debug(DEBUG_TELEMETRY);
 
   /**
    * Creates notification manager for specified app.
-   * Resolves OS-specific config paths.
-   *
-   * @param appName - Optional app name for config path, defaults to PROGRAM_NAME
    */
-  constructor(appName = PROGRAM_NAME) {
+  constructor() {
     this.log('Initializing TelemetryNotificationManager');
-    const configDir =
-      process.platform === 'win32'
-        ? (process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'))
-        : (process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config'));
-
-    this.configPath = path.join(configDir, appName);
-    this.telemetryNoticePath = path.join(this.configPath, '.telemetry-notice-shown');
-    this.log('Config path:', this.configPath);
-    this.log('Telemetry notice path:', this.telemetryNoticePath);
   }
 
   /**
@@ -69,7 +55,7 @@ export class TelemetryNotificationManager {
 
     let result: boolean;
     try {
-      fs.accessSync(this.telemetryNoticePath);
+      fs.accessSync(this.getTelemetryNoticePath());
       result = false;
     } catch {
       result = true;
@@ -85,13 +71,20 @@ export class TelemetryNotificationManager {
    */
   markTelemetryNoticeShown() {
     try {
-      fs.mkdirSync(this.configPath, { recursive: true });
-      fs.writeFileSync(this.telemetryNoticePath, String(Date.now()));
+      const telemetryNoticePath = this.getTelemetryNoticePath();
+      const telemetryNoticeDir = path.dirname(telemetryNoticePath);
+      fs.mkdirSync(telemetryNoticeDir, { recursive: true });
+      fs.writeFileSync(telemetryNoticePath, String(Date.now()));
       this.log('Marked telemetry notice as shown');
     } catch (error) {
       // Fail silently - worst case we show notice again
       this.log('Error marking telemetry notice shown:', error);
     }
+  }
+
+  getTelemetryNoticePath(): string {
+    const configPath = getConfigPath();
+    return path.join(configPath, '.telemetry-notice-shown');
   }
 
   /**

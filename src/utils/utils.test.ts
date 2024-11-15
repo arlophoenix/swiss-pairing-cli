@@ -1,8 +1,9 @@
 import { PlayedTeams, ReadonlyPlayedTeams, Team } from '../types/types.js';
-import { afterEach, describe, expect, it } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import {
   createBidirectionalMap,
   detectExecutionContext,
+  getConfigPath,
   isValidTeamString,
   mutableCloneBidirectionalMap,
   parseStringLiteral,
@@ -11,6 +12,10 @@ import {
   stringToTeam,
   teamToString,
 } from './utils.js';
+
+import { PROGRAM_NAME } from '../constants.js';
+import os from 'os';
+import path from 'path';
 
 describe('utils', () => {
   describe('createBidirectionalMap', () => {
@@ -308,6 +313,73 @@ describe('utils', () => {
       // eslint-disable-next-line functional/immutable-data
       delete process.env.npm_execpath;
       expect(detectExecutionContext()).toBe('local');
+    });
+  });
+
+  describe('utils', () => {
+    const mockHomedir = '/mock/home';
+    const originalPlatform = process.platform;
+    const originalEnv = { ...process.env };
+
+    beforeEach(() => {
+      jest.spyOn(os, 'homedir').mockReturnValue(mockHomedir);
+      jest.spyOn(path, 'join').mockImplementation((...args) => args.join('/'));
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+      // eslint-disable-next-line functional/immutable-data
+      Object.defineProperty(process, 'platform', { value: originalPlatform });
+      // eslint-disable-next-line functional/immutable-data
+      process.env = originalEnv;
+    });
+
+    describe('getConfigPath', () => {
+      it('should use XDG_CONFIG_HOME if set on Unix', () => {
+        const mockXdgConfig = '/custom/config';
+        // eslint-disable-next-line functional/immutable-data
+        Object.defineProperty(process, 'platform', { value: 'darwin' });
+        // eslint-disable-next-line functional/immutable-data
+        process.env.XDG_CONFIG_HOME = mockXdgConfig;
+
+        const result = getConfigPath();
+
+        expect(result).toBe(`${mockXdgConfig}/${PROGRAM_NAME}`);
+      });
+
+      it('should use default .config path on Unix when XDG_CONFIG_HOME not set', () => {
+        // eslint-disable-next-line functional/immutable-data
+        Object.defineProperty(process, 'platform', { value: 'darwin' });
+        // eslint-disable-next-line functional/immutable-data
+        delete process.env.XDG_CONFIG_HOME;
+
+        const result = getConfigPath();
+
+        expect(result).toBe(`${mockHomedir}/.config/${PROGRAM_NAME}`);
+      });
+
+      it('should use APPDATA if set on Windows', () => {
+        const mockAppData = 'C:\\Users\\Test\\AppData\\Roaming';
+        // eslint-disable-next-line functional/immutable-data
+        Object.defineProperty(process, 'platform', { value: 'win32' });
+        // eslint-disable-next-line functional/immutable-data
+        process.env.APPDATA = mockAppData;
+
+        const result = getConfigPath();
+
+        expect(result).toBe(`${mockAppData}/${PROGRAM_NAME}`);
+      });
+
+      it('should use default AppData path on Windows when APPDATA not set', () => {
+        // eslint-disable-next-line functional/immutable-data
+        Object.defineProperty(process, 'platform', { value: 'win32' });
+        // eslint-disable-next-line functional/immutable-data
+        delete process.env.APPDATA;
+
+        const result = getConfigPath();
+
+        expect(result).toBe(`${mockHomedir}/AppData/Roaming/${PROGRAM_NAME}`);
+      });
     });
   });
 });

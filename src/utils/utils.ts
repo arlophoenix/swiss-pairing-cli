@@ -10,6 +10,11 @@
  */
 
 import { Result, Team } from '../types/types.js';
+
+import { PROGRAM_NAME } from '../constants.js';
+import os from 'os';
+import path from 'path';
+
 export * from './errorUtils.js';
 
 /**
@@ -192,4 +197,16 @@ export function detectExecutionContext(): 'npx' | 'global' | 'local' {
     return 'global';
   }
   return 'local';
+}
+
+/**
+ * Resolves OS-specific config paths.
+ */
+export function getConfigPath(): string {
+  const configDir =
+    process.platform === 'win32'
+      ? (process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'))
+      : (process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config'));
+
+  return path.join(configDir, PROGRAM_NAME);
 }
