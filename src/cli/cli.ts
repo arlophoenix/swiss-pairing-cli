@@ -37,10 +37,7 @@ import {
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
 import { Command } from 'commander';
-import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
-import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
-import { handleCorePipelineCommand } from '../commands/corePipeline/corePipelineCommand.js';
-import { normalizeError } from './cliUtils.js';
+import { handleCLIAction } from '../commands/cliAction/cliActionCommand.js';
 
 /**
  * Creates and configures the CLI command parser.
@@ -99,42 +96,12 @@ export function createCLI(): Command {
       }
     )
     .action(async (options: UnvalidatedCLIOptions) => {
-      const notificationManager = new TelemetryNotificationManager();
-      const shouldShowTelemetryNotice = notificationManager.shouldShowTelemetryNotice();
-
-      const telemetryCommand = new TelemetryCommand({ options, shouldShowTelemetryNotice });
-      telemetryCommand.recordInvocation();
-
-      if (shouldShowTelemetryNotice) {
-        console.log(TelemetryNotificationManager.getTelemetryNotice());
-        notificationManager.markTelemetryNoticeShown();
-      }
-
-      let exitCode: number;
-      try {
-        const result = await handleCorePipelineCommand(options);
-
-        if (result.success) {
-          // Record success and shutdown telemetry
-          telemetryCommand.recordSuccess();
-          console.log(result.value);
-          exitCode = 0;
-        } else {
-          // Handle validation failure
-          telemetryCommand.recordValidationFailure();
-          console.error(result.message);
-          exitCode = 1;
-        }
-      } catch (error) {
-        telemetryCommand.recordError(normalizeError(error));
-        console.error(error);
-        exitCode = 1;
-      } finally {
-        await telemetryCommand.shutdown();
-      }
+      const { output, exitCode } = await handleCLIAction(options);
       if (exitCode > 0) {
+        console.error(output);
         process.exit(exitCode);
       }
+      console.log(output);
     });
 
   return program;

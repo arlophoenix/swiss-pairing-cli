@@ -1,30 +1,25 @@
-import * as corePipelineCommand from '../commands/corePipeline/corePipelineCommand.js';
+import * as cliActionCommand from '../commands/cliAction/cliActionCommand.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
-import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
-import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
 import { createCLI } from './cli.js';
 
-jest.mock('../commands/corePipeline/corePipelineCommand.js');
+jest.mock('../commands/cliAction/cliActionCommand.js');
 
 describe('CLI', () => {
-  let mockhandleCorePipelineCommand: SpyInstance<typeof corePipelineCommand.handleCorePipelineCommand>;
+  let mockHandleCLIAction: SpyInstance<typeof cliActionCommand.handleCLIAction>;
   let mockConsoleLog: SpyInstance;
   let mockConsoleError: SpyInstance;
   let mockProcessExit: SpyInstance<typeof process.exit>;
 
   beforeEach(() => {
-    mockhandleCorePipelineCommand = jest
-      .spyOn(corePipelineCommand, 'handleCorePipelineCommand')
-      .mockResolvedValue({ success: true, value: 'Matches generated successfully' });
-    mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {
-      // do nothing
-    });
-    mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {
-      // do nothing
-    });
+    mockHandleCLIAction = jest
+      .spyOn(cliActionCommand, 'handleCLIAction')
+      .mockResolvedValue({ output: 'Matches generated successfully', exitCode: 0 });
+
+    mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue();
+    mockConsoleError = jest.spyOn(console, 'error').mockReturnValue();
     mockProcessExit = jest.spyOn(process, 'exit').mockImplementation((code?) => {
       throw new Error(`Process exited with code ${String(code)}`);
     });
@@ -38,7 +33,7 @@ describe('CLI', () => {
     const program = createCLI();
     await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
 
-    expect(corePipelineCommand.handleCorePipelineCommand).toHaveBeenCalledWith(
+    expect(cliActionCommand.handleCLIAction).toHaveBeenCalledWith(
       expect.objectContaining({ teams: ['Alice', 'Bob'] })
     );
     expect(mockConsoleLog).toHaveBeenCalledWith('Matches generated successfully');
@@ -47,9 +42,9 @@ describe('CLI', () => {
   });
 
   it('should handle errors', async () => {
-    jest.spyOn(corePipelineCommand, 'handleCorePipelineCommand').mockResolvedValue({
-      success: false,
-      message: 'Invalid input',
+    mockHandleCLIAction.mockResolvedValue({
+      output: 'Invalid input',
+      exitCode: 1,
     });
 
     const program = createCLI();
@@ -57,6 +52,7 @@ describe('CLI', () => {
       'Process exited with code 1'
     );
 
+    expect(mockConsoleLog).not.toHaveBeenCalled();
     expect(mockConsoleError).toHaveBeenCalledWith('Invalid input');
     expect(mockProcessExit).toHaveBeenCalledWith(1);
   });
@@ -83,7 +79,7 @@ describe('CLI', () => {
       'data.csv',
     ]);
 
-    expect(mockhandleCorePipelineCommand).toHaveBeenCalledWith({
+    expect(mockHandleCLIAction).toHaveBeenCalledWith({
       teams: ['Alice', 'Bob'],
       numRounds: '3',
       startRound: '2',
@@ -91,39 +87,6 @@ describe('CLI', () => {
       format: 'json-pretty',
       matches: [['Alice', 'Bob']],
       file: 'data.csv',
-    });
-  });
-
-  describe('telemetry flow', () => {
-    let mockShouldShowTelemetryNotice: SpyInstance<
-      typeof TelemetryNotificationManager.prototype.shouldShowTelemetryNotice
-    >;
-    let mockRecordInvocation: SpyInstance<typeof TelemetryCommand.prototype.recordInvocation>;
-
-    beforeEach(() => {
-      mockShouldShowTelemetryNotice = jest.spyOn(
-        TelemetryNotificationManager.prototype,
-        'shouldShowTelemetryNotice'
-      );
-      mockRecordInvocation = jest.spyOn(TelemetryCommand.prototype, 'recordInvocation');
-    });
-
-    it('should show notice and not collect telemetry on first run', async () => {
-      mockShouldShowTelemetryNotice.mockReturnValue(true);
-      const program = createCLI();
-      await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
-
-      expect(console.log).toHaveBeenCalledWith(TelemetryNotificationManager.getTelemetryNotice());
-      expect(mockRecordInvocation).toHaveBeenCalled();
-    });
-
-    it('should collect telemetry and not show notice on subsequent runs', async () => {
-      mockShouldShowTelemetryNotice.mockReturnValue(false);
-      const program = createCLI();
-      await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
-
-      expect(console.log).not.toHaveBeenCalledWith(TelemetryNotificationManager.getTelemetryNotice());
-      expect(mockRecordInvocation).toHaveBeenCalled();
     });
   });
 });

@@ -1,17 +1,12 @@
-import { CLIOptionFormat, ReadonlyMatch } from '../types/types.js';
+import { CLIOptionFormat, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
 
-/**
- * Raw command input from CLI
- */
-export interface CorePipelineCommand {
-  readonly teams?: readonly string[];
-  readonly numRounds?: string;
-  readonly startRound?: string;
-  readonly matches?: readonly (readonly string[])[];
-  readonly order?: string;
-  readonly format?: string;
-  readonly file?: string;
+export type CLIActionCommand = UnvalidatedCLIOptions;
+export interface CLIActionCommandOutput {
+  readonly output: string;
+  readonly exitCode: number;
 }
+
+export type CorePipelineCommand = UnvalidatedCLIOptions;
 
 /**
  * Command parameters for tournament generation.
