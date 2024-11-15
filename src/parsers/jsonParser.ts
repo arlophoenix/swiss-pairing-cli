@@ -7,7 +7,7 @@
  * @module jsonParser
  */
 
-import { ErrorTemplate, formatError, wrapErrorWithOrigin } from './parserUtils.js';
+import { ErrorTemplate, formatError, normalizeError, wrapErrorWithOrigin } from './parserUtils.js';
 import { Result, ValidatedCLIOptions } from '../types/types.js';
 
 import { validateJSONOptions } from '../validators/jsonValidator.js';
@@ -45,11 +45,12 @@ export function parseOptionsFromJSON(content: string): Result<Partial<ValidatedC
     }
     return result;
   } catch (error) {
+    const normalizedError = normalizeError(error);
     return {
       success: false,
       message: formatError({
         template: ErrorTemplate.PARSE_JSON_ERROR,
-        values: { error: (error as Error).message },
+        values: { error: normalizedError.message },
       }),
     };
   }

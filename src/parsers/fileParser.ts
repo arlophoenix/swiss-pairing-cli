@@ -5,7 +5,13 @@ import {
   SUPPORTED_FILE_TYPE_JSON,
 } from '../constants.js';
 import { BooleanResult, Result, SupportedFileTypes, ValidatedCLIOptions } from '../types/types.js';
-import { ErrorTemplate, createInvalidValueMessage, formatError, parseStringLiteral } from './parserUtils.js';
+import {
+  ErrorTemplate,
+  createInvalidValueMessage,
+  formatError,
+  normalizeError,
+  parseStringLiteral,
+} from './parserUtils.js';
 
 import { existsSync } from 'fs';
 import { extname } from 'path';
@@ -45,11 +51,12 @@ export async function parseFile(filePath: string): Promise<Result<Partial<Valida
         return parseOptionsFromJSON(fileContent);
     }
   } catch (error) {
+    const normalizedError = normalizeError(error);
     return {
       success: false,
       message: formatError({
         template: ErrorTemplate.FILE_READ_ERROR,
-        values: { error: (error as Error).message },
+        values: { error: normalizedError.message },
       }),
     };
   }

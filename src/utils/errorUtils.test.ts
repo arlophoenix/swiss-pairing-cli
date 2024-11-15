@@ -1,4 +1,10 @@
-import { ErrorTemplate, createInvalidValueMessage, formatError, wrapErrorWithOrigin } from './errorUtils.js';
+import {
+  ErrorTemplate,
+  createInvalidValueMessage,
+  formatError,
+  normalizeError,
+  wrapErrorWithOrigin,
+} from './errorUtils.js';
 import { describe, expect, it } from '@jest/globals';
 
 import { FailureResult } from '../types/errors.js';
@@ -128,6 +134,45 @@ describe('errorUtils', () => {
       const invalidInput = { success: true, value: 'test' };
       // @ts-expect-error - success: true should not be accepted
       wrapErrorWithOrigin({ error: invalidInput, origin: 'JSON' });
+    });
+  });
+  describe('normalizeError', () => {
+    it('handles Error objects', () => {
+      const error = new Error('test message');
+      // eslint-disable-next-line functional/immutable-data
+      error.name = 'TestError';
+
+      expect(normalizeError(error)).toEqual({
+        name: 'TestError',
+        message: 'test message',
+      });
+    });
+
+    it('handles string errors', () => {
+      expect(normalizeError('test error')).toEqual({
+        name: 'UnknownError',
+        message: 'test error',
+      });
+    });
+
+    it('handles non-standard error objects', () => {
+      const error = { foo: 'bar' };
+      expect(normalizeError(error)).toEqual({
+        name: 'UnknownError',
+        message: '[object Object]',
+      });
+    });
+
+    it('handles null/undefined', () => {
+      expect(normalizeError(null)).toEqual({
+        name: 'UnknownError',
+        message: 'null',
+      });
+
+      expect(normalizeError(undefined)).toEqual({
+        name: 'UnknownError',
+        message: 'undefined',
+      });
     });
   });
 });

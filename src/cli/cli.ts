@@ -40,6 +40,7 @@ import { Command } from 'commander';
 import { TelemetryCommand } from '../commands/telemetry/TelemetryCommand.js';
 import { TelemetryNotificationManager } from '../telemetry/TelemetryNotificationManager.js';
 import { handleCLIActionCommand } from '../commands/cliAction/cliActionCommand.js';
+import { normalizeError } from './cliUtils.js';
 
 /**
  * Creates and configures the CLI command parser.
@@ -125,7 +126,7 @@ export function createCLI(): Command {
           exitCode = 1;
         }
       } catch (error) {
-        telemetryCommand.recordError(error as Error);
+        telemetryCommand.recordError(normalizeError(error));
         console.error(error);
         exitCode = 1;
       } finally {

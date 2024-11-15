@@ -123,3 +123,21 @@ export function wrapErrorWithOrigin({
     message: `Invalid ${origin} data: ${message}`,
   };
 }
+
+/**
+ * Normalizes any thrown value into an error object with name and message.
+ * Handles strings, Error objects, and other values consistently.
+ */
+export function normalizeError(error: unknown): { readonly name: string; readonly message: string } {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+    };
+  }
+
+  return {
+    name: 'UnknownError',
+    message: typeof error === 'string' ? error : String(error),
+  };
+}
