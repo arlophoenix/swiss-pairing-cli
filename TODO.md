@@ -3,7 +3,6 @@
 ## In Progress
 
 - Telemetry using PostHog
-  - enable telemetry for production (how to securely store API key?)
   - mention telemetry in readme
   - ensure no user data in errors
 

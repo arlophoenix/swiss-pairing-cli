@@ -132,3 +132,5 @@ export const ENV_TELEMETRY_OPT_OUT = 'SWISS_PAIRING_TELEMETRY_OPT_OUT';
 
 export const DOTENV_DEV = '.env';
 export const DOTENV_TEST = '.env.test';
+
+export const POSTHOG_API_KEY = 'phc_aj6gLTr4r02DFTrEttyUyD6lWHgrwjig8sewaVtEcP5';

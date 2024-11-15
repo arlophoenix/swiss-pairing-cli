@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from './Config.js';
+import { POSTHOG_API_KEY } from './constants.js';
 import dotenv from 'dotenv';
 
 jest.mock('dotenv', () => ({
@@ -56,9 +57,9 @@ describe('Config', () => {
       expect(Config.getInstance().getPosthogApiKey()).toBe(testKey);
     });
 
-    it('should return empty string for undefined API key', () => {
+    it('should return default string for undefined env API key', () => {
       Config.resetForTesting({ env: null });
-      expect(Config.getInstance().getPosthogApiKey()).toBe('');
+      expect(Config.getInstance().getPosthogApiKey()).toBe(POSTHOG_API_KEY);
     });
 
     it('should return telemetry opt out status', () => {

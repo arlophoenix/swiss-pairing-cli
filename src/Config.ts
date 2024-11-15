@@ -4,6 +4,7 @@ import {
   ENV_POSTHOG_API_KEY,
   ENV_SHOW_TELEMETRY_NOTICE,
   ENV_TELEMETRY_OPT_OUT,
+  POSTHOG_API_KEY,
 } from './constants.js';
 
 import dotenv from 'dotenv';
@@ -29,7 +30,7 @@ export class Config {
   }
 
   public getPosthogApiKey(): string {
-    return this.env[ENV_POSTHOG_API_KEY] ?? '';
+    return this.env[ENV_POSTHOG_API_KEY] ?? POSTHOG_API_KEY;
   }
 
   public getTelemetryOptOut(): boolean {
