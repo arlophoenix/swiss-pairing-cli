@@ -9,7 +9,7 @@ import {
   mergeOptions,
   prepareTeams,
   validateFileOptions,
-} from './cliActionUtils.js';
+} from './processInputUtils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';

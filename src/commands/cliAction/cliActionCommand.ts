@@ -10,25 +10,11 @@
  * @module cliActionCommand
  */
 
-import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from './cliActionUtils.js';
-
+import { CLIActionCommand } from '../commandTypes.js';
 import { Result } from '../../types/types.js';
 import { formatOutput } from '../../formatters/outputFormatter.js';
 import { handleGenerateRounds } from '../generateRounds/generateRoundsCommand.js';
-import { validateCLIOptions } from '../../validators/cliValidator.js';
-
-/**
- * Raw command input from CLI
- */
-export interface CLIActionCommand {
-  readonly teams?: readonly string[];
-  readonly numRounds?: string;
-  readonly startRound?: string;
-  readonly matches?: readonly (readonly string[])[];
-  readonly order?: string;
-  readonly format?: string;
-  readonly file?: string;
-}
+import { handleProcessInput } from '../processInput/processInputCommand.js';
 
 /**
  * Processes CLI input through the tournament generation pipeline.
@@ -39,54 +25,33 @@ export interface CLIActionCommand {
  *
  * @param cliOptions - Raw options from command line
  * @returns Formatted tournament results or error message
- *
- * @example
- * const result = await handleCLIAction({
- *   teams: ["Alice [A]", "Bob [B]"],
- *   numRounds: "2",
- *   format: "text-markdown"
- * });
- * if (result.success) {
- *   console.log(result.value);
- * }
  */
 export async function handleCLIActionCommand(command: CLIActionCommand): Promise<Result<string>> {
-  const validateCLIOptionsResult = validateCLIOptions(command);
-  if (!validateCLIOptionsResult.success) {
-    return validateCLIOptionsResult;
+  const processInputResult = await handleProcessInput(command);
+  if (!processInputResult.success) {
+    return processInputResult;
   }
 
-  const validateFileOptionsResult = await validateFileOptions(command.file);
-  if (!validateFileOptionsResult.success) {
-    return validateFileOptionsResult;
-  }
-
-  const { teams, numRounds, startRound, order, matches, format } = mergeOptions({
-    cliOptions: validateCLIOptionsResult.value,
-    fileOptions: validateFileOptionsResult.value,
-  });
-
-  // Strip squad info before preparing teams - squads are handled separately via squadMap
-  const preparedTeams = prepareTeams({ teams: teams.map((t) => t.name), order });
-  const squadMap = createSquadMap(teams);
+  const { teams, numRounds, startRound, matches, squadMap, format } = processInputResult.value;
 
   const roundsResult = handleGenerateRounds({
-    teams: preparedTeams,
+    teams,
     numRounds,
     startRound,
     matches,
     squadMap,
   });
-
   if (!roundsResult.success) {
     return roundsResult;
   }
 
+  const formattedOutput = formatOutput({
+    results: roundsResult.value,
+    format,
+  });
+
   return {
     success: true,
-    value: formatOutput({
-      results: roundsResult.value,
-      format,
-    }),
+    value: formattedOutput,
   };
 }

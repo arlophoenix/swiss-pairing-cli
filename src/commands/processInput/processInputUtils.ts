@@ -5,7 +5,7 @@
  * - Option merging (CLI + file inputs)
  * - Squad mapping
  *
- * @module cliUtils
+ * @module processInputUtils
  */
 
 import { BYE_TEAM, CLI_OPTION_DEFAULTS } from '../../constants.js';

@@ -10,29 +10,15 @@
  */
 
 import { ErrorTemplate, formatError } from '../../utils/errorUtils.js';
-import { ReadonlyMatch, Result, SwissPairingResult } from '../../types/types.js';
+import { Result, SwissPairingResult } from '../../types/types.js';
 import {
   validateGenerateRoundsInput,
   validateGenerateRoundsOutput,
 } from '../../swiss-pairing/swissValidator.js';
 
+import { GenerateRoundsCommand } from '../commandTypes.js';
 import { createBidirectionalMap } from '../../utils/utils.js';
 import { generateRounds } from '../../swiss-pairing/swissPairing.js';
-
-/**
- * Command parameters for tournament generation.
- * Provides validated and prepared inputs:
- * - Teams in desired pairing order
- * - Tournament settings (rounds, format)
- * - Constraints (matches, squads)
- */
-export interface GenerateRoundsCommand {
-  readonly teams: readonly string[];
-  readonly numRounds: number;
-  readonly startRound: number;
-  readonly matches?: readonly ReadonlyMatch[];
-  readonly squadMap: ReadonlyMap<string, string>;
-}
 
 /**
  * Handles tournament generation command.
