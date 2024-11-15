@@ -12,6 +12,12 @@
   "bin": {
     "swiss-pairing": "./dist/index.js"
   },
+  "files": [
+    "dist/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": "^20.17.0"
   },

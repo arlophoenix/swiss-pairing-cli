@@ -1,0 +1,10 @@
+# Deny everything by default
+*
+
+# Essential package files
+!package.json
+!README.md
+!LICENSE
+
+# Built code
+!dist/
