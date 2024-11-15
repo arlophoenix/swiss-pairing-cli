@@ -41,6 +41,8 @@ export class TelemetryClient {
   }
 
   private constructor() {
+    this.log('Initializing TelemetryClient');
+
     const config = Config.getInstance();
     const apiKey = config.getPosthogApiKey();
     this.enabled = shouldEnableTelemetryClient({
@@ -49,7 +51,6 @@ export class TelemetryClient {
       environment: detectEnvironment(),
     });
 
-    this.log('Initializing telemetry');
     this.log('Telemetry enabled:', this.enabled);
 
     if (this.enabled) {
