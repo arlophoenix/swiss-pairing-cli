@@ -424,6 +424,23 @@ Example:
 function shuffle<T>(array: readonly T[]): readonly T[] {
 ```
 
+## Telemetry
+
+This tool collects anonymous usage data to help improve the user experience, including:
+
+- Command line arguments provided (but not their values)
+- Total number of teams and squads
+- Number of rounds
+- Execution duration
+- Basic system info (Node version, OS)
+- Error conditions encountered
+
+No personal information or sensitive data is ever collected. You can opt-out by setting:
+
+```bash
+export SWISS_PAIRING_TELEMETRY_OPT_OUT=1
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.

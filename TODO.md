@@ -2,9 +2,6 @@
 
 ## In Progress
 
-- Telemetry using PostHog
-  - mention telemetry in readme
-
 ## Functionality
 
 ## Code Quality
