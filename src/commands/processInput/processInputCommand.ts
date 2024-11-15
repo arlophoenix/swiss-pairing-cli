@@ -1,12 +1,9 @@
 import { ProcessInputCommand, ProcessInputCommandOutput } from '../commandTypes.js';
 import { createSquadMap, mergeOptions, prepareTeams, validateFileOptions } from './processInputUtils.js';
 
-import { Result } from '../../types/types.js';
 import { validateCLIOptions } from '../../validators/cliValidator.js';
 
-export async function handleProcessInput(
-  command: ProcessInputCommand
-): Promise<Result<ProcessInputCommandOutput>> {
+export async function handleProcessInput(command: ProcessInputCommand): Promise<ProcessInputCommandOutput> {
   const validateCLIOptionsResult = validateCLIOptions(command);
   if (!validateCLIOptionsResult.success) {
     return validateCLIOptionsResult;

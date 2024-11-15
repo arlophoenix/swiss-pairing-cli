@@ -10,8 +10,8 @@
  * @module corePipelineCommand
  */
 
-import { CorePipelineCommand } from '../commandTypes.js';
-import { Result } from '../../types/types.js';
+import { CorePipelineCommand, CorePipelineCommandOutput } from '../commandTypes.js';
+
 import { formatOutput } from '../../formatters/outputFormatter.js';
 import { handleGenerateRounds } from '../generateRounds/generateRoundsCommand.js';
 import { handleProcessInput } from '../processInput/processInputCommand.js';
@@ -26,7 +26,9 @@ import { handleProcessInput } from '../processInput/processInputCommand.js';
  * @param cliOptions - Raw options from command line
  * @returns Formatted tournament results or error message
  */
-export async function handleCorePipelineCommand(command: CorePipelineCommand): Promise<Result<string>> {
+export async function handleCorePipelineCommand(
+  command: CorePipelineCommand
+): Promise<CorePipelineCommandOutput> {
   const processInputResult = await handleProcessInput(command);
   if (!processInputResult.success) {
     return processInputResult;

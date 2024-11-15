@@ -23,7 +23,7 @@ import {
   ReadonlyPlayedTeams,
   Result,
   Round,
-  SwissPairingResult,
+  SwissPairingOutput,
 } from '../types/types.js';
 
 /**
@@ -57,7 +57,7 @@ export function generateRounds({
   readonly startRound: number;
   readonly playedTeams: ReadonlyPlayedTeams;
   readonly squadMap?: ReadonlyMap<string, string>;
-}): Result<SwissPairingResult> {
+}): Result<SwissPairingOutput> {
   let currentPlayedTeams = mutableCloneBidirectionalMap(playedTeams);
   // eslint-disable-next-line functional/prefer-readonly-type
   const rounds: Round[] = [];

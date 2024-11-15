@@ -6,10 +6,10 @@ import {
   formatRoundsAsText,
 } from './outputFormatter.js';
 
-import { SwissPairingResult } from '../types/types.js';
+import { SwissPairingOutput } from '../types/types.js';
 
 describe('outputFormatter', () => {
-  let sampleResults: SwissPairingResult;
+  let sampleResults: SwissPairingOutput;
 
   beforeEach(() => {
     sampleResults = {
@@ -46,7 +46,7 @@ describe('outputFormatter', () => {
     });
 
     it('should handle non-sequential round numbers', () => {
-      const nonSequentialResults: SwissPairingResult = {
+      const nonSequentialResults: SwissPairingOutput = {
         rounds: [
           {
             label: 'Round 3',
@@ -66,7 +66,7 @@ describe('outputFormatter', () => {
     });
 
     it('should handle BYE teams', () => {
-      const byeResults: SwissPairingResult = {
+      const byeResults: SwissPairingOutput = {
         rounds: [
           {
             label: 'Round 1',
@@ -83,7 +83,7 @@ describe('outputFormatter', () => {
     });
 
     it('should handle empty rounds', () => {
-      const emptyResults: SwissPairingResult = {
+      const emptyResults: SwissPairingOutput = {
         rounds: [],
       };
       const result = formatRoundsAsCSV(emptyResults.rounds);
@@ -109,7 +109,7 @@ describe('outputFormatter', () => {
     });
 
     it('should format single round without header', () => {
-      const singleRoundResults: SwissPairingResult = {
+      const singleRoundResults: SwissPairingOutput = {
         rounds: [sampleResults.rounds[0]],
       };
       const result = formatRoundsAsMarkdown(singleRoundResults.rounds);
@@ -121,7 +121,7 @@ describe('outputFormatter', () => {
     });
 
     it('should handle BYE teams', () => {
-      const byeResults: SwissPairingResult = {
+      const byeResults: SwissPairingOutput = {
         rounds: [
           {
             label: 'Round 1',
@@ -135,7 +135,7 @@ describe('outputFormatter', () => {
     });
 
     it('should handle empty rounds', () => {
-      const emptyResults: SwissPairingResult = {
+      const emptyResults: SwissPairingOutput = {
         rounds: [],
       };
       const result = formatRoundsAsMarkdown(emptyResults.rounds);
@@ -156,7 +156,7 @@ Bob vs David`;
     });
 
     it('should handle BYE teams', () => {
-      const byeResults: SwissPairingResult = {
+      const byeResults: SwissPairingOutput = {
         rounds: [
           {
             label: 'Round 1',
@@ -170,7 +170,7 @@ Bob vs David`;
     });
 
     it('should handle empty rounds', () => {
-      const emptyResults: SwissPairingResult = {
+      const emptyResults: SwissPairingOutput = {
         rounds: [],
       };
       const result = formatRoundsAsText(emptyResults.rounds);
@@ -178,7 +178,7 @@ Bob vs David`;
     });
 
     it('should preserve round labels', () => {
-      const customLabelResults: SwissPairingResult = {
+      const customLabelResults: SwissPairingOutput = {
         rounds: [
           {
             label: 'Finals',
@@ -256,7 +256,7 @@ Bob vs David`;
     });
 
     it('should format single round output without title', () => {
-      const singleRoundResults: SwissPairingResult = {
+      const singleRoundResults: SwissPairingOutput = {
         rounds: [sampleResults.rounds[0]],
       };
       const result = formatOutput({ results: singleRoundResults, format: 'text-markdown' });
@@ -269,7 +269,7 @@ Bob vs David`;
   });
 
   it('should handle non-sequential round numbers in CSV format', () => {
-    const nonSequentialResults: SwissPairingResult = {
+    const nonSequentialResults: SwissPairingOutput = {
       rounds: [
         {
           label: 'Round 3',
@@ -300,7 +300,7 @@ Bob vs David`;
   });
 
   it('should handle BYE teams in formats', () => {
-    const byeResults: SwissPairingResult = {
+    const byeResults: SwissPairingOutput = {
       rounds: [
         {
           label: 'Round 1',
@@ -321,7 +321,7 @@ Bob vs David`;
   });
 
   it('should handle empty rounds array', () => {
-    const emptyResults: SwissPairingResult = {
+    const emptyResults: SwissPairingOutput = {
       rounds: [],
     };
 

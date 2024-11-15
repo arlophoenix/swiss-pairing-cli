@@ -9,7 +9,7 @@
  * @module outputFormatter
  */
 
-import { CLIOptionFormat, ReadonlyMatch, Round, SwissPairingResult } from '../types/types.js';
+import { CLIOptionFormat, ReadonlyMatch, Round, SwissPairingOutput } from '../types/types.js';
 import {
   CLI_OPTION_FORMAT_CSV,
   CLI_OPTION_FORMAT_JSON_PLAIN,
@@ -35,7 +35,7 @@ export function formatOutput({
   results,
   format,
 }: {
-  readonly results: SwissPairingResult;
+  readonly results: SwissPairingOutput;
   readonly format: CLIOptionFormat;
 }): string {
   // eslint-disable-next-line max-params

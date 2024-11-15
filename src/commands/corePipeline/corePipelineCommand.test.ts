@@ -4,7 +4,7 @@ import * as processInputCommand from '../processInput/processInputCommand.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { ProcessInputCommandOutput } from '../commandTypes.js';
+import { ProcessInputCommandOutputSuccess } from '../commandTypes.js';
 import { Round } from '../../types/types.js';
 import { handleCorePipelineCommand } from './corePipelineCommand.js';
 
@@ -13,7 +13,7 @@ jest.mock('../generateRounds/generateRoundsCommand.js');
 jest.mock('../../formatters/outputFormatter.js');
 
 describe('handleCorePipelineCommand', () => {
-  let mockProcessOutput: ProcessInputCommandOutput;
+  let mockProcessOutput: ProcessInputCommandOutputSuccess;
   let mockRounds: { readonly rounds: readonly Round[] };
 
   beforeEach(() => {

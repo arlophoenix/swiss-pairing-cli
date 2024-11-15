@@ -88,9 +88,10 @@ export interface Round {
 }
 
 /**
- * Complete tournament results with all generated rounds.
+ * List of generated rounds with team pairings.
+ * Rounds are numbered sequentially and contain pairs of teams.
  */
-export interface SwissPairingResult {
+export interface SwissPairingOutput {
   /** List of rounds in sequential order */
   readonly rounds: readonly Round[];
 }

@@ -1,4 +1,10 @@
-import { CLIOptionFormat, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
+import {
+  CLIOptionFormat,
+  ReadonlyMatch,
+  Result,
+  SwissPairingOutput,
+  UnvalidatedCLIOptions,
+} from '../types/types.js';
 
 export type CLIActionCommand = UnvalidatedCLIOptions;
 export interface CLIActionCommandOutput {
@@ -7,6 +13,11 @@ export interface CLIActionCommandOutput {
 }
 
 export type CorePipelineCommand = UnvalidatedCLIOptions;
+export type CorePipelineCommandOutput = Result<string>;
+
+export type ProcessInputCommand = CorePipelineCommand;
+export type ProcessInputCommandOutput = Result<ProcessInputCommandOutputSuccess>;
+export type ProcessInputCommandOutputSuccess = GenerateRoundsCommand & { readonly format: CLIOptionFormat };
 
 /**
  * Command parameters for tournament generation.
@@ -22,6 +33,4 @@ export interface GenerateRoundsCommand {
   readonly matches?: readonly ReadonlyMatch[];
   readonly squadMap: ReadonlyMap<string, string>;
 }
-
-export type ProcessInputCommand = CorePipelineCommand;
-export type ProcessInputCommandOutput = GenerateRoundsCommand & { readonly format: CLIOptionFormat };
+export type GenerateRoundsCommandOutput = Result<SwissPairingOutput>;

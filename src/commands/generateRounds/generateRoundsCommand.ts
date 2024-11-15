@@ -10,13 +10,12 @@
  */
 
 import { ErrorTemplate, formatError } from '../../utils/errorUtils.js';
-import { Result, SwissPairingResult } from '../../types/types.js';
+import { GenerateRoundsCommand, GenerateRoundsCommandOutput } from '../commandTypes.js';
 import {
   validateGenerateRoundsInput,
   validateGenerateRoundsOutput,
 } from '../../swiss-pairing/swissValidator.js';
 
-import { GenerateRoundsCommand } from '../commandTypes.js';
 import { createBidirectionalMap } from '../../utils/utils.js';
 import { generateRounds } from '../../swiss-pairing/swissPairing.js';
 
@@ -37,7 +36,7 @@ import { generateRounds } from '../../swiss-pairing/swissPairing.js';
  *   squadMap: new Map([["Team1", "A"], ["Team2", "B"]])
  * });
  */
-export function handleGenerateRounds(command: GenerateRoundsCommand): Result<SwissPairingResult> {
+export function handleGenerateRounds(command: GenerateRoundsCommand): GenerateRoundsCommandOutput {
   const playedTeams = createBidirectionalMap(command.matches);
 
   const validateInputResult = validateGenerateRoundsInput({
