@@ -10,29 +10,89 @@ import os from 'os';
 import path from 'path';
 import util from 'util';
 
+/**
+ * Integration tests for the Swiss Pairing CLI application
+ *
+ * Purpose:
+ * - Validates end-to-end functionality of the CLI
+ * - Tests file input/output handling
+ * - Verifies telemetry notice behavior
+ * - Ensures consistent behavior between file and direct CLI inputs
+ *
+ * Key functionality tested:
+ * - Success and failure cases via fixtures
+ * - File parsing for supported formats
+ * - CLI argument handling
+ * - Environment configuration
+ * - Telemetry notice display and persistence
+ *
+ * Error handling strategy:
+ * - Validates both success and error cases
+ * - Captures and verifies CLI output/errors
+ * - Ensures proper error messages are displayed
+ *
+ * Implementation notes:
+ * - Uses fixture-based testing approach
+ * - Caches file reads and CLI results for performance
+ * - Manages temporary config directories for telemetry tests
+ */
+
 const execAsync = util.promisify(exec);
 const fixturesDir = path.join(__dirname, 'fixtures');
 
+/**
+ * Cache for file contents to avoid repeated disk reads
+ * Key: File path
+ * Value: File contents as string
+ */
 const fileCache: Record<string, string> = {};
+
+/**
+ * Cache for CLI execution results to improve test performance
+ * Key: CLI arguments string
+ * Value: Execution result
+ */
 const cliResultCache = new Map<string, CLIResult>();
 
+/**
+ * Extended Error type for child_process.exec errors
+ *
+ * @property stdout - Standard output from the failed command
+ * @property stderr - Standard error from the failed command
+ * @property code - Process exit code
+ */
 interface ExecError extends Error {
   readonly stdout: string;
   readonly stderr: string;
   readonly code: number;
 }
 
+/**
+ * Represents the result of a CLI command execution
+ */
 interface CLIResult {
+  /** Whether the command succeeded */
   readonly success: boolean;
+  /** Output message or error details */
   readonly message: string;
 }
 
+/**
+ * Type guard to validate exec errors
+ * @param error - Unknown error to check
+ * @returns True if error matches ExecError shape
+ */
 function isExecError(error: unknown): error is ExecError {
   return (
     typeof error === 'object' && error !== null && 'stderr' in error && 'stdout' in error && 'code' in error
   );
 }
 
+/**
+ * Reads and caches file content
+ * @param filePath - Path to file to read
+ * @returns File content as string
+ */
 async function readFileContent(filePath: string): Promise<string> {
   if (!fileCache[filePath]) {
     // eslint-disable-next-line functional/immutable-data
@@ -41,6 +101,14 @@ async function readFileContent(filePath: string): Promise<string> {
   return fileCache[filePath];
 }
 
+/**
+ * Executes the CLI with given arguments
+ * @param args - CLI arguments string
+ * @param env - Optional environment variables
+ * @param useCache - Whether to cache results
+ * @returns CLI execution result
+ * @throws If execution fails in an unexpected way
+ */
 async function runCLI({
   args,
   env = process.env,
@@ -76,6 +144,11 @@ async function runCLI({
   }
 }
 
+/**
+ * Validates CLI execution results against expectations
+ * @param result - CLI execution result
+ * @param isErrorCase - Whether this is testing an error case
+ */
 function validateCLIResult({
   result,
   isErrorCase,
@@ -91,6 +164,12 @@ function validateCLIResult({
   expect(result).toMatchSnapshot();
 }
 
+/**
+ * Validates a test fixture file
+ * @param fileName - Fixture file name
+ * @param isErrorCase - Whether this tests an error case
+ * @param allFixtures - List of all available fixtures
+ */
 async function validateFixture({
   fileName,
   isErrorCase,
