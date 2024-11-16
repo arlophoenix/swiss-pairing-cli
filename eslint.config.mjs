@@ -12,6 +12,8 @@ const jsConfig = {
     functional: eslintPluginFunctional,
   },
   rules: {
+    // Ban console usage in source code
+    'no-console': 'error',
     // Functional style rules
     'functional/functional-parameters': ['error', { allowRestParameter: true, enforceParameterCount: false }],
     'functional/no-expression-statement': 'off',
@@ -51,6 +53,13 @@ const tsConfig = tseslint.config({
     ],
   },
 });
+
+const scriptsConfig = {
+  files: ['scripts/**/*.ts'],
+  rules: {
+    'no-console': 'off',
+  },
+};
 
 const testConfig = {
   files: ['**/*.test.ts', '**/__tests__/**/*.ts'],
@@ -97,4 +106,4 @@ const testConfig = {
   },
 };
 
-export default [jsConfig, ...tsConfig, testConfig];
+export default [jsConfig, ...tsConfig, scriptsConfig, testConfig];

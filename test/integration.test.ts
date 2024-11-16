@@ -158,6 +158,7 @@ function validateCLIResult({
 }): void {
   // print the output for unexpected errors
   if (result.success === isErrorCase) {
+    // eslint-disable-next-line no-console
     console.log(result.message);
   }
   expect(result.success).toBe(!isErrorCase);

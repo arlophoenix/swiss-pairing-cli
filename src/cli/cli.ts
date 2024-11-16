@@ -98,9 +98,11 @@ export function createCLI(): Command {
     .action(async (options: UnvalidatedCLIOptions) => {
       const { output, exitCode } = await handleCLIAction(options);
       if (exitCode > 0) {
+        // eslint-disable-next-line no-console
         console.error(output);
         process.exit(exitCode);
       }
+      // eslint-disable-next-line no-console
       console.log(output);
     });
 
