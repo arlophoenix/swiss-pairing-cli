@@ -53,9 +53,6 @@ async function updateReadmeExamples() {
   readme = readme.replace(
     /<!-- CLI_EXAMPLES_START -->[\s\S]*<!-- CLI_EXAMPLES_END -->/,
     `<!-- CLI_EXAMPLES_START -->
-
-**Examples:**
-
 ${outputs.join('\n')}
 <!-- CLI_EXAMPLES_END -->`
   );
