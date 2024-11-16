@@ -4,6 +4,8 @@
 
 ## Functionality
 
+- Test on Windows
+
 ## Code Quality
 
 - prevent pushing directly to remote master branch
