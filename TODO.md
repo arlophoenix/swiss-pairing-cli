@@ -24,6 +24,7 @@
 
 ## Additional Tooling to Consider
 
+- those nifty repo tags that show passing tests, coverage, depenencies, etc.
 - [ ] Commitlint for enforcing consistent commit messages (works well with 📦 Semantic Release)
 - [ ] Semantic Release for automating version management and package publishing
 
