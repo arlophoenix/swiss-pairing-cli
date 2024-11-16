@@ -7,21 +7,26 @@ import { detectEnvironment, generateDistinctID, shouldEnableTelemetryClient } fr
 import type { SpyInstance } from 'jest-mock';
 import fs from 'fs';
 import os from 'os';
+import path from 'path';
 
 jest.mock('../utils/utils.js');
+jest.mock('fs');
+jest.mock('os');
+jest.mock('path');
 
 describe('telemetryUtils', () => {
+  const originalEnv = { ...process.env };
+
+  afterEach(() => {
+    process.env = originalEnv;
+    jest.resetAllMocks();
+  });
+
   describe('detectEnvironment', () => {
-    const originalEnv = { ...process.env };
     let mockDetectExecutionContext: SpyInstance;
 
     beforeEach(() => {
       mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
-    });
-
-    afterEach(() => {
-      process.env = originalEnv;
-      jest.clearAllMocks();
     });
 
     it('should return "ci" when CI environment variable is set', () => {
@@ -68,12 +73,6 @@ describe('telemetryUtils', () => {
   });
 
   describe('shouldEnableTelemetryClient', () => {
-    const originalEnv = process.env;
-
-    afterEach(() => {
-      process.env = { ...originalEnv };
-    });
-
     describe('environment based rules', () => {
       it('should disable telemetry in CI', () => {
         const result = shouldEnableTelemetryClient({
@@ -123,25 +122,22 @@ describe('telemetryUtils', () => {
   });
 
   describe('generateDistinctID', () => {
-    let originalHomedir: typeof os.homedir;
     let originalPlatform: typeof process.platform;
     let _mockMkdir: SpyInstance<typeof fs.mkdirSync>;
     let mockWriteFile: SpyInstance<typeof fs.writeFileSync>;
     let mockReadFile: SpyInstance<typeof fs.readFileSync>;
+    let mockHomedir: SpyInstance<typeof os.homedir>;
 
     beforeEach(() => {
-      originalHomedir = os.homedir;
       originalPlatform = process.platform;
       _mockMkdir = jest.spyOn(fs, 'mkdirSync');
       mockWriteFile = jest.spyOn(fs, 'writeFileSync');
       mockReadFile = jest.spyOn(fs, 'readFileSync') as jest.MockedFunction<typeof fs.readFileSync>;
-      os.homedir = jest.fn().mockReturnValue('/home/user') as jest.MockedFunction<typeof os.homedir>;
+      mockHomedir = jest.spyOn(os, 'homedir').mockReturnValue('/home/user');
     });
 
     afterEach(() => {
-      os.homedir = originalHomedir;
       Object.defineProperty(process, 'platform', { value: originalPlatform });
-      jest.resetAllMocks();
     });
 
     it('should generate machine hash for npx context', () => {
@@ -162,6 +158,70 @@ describe('telemetryUtils', () => {
       const result = generateDistinctID();
       expect(result).toBe('existing-id');
       expect(mockWriteFile).not.toHaveBeenCalled();
+    });
+
+    describe('Windows platform', () => {
+      let _mockJoin: SpyInstance<typeof path.join>;
+
+      beforeEach(() => {
+        _mockJoin = jest.spyOn(path, 'join').mockImplementation((...paths) => paths.join('\\'));
+
+        Object.defineProperty(process, 'platform', { value: 'win32' });
+      });
+
+      it('should use APPDATA', () => {
+        jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+        process.env.APPDATA = 'C:\\Users\\test\\AppData\\Roaming';
+        mockReadFile.mockReturnValue('existing-id');
+
+        const result = generateDistinctID();
+
+        expect(result).toBe('existing-id');
+        expect(mockReadFile).toHaveBeenCalledWith(
+          expect.stringContaining('C:\\Users\\test\\AppData\\Roaming\\swiss-pairing-cli\\.installation-id'),
+          'utf8'
+        );
+      });
+
+      it('should fallback to homedir/AppData/Roaming when APPDATA not set', () => {
+        jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+        delete process.env.APPDATA;
+        mockReadFile.mockReturnValue('existing-id');
+
+        const result = generateDistinctID();
+
+        expect(result).toBe('existing-id');
+        expect(mockReadFile).toHaveBeenCalledWith(
+          expect.stringContaining('/home/user\\AppData\\Roaming\\swiss-pairing-cli\\.installation-id'),
+          'utf8'
+        );
+      });
+    });
+
+    it('should fallback to random ID when file operations fail', () => {
+      jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+      jest.spyOn(os, 'homedir').mockImplementation(() => {
+        throw new Error('homedir failed');
+      });
+
+      const result = generateDistinctID();
+
+      expect(result).toMatch(/^[a-zA-Z0-9]{10,}$/); // Random ID format
+      expect(mockWriteFile).not.toHaveBeenCalled();
+      expect(mockReadFile).not.toHaveBeenCalled();
+    });
+
+    it('should generate new ID when reading existing ID fails', () => {
+      jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+      mockReadFile.mockImplementation(() => {
+        throw new Error('read failed');
+      });
+
+      const result = generateDistinctID();
+
+      expect(result).toMatch(/^[a-zA-Z0-9]{10,}$/);
+      expect(mockWriteFile).toHaveBeenCalled();
+      expect(mockReadFile).toHaveBeenCalled();
     });
   });
 });
