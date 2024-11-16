@@ -1,10 +1,16 @@
 /**
- * Tournament generation command handling.
- * Implements the core tournament generation workflow:
- * 1. Input validation
- * 2. Round generation
- * 3. Output validation
- * 4. Result formatting
+ * Tournament round generation command.
+ * Core business logic for Swiss tournament pairing:
+ * - Validates tournament configuration
+ * - Generates optimal pairings per round
+ * - Validates generated matches
+ *
+ * Enforces tournament rules:
+ * - Even number of teams required
+ * - No repeat matches
+ * - No intra-squad matches
+ * - Sequential round numbers
+ * - All teams paired each round
  *
  * @module generateRounds
  */
@@ -20,25 +26,34 @@ import { createBidirectionalMap } from '../../utils/utils.js';
 import { generateRounds } from '../../swiss-pairing/swissPairing.js';
 
 /**
- * Handles tournament generation command.
- * Ensures all validation steps pass before
- * attempting to generate pairings.
+ * Generates tournament rounds using Swiss pairing algorithm.
+ * Validates inputs and outputs to ensure tournament rules.
  *
- * Note: Teams must already be in desired pairing order
- * and any BYE team must be added before calling.
+ * @param command - Validated tournament configuration
+ * @returns Generated rounds with pairings or error message
  *
  * @example
  * const result = handleGenerateRounds({
- *   teams: ["Team1", "Team2", "Team3", "BYE"],
+ *   teams: ["Team1", "Team2", "Team3", "Team4"],
  *   numRounds: 2,
  *   startRound: 1,
- *   format: "text-markdown",
- *   squadMap: new Map([["Team1", "A"], ["Team2", "B"]])
+ *   squadMap: new Map([["Team1", "A"], ["Team2", "A"]])
  * });
+ * // Success: {
+ *   success: true,
+ *   value: {
+ *     rounds: [{
+ *       label: "Round 1",
+ *       matches: [["Team1", "Team3"], ["Team2", "Team4"]]
+ *     }]
+ *   }
+ * }
  */
 export function handleGenerateRounds(command: GenerateRoundsCommand): GenerateRoundsCommandOutput {
+  // Convert matches to bidirectional map for lookups
   const playedTeams = createBidirectionalMap(command.matches);
 
+  // Validate input configuration
   const validateInputResult = validateGenerateRoundsInput({
     teams: command.teams,
     numRounds: command.numRounds,
@@ -56,6 +71,7 @@ export function handleGenerateRounds(command: GenerateRoundsCommand): GenerateRo
     };
   }
 
+  // Generate tournament rounds
   const roundsResult = generateRounds({
     teams: command.teams,
     numRounds: command.numRounds,
@@ -74,6 +90,7 @@ export function handleGenerateRounds(command: GenerateRoundsCommand): GenerateRo
     };
   }
 
+  // Validate generated rounds
   const validateOutputResult = validateGenerateRoundsOutput({
     rounds: roundsResult.value.rounds,
     teams: command.teams,

@@ -331,98 +331,53 @@ type Result<T> =
 
 ## Documentation Principles
 
-### File Level
+### Module Level
 
 Each file should start with a TSDoc comment explaining:
 
-- Purpose of the module
-- Key exports and their relationships
-- Any important implementation details
+- Purpose and responsibilities
+- Key exports and relationships
+- Critical paths and constraints
+- Error handling strategy
+- Important implementation details
 
-Example:
+### Function/Method Level
 
-```typescript
-/**
- * Swiss tournament pairing core algorithm.
- *
- * Generates optimal pairings for tournament rounds based on:
- * - Previous match history
- * - Squad constraints
- * - Swiss tournament rules
- *
- * @module swiss-pairing
- */
-```
-
-### Function Level
-
-Functions should have JSDoc comments with:
+Functions should document:
 
 - Clear description of purpose
-- @param descriptions including constraints
-- @returns description
-- @throws if applicable
-- @example for non-obvious usage
+- Process steps for complex operations
+- @param descriptions with constraints
+- @returns description and type
+- @example showing typical usage
+- @example showing error cases (if applicable)
 
-Example:
+### Type Level
 
-```typescript
-/**
- * Generates matches for the next tournament round.
- *
- * @param teams - List of team names ordered by rank
- * @param playedTeams - Map of previous matchups
- * @param squadMap - Optional squad assignments
- * @returns Generated matches or error message
- * @throws Never - Uses Result type for errors
- *
- * @example
- * const result = generateRound({
- *   teams: ['A','B','C','D'],
- *   playedTeams: new Map([['A', new Set(['B'])]])
- * });
- */
-```
+Types/Interfaces should document:
 
-### Interface/Type Level
-
-Interfaces and types should document:
-
-- Purpose of the type
-- Constraints on fields
+- Purpose and usage
+- Field constraints
 - Relationships to other types
+- Valid/invalid states
 
-Example:
+### Command Pattern
 
-```typescript
-/**
- * Represents a tournament team with optional squad assignment.
- * Team names must be unique within a tournament.
- * Teams in the same squad cannot play each other.
- */
-interface Team {
-  /** Unique identifier for the team */
-  readonly name: string;
+Commands additionally require:
 
-  /** Optional squad grouping */
-  readonly squad?: string;
-}
-```
+- Input validation approach
+- Success/failure paths
+- Telemetry considerations
+- Exit codes and output formats
 
 ### Inline Comments
 
-- Use sparingly - prefer self-documenting code
-- Explain complex algorithms
-- Document non-obvious constraints
-- Note edge cases and workarounds
+Use sparingly for:
 
-Example:
-
-```typescript
-// Fisher-Yates shuffle to randomize team order
-// Note: Math.random() is sufficient for this use case
-function shuffle<T>(array: readonly T[]): readonly T[] {
-```
+- Complex algorithms
+- Non-obvious constraints
+- Edge cases
+- Important state changes
 
 ## Telemetry
 

@@ -10,9 +10,6 @@
 
 ## Documentation
 
-- Commands
-  - document command types
-  - document modules and command functions
 - Scripts
   - Add a section on scripts to the readme
   - Document the scripts

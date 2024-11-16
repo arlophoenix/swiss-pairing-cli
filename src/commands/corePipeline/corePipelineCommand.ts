@@ -1,13 +1,15 @@
 /**
- * Handles CLI command processing and tournament generation.
- * Implements the main validation and execution pipeline:
- * 1. Validates CLI options
- * 2. Validates file input (if present)
- * 3. Merges options from both sources
- * 4. Prepares team pairings
- * 5. Generates tournament rounds
+ * Core tournament generation pipeline.
+ * Orchestrates the main tournament generation flow:
+ * 1. Validate input data
+ * 2. Process and normalize teams
+ * 3. Generate tournament rounds
+ * 4. Format output
  *
- * @module corePipelineCommand
+ * Each step returns a Result type for consistent error handling.
+ * Pipeline stops on first error encountered.
+ *
+ * @module corePipeline
  */
 
 import { CorePipelineCommand, CorePipelineCommandOutput } from '../commandTypes.js';
@@ -17,25 +19,34 @@ import { handleGenerateRounds } from '../generateRounds/generateRoundsCommand.js
 import { handleProcessInput } from '../processInput/processInputCommand.js';
 
 /**
- * Processes CLI input through the tournament generation pipeline.
- * Validates input, generates pairings, and formats output.
+ * Executes tournament generation pipeline.
+ * Coordinates validation, generation and formatting.
  *
- * Note: CLI options take precedence over file options when both are provided.
- * Teams must be prepared (ordered, BYE added if needed) before generation.
+ * @param command - Raw input options to process
+ * @returns Formatted tournament output or error message
  *
- * @param cliOptions - Raw options from command line
- * @returns Formatted tournament results or error message
+ * @example
+ * const result = await handleCorePipelineCommand({
+ *   teams: ["Team1", "Team2"],
+ *   numRounds: "2",
+ *   format: "text-markdown"
+ * });
+ * // Success: { success: true, value: "Round 1: Team1 vs Team2..." }
+ * // Failure: { success: false, message: "Invalid input: ..." }
  */
 export async function handleCorePipelineCommand(
   command: CorePipelineCommand
 ): Promise<CorePipelineCommandOutput> {
+  // Validate and normalize input
   const processInputResult = await handleProcessInput(command);
   if (!processInputResult.success) {
     return processInputResult;
   }
 
+  // Extract validated configuration
   const { teams, numRounds, startRound, matches, squadMap, format } = processInputResult.value;
 
+  // Generate tournament rounds
   const roundsResult = handleGenerateRounds({
     teams,
     numRounds,
@@ -47,6 +58,7 @@ export async function handleCorePipelineCommand(
     return roundsResult;
   }
 
+  // Format output in requested format
   const formattedOutput = formatOutput({
     results: roundsResult.value,
     format,
