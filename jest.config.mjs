@@ -21,10 +21,10 @@ export default {
   coverageDirectory: 'coverage',
   coverageThreshold: {
     global: {
-      branches: 90,
+      statements: 100,
+      branches: 100,
       functions: 100,
-      lines: 90,
-      statements: 90,
+      lines: 100,
     },
   },
   // Make sure Jest can find and process test fixture files

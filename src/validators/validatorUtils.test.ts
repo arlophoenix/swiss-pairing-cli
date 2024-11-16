@@ -162,8 +162,16 @@ describe('validatorUtils', () => {
   });
 
   describe('validateNumRounds', () => {
-    it('should return success for valid number of rounds', () => {
+    it('should return success for valid number of rounds - string', () => {
       const result = validateNumRounds({ numRounds: '3', origin: 'CLI' });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toBe(3);
+      }
+    });
+
+    it('should return success for valid number of rounds - number', () => {
+      const result = validateNumRounds({ numRounds: 3, origin: 'CLI' });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.value).toBe(3);

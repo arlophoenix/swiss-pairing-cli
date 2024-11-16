@@ -117,5 +117,30 @@ describe('csvValidator', () => {
         );
       }
     });
+
+    it('should handle empty team names', () => {
+      const csvRows: readonly UnvalidatedCSVRow[] = [
+        { teams: '', squads: 'A' },
+        { teams: 'Bob' },
+        { teams: 'Charlie' },
+      ];
+      const result = validateCSVOptions(csvRows);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value.teams).toEqual([
+          { name: 'Bob', squad: undefined },
+          { name: 'Charlie', squad: undefined },
+        ]);
+      }
+    });
+
+    it('should handle no valid teams', () => {
+      const csvRows: readonly UnvalidatedCSVRow[] = [{ teams: '', 'num-rounds': '3' }, { teams: '' }];
+      const result = validateCSVOptions(csvRows);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value.teams).toBeUndefined();
+      }
+    });
   });
 });
