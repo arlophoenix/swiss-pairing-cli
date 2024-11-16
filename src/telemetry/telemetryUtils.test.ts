@@ -123,17 +123,15 @@ describe('telemetryUtils', () => {
 
   describe('generateDistinctID', () => {
     let originalPlatform: typeof process.platform;
-    let _mockMkdir: SpyInstance<typeof fs.mkdirSync>;
     let mockWriteFile: SpyInstance<typeof fs.writeFileSync>;
     let mockReadFile: SpyInstance<typeof fs.readFileSync>;
-    let mockHomedir: SpyInstance<typeof os.homedir>;
 
     beforeEach(() => {
       originalPlatform = process.platform;
-      _mockMkdir = jest.spyOn(fs, 'mkdirSync');
+      jest.spyOn(fs, 'mkdirSync');
       mockWriteFile = jest.spyOn(fs, 'writeFileSync');
       mockReadFile = jest.spyOn(fs, 'readFileSync') as jest.MockedFunction<typeof fs.readFileSync>;
-      mockHomedir = jest.spyOn(os, 'homedir').mockReturnValue('/home/user');
+      jest.spyOn(os, 'homedir').mockReturnValue('/home/user');
     });
 
     afterEach(() => {
