@@ -4,6 +4,7 @@ import * as utils from '../utils/utils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from '../Config.js';
+import { PostHog } from 'posthog-node';
 import type { SpyInstance } from 'jest-mock';
 import { TelemetryClient } from './TelemetryClient.js';
 import { TelemetryEvent } from './telemetryTypes.js';
@@ -15,6 +16,7 @@ describe('Telemetry', () => {
   let mockshouldEnableTelemetryClient: SpyInstance<typeof telemetryUtils.shouldEnableTelemetryClient>;
   let mockDetectExecutionContext: SpyInstance<typeof utils.detectExecutionContext>;
   let mockDetectEnvironment: SpyInstance<typeof telemetryUtils.detectEnvironment>;
+  let mockProcessOn: SpyInstance<typeof process.on>;
 
   beforeEach(() => {
     // Mock config to enable telemetry
@@ -22,7 +24,7 @@ describe('Telemetry', () => {
     jest.spyOn(Config.prototype, 'getTelemetryOptOut').mockReturnValue(false);
 
     // eslint-disable-next-line max-params
-    jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
+    mockProcessOn = jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
 
     mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
     mockshouldEnableTelemetryClient = jest
@@ -75,6 +77,47 @@ describe('Telemetry', () => {
 
       TelemetryClient.getInstance(); // Second call
       expect(processOnSpy).toHaveBeenCalledTimes(1); // Still only called once
+    });
+
+    it('should handle process exit without error', () => {
+      const instance = TelemetryClient.getInstance();
+      const shutdownSpy = jest
+        .spyOn(instance, 'shutdown')
+        .mockRejectedValueOnce(new Error('Shutdown failed'));
+
+      // Get the exit handler that was registered
+      const exitCall = mockProcessOn.mock.calls.find((call) => call[0] === 'exit');
+      if (!exitCall) {
+        throw new Error('Exit handler was not registered');
+      }
+      const exitHandler = exitCall[1];
+
+      // Call the exit handler
+      exitHandler();
+
+      // Verify shutdown was called
+      expect(shutdownSpy).toHaveBeenCalled();
+      // Verify error was caught silently
+      expect(exitHandler).not.toThrow();
+    });
+  });
+
+  describe('constructor', () => {
+    it('should handle PostHog initialization failure', () => {
+      const mockPostHogConstructor = PostHog.prototype.constructor as jest.Mock;
+      mockPostHogConstructor.mockImplementation(() => {
+        throw new Error('PostHog initialization failed');
+      });
+
+      const client = TelemetryClient.getInstance();
+
+      // Should disable telemetry on error
+      // @ts-expect-error accessing private for test
+      expect(client.enabled).toBe(false);
+      // @ts-expect-error accessing private for test
+      expect(client.postHogClient).toBeNull();
+
+      TelemetryClient.resetForTesting();
     });
   });
 
@@ -197,9 +240,78 @@ describe('Telemetry', () => {
         })
       );
     });
+
+    it('should debounce flushes', () => {
+      const instance = TelemetryClient.getInstance();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mockFlush = jest.spyOn(instance as any, 'flush').mockResolvedValue(undefined);
+
+      // Record multiple events in quick succession
+      instance.record({
+        name: 'command_succeeded',
+        properties: { duration_ms: 100 },
+      });
+      instance.record({
+        name: 'command_succeeded',
+        properties: { duration_ms: 200 },
+      });
+
+      // Only one flush should be scheduled
+      expect(mockFlush).not.toHaveBeenCalled();
+
+      // Fast forward timers
+      jest.advanceTimersByTime(100);
+
+      expect(mockFlush).toHaveBeenCalledTimes(1);
+      // @ts-expect-error accessing private for tests
+      expect(instance.eventQueue).toHaveLength(2);
+    });
+
+    it('should clear flush timeout on shutdown', async () => {
+      const instance = TelemetryClient.getInstance();
+      const mockClearTimeout = jest.spyOn(global, 'clearTimeout');
+
+      instance.record({
+        name: 'command_succeeded',
+        properties: { duration_ms: 100 },
+      });
+
+      await instance.shutdown();
+
+      expect(mockClearTimeout).toHaveBeenCalled();
+    });
+
+    it('should not queue events when telemetry is disabled', () => {
+      // Setup client with telemetry disabled
+      mockshouldEnableTelemetryClient.mockReturnValue(false);
+      const instance = TelemetryClient.getInstance();
+
+      const event: TelemetryEvent = {
+        name: 'command_succeeded',
+        properties: { duration_ms: 100 },
+      };
+
+      instance.record(event);
+
+      // Verify no events were queued
+      // @ts-expect-error accessing private for tests
+      expect(instance.eventQueue).toHaveLength(0);
+      // @ts-expect-error accessing private for tests
+      expect(instance.postHogClient).toBeNull();
+    });
   });
 
   describe('shutdown', () => {
+    beforeEach(() => {
+      // Use fake timers but make them run immediately
+      jest.useFakeTimers({ legacyFakeTimers: true });
+      jest.runAllTimers();
+    });
+
+    afterEach(() => {
+      jest.clearAllTimers();
+    });
+
     it('should flush queued events and close client', async () => {
       const mockShutdown = jest.fn<() => Promise<void>>();
       const mockCapture = jest.fn<() => Promise<void>>().mockResolvedValue();
@@ -247,10 +359,36 @@ describe('Telemetry', () => {
       const instance = TelemetryClient.getInstance();
       // @ts-expect-error accessing private for tests
       // eslint-disable-next-line functional/immutable-data
-      instance.client = { shutdown: mockShutdown };
+      instance.postHogClient = { shutdown: mockShutdown };
 
       // Should not throw
       await expect(instance.shutdown()).resolves.toBeUndefined();
+    });
+
+    it('should handle errors during flush', async () => {
+      const mockCapture = jest.fn<() => Promise<void>>().mockRejectedValue(new Error('Flush failed'));
+      const instance = TelemetryClient.getInstance();
+
+      // Set up mock client
+      // @ts-expect-error accessing private for tests
+      // eslint-disable-next-line functional/immutable-data
+      instance.postHogClient = {
+        capture: mockCapture,
+        shutdown: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
+      };
+
+      instance.record({
+        name: 'command_succeeded',
+        properties: {
+          duration_ms: 123,
+        },
+      });
+
+      await instance.shutdown();
+
+      expect(mockCapture).toHaveBeenCalled();
+      // @ts-expect-error accessing private for tests
+      expect(instance.eventQueue).toHaveLength(0);
     });
   });
 });

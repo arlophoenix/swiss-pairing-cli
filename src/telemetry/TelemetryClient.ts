@@ -107,19 +107,19 @@ export class TelemetryClient {
     try {
       // Send all queued events in parallel
       await Promise.all(
-        this.eventQueue.map((event) => {
+        this.eventQueue.map((event) =>
           this.postHogClient?.capture({
             distinctId: this.distinctId,
             event: event.name,
             properties: event.properties,
-          });
-        })
+          })
+        )
       );
-      // eslint-disable-next-line functional/immutable-data
-      this.eventQueue = [];
     } catch {
       // Silently fail
     } finally {
+      // eslint-disable-next-line functional/immutable-data
+      this.eventQueue = [];
       this.log('Flush complete');
     }
   }
