@@ -351,6 +351,18 @@ npm start -- ...options
   npm run readme:update-usage
   ```
 
+## Debug Logging
+
+This tool supports debug logging using the [debug](https://www.npmjs.com/package/debug) package. To enable debug logs, set the `DEBUG` environment variable:
+
+```bash
+# Enable all debug logs
+export DEBUG=swiss-pairing*
+
+# Enable only telemetry debug logs
+export DEBUG=swiss-pairing:telemetry
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

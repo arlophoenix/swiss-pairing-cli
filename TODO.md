@@ -10,8 +10,7 @@
 
 ## Documentation
 
-- Debug
-  - Add a section on debug logging to the readme
+- Update Architecture principles in readme with new components and responsibilities
 
 ## Project Configuration
 
