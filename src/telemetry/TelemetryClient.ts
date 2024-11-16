@@ -12,6 +12,28 @@ import { PostHog } from 'posthog-node';
 import debug from 'debug';
 import os from 'os';
 
+/**
+ * Core telemetry client for tracking CLI usage.
+ *
+ * Responsibilities:
+ * - Initialize PostHog connection
+ * - Buffer and batch events
+ * - Handle graceful shutdown
+ * - Respect privacy settings
+ *
+ * Events are queued in memory and flushed:
+ * - When queue reaches size limit
+ * - On explicit shutdown
+ * - Before process exit
+ *
+ * Privacy features:
+ * - No PII collected
+ * - Opt-out support
+ * - First-run disabled
+ * - Environment-based rules
+ *
+ * @module TelemetryClient
+ */
 export class TelemetryClient {
   private readonly postHogClient: PostHog | null = null;
   private readonly distinctId!: string;
@@ -25,6 +47,11 @@ export class TelemetryClient {
   // eslint-disable-next-line functional/prefer-readonly-type
   private static instance: TelemetryClient | null = null;
 
+  /**
+   * Get singleton instance.
+   * Creates new instance if none exists.
+   * Registers process exit handler for cleanup.
+   */
   public static getInstance(): TelemetryClient {
     if (!TelemetryClient.instance) {
       // eslint-disable-next-line functional/immutable-data
@@ -68,6 +95,18 @@ export class TelemetryClient {
     }
   }
 
+  /**
+   * Record telemetry event.
+   * Events are queued for batched sending.
+   *
+   * @param event - Event to record
+   *
+   * @example
+   * client.record({
+   *   name: 'command_succeeded',
+   *   properties: { duration_ms: 123 }
+   * });
+   */
   record(event: TelemetryEvent) {
     if (!this.enabled || !this.postHogClient) {
       return;
@@ -124,6 +163,18 @@ export class TelemetryClient {
     }
   }
 
+  /**
+   * Ensure queued events are sent.
+   * Should be called before exit.
+   * Handles errors gracefully.
+   *
+   * @example
+   * try {
+   *   // Run command
+   * } finally {
+   *   await client.shutdown();
+   * }
+   */
   async shutdown(): Promise<void> {
     if (this.flushTimeout) {
       clearTimeout(this.flushTimeout);
