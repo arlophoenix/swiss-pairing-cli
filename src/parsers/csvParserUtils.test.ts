@@ -149,5 +149,40 @@ describe('csvParserUtils', () => {
         })
       );
     });
+
+    it('should trim whitespace and convert headers to lowercase', () => {
+      const mockCSV = ` Teams , Num-Rounds ,  START-ROUND
+      Alice,3,1`;
+      const mockParseResult = createMockPapaParseResult({
+        data: [
+          {
+            teams: 'Alice',
+            'num-rounds': '3',
+            'start-round': '1',
+          },
+        ],
+      });
+
+      // eslint-disable-next-line max-params, @typescript-eslint/no-explicit-any
+      mockPapaParse.mockImplementation((_input: any, config: any) => {
+        // Test the transformHeader function directly
+        const headers = [' Teams ', ' Num-Rounds ', '  START-ROUND  '];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+        const transformedHeaders = headers.map(config.transformHeader);
+        expect(transformedHeaders).toEqual(['teams', 'num-rounds', 'start-round']);
+
+        return mockParseResult;
+      });
+
+      const result = parseCSV(mockCSV);
+
+      expect(result.success).toBe(true);
+      expect(mockPapaParse).toHaveBeenCalledWith(
+        mockCSV,
+        expect.objectContaining({
+          transformHeader: expect.any(Function),
+        })
+      );
+    });
   });
 });
