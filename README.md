@@ -217,27 +217,45 @@ The JSON file should have the following structure:
 
 - Node.js (LTS version recommended)
 - npm
+- [nvm](https://github.com/nvm-sh/nvm) (recommended for version management)
 
 ### Setup
 
 1. Clone the repository:
 
-```bash
+   ```bash
    git clone https://github.com/arlophoenix/swiss-pairing.git
    cd swiss-pairing
-```
+   ```
 
-2. Install dependencies:
+1. Set up Node.js version:
 
-```bash
+   We recommend using nvm to manage Node.js versions. The project includes an .nvmrc file to specify the correct version:
+
+   ```bash
+   nvm install # Install the version specified in .nvmrc
+   nvm use # Switch to the project's Node.js version
+   ```
+
+1. Install dependencies:
+
+   ```bash
    npm install
-```
+   ```
 
-3. Build the project:
+1. Build the project:
 
-```bash
+   ```bash
    npm run build
-```
+   ```
+
+1. Set up environment:
+
+   The project has some environment configuration. Run the setup script:
+
+   ```bash
+   npm run setup-env
+   ```
 
 ### Running Tests
 
@@ -245,12 +263,8 @@ To run the test suite:
 
 ```bash
 npm test
-```
-
-or to run tests on file changes:
-
-```bash
-npm run test:watch
+npm run test:watch // to run tests on file changes
+npm run test:integration // to run integration tests
 ```
 
 ### Linting
@@ -259,19 +273,83 @@ To lint the code:
 
 ```bash
 npm run lint
+npm run lint:fix // to automatically fix linting issues
 ```
 
-To automatically fix linting issues:
-
-```bash
-npm run lint:fix
-```
-
-#### Run locally
+### Run locally
 
 ```bash
 npm start -- ...options
 ```
+
+## Scripts
+
+### Package Scripts
+
+- **Build Scripts**
+
+  - `build`: Compiles TypeScript to JavaScript
+  - `build:clean`: Cleans output directory and rebuilds
+  - `clean`: Removes compiled output files
+
+- **Test Scripts**
+
+  - `test:unit`: Runs unit tests only
+  - `test:integration`: Runs integration tests only
+  - `test:coverage`: Runs all tests with coverage report
+  - `test:watch`: Runs tests in watch mode, excluding integration
+  - `test:perf`: Runs performance tests across tournament sizes
+
+- **Lint and Format Scripts**
+
+  - `lint`: Runs all linting checks (ESLint, Prettier, TODOs)
+  - `lint:fix`: Automatically fixes linting and formatting issues
+  - `eslint`: Checks code style with ESLint
+  - `format`: Checks code formatting with Prettier
+
+- **Development Scripts**
+  - `setup-env`: Sets up development environment configuration
+  - `readme:update-usage`: Updates README CLI usage documentation
+  - `readme:update-examples`: Updates README CLI examples with live output
+  - `todo:report`: Generates Markdown report of TODO comments
+  - `validate`: Runs full validation suite (lint + tests)
+
+### Utility Scripts
+
+- **performance-test.ts**
+  Tests Swiss pairing algorithm performance across various tournament sizes (8 to 1000 teams). Measures execution time and memory usage.
+
+  ```bash
+  npm run test:perf
+  ```
+
+- **setup-env.ts**
+  Creates environment configuration files (.env and .env.test). Requires 1Password CLI with PostHog API key.
+
+  ```bash
+  npm run setup-env
+  ```
+
+- **update-nvmrc.ts**
+  Updates .nvmrc to match Node.js version specified in package.json engines.
+
+  ```bash
+  npm run update-nvmrc
+  ```
+
+- **update-readme-examples.ts**
+  Updates README example section with live CLI output. Ensures examples stay current.
+
+  ```bash
+  npm run readme:update-examples
+  ```
+
+- **update-readme-usage.ts**
+  Updates README usage section with current CLI help text. Keeps documentation in sync.
+
+  ```bash
+  npm run readme:update-usage
+  ```
 
 ## Contributing
 

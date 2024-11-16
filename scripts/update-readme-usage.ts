@@ -1,3 +1,23 @@
+/**
+ * README usage documentation update script.
+ * Updates README.md with current CLI usage information.
+ *
+ * Process:
+ * 1. Gets current CLI help text from Commander
+ * 2. Updates README.md usage section
+ * 3. Preserves surrounding content
+ *
+ * Usage section format:
+ * ```bash
+ * Usage: swiss-pairing [options]
+ * ...CLI help text...
+ * ```
+ *
+ * Ensures usage documentation stays in sync with actual CLI options.
+ *
+ * @module update-readme-usage
+ */
+
 import { readFileSync, writeFileSync } from 'fs';
 
 import { createCLI } from '../src/cli/cli.js';

@@ -1,3 +1,18 @@
+/**
+ * Development environment setup script.
+ * Creates environment config files for development and test.
+ *
+ * Files created:
+ * - .env - Development environment with PostHog API key
+ * - .env.test - Test environment with telemetry disabled
+ *
+ * Requirements:
+ * - 1Password CLI installed and authenticated
+ * - PostHog API key stored in 1Password
+ *
+ * @module setup-env
+ */
+
 import * as path from 'path';
 
 import { DOTENV_DEV, DOTENV_TEST, ENV_POSTHOG_API_KEY, ENV_TELEMETRY_OPT_OUT } from '../src/constants.js';

@@ -1,3 +1,20 @@
+/**
+ * Performance testing script for Swiss pairing algorithm.
+ * Tests scaling behavior with different tournament sizes.
+ *
+ * Tests configurations:
+ * - Team counts: 8 to 1000
+ * - Round counts: 3 to 9
+ * - Multiple iterations per config
+ *
+ * Measures:
+ * - Execution time
+ * - Memory usage
+ * - Scaling behavior
+ *
+ * @module performance-test
+ */
+
 import { generateRounds } from '../src/swiss-pairing/swissPairing.js';
 import { performance } from 'perf_hooks';
 
@@ -47,15 +64,15 @@ function runPerformanceTest({
 }
 
 function runPerformanceTests() {
-  // Test cases
+  // Test cases cover range of tournament sizes
   const testCases = [
-    { teamCount: 8, roundCount: 3 },
-    { teamCount: 16, roundCount: 3 },
-    { teamCount: 16, roundCount: 5 },
-    { teamCount: 32, roundCount: 5 },
-    { teamCount: 64, roundCount: 5 },
-    { teamCount: 100, roundCount: 9 },
-    { teamCount: 1000, roundCount: 9 },
+    { teamCount: 8, roundCount: 3 }, // Small tournament
+    { teamCount: 16, roundCount: 3 }, // Small tournament, same rounds
+    { teamCount: 16, roundCount: 5 }, // Small tournament, more rounds
+    { teamCount: 32, roundCount: 5 }, // Medium tournament
+    { teamCount: 64, roundCount: 5 }, // Medium tournament
+    { teamCount: 100, roundCount: 9 }, // Large tournament
+    { teamCount: 1000, roundCount: 9 }, // Stress test
   ];
 
   testCases.forEach(({ teamCount, roundCount }) => {

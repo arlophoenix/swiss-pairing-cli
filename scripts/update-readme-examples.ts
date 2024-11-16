@@ -1,3 +1,24 @@
+/**
+ * README examples update script.
+ * Updates README.md with live CLI examples.
+ *
+ * Process:
+ * 1. Reads example commands from cliExamples.js
+ * 2. Executes each example using current CLI
+ * 3. Captures command output
+ * 4. Updates README.md examples section
+ *
+ * Example format:
+ * ```bash
+ * >command
+ * output
+ * ```
+ *
+ * Ensures examples stay in sync with actual CLI behavior.
+ *
+ * @module update-readme-examples
+ */
+
 import { readFileSync, writeFileSync } from 'fs';
 
 import { examples } from '../src/cli/cliExamples.js';

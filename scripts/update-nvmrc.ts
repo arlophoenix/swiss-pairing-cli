@@ -1,3 +1,20 @@
+/**
+ * Node version manager configuration script.
+ * Updates .nvmrc to match engine version from package.json.
+ *
+ * Purpose:
+ * - Ensures consistent Node.js version across development environments
+ * - Prevents version mismatches between package.json and .nvmrc
+ * - Simplifies nvm setup with automatic version switching
+ *
+ * Behavior:
+ * - Reads required Node version from package.json engines field
+ * - Strips version modifiers (^, ~, >=)
+ * - Updates .nvmrc only if version differs
+ *
+ * @module update-nvmrc
+ */
+
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -7,11 +24,9 @@ interface PackageJson {
   readonly engines?: {
     readonly node?: string;
   };
-  // Add other properties as needed
 }
 
 // Get the root directory (parent of the scripts folder)
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootPath: string = path.join(__dirname, '..');
@@ -22,7 +37,6 @@ let packageJson: PackageJson;
 
 try {
   const packageJsonStr = fs.readFileSync(packageJsonPath, 'utf8');
-
   packageJson = JSON.parse(packageJsonStr) as PackageJson;
 } catch (error) {
   console.error(`Error reading package.json: ${(error as Error).message}`);
