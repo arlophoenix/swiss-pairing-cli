@@ -63,10 +63,9 @@ export async function handleCLIAction(command: CLIActionCommand): Promise<CLIAct
   const shouldShowTelemetryNotice = notificationManager.shouldShowTelemetryNotice();
 
   const telemetryCommand = new TelemetryCommand({
-    options: command,
     shouldShowTelemetryNotice,
   });
-  telemetryCommand.recordInvocation();
+  telemetryCommand.recordInvocation(command);
 
   let resultOutput: string;
   let exitCode: number;

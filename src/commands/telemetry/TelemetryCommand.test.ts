@@ -28,48 +28,44 @@ describe('TelemetryCommand', () => {
 
   describe('constructor', () => {
     it('should initialize telemetry when shouldShowTelemetryNotice is false', () => {
+      const command = new TelemetryCommand({
+        shouldShowTelemetryNotice: false,
+      });
+
       const options = {
         teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
         numRounds: '3',
         format: 'text-markdown',
       };
-
-      const command = new TelemetryCommand({
-        options,
-        shouldShowTelemetryNotice: false,
-      });
-
-      command.recordInvocation();
+      command.recordInvocation(options);
       expect(mockRecord).toHaveBeenCalled();
     });
 
     it('should disable telemetry when shouldShowTelemetryNotice is true', () => {
+      const command = new TelemetryCommand({
+        shouldShowTelemetryNotice: true,
+      });
+
       const options = {
         teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
         numRounds: '3',
         format: 'text-markdown',
       };
-
-      const command = new TelemetryCommand({
-        options,
-        shouldShowTelemetryNotice: true,
-      });
-
-      command.recordInvocation();
+      command.recordInvocation(options);
       expect(mockRecord).not.toHaveBeenCalled();
     });
   });
 
   describe('recordInvocation', () => {
     it('should record command invocation with parsed options', () => {
+      const command = new TelemetryCommand({ shouldShowTelemetryNotice: false });
       const options = {
         teams: ['Alice [A]', 'Bob [B]', 'Charlie'],
         numRounds: '3',
         format: 'text-markdown',
       };
 
-      const command = new TelemetryCommand({ options, shouldShowTelemetryNotice: false });
-      command.recordInvocation();
+      command.recordInvocation(options);
 
       expect(mockRecord).toHaveBeenCalledWith({
         name: 'command_invoked',
@@ -97,7 +93,6 @@ describe('TelemetryCommand', () => {
   describe('recordSuccess', () => {
     it('should record successful command completion with duration', () => {
       const command = new TelemetryCommand({
-        options: {},
         shouldShowTelemetryNotice: false,
       });
 
@@ -110,16 +105,15 @@ describe('TelemetryCommand', () => {
       expect(mockRecord).toHaveBeenCalledWith({
         name: 'command_succeeded',
         properties: {
-          duration_ms: 500, // 1500 - 1000
+          duration_ms: 500,
         },
       });
     });
   });
 
   describe('recordValidationFailure', () => {
-    it('should record validation failure with error message and duration', () => {
+    it('should record validation failure with duration', () => {
       const command = new TelemetryCommand({
-        options: {},
         shouldShowTelemetryNotice: false,
       });
 
@@ -133,16 +127,15 @@ describe('TelemetryCommand', () => {
         name: 'command_failed',
         properties: {
           error_name: 'validation_failed',
-          duration_ms: 1000, // 2000 - 1000
+          duration_ms: 1000,
         },
       });
     });
   });
 
   describe('recordError', () => {
-    it('should record unexpected error with error details and duration', () => {
+    it('should record unexpected error with details and duration', () => {
       const command = new TelemetryCommand({
-        options: {},
         shouldShowTelemetryNotice: false,
       });
 
@@ -161,7 +154,7 @@ describe('TelemetryCommand', () => {
         properties: {
           error_name: 'TypeError',
           error_message: 'Unexpected error',
-          duration_ms: 2000, // 3000 - 1000
+          duration_ms: 2000,
         },
       });
     });
@@ -170,18 +163,15 @@ describe('TelemetryCommand', () => {
   describe('shutdown', () => {
     it('should call telemetry shutdown', async () => {
       const command = new TelemetryCommand({
-        options: {},
         shouldShowTelemetryNotice: false,
       });
 
       await command.shutdown();
-
       expect(mockShutdown).toHaveBeenCalled();
     });
 
     it('should not call shutdown when telemetry is disabled', async () => {
       const command = new TelemetryCommand({
-        options: {},
         shouldShowTelemetryNotice: true,
       });
 

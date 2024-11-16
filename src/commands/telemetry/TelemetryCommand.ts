@@ -18,12 +18,8 @@
  */
 
 import { TelemetryClient } from '../../telemetry/TelemetryClient.js';
+import { TelemetryCommandInput } from '../commandTypes.js';
 import { UnvalidatedCLIOptions } from '../../types/types.js';
-
-interface TelemetryInvocation {
-  readonly startTime: number;
-  readonly options: UnvalidatedCLIOptions;
-}
 
 /**
  * Records command execution telemetry.
@@ -37,33 +33,21 @@ interface TelemetryInvocation {
  */
 export class TelemetryCommand {
   private readonly telemetryClient: TelemetryClient | undefined;
-  private readonly invocation: TelemetryInvocation;
+  private readonly startTime: number;
 
   /**
    * Initialize telemetry for command execution.
    * Disables telemetry on first run.
    *
-   * @param options - Raw command options for metadata
    * @param shouldShowTelemetryNotice - Whether this is first run
    *
    * @example
    * const command = new TelemetryCommand({
-   *   options: { teams: ["Team1", "Team2"] },
    *   shouldShowTelemetryNotice: false
    * });
    */
-  constructor({
-    options,
-    shouldShowTelemetryNotice,
-  }: {
-    readonly options: UnvalidatedCLIOptions;
-    readonly shouldShowTelemetryNotice: boolean;
-  }) {
-    this.invocation = {
-      startTime: Date.now(),
-      options,
-    };
-    // Disable telemetry on first run
+  constructor({ shouldShowTelemetryNotice }: TelemetryCommandInput) {
+    this.startTime = Date.now();
     if (shouldShowTelemetryNotice) {
       return;
     }
@@ -74,6 +58,8 @@ export class TelemetryCommand {
    * Record command invocation with metadata.
    * Only records non-sensitive data about command structure.
    *
+   * @param options - Command options to analyze
+   *
    * @example
    * command.recordInvocation();
    * // Records:
@@ -81,25 +67,25 @@ export class TelemetryCommand {
    * // - Team/round counts
    * // - Output format
    */
-  recordInvocation() {
+  recordInvocation(options: UnvalidatedCLIOptions) {
     this.telemetryClient?.record({
       name: 'command_invoked',
       properties: {
         args_provided: {
-          file: this.invocation.options.file != undefined,
-          format: this.invocation.options.format != undefined,
-          matches: this.invocation.options.matches != undefined,
-          numRounds: this.invocation.options.numRounds != undefined,
-          order: this.invocation.options.order != undefined,
-          startRound: this.invocation.options.startRound != undefined,
-          teams: this.invocation.options.teams != undefined,
+          file: options.file != undefined,
+          format: options.format != undefined,
+          matches: options.matches != undefined,
+          numRounds: options.numRounds != undefined,
+          order: options.order != undefined,
+          startRound: options.startRound != undefined,
+          teams: options.teams != undefined,
         },
-        teams_count: this.invocation.options.teams?.length,
-        squad_count: this.invocation.options.teams?.filter((t) => t.includes('[') && t.includes(']')).length,
-        rounds_count: Number(this.invocation.options.numRounds),
-        start_round: Number(this.invocation.options.startRound),
-        order: this.invocation.options.order,
-        format: this.invocation.options.format,
+        teams_count: options.teams?.length,
+        squad_count: options.teams?.filter((t) => t.includes('[') && t.includes(']')).length,
+        rounds_count: Number(options.numRounds),
+        start_round: Number(options.startRound),
+        order: options.order,
+        format: options.format,
       },
     });
   }
@@ -116,7 +102,7 @@ export class TelemetryCommand {
     this.telemetryClient?.record({
       name: 'command_succeeded',
       properties: {
-        duration_ms: Date.now() - this.invocation.startTime,
+        duration_ms: Date.now() - this.startTime,
       },
     });
   }
@@ -136,7 +122,7 @@ export class TelemetryCommand {
       name: 'command_failed',
       properties: {
         error_name: 'validation_failed',
-        duration_ms: Date.now() - this.invocation.startTime,
+        duration_ms: Date.now() - this.startTime,
       },
     });
   }
@@ -160,7 +146,7 @@ export class TelemetryCommand {
       properties: {
         error_name: error.name,
         error_message: error.message,
-        duration_ms: Date.now() - this.invocation.startTime,
+        duration_ms: Date.now() - this.startTime,
       },
     });
   }

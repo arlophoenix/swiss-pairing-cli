@@ -95,3 +95,11 @@ export interface GenerateRoundsCommand {
  * Failure: Error message if valid pairings impossible
  */
 export type GenerateRoundsCommandOutput = Result<SwissPairingOutput>;
+
+/**
+ * Input configuration for TelemetryCommand.
+ * Controls telemetry behavior and privacy settings.
+ */
+export interface TelemetryCommandInput {
+  readonly shouldShowTelemetryNotice: boolean;
+}
