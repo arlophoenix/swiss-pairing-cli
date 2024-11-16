@@ -26,7 +26,7 @@ const OP_POSTHOG_API_KEY_NAME = 'Posthog API Key';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function fetchPosthogApiKey(): string {
+function fetchPosthogApiKey(): string | undefined {
   try {
     // Fetch API key from 1Password using their CLI
     const apiKey = execSync(`op item get "${OP_POSTHOG_API_KEY_NAME}" --reveal --field credential`, {
@@ -34,26 +34,25 @@ function fetchPosthogApiKey(): string {
     }).trim();
     return apiKey;
   } catch (error) {
-    console.error('Failed to fetch API key from 1Password:', error);
-    process.exit(1);
+    console.warn('Failed to fetch API key from 1Password:', error);
+    return undefined;
   }
 }
 
 function createDevelopmentEnv() {
   const posthogApiKey = fetchPosthogApiKey();
-  const envContent = `
-# Development environment config
+  const posthogApiKeyEntry = posthogApiKey ? `${ENV_POSTHOG_API_KEY}=${posthogApiKey}` : '';
+  const envContent = `# Development environment config
 NODE_ENV=development
 
 # Telemetry config
-${ENV_POSTHOG_API_KEY}=${posthogApiKey}
+${posthogApiKeyEntry}
 `;
   writeEnvFile({ envFileName: DOTENV_DEV, envContent });
 }
 
 function createTestEnv() {
-  const envContent = `
-# Test environment config
+  const envContent = `# Test environment config
 NODE_ENV=test
 
 # Telemetry config
@@ -80,9 +79,9 @@ function writeEnvFile({
     writeFileSync(envPath, envContent, {
       encoding: 'utf-8',
     });
-    console.log(`Succesfully wrote to ${envPath}`);
+    console.log(`Successfully wrote to ${envPath}`);
   } catch (error) {
-    console.error(`Failed to write env file:`, error);
+    console.error('Failed to write env file:', error);
     process.exit(1);
   }
 }
