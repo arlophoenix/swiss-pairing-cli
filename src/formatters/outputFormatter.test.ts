@@ -245,6 +245,17 @@ Bob vs David`;
       expect(result).toBe(expected);
     });
 
+    it('should format output as plain text', () => {
+      const result = formatOutput({ results: sampleResults, format: 'text-plain' });
+      const expected = `Round 1:
+Alice vs Bob
+Charlie vs David
+Round 2:
+Alice vs Charlie
+Bob vs David`;
+      expect(result).toBe(expected);
+    });
+
     it('should format output as CSV', () => {
       const result = formatOutput({ results: sampleResults, format: 'csv' });
       const expected = `Round,Match,Home Team,Away Team
