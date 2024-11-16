@@ -44,15 +44,15 @@ async function readFileContent(filePath: string): Promise<string> {
 async function runCLI({
   args,
   env = process.env,
-  skipCache = false,
+  useCache = false,
 }: {
   readonly args: string;
   readonly env?: NodeJS.ProcessEnv;
-  readonly skipCache?: boolean;
+  readonly useCache?: boolean;
 }): Promise<CLIResult> {
   const cacheKey = `args:${args}`;
   const cliResult = cliResultCache.get(cacheKey);
-  if (cliResult && !skipCache) {
+  if (useCache && cliResult) {
     return cliResult;
   }
 
@@ -60,14 +60,14 @@ async function runCLI({
     const { stdout, stderr } = await execAsync(`node dist/index.js ${args}`, { env });
     const success = stderr === '';
     const result = { success: success, message: success ? stdout : `Error: ${stderr}\n${stdout}` };
-    if (!skipCache) {
+    if (useCache) {
       cliResultCache.set(cacheKey, result);
     }
     return result;
   } catch (error) {
     if (isExecError(error)) {
       const result = { success: false, message: error.stderr };
-      if (!skipCache) {
+      if (useCache) {
         cliResultCache.set(cacheKey, result);
       }
       return result;
@@ -106,11 +106,11 @@ async function validateFixture({
   // text files contain arguments to be run directly in the CLI
   if (ext === '.txt') {
     const input = await readFileContent(fixturePath);
-    const result = await runCLI({ args: input });
+    const result = await runCLI({ args: input, useCache: true });
     validateCLIResult({ result, isErrorCase });
     // JSON or CSV files are expected to be provided as a file argument
   } else if (SUPPORTED_FILE_TYPES.includes(ext as SupportedFileTypes)) {
-    const result = await runCLI({ args: `--file ${fixturePath}` });
+    const result = await runCLI({ args: `--file ${fixturePath}`, useCache: true });
     validateCLIResult({ result, isErrorCase });
 
     // Compare file input with direct CLI args if both exist
@@ -118,7 +118,7 @@ async function validateFixture({
     if (allFixtures.includes(correspondingTxtFixtureName)) {
       const correspondingTxtFixturePath = path.join(fixturesDir, correspondingTxtFixtureName);
       const inputWithArgs = await readFileContent(correspondingTxtFixturePath);
-      const resultWithArgs = await runCLI({ args: inputWithArgs });
+      const resultWithArgs = await runCLI({ args: inputWithArgs, useCache: true });
       expect(result).toEqual(resultWithArgs);
     }
   } else {
@@ -153,8 +153,6 @@ describe('Integration Tests', () => {
     beforeEach(() => {
       // Set up temp directory for config files
       configDir = path.join(os.tmpdir(), `swiss-pairing-test-${String(Date.now())}`);
-
-      cliResultCache.clear(); // Clear CLI result cache
     });
 
     afterEach(() => {
@@ -176,7 +174,6 @@ describe('Integration Tests', () => {
       const result1 = await runCLI({
         args: '--teams Alice Bob',
         env,
-        skipCache: true,
       });
       expect(result1.success).toBe(true);
       expect(result1.message).toContain('Telemetry Notice');
@@ -185,7 +182,6 @@ describe('Integration Tests', () => {
       const result2 = await runCLI({
         args: '--teams Alice Bob',
         env,
-        skipCache: true,
       });
       expect(result2.success).toBe(true);
       expect(result2.message).not.toContain('Telemetry Notice');
@@ -197,7 +193,7 @@ describe('Integration Tests', () => {
         XDG_CONFIG_HOME: configDir,
         SWISS_PAIRING_TELEMETRY_OPT_OUT: '1',
       };
-      const result = await runCLI({ args: '--teams Alice Bob', env, skipCache: true });
+      const result = await runCLI({ args: '--teams Alice Bob', env });
       expect(result.success).toBe(true);
       expect(result.message).not.toContain('Telemetry Notice');
     });
