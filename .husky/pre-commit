@@ -2,8 +2,6 @@
 set -eo pipefail
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run lint-staged
-
 npm run docs:readme:usage
 git add README.md
 
@@ -28,3 +26,6 @@ if git diff --cached --name-only | grep -qE "package\.json|\.nvmrc"; then
   npm run update-nvmrc
   git add .nvmrc
 fi
+
+# Run this last because it can format the above file changes
+npm run lint-staged
