@@ -2,7 +2,7 @@
 import * as utils from '../utils/utils.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { detectEnvironment, generateDistinctID, shouldEnableTelemetryClient } from './telemetryUtils.js';
+import { generateDistinctID, shouldEnableTelemetryClient } from './telemetryUtils.js';
 
 import type { SpyInstance } from 'jest-mock';
 import fs from 'fs';
@@ -18,59 +18,8 @@ describe('telemetryUtils', () => {
   const originalEnv = { ...process.env };
 
   afterEach(() => {
-     
     process.env = { ...originalEnv };
     jest.resetAllMocks();
-  });
-
-  describe('detectEnvironment', () => {
-    let mockDetectExecutionContext: SpyInstance;
-
-    beforeEach(() => {
-      mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
-    });
-
-    it('should return "ci" when CI environment variable is set', () => {
-      process.env.CI = 'true';
-      expect(detectEnvironment()).toBe('ci');
-      expect(mockDetectExecutionContext).not.toHaveBeenCalled();
-    });
-
-    it('should return "test" when NODE_ENV is test', () => {
-      process.env.NODE_ENV = 'test';
-      expect(detectEnvironment()).toBe('test');
-      expect(mockDetectExecutionContext).not.toHaveBeenCalled();
-    });
-
-    it('should return "development" when NODE_ENV is development', () => {
-      process.env.NODE_ENV = 'development';
-      expect(detectEnvironment()).toBe('development');
-      expect(mockDetectExecutionContext).not.toHaveBeenCalled();
-    });
-
-    describe('when NODE_ENV is not set', () => {
-      beforeEach(() => {
-        delete process.env.NODE_ENV;
-      });
-
-      it('should return "development" for local installs', () => {
-        mockDetectExecutionContext.mockReturnValue('local');
-        expect(detectEnvironment()).toBe('development');
-        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
-      });
-
-      it('should return "production" for global installs', () => {
-        mockDetectExecutionContext.mockReturnValue('global');
-        expect(detectEnvironment()).toBe('production');
-        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
-      });
-
-      it('should return "production" for npx executions', () => {
-        mockDetectExecutionContext.mockReturnValue('npx');
-        expect(detectEnvironment()).toBe('production');
-        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
-      });
-    });
   });
 
   describe('shouldEnableTelemetryClient', () => {

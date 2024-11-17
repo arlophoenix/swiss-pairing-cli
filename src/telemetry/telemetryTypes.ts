@@ -13,7 +13,7 @@
  * @module telemetryTypes
  */
 
-import { UnvalidatedCLIOptions } from '../types/types.js';
+import { Environment, UnvalidatedCLIOptions } from '../types/types.js';
 
 /**
  * System metadata included with all events.
@@ -27,7 +27,7 @@ export interface SystemContext {
   /** Operating system identifier */
   readonly os_name: string;
   /** Runtime environment (test/dev/prod) */
-  readonly environment: 'test' | 'development' | 'ci' | 'production';
+  readonly environment: Environment;
   /** Installation context (npx/global/local) */
   readonly execution_context: 'npx' | 'global' | 'local';
 }

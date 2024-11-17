@@ -115,3 +115,5 @@ export type SupportedFileTypes = (typeof SUPPORTED_FILE_TYPES)[number];
 
 /** Valid CLI argument names */
 export type CLIArg = (typeof ARGS)[number];
+
+export type Environment = 'test' | 'development' | 'ci' | 'production';

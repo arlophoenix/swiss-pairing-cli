@@ -1,4 +1,5 @@
 import { DEBUG_TELEMETRY } from '../constants.js';
+import { Environment } from '../types/types.js';
 import { createHash } from 'crypto';
 import debug from 'debug';
 import { detectExecutionContext } from '../utils/utils.js';
@@ -7,32 +8,6 @@ import os from 'os';
 import path from 'path';
 
 export * from '../utils/utils.js';
-
-/**
- * Determines the current environment context based on environment variables
- * and execution context. Priority order:
- * 1. CI environment
- * 2. Test environment
- * 3. Development environment
- * 4. Local install (development)
- * 5. Global/npx install (production)
- *
- * @returns The detected environment context
- */
-export function detectEnvironment(): 'test' | 'development' | 'ci' | 'production' {
-  if (process.env.CI) {
-    return 'ci';
-  }
-  if (process.env.NODE_ENV === 'test') {
-    return 'test';
-  }
-  if (process.env.NODE_ENV === 'development') {
-    return 'development';
-  }
-  // Global/npx installs are "production", local installs are "development"
-  const context = detectExecutionContext();
-  return context === 'local' ? 'development' : 'production';
-}
 
 /**
  * Determines whether telemetry should be enabled based on environment and configuration.
@@ -49,7 +24,7 @@ export function shouldEnableTelemetryClient({
 }: {
   readonly telemetryOptOut: boolean;
   readonly apiKeyExists: boolean;
-  readonly environment: 'test' | 'development' | 'ci' | 'production';
+  readonly environment: Environment;
 }): boolean {
   const log = debug(DEBUG_TELEMETRY);
   log('shouldEnableTelemetryClient()', {

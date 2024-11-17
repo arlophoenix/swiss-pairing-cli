@@ -1,8 +1,10 @@
+import * as detectExecutionContext from './detectExecutionContext.js';
+
 import { PlayedTeams, ReadonlyPlayedTeams, Team } from '../types/types.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import {
   createBidirectionalMap,
-  detectExecutionContext,
+  detectEnvironment,
   getConfigPath,
   isValidTeamString,
   mutableCloneBidirectionalMap,
@@ -14,10 +16,19 @@ import {
 } from './utils.js';
 
 import { PROJECT_NAME } from '../constants.js';
+import type { SpyInstance } from 'jest-mock';
 import os from 'os';
 import path from 'path';
 
 describe('utils', () => {
+  const originalEnv = { ...process.env };
+
+  afterEach(() => {
+    // eslint-disable-next-line functional/immutable-data
+    process.env = { ...originalEnv };
+    jest.resetAllMocks();
+  });
+
   describe('createBidirectionalMap', () => {
     it('should correctly build played matches Map', () => {
       const matches: readonly (readonly [string, string])[] = [
@@ -283,43 +294,63 @@ describe('utils', () => {
     });
   });
 
-  describe('detectExecutionContext', () => {
-    const originalEnv = { ...process.env };
+  describe('detectEnvironment', () => {
+    let mockDetectExecutionContext: SpyInstance;
 
-    afterEach(() => {
-      // eslint-disable-next-line functional/immutable-data
-      process.env = originalEnv;
+    beforeEach(() => {
+      mockDetectExecutionContext = jest.spyOn(detectExecutionContext, 'detectExecutionContext');
     });
 
-    it('should detect npx execution', () => {
+    it('should return "ci" when CI environment variable is set', () => {
       // eslint-disable-next-line functional/immutable-data
-      process.env.npm_execpath = '/path/to/npx/executable';
-      expect(detectExecutionContext()).toBe('npx');
+      process.env.CI = 'true';
+      expect(detectEnvironment()).toBe('ci');
+      expect(mockDetectExecutionContext).not.toHaveBeenCalled();
     });
 
-    it('should detect global installation', () => {
+    it('should return "test" when NODE_ENV is test', () => {
       // eslint-disable-next-line functional/immutable-data
-      process.env.npm_execpath = '/usr/local/lib/node_modules/npm/bin/npm-cli.js';
-      expect(detectExecutionContext()).toBe('global');
+      process.env.NODE_ENV = 'test';
+      expect(detectEnvironment()).toBe('test');
+      expect(mockDetectExecutionContext).not.toHaveBeenCalled();
     });
 
-    it('should detect local installation', () => {
+    it('should return "development" when NODE_ENV is development', () => {
       // eslint-disable-next-line functional/immutable-data
-      process.env.npm_execpath = '/path/to/project/node_modules/.bin/cli';
-      expect(detectExecutionContext()).toBe('local');
+      process.env.NODE_ENV = 'development';
+      expect(detectEnvironment()).toBe('development');
+      expect(mockDetectExecutionContext).not.toHaveBeenCalled();
     });
 
-    it('should default to local when npm_execpath is undefined', () => {
-      // eslint-disable-next-line functional/immutable-data
-      delete process.env.npm_execpath;
-      expect(detectExecutionContext()).toBe('local');
+    describe('when NODE_ENV is not set', () => {
+      beforeEach(() => {
+        // eslint-disable-next-line functional/immutable-data
+        delete process.env.NODE_ENV;
+      });
+
+      it('should return "development" for local installs', () => {
+        mockDetectExecutionContext.mockReturnValue('local');
+        expect(detectEnvironment()).toBe('development');
+        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return "production" for global installs', () => {
+        mockDetectExecutionContext.mockReturnValue('global');
+        expect(detectEnvironment()).toBe('production');
+        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return "production" for npx executions', () => {
+        mockDetectExecutionContext.mockReturnValue('npx');
+        expect(detectEnvironment()).toBe('production');
+        expect(mockDetectExecutionContext).toHaveBeenCalledTimes(1);
+      });
     });
   });
 
-  describe('utils', () => {
+  describe('getConfigPath', () => {
     const mockHomedir = '/mock/home';
     const originalPlatform = process.platform;
-    const originalEnv = { ...process.env };
 
     beforeEach(() => {
       jest.spyOn(os, 'homedir').mockReturnValue(mockHomedir);
@@ -327,59 +358,54 @@ describe('utils', () => {
     });
 
     afterEach(() => {
-      jest.resetAllMocks();
       // eslint-disable-next-line functional/immutable-data
       Object.defineProperty(process, 'platform', { value: originalPlatform });
-      // eslint-disable-next-line functional/immutable-data
-      process.env = originalEnv;
     });
 
-    describe('getConfigPath', () => {
-      it('should use XDG_CONFIG_HOME if set on Unix', () => {
-        const mockXdgConfig = '/custom/config';
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(process, 'platform', { value: 'darwin' });
-        // eslint-disable-next-line functional/immutable-data
-        process.env.XDG_CONFIG_HOME = mockXdgConfig;
+    it('should use XDG_CONFIG_HOME if set on Unix', () => {
+      const mockXdgConfig = '/custom/config';
+      // eslint-disable-next-line functional/immutable-data
+      Object.defineProperty(process, 'platform', { value: 'darwin' });
+      // eslint-disable-next-line functional/immutable-data
+      process.env.XDG_CONFIG_HOME = mockXdgConfig;
 
-        const result = getConfigPath();
+      const result = getConfigPath();
 
-        expect(result).toBe(`${mockXdgConfig}/${PROJECT_NAME}`);
-      });
+      expect(result).toBe(`${mockXdgConfig}/${PROJECT_NAME}`);
+    });
 
-      it('should use default .config path on Unix when XDG_CONFIG_HOME not set', () => {
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(process, 'platform', { value: 'darwin' });
-        // eslint-disable-next-line functional/immutable-data
-        delete process.env.XDG_CONFIG_HOME;
+    it('should use default .config path on Unix when XDG_CONFIG_HOME not set', () => {
+      // eslint-disable-next-line functional/immutable-data
+      Object.defineProperty(process, 'platform', { value: 'darwin' });
+      // eslint-disable-next-line functional/immutable-data
+      delete process.env.XDG_CONFIG_HOME;
 
-        const result = getConfigPath();
+      const result = getConfigPath();
 
-        expect(result).toBe(`${mockHomedir}/.config/${PROJECT_NAME}`);
-      });
+      expect(result).toBe(`${mockHomedir}/.config/${PROJECT_NAME}`);
+    });
 
-      it('should use APPDATA if set on Windows', () => {
-        const mockAppData = 'C:\\Users\\Test\\AppData\\Roaming';
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(process, 'platform', { value: 'win32' });
-        // eslint-disable-next-line functional/immutable-data
-        process.env.APPDATA = mockAppData;
+    it('should use APPDATA if set on Windows', () => {
+      const mockAppData = 'C:\\Users\\Test\\AppData\\Roaming';
+      // eslint-disable-next-line functional/immutable-data
+      Object.defineProperty(process, 'platform', { value: 'win32' });
+      // eslint-disable-next-line functional/immutable-data
+      process.env.APPDATA = mockAppData;
 
-        const result = getConfigPath();
+      const result = getConfigPath();
 
-        expect(result).toBe(`${mockAppData}/${PROJECT_NAME}`);
-      });
+      expect(result).toBe(`${mockAppData}/${PROJECT_NAME}`);
+    });
 
-      it('should use default AppData path on Windows when APPDATA not set', () => {
-        // eslint-disable-next-line functional/immutable-data
-        Object.defineProperty(process, 'platform', { value: 'win32' });
-        // eslint-disable-next-line functional/immutable-data
-        delete process.env.APPDATA;
+    it('should use default AppData path on Windows when APPDATA not set', () => {
+      // eslint-disable-next-line functional/immutable-data
+      Object.defineProperty(process, 'platform', { value: 'win32' });
+      // eslint-disable-next-line functional/immutable-data
+      delete process.env.APPDATA;
 
-        const result = getConfigPath();
+      const result = getConfigPath();
 
-        expect(result).toBe(`${mockHomedir}/AppData/Roaming/${PROJECT_NAME}`);
-      });
+      expect(result).toBe(`${mockHomedir}/AppData/Roaming/${PROJECT_NAME}`);
     });
   });
 });

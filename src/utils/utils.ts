@@ -9,11 +9,14 @@
  * @module utils
  */
 
-import { Result, Team } from '../types/types.js';
+import { Environment, Result, Team } from '../types/types.js';
 
 import { PROJECT_NAME } from '../constants.js';
+import { detectExecutionContext } from './detectExecutionContext.js';
 import os from 'os';
 import path from 'path';
+
+export * from './detectExecutionContext.js';
 
 export * from './errorUtils.js';
 
@@ -175,28 +178,29 @@ export function stringToTeam(str: string): Team {
 }
 
 /**
- * Detects how the CLI was executed based on npm's execution path.
- * Used to distinguish between different installation contexts.
+ * Determines the current environment context based on environment variables
+ * and execution context. Priority order:
+ * 1. CI environment
+ * 2. Test environment
+ * 3. Development environment
+ * 4. Local install (development)
+ * 5. Global/npx install (production)
  *
- * @returns 'npx' if executed via npx
- *          'global' if installed globally via npm install -g
- *          'local' if installed locally or run from source
- *
- * @example
- * const context = detectExecutionContext();
- * // context === 'npx' when run via: npx swisspair
- * // context === 'global' when installed via: npm install -g swiss-pairing-cli
- * // context === 'local' when run via: npm start
+ * @returns The detected environment context
  */
-export function detectExecutionContext(): 'npx' | 'global' | 'local' {
-  const execPath = process.env.npm_execpath ?? '';
-  if (execPath.includes('npx')) {
-    return 'npx';
+export function detectEnvironment(): Environment {
+  if (process.env.CI) {
+    return 'ci';
   }
-  if (execPath.includes('npm/bin')) {
-    return 'global';
+  if (process.env.NODE_ENV === 'test') {
+    return 'test';
   }
-  return 'local';
+  if (process.env.NODE_ENV === 'development') {
+    return 'development';
+  }
+  // Global/npx installs are "production", local installs are "development"
+  const context = detectExecutionContext();
+  return context === 'local' ? 'development' : 'production';
 }
 
 /**

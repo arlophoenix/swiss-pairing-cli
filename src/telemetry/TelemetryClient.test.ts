@@ -1,3 +1,4 @@
+import * as detectExecutionContext from '../utils/detectExecutionContext.js';
 import * as telemetryUtils from './telemetryUtils.js';
 import * as utils from '../utils/utils.js';
 
@@ -14,7 +15,7 @@ jest.mock('process');
 
 describe('Telemetry', () => {
   let mockshouldEnableTelemetryClient: SpyInstance<typeof telemetryUtils.shouldEnableTelemetryClient>;
-  let mockDetectExecutionContext: SpyInstance<typeof utils.detectExecutionContext>;
+  let mockDetectExecutionContext: SpyInstance<typeof telemetryUtils.detectExecutionContext>;
   let mockDetectEnvironment: SpyInstance<typeof telemetryUtils.detectEnvironment>;
   let mockProcessOn: SpyInstance<typeof process.on>;
 
@@ -26,11 +27,11 @@ describe('Telemetry', () => {
     // eslint-disable-next-line max-params
     mockProcessOn = jest.spyOn(process, 'on').mockImplementation((_event, _listener) => process);
 
-    mockDetectExecutionContext = jest.spyOn(utils, 'detectExecutionContext');
+    mockDetectExecutionContext = jest.spyOn(detectExecutionContext, 'detectExecutionContext');
     mockshouldEnableTelemetryClient = jest
       .spyOn(telemetryUtils, 'shouldEnableTelemetryClient')
       .mockReturnValue(true);
-    mockDetectEnvironment = jest.spyOn(telemetryUtils, 'detectEnvironment').mockReturnValue('development');
+    mockDetectEnvironment = jest.spyOn(utils, 'detectEnvironment').mockReturnValue('development');
   });
 
   afterEach(() => {
