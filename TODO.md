@@ -22,7 +22,6 @@
   - see first attempt in .github/workflows/ci.yml
 - [ ] Implement semantic versioning practices
 - [ ] Implement automated dependency updates (e.g., Dependabot)
-- Add dependency visualization
 
 ## Additional Tooling to Consider
 
