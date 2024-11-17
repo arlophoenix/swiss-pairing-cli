@@ -17,7 +17,7 @@ describe('Config', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    process.env = originalEnv;
+    process.env = { ...originalEnv };
     Config.resetForTesting({ env: null });
   });
 

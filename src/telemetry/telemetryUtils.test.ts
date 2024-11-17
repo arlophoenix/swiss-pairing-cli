@@ -18,7 +18,8 @@ describe('telemetryUtils', () => {
   const originalEnv = { ...process.env };
 
   afterEach(() => {
-    process.env = originalEnv;
+     
+    process.env = { ...originalEnv };
     jest.resetAllMocks();
   });
 
@@ -122,12 +123,11 @@ describe('telemetryUtils', () => {
   });
 
   describe('generateDistinctID', () => {
-    let originalPlatform: typeof process.platform;
+    const originalPlatform = process.platform;
     let mockWriteFile: SpyInstance<typeof fs.writeFileSync>;
     let mockReadFile: SpyInstance<typeof fs.readFileSync>;
 
     beforeEach(() => {
-      originalPlatform = process.platform;
       jest.spyOn(fs, 'mkdirSync');
       mockWriteFile = jest.spyOn(fs, 'writeFileSync');
       mockReadFile = jest.spyOn(fs, 'readFileSync') as jest.MockedFunction<typeof fs.readFileSync>;

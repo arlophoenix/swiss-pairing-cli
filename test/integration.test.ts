@@ -237,7 +237,7 @@ describe('Integration Tests', () => {
 
     afterEach(() => {
       // eslint-disable-next-line functional/immutable-data
-      process.env = originalEnv;
+      process.env = { ...originalEnv };
       if (fs.existsSync(configDir)) {
         fs.rmSync(configDir, { recursive: true });
       }
