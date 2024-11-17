@@ -102,6 +102,8 @@ npx swiss-pairing ...options
 
 - [Architecture Overview](docs/architecture.md) - System design and patterns
 - [Contributing Guide](docs/contributing.md) - Development workflow and standards
+- [Dependencies Detailed](docs/dependencies-detailed.md) - Per file dependencies
+- [Dependencies Overview](docs/dependencies-overview.md) - Per module dependencies
 - [Development Guide](docs/development.md) - Setting up your environment
 - [Documentation Guide](docs/documentation.md) - Writing and maintaining documentation
 - [Scripts Guide](docs/scripts.md) - Scripts and automation

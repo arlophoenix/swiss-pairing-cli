@@ -23,6 +23,8 @@ const configuration = {
           '[.]d[.]ts$',
           '(^|/)tsconfig[.]json$',
           '(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$',
+          'types[.]ts$',
+          'Types[.]ts$',
         ],
       },
       to: {},
