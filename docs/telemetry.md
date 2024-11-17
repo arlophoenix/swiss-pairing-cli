@@ -112,5 +112,5 @@ function shouldEnableTelemetry({ telemetryOptOut, environment }: Config): boolea
 Enable telemetry debug logs:
 
 ```bash
-DEBUG=swiss-pairing:telemetry npm start
+DEBUG=swiss-pairing-cli:telemetry npm start
 ```

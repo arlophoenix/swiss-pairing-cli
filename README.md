@@ -13,13 +13,13 @@ Generate Swiss-style tournament pairings from the command line.
 ## Install
 
 ```bash
-npm install -g swiss-pairing
+npm install -g swiss-pairing-cli
 ```
 
 or you can use npx to run it directly:
 
 ```bash
-npx swiss-pairing ...options
+npx swisspair ...options
 ```
 
 ## Quick Start
@@ -29,7 +29,7 @@ npx swiss-pairing ...options
 1. Generate random pairings for 4 teams with squads
 
    ```bash
-   >swiss-pairing --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]" --order random
+   >swisspair --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]" --order random
    **Round 1**
 
    1. Bob vs Charlie
@@ -39,7 +39,7 @@ npx swiss-pairing ...options
 1. Generate swiss pairings for 4 teams without squads, on round two, with round one matches already played
 
    ```bash
-   >swiss-pairing --teams Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
+   >swisspair --teams Alice Bob Charlie David --start-round 2 --matches "Alice,Bob" "Charlie,David"
    **Round 2**
 
    1. Alice vs Charlie
@@ -49,7 +49,7 @@ npx swiss-pairing ...options
 1. Generate pairings using a CSV file
 
    ```bash
-   >swiss-pairing --file example_data/tournament_round1.csv
+   >swisspair --file example_data/tournament_round1.csv
    **Round 1**
 
    1. Alice vs Bob
@@ -59,7 +59,7 @@ npx swiss-pairing ...options
 1. Generate pairings using a JSON file, overriding the pairing order and the output format
 
    ```bash
-   >swiss-pairing --file example_data/tournament_round2.json --order bottom-up --format json-pretty
+   >swisspair --file example_data/tournament_round2.json --order bottom-up --format json-pretty
    {
      "Round 2": [
        [
@@ -77,23 +77,23 @@ npx swiss-pairing ...options
 1. Generate multiple rounds of random pairings
 
    ```bash
-   >swiss-pairing --teams Alice Bob Charlie David --num-rounds 3 --order random
+   >swisspair --teams Alice Bob Charlie David --num-rounds 3 --order random
    # Matches
 
    **Round 1**
 
-   1. David vs Alice
+   1. Alice vs David
    2. Bob vs Charlie
 
    **Round 2**
 
-   1. David vs Bob
-   2. Alice vs Charlie
+   1. Alice vs Bob
+   2. David vs Charlie
 
    **Round 3**
 
-   1. David vs Charlie
-   2. Alice vs Bob
+   1. Alice vs Charlie
+   2. David vs Bob
    ```
 
 <!-- CLI_EXAMPLES_END -->
@@ -120,7 +120,7 @@ You can use the Swiss Pairing CLI in two ways:
 <!-- CLI_USAGE_START -->
 
 ```bash
-Usage: swiss-pairing [options]
+Usage: swisspair [options]
 
 A CLI tool for generating Swiss-style tournament pairings
 
@@ -155,7 +155,7 @@ Options:
 To use squads, you can specify them after the team names using square brackets. For example:
 
 ```bash
-swiss-pairing --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"
+swisspair --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"
 ```
 
 This will ensure that teams from the same squad (e.g., Alice and Charlie, or Bob and David) are not paired against each other.
@@ -165,13 +165,9 @@ This will ensure that teams from the same squad (e.g., Alice and Charlie, or Bob
 You can provide tournament data using CSV or JSON files. To use a file, use the `-f` or `--file` option:
 
 ```bash
-swiss-pairing --file path/to/your/input.csv
-```
-
-or
-
-```bash
-swiss-pairing --file path/to/your/input.json
+swisspair --file path/to/your/input.csv
+# or
+swisspair --file path/to/your/input.json
 ```
 
 Note: When using an input file, any options provided will be overridden by the matching command-line arguments.

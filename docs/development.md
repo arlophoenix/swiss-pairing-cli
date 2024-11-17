@@ -102,10 +102,10 @@ npm run format
 
    ```bash
    # Enable all debug logs
-   DEBUG=swiss-pairing* npm start
+   DEBUG=swiss-pairing-cli* npm start
 
    # Specific component logs
-   DEBUG=swiss-pairing:telemetry npm start
+   DEBUG=swiss-pairing-cli:telemetry npm start
    ```
 
 ## Project Structure

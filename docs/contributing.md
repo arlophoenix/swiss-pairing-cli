@@ -5,8 +5,8 @@
 1. **Fork & Clone**
 
    ```bash
-   git clone https://github.com/<your-username>/swiss-pairing.git
-   cd swiss-pairing
+   git clone https://github.com/<your-username>/swiss-pairing-cli.git
+   cd swiss-pairing-cli
    ```
 
 1. **Branch**

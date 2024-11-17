@@ -1,5 +1,5 @@
 {
-  "name": "swiss-pairing",
+  "name": "swiss-pairing-cli",
   "version": "1.0.0",
   "description": "A simple CLI tool for generating Swiss pairings",
   "main": "dist/index.js",
@@ -7,10 +7,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arlophoenix/swiss-pairing.git"
+    "url": "https://github.com/arlophoenix/swiss-pairing-cli.git"
   },
   "bin": {
-    "swiss-pairing": "./dist/index.js"
+    "swisspair": "./dist/index.js"
   },
   "files": [
     "dist/"

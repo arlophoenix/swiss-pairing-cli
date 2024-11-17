@@ -115,7 +115,8 @@ export const SUPPORTED_FILE_TYPES = [SUPPORTED_FILE_TYPE_CSV, SUPPORTED_FILE_TYP
 /**
  * Program information and examples for CLI help.
  */
-export const PROGRAM_NAME = 'swiss-pairing';
+export const PROJECT_NAME = 'swiss-pairing-cli';
+export const BIN_NAME = 'swisspair';
 export const EXAMPLE_TEAMS_COUNT = '4';
 export const EXAMPLE_TEAMS = 'Alice Bob Charlie David';
 export const EXAMPLE_TEAMS_WITH_SQUADS = '"Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"';
@@ -123,7 +124,7 @@ export const EXAMPLE_MATCHES = '"Alice,Bob" "Charlie,David"';
 export const EXAMPLE_FILE_CSV = 'example_data/tournament_round1.csv';
 export const EXAMPLE_FILE_JSON = 'example_data/tournament_round2.json';
 
-export const DEBUG_PREFIX = 'swiss-pairing';
+export const DEBUG_PREFIX = PROJECT_NAME;
 export const DEBUG_TELEMETRY = `${DEBUG_PREFIX}:telemetry`;
 
 export const ENV_POSTHOG_API_KEY = 'SWISS_PAIRING_POSTHOG_API_KEY';

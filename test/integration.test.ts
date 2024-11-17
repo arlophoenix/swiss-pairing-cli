@@ -1,6 +1,6 @@
+import { PROJECT_NAME, SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { afterEach, beforeEach, describe, expect, it, test } from '@jest/globals';
 
-import { SUPPORTED_FILE_TYPES } from '../src/constants.js';
 import { SupportedFileTypes } from '../src/types/types.js';
 import { TelemetryClient } from '../src/telemetry/TelemetryClient.js';
 import { exec } from 'child_process';
@@ -232,7 +232,7 @@ describe('Integration Tests', () => {
 
     beforeEach(() => {
       // Set up temp directory for config files
-      configDir = path.join(os.tmpdir(), `swiss-pairing-test-${String(Date.now())}`);
+      configDir = path.join(os.tmpdir(), `${PROJECT_NAME}-test-${String(Date.now())}`);
     });
 
     afterEach(() => {

@@ -11,7 +11,7 @@
 
 import { Result, Team } from '../types/types.js';
 
-import { PROGRAM_NAME } from '../constants.js';
+import { PROJECT_NAME } from '../constants.js';
 import os from 'os';
 import path from 'path';
 
@@ -184,8 +184,8 @@ export function stringToTeam(str: string): Team {
  *
  * @example
  * const context = detectExecutionContext();
- * // context === 'npx' when run via: npx swiss-pairing
- * // context === 'global' when installed via: npm install -g swiss-pairing
+ * // context === 'npx' when run via: npx swisspair
+ * // context === 'global' when installed via: npm install -g swiss-pairing-cli
  * // context === 'local' when run via: npm start
  */
 export function detectExecutionContext(): 'npx' | 'global' | 'local' {
@@ -208,5 +208,5 @@ export function getConfigPath(): string {
       ? (process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'))
       : (process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config'));
 
-  return path.join(configDir, PROGRAM_NAME);
+  return path.join(configDir, PROJECT_NAME);
 }

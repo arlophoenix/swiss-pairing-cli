@@ -5,9 +5,9 @@
  * tournament pairings using Swiss system rules.
  *
  * Environment: Node.js
- * Usage: npx swiss-pairing [options]
+ * Usage: npx swisspair [options]
  *
- * @module swiss-pairing
+ * @module swiss-pairing-cli
  */
 
 import { createCLI } from './cli/cli.js';

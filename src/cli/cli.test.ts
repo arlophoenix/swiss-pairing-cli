@@ -2,6 +2,7 @@ import * as cliActionCommand from '../commands/cliAction/cliActionCommand.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
+import { BIN_NAME } from '../constants.js';
 import type { SpyInstance } from 'jest-mock';
 import { createCLI } from './cli.js';
 
@@ -31,7 +32,7 @@ describe('CLI', () => {
 
   it('should handle successful case', async () => {
     const program = createCLI();
-    await program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice', 'Bob']);
+    await program.parseAsync(['node', BIN_NAME, '--teams', 'Alice', 'Bob']);
 
     expect(cliActionCommand.handleCLIAction).toHaveBeenCalledWith(
       expect.objectContaining({ teams: ['Alice', 'Bob'] })
@@ -48,7 +49,7 @@ describe('CLI', () => {
     });
 
     const program = createCLI();
-    await expect(program.parseAsync(['node', 'swiss-pairing', '--teams', 'Alice'])).rejects.toThrow(
+    await expect(program.parseAsync(['node', BIN_NAME, '--teams', 'Alice'])).rejects.toThrow(
       'Process exited with code 1'
     );
 
@@ -61,7 +62,7 @@ describe('CLI', () => {
     const program = createCLI();
     await program.parseAsync([
       'node',
-      'swiss-pairing',
+      BIN_NAME,
       '--teams',
       'Alice',
       'Bob',

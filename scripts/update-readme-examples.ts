@@ -21,6 +21,7 @@
 
 import { readFileSync, writeFileSync } from 'fs';
 
+import { BIN_NAME } from '../src/constants.js';
 import { examples } from '../src/cli/cliExamples.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -33,7 +34,7 @@ async function updateReadmeExamples() {
   const outputs = await Promise.all(
     examples.map(async ({ description, command }) => {
       try {
-        const output = await execAsync(command.replace('swiss-pairing', 'node dist/index.js'));
+        const output = await execAsync(command.replace(BIN_NAME, 'node dist/index.js'));
         // using triple spaces ie '   ' on purpose to preserve list indentation in markdown code block
         return `1. ${description}
 

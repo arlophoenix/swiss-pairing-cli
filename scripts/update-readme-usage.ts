@@ -9,7 +9,7 @@
  *
  * Usage section format:
  * ```bash
- * Usage: swiss-pairing [options]
+ * Usage: swisspair [options]
  * ...CLI help text...
  * ```
  *

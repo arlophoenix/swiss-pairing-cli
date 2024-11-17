@@ -13,7 +13,7 @@ import {
   teamToString,
 } from './utils.js';
 
-import { PROGRAM_NAME } from '../constants.js';
+import { PROJECT_NAME } from '../constants.js';
 import os from 'os';
 import path from 'path';
 
@@ -344,7 +344,7 @@ describe('utils', () => {
 
         const result = getConfigPath();
 
-        expect(result).toBe(`${mockXdgConfig}/${PROGRAM_NAME}`);
+        expect(result).toBe(`${mockXdgConfig}/${PROJECT_NAME}`);
       });
 
       it('should use default .config path on Unix when XDG_CONFIG_HOME not set', () => {
@@ -355,7 +355,7 @@ describe('utils', () => {
 
         const result = getConfigPath();
 
-        expect(result).toBe(`${mockHomedir}/.config/${PROGRAM_NAME}`);
+        expect(result).toBe(`${mockHomedir}/.config/${PROJECT_NAME}`);
       });
 
       it('should use APPDATA if set on Windows', () => {
@@ -367,7 +367,7 @@ describe('utils', () => {
 
         const result = getConfigPath();
 
-        expect(result).toBe(`${mockAppData}/${PROGRAM_NAME}`);
+        expect(result).toBe(`${mockAppData}/${PROJECT_NAME}`);
       });
 
       it('should use default AppData path on Windows when APPDATA not set', () => {
@@ -378,7 +378,7 @@ describe('utils', () => {
 
         const result = getConfigPath();
 
-        expect(result).toBe(`${mockHomedir}/AppData/Roaming/${PROGRAM_NAME}`);
+        expect(result).toBe(`${mockHomedir}/AppData/Roaming/${PROJECT_NAME}`);
       });
     });
   });

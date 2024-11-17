@@ -23,6 +23,7 @@ import {
   ARG_START_ROUND_SHORT,
   ARG_TEAMS,
   ARG_TEAMS_SHORT,
+  BIN_NAME,
   CLI_OPTION_FORMAT,
   CLI_OPTION_FORMAT_DEFAULT,
   CLI_OPTION_NUM_ROUND_DEFAULT,
@@ -31,7 +32,6 @@ import {
   CLI_OPTION_START_ROUND_DEFAULT,
   EXAMPLE_MATCHES,
   EXAMPLE_TEAMS_WITH_SQUADS,
-  PROGRAM_NAME,
   SUPPORTED_FILE_TYPES,
 } from '../constants.js';
 import { Match, ReadonlyMatch, UnvalidatedCLIOptions } from '../types/types.js';
@@ -53,7 +53,7 @@ export function createCLI(): Command {
   const program = new Command();
 
   program
-    .name(PROGRAM_NAME)
+    .name(BIN_NAME)
     .description('A CLI tool for generating Swiss-style tournament pairings')
     // Teams list with optional squad assignments
     .option(
