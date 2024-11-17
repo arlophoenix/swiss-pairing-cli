@@ -8,6 +8,7 @@
 - npm
 - VS Code (recommended)
 - Git
+- graphviz (`brew install graphviz` on macOS)
 
 ### Initial Setup
 
@@ -28,7 +29,7 @@
 1. **Setup Environment**
 
    ```bash
-   npm run setup-env
+   npm run env:setup
    ```
 
 1. **VS Code Setup**

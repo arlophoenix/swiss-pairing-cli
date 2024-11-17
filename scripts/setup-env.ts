@@ -62,11 +62,6 @@ ${ENV_TELEMETRY_OPT_OUT}=1
   writeEnvFile({ envFileName: DOTENV_TEST, envContent });
 }
 
-function setupEnv() {
-  createDevelopmentEnv();
-  createTestEnv();
-}
-
 function writeEnvFile({
   envFileName,
   envContent,
@@ -86,4 +81,26 @@ function writeEnvFile({
   }
 }
 
-setupEnv();
+function createEnvFiles() {
+  createDevelopmentEnv();
+  createTestEnv();
+}
+
+function checkGraphviz() {
+  try {
+    execSync('dot -V', { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function validateExternalDependencies() {
+  if (!checkGraphviz()) {
+    console.warn('Error: graphviz is required for visualizations but not installed.');
+    console.warn('Install with: brew install graphviz');
+  }
+}
+
+createEnvFiles();
+validateExternalDependencies();

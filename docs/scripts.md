@@ -47,11 +47,11 @@ npm run docs:readme:usage
 
 ### setup-env.ts
 
-Creates environment configuration files.
+Creates environment configuration files and checks external dependencies are installed.
 
 ```typescript
 // Setup development environment
-npm run setup-env
+npm run env:setup
 
 // Outputs
 - .env (development)

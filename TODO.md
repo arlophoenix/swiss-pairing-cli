@@ -17,7 +17,6 @@
 
 ## Project Configuration
 
-- automatically run setup-env script on npm install (or similar lifecycle)
 - Set up CI/CD pipeline (e.g., GitHub Actions)
   - see first attempt in .github/workflows/ci.yml
 - [ ] Implement semantic versioning practices

@@ -13,9 +13,15 @@ if git diff --cached --name-only | grep -qE "src/cliExamples\.ts"; then
   git add README.md
 fi
 
-npm run docs:dependencies:detailed
-npm run docs:dependencies:overview
-git add docs/dependencies*
+# Only run dependency visualization if dot is available
+if command -v dot >/dev/null 2>&1; then
+  npm run docs:dependencies:detailed
+  npm run docs:dependencies:overview
+  git add docs/dependencies*
+else
+  echo "\033[33mWarning: graphviz not found - dependency visualizations were not updated\033[0m"
+  echo "Install with: brew install graphviz"
+fi
 
 # Check if package.json or .nvmrc has changed
 if git diff --cached --name-only | grep -qE "package\.json|\.nvmrc"; then
