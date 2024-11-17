@@ -4,12 +4,12 @@ set -eo pipefail
 
 npm run lint-staged
 
-npm run readme:update-usage
+npm run docs:readme:usage
 git add README.md
 
 # Check if cliExamples.ts has changed
 if git diff --cached --name-only | grep -qE "src/cliExamples\.ts"; then
-  npm run readme:update-examples
+  npm run docs:readme:examples
   git add README.md
 fi
 

@@ -28,10 +28,10 @@ Updates README examples with live CLI output.
 
 ```typescript
 // Update examples
-npm run readme:update-examples
+npm run docs:readme:examples
 
 // Validates examples are current
-npm run readme:update-examples -- --check
+npm run docs:readme:examples -- --check
 ```
 
 ### update-readme-usage.ts
@@ -40,7 +40,7 @@ Updates README CLI usage documentation.
 
 ```typescript
 // Update usage docs
-npm run readme:update-usage
+npm run docs:readme:usage
 ```
 
 ## Environment
@@ -93,7 +93,7 @@ npm run update-nvmrc
 ### Development Scripts
 
 - `setup-env`: Sets up development environment configuration
-- `readme:update-usage`: Updates README CLI usage documentation
-- `readme:update-examples`: Updates README CLI examples with live output
+- `docs:readme:usage`: Updates README CLI usage documentation
+- `docs:readme:examples`: Updates README CLI examples with live output
 - `todo:report`: Generates Markdown report of TODO comments
 - `validate`: Runs full validation suite (lint + tests)

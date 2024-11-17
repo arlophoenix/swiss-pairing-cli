@@ -118,8 +118,8 @@ Team2,Red,
 
 ```bash
 # Update examples
-npm run readme:update-examples
+npm run docs:readme:examples
 
 # Update usage
-npm run readme:update-usage
+npm run docs:readme:usage
 ```
