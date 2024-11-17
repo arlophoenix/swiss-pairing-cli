@@ -2,9 +2,8 @@
 /**
  * Swiss tournament pairing CLI entry point.
  * Provides command line interface for generating
- * tournament pairings using Swiss system rules.
+ * tournament pairings using the Swiss system.
  *
- * Environment: Node.js
  * Usage: npx swisspair [options]
  *
  * @module swiss-pairing-cli
