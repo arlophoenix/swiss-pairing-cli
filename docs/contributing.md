@@ -114,6 +114,14 @@ describe('validateTeams', () => {
 });
 ```
 
+## Dependencies & Architecture
+
+- Check Dependency [Overview](dependencies-overview.html) and [Details](dependencies-detailed.html) for project structure
+- Review dependency rules in [`.dependency-cruiser.mjs`](../.dependency-cruiser.mjs)
+- Pre-push hooks validate dependency rules
+- No circular dependencies allowed
+- Utils must remain independent of domain code
+
 ## Documentation Standards
 
 - Document modules with clear purpose
@@ -152,6 +160,7 @@ describe('validateTeams', () => {
    - [ ] No type errors
    - [ ] No console logs
    - [ ] No commented code
+   - [ ] Dependency rules not violated
 
 3. **Review Response**
 

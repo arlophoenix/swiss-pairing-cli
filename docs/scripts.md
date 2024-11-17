@@ -92,8 +92,11 @@ npm run update-nvmrc
 
 ### Development Scripts
 
-- `setup-env`: Sets up development environment configuration
+- `docs:dependencies:detailed`: Generates per file dependencies visulization
+- `docs:dependencies:overview`: Generates per module dependencies visulization
+- `docs:dependencies:validate`: Validates dependencies rules are satisfied
 - `docs:readme:usage`: Updates README CLI usage documentation
 - `docs:readme:examples`: Updates README CLI examples with live output
+- `setup-env`: Sets up development environment configuration
 - `todo:report`: Generates Markdown report of TODO comments
-- `validate`: Runs full validation suite (lint + tests)
+- `validate`: Runs full validation suite (lint + tests + dependency check)

@@ -13,6 +13,10 @@ if git diff --cached --name-only | grep -qE "src/cliExamples\.ts"; then
   git add README.md
 fi
 
+npm run docs:dependencies:detailed
+npm run docs:dependencies:overview
+git add docs/dependencies*
+
 # Check if package.json or .nvmrc has changed
 if git diff --cached --name-only | grep -qE "package\.json|\.nvmrc"; then
   npm run update-nvmrc

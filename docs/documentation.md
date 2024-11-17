@@ -3,15 +3,17 @@
 ## Project Documentation
 
 ```bash
-README.md            # Project overview & usage
+README.md                         # Project overview & usage
 docs/
-├── architecture.md   # System design & patterns
-├── contributing.md   # Development workflow and standards
-├── development.md    # Setting up your environment
-├── documentaion.md   # This guide
-├── scripts.md        # Scripts & automation
-├── telemetry.md      # Privacy & data collection
-└── testing.md        # Testing approach & practices
+├── architecture.md               # System design & patterns
+├── contributing.md               # Development workflow and standards
+├── dependencies-detailed.html    # Per file dependencies
+├── dependencies-overview.html    # Per module dependencies
+├── development.md                # Setting up your environment
+├── documentaion.md               # This guide
+├── scripts.md                    # Scripts & automation
+├── telemetry.md                  # Privacy & data collection
+└── testing.md                    # Testing approach & practices
 ```
 
 ## Code Documentation

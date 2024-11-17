@@ -127,6 +127,20 @@ File handling abstraction:
 - Validation pipeline integration
 - Format-specific parsing
 
+## Project Dependencies
+
+The project's internal module dependencies are visualized in [Dependencies Overview](dependencies-overview.html); and file dependencies in [Dependencies Detailed](dependencies-detailed.html)
+This visualization is automatically generated and updated on git push using `dependency-cruiser`.
+
+Key dependency rules enforced:
+
+- No circular dependencies
+- Utils cannot depend on domain modules
+- Test files cannot be imported into source
+- Domain modules (swiss-pairing, validators, parsers, formatters) depend only on types and utils
+
+All dependencies are managed via npm. See [package.json](../package.json) for the complete list of runtime and development dependencies.
+
 ## Technology Stack
 
 ### Core
@@ -149,6 +163,7 @@ File handling abstraction:
 - Prettier
 - Strict TypeScript
 - Husky hooks
+- Dependency Cruiser
 
 ### Development
 
