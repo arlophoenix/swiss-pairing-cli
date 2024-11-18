@@ -1,0 +1,34 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    versioning-strategy: 'increase'
+    groups:
+      # Group typescript-eslint updates together
+      typescript-eslint:
+        patterns:
+          - '@typescript-eslint/*'
+      # Group test framework updates
+      testing:
+        patterns:
+          - 'jest'
+          - '@types/jest'
+          - 'ts-jest'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
