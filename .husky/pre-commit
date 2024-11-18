@@ -28,4 +28,4 @@ if git diff --cached --name-only | grep -qE "package\.json|\.nvmrc"; then
 fi
 
 # Run this last because it can format the above file changes
-npm run lint-staged
+npm run lint-staged --no-concurrent
