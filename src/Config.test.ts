@@ -1,4 +1,3 @@
-/* eslint-disable functional/immutable-data */
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from './Config.js';
@@ -17,12 +16,14 @@ describe('Config', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    // eslint-disable-next-line functional/immutable-data
     process.env = { ...originalEnv };
     Config.resetForTesting({ env: null });
   });
 
   describe('initialization', () => {
     it('should initialize with test env when NODE_ENV=test', () => {
+      // eslint-disable-next-line functional/immutable-data
       process.env.NODE_ENV = 'test';
       Config.getInstance();
       expect(dotenv.config).toHaveBeenCalledWith({
@@ -31,6 +32,7 @@ describe('Config', () => {
     });
 
     it('should initialize with dev env otherwise', () => {
+      // eslint-disable-next-line functional/immutable-data
       process.env.NODE_ENV = 'development';
       Config.getInstance();
       expect(dotenv.config).toHaveBeenCalledWith({

@@ -1,4 +1,3 @@
-/* eslint-disable functional/immutable-data */
 import * as utils from '../utils/utils.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
@@ -18,6 +17,7 @@ describe('telemetryUtils', () => {
   const originalEnv = { ...process.env };
 
   afterEach(() => {
+    // eslint-disable-next-line functional/immutable-data
     process.env = { ...originalEnv };
     jest.resetAllMocks();
   });
@@ -84,6 +84,7 @@ describe('telemetryUtils', () => {
     });
 
     afterEach(() => {
+      // eslint-disable-next-line functional/immutable-data
       Object.defineProperty(process, 'platform', { value: originalPlatform });
     });
 
@@ -113,11 +114,13 @@ describe('telemetryUtils', () => {
       beforeEach(() => {
         _mockJoin = jest.spyOn(path, 'join').mockImplementation((...paths) => paths.join('\\'));
 
+        // eslint-disable-next-line functional/immutable-data
         Object.defineProperty(process, 'platform', { value: 'win32' });
       });
 
       it('should use APPDATA', () => {
         jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+        // eslint-disable-next-line functional/immutable-data
         process.env.APPDATA = 'C:\\Users\\test\\AppData\\Roaming';
         mockReadFile.mockReturnValue('existing-id');
 
@@ -132,6 +135,7 @@ describe('telemetryUtils', () => {
 
       it('should fallback to homedir/AppData/Roaming when APPDATA not set', () => {
         jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+        // eslint-disable-next-line functional/immutable-data
         delete process.env.APPDATA;
         mockReadFile.mockReturnValue('existing-id');
 
