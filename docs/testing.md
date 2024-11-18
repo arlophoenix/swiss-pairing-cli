@@ -158,20 +158,8 @@ describe('TelemetryClient', () => {
 
 ## Test Coverage
 
-### Running Coverage
-
-```bash
-# Full coverage
-npm run test:coverage
-
-# Single file
-npm run test:coverage -- path/to/file.ts
-```
-
-### Coverage Requirements
-
-Generally 99%+
-See [jest.config](jest.config.mjs) for details
+- Displayed when running any of the test commands e.g. `npm test`
+- Generally 99%+ requirement; see [jest.config](jest.config.mjs) for specific
 
 ## Test Development
 
@@ -201,7 +189,7 @@ See [jest.config](jest.config.mjs) for details
 1. Run tests
 
    ```bash
-   npm test
+   npm test:unit
    ```
 
 ### Testing Guidelines
@@ -228,23 +216,9 @@ See [jest.config](jest.config.mjs) for details
 
 ## Debugging Tests
 
-### VS Code Debug Config
-
-```json
-{
-  "type": "node",
-  "request": "launch",
-  "name": "Debug Current Test",
-  "program": "${workspaceFolder}/node_modules/.bin/jest",
-  "args": ["${fileBasename}"],
-  "console": "integratedTerminal",
-  "internalConsoleOptions": "neverOpen"
-}
-```
-
 ### Debug Techniques
 
 1. Use test.only()
-2. Add console.logs
-3. Use debugger statement
-4. Check test coverage
+1. Use included VS Code debugger statement
+1. Add console.logs
+1. Check test coverage

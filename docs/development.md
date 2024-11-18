@@ -62,11 +62,11 @@ npm test
 # Watch mode
 npm run test:watch
 
-# Coverage
-npm run test:coverage
+# Integration
+npm run test:integration
 
 # Performance tests
-npm run test:perf
+npm run test:performance
 ```
 
 ### Lint
@@ -205,13 +205,7 @@ test/
 1. Run tests
 
    ```bash
-   npm run test:coverage
-   ```
-
-1. Check types
-
-   ```bash
-   npm run build
+   npm test
    ```
 
 ## Troubleshooting

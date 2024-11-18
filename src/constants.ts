@@ -126,6 +126,7 @@ export const EXAMPLE_FILE_JSON = 'example_data/tournament_round2.json';
 
 export const DEBUG_PREFIX = PROJECT_NAME;
 export const DEBUG_TELEMETRY = `${DEBUG_PREFIX}:telemetry`;
+export const DEBUG_PERFORMANCE = `${DEBUG_PREFIX}:performance`;
 
 export const ENV_POSTHOG_API_KEY = 'SWISS_PAIRING_POSTHOG_API_KEY';
 export const ENV_SHOW_TELEMETRY_NOTICE = 'SWISS_PAIRING_SHOW_TELEMETRY_NOTICE';

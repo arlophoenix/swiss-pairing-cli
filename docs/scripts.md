@@ -4,22 +4,6 @@
 
 Development utility scripts for automating common tasks and maintaining project quality.
 
-## Performance Testing
-
-### performance-test.ts
-
-Tests Swiss pairing algorithm performance across tournament sizes.
-
-```typescript
-// Run performance tests
-npm run test:perf
-
-// Output
-Teams: 8, Rounds: 3, Avg Time: 1.23ms
-Teams: 16, Rounds: 3, Avg Time: 2.45ms
-...
-```
-
 ## Documentation
 
 ### update-readme-examples.ts
@@ -79,9 +63,8 @@ npm run update-nvmrc
 
 - `test:unit`: Runs unit tests only
 - `test:integration`: Runs integration tests only
-- `test:coverage`: Runs all tests with coverage report
 - `test:watch`: Runs tests in watch mode, excluding integration
-- `test:perf`: Runs performance tests across tournament sizes
+- `test:performance`: Runs performance tests across tournament sizes
 
 ### Lint and Format Scripts
 

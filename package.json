@@ -31,12 +31,11 @@
     "clean": "rm -rf dist",
     "//-----Test Scripts-----": "",
     "test:env": "NODE_ENV=test sh -c",
-    "test:watch": "npm run test:env 'npm run pretest && jest --watch --testPathIgnorePatterns=integration.test.ts'",
-    "test:unit": "npm run test:env 'npm run pretest && jest --testPathIgnorePatterns=integration.test.ts'",
-    "test:integration": "npm run test:env 'npm run pretest && jest --testPathPattern=integration.test.ts'",
-    "test:integration:update-snapshots": "npm run test:env 'npm run pretest && jest --testPathPattern=integration.test.ts -u'",
-    "test:coverage": "npm run test:env 'npm run pretest && jest --coverage'",
-    "test:perf": "npm run test:env 'npm run pretest && tsx scripts/performance-test.ts'",
+    "test:watch": "npm run test:env 'npm run pretest && jest --watch --testPathIgnorePatterns={integration,performance}.test.ts'",
+    "test:unit": "npm run test:env 'npm run pretest && jest --testPathIgnorePatterns={integration,performance}.test.ts'",
+    "test:integration": "npm run test:env 'npm run pretest && jest integration.test.ts'",
+    "test:integration:update-snapshots": "npm run test:env 'npm run pretest && jest integration.test.ts -u'",
+    "test:performance": "npm run test:env 'npm run pretest && jest performance.test.ts --node-options=\"--expose-gc\"'",
     "//-----Package Hook Scripts-----": "",
     "preinstall": "npm run update-nvmrc && npm run env:setup",
     "prepare": "husky install && npm run build",
@@ -64,7 +63,7 @@
     "todo": "leasot \"$npm_package_config_sourceGlob\"",
     "update-nvmrc": "tsx scripts/update-nvmrc.ts",
     "usage": "npm run start -- --help",
-    "validate": "npm run lint && npm run test:coverage && npm run docs:dependencies:validate"
+    "validate": "npm run lint && npm test && npm run docs:dependencies:validate"
   },
   "lint-staged": {
     "{*.{js,mjs},{scripts,src,test}/**/*.{ts,test.ts}}": "npm run eslint:fix",
