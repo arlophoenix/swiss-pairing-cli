@@ -12,17 +12,7 @@
 
 ## Documentation
 
-- Add a Release Guide
-- Add a changelog
-
 ## Project Configuration
-
-- [ ] Implement semantic versioning practices
-
-## Additional Tooling to Consider
-
-- [ ] Commitlint for enforcing consistent commit messages (works well with 📦 Semantic Release)
-- [ ] Semantic Release for automating version management and package publishing
 
 ## Distribution
 

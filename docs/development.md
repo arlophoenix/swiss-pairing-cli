@@ -208,6 +208,18 @@ test/
    npm test
    ```
 
+### Release Process
+
+Releases are handled automatically when merging to _origin/main_. To test the release process:
+
+```bash
+# Dry run
+npx semantic-release --dry-run
+
+# See what version would be released
+npx semantic-release --dry-run --no-ci
+```
+
 ## Troubleshooting
 
 ### Common Issues

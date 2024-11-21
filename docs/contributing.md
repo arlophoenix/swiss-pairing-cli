@@ -12,7 +12,8 @@
 1. **Branch**
 
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/your-feature-name   # For new features
+   git checkout -b fix/bug-description        # For bug fixes
    ```
 
 1. **Install Dependencies**
@@ -30,9 +31,45 @@
    - Format code: `npm run format`
 
 1. **Commit**
+   Follow the Conventional Commits specification:
 
    ```bash
-   git commit -m "feat: add your feature description"
+   # Format: type(scope): description
+
+   git commit -m "feat(core): implement new pairing algorithm"
+   git commit -m "fix(cli): handle odd number of teams"
+   git commit -m "docs: update usage examples"
+   ```
+
+   Types:
+
+   - **feat**: New features
+   - **fix**: Bug fixes
+   - **docs**: Documentation changes
+   - **style**: Code formatting
+   - **refactor**: Code restructuring
+   - **perf**: Performance improvements
+   - **test**: Test changes
+   - **build**: Build system changes
+   - **ci**: CI/CD changes
+   - **chore**: General maintenance
+
+   Scopes:
+
+   - **cli**: Command line interface
+   - **core**: Core algorithm
+   - **parser**: Input parsing
+   - **format**: Output formatting
+   - **test**: Testing infrastructure
+   - **build**: Build configuration
+   - **deps**: Dependencies
+
+   Breaking Changes:
+
+   ```bash
+   git commit -m "feat!(core): rename core API functions
+
+   BREAKING CHANGE: All core functions renamed for consistency"
    ```
 
 1. **Push & PR**
