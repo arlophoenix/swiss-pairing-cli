@@ -17,14 +17,10 @@
 
 ## Project Configuration
 
-- Set up CI/CD pipeline (e.g., GitHub Actions)
-  - see first attempt in .github/workflows/ci.yml
 - [ ] Implement semantic versioning practices
-- [ ] Implement automated dependency updates (e.g., Dependabot)
 
 ## Additional Tooling to Consider
 
-- those nifty repo tags that show passing tests, coverage, depenencies, etc.
 - [ ] Commitlint for enforcing consistent commit messages (works well with 📦 Semantic Release)
 - [ ] Semantic Release for automating version management and package publishing
 
