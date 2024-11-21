@@ -2,6 +2,13 @@
 
 Generate Swiss-style tournament pairings from the command line.
 
+[![CI](https://github.com/arlophoenix/swiss-pairing-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/arlophoenix/swiss-pairing-cli/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/arlophoenix/swiss-pairing-cli/branch/main/graph/badge.svg)](https://codecov.io/gh/arlophoenix/swiss-pairing-cli)
+[![npm](https://img.shields.io/npm/v/swiss-pairing-cli)](https://www.npmjs.com/package/swiss-pairing-cli)
+[![License](https://img.shields.io/github/license/arlophoenix/swiss-pairing-cli)](LICENSE.md)
+[![Dependencies](https://img.shields.io/librariesio/github/arlophoenix/swiss-pairing-cli)](https://libraries.io/github/arlophoenix/swiss-pairing-cli)
+[![Node](https://img.shields.io/node/v/swiss-pairing-cli)](.nvmrc)
+
 ## Features
 
 - Swiss or random pairings
