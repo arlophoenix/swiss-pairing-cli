@@ -158,3 +158,11 @@ export interface AugmentedTelemetryEvent<T extends TelemetryEvent = TelemetryEve
   /** Event properties combined with system context */
   readonly properties: T['properties'] & SystemContext;
 }
+
+/**
+ * Input configuration for TelemetryManager.
+ * Controls telemetry behavior and privacy settings.
+ */
+export interface TelemetryManagerInput {
+  readonly shouldShowTelemetryNotice: boolean;
+}
