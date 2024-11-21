@@ -18,7 +18,7 @@
 
 import { CLIActionCommand, CLIActionCommandOutput } from '../commandTypes.js';
 
-import { TelemetryCommand } from '../telemetry/TelemetryCommand.js';
+import { TelemetryManager } from '../../telemetry/TelemetryManager.js';
 import { TelemetryNotificationManager } from '../../telemetry/TelemetryNotificationManager.js';
 import { handleCorePipelineCommand } from '../corePipeline/corePipelineCommand.js';
 import { normalizeError } from '../../utils/utils.js';
@@ -62,10 +62,10 @@ export async function handleCLIAction(command: CLIActionCommand): Promise<CLIAct
   const notificationManager = new TelemetryNotificationManager();
   const shouldShowTelemetryNotice = notificationManager.shouldShowTelemetryNotice();
 
-  const telemetryCommand = new TelemetryCommand({
+  const telemetryManager = new TelemetryManager({
     shouldShowTelemetryNotice,
   });
-  telemetryCommand.recordInvocation(command);
+  telemetryManager.recordInvocation(command);
 
   let resultOutput: string;
   let exitCode: number;
@@ -74,23 +74,23 @@ export async function handleCLIAction(command: CLIActionCommand): Promise<CLIAct
     const result = await handleCorePipelineCommand(command);
 
     if (result.success) {
-      telemetryCommand.recordSuccess();
+      telemetryManager.recordSuccess();
       resultOutput = result.value;
       exitCode = 0;
     } else {
-      telemetryCommand.recordValidationFailure();
+      telemetryManager.recordValidationFailure();
       resultOutput = result.message;
       exitCode = 1;
     }
   } catch (error) {
     // Handle unexpected errors
     const normalizedError = normalizeError(error);
-    telemetryCommand.recordError(normalizedError);
+    telemetryManager.recordError(normalizedError);
     resultOutput = `${normalizedError.name}: ${normalizedError.message}`;
     exitCode = 1;
   } finally {
     // Ensure telemetry is flushed
-    await telemetryCommand.shutdown();
+    await telemetryManager.shutdown();
   }
 
   let output;

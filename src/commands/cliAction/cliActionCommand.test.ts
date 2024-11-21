@@ -3,7 +3,7 @@ import * as corePipelineCommand from '../corePipeline/corePipelineCommand.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import type { SpyInstance } from 'jest-mock';
-import { TelemetryCommand } from '../telemetry/TelemetryCommand.js';
+import { TelemetryManager } from '../../telemetry/TelemetryManager.js';
 import { TelemetryNotificationManager } from '../../telemetry/TelemetryNotificationManager.js';
 import { handleCLIAction } from './cliActionCommand.js';
 
@@ -14,10 +14,10 @@ describe('handleCLIAction', () => {
   let mockShouldShowTelemetryNotice: SpyInstance<
     typeof TelemetryNotificationManager.prototype.shouldShowTelemetryNotice
   >;
-  let mockRecordInvocation: SpyInstance<typeof TelemetryCommand.prototype.recordInvocation>;
-  let mockRecordSuccess: SpyInstance<typeof TelemetryCommand.prototype.recordSuccess>;
-  let mockRecordValidationFailure: SpyInstance<typeof TelemetryCommand.prototype.recordValidationFailure>;
-  let mockRecordError: SpyInstance<typeof TelemetryCommand.prototype.recordError>;
+  let mockRecordInvocation: SpyInstance<typeof TelemetryManager.prototype.recordInvocation>;
+  let mockRecordSuccess: SpyInstance<typeof TelemetryManager.prototype.recordSuccess>;
+  let mockRecordValidationFailure: SpyInstance<typeof TelemetryManager.prototype.recordValidationFailure>;
+  let mockRecordError: SpyInstance<typeof TelemetryManager.prototype.recordError>;
   let mockShutdown: SpyInstance;
 
   beforeEach(() => {
@@ -29,17 +29,17 @@ describe('handleCLIAction', () => {
       .spyOn(TelemetryNotificationManager.prototype, 'shouldShowTelemetryNotice')
       .mockReturnValue(false);
 
-    mockRecordInvocation = jest.spyOn(TelemetryCommand.prototype, 'recordInvocation').mockReturnValue();
+    mockRecordInvocation = jest.spyOn(TelemetryManager.prototype, 'recordInvocation').mockReturnValue();
 
-    mockRecordSuccess = jest.spyOn(TelemetryCommand.prototype, 'recordSuccess').mockReturnValue();
+    mockRecordSuccess = jest.spyOn(TelemetryManager.prototype, 'recordSuccess').mockReturnValue();
 
     mockRecordValidationFailure = jest
-      .spyOn(TelemetryCommand.prototype, 'recordValidationFailure')
+      .spyOn(TelemetryManager.prototype, 'recordValidationFailure')
       .mockReturnValue();
 
-    mockRecordError = jest.spyOn(TelemetryCommand.prototype, 'recordError').mockReturnValue();
+    mockRecordError = jest.spyOn(TelemetryManager.prototype, 'recordError').mockReturnValue();
 
-    mockShutdown = jest.spyOn(TelemetryCommand.prototype, 'shutdown').mockResolvedValue();
+    mockShutdown = jest.spyOn(TelemetryManager.prototype, 'shutdown').mockResolvedValue();
   });
 
   afterEach(() => {
