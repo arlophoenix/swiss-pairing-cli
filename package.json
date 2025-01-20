@@ -112,6 +112,6 @@
     "dotenv": "^16.4.5",
     "file-type": "^19.5.0",
     "papaparse": "^5.4.1",
-    "posthog-node": "^4.2.1"
+    "posthog-node": "^4.4.0"
   }
 }
