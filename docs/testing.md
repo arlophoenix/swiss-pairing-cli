@@ -195,14 +195,12 @@ describe('TelemetryClient', () => {
 ### Testing Guidelines
 
 1. **Test Organization**
-
    - Group related tests
    - Use clear descriptions
    - Test edge cases
    - Test error paths
 
 1. **Test Quality**
-
    - Make tests readable
    - Test behavior not implementation
    - Avoid test interdependence

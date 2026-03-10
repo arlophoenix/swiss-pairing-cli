@@ -23,7 +23,6 @@
    ```
 
 1. **Development Loop**
-
    - Write tests first
    - Implement feature
    - Run tests: `npm test`
@@ -42,7 +41,6 @@
    ```
 
    Types:
-
    - **feat**: New features
    - **fix**: Bug fixes
    - **docs**: Documentation changes
@@ -55,7 +53,6 @@
    - **chore**: General maintenance
 
    Scopes:
-
    - **cli**: Command line interface
    - **core**: Core algorithm
    - **parser**: Input parsing
@@ -183,14 +180,12 @@ describe('validateTeams', () => {
 ## Pull Request Process
 
 1. **Description**
-
    - Clear purpose and scope
    - Related issues
    - Implementation approach
    - Testing approach
 
 2. **Review Checklist**
-
    - [ ] Tests added/updated
    - [ ] Documentation updated
    - [ ] No linting errors
@@ -200,7 +195,6 @@ describe('validateTeams', () => {
    - [ ] Dependency rules not violated
 
 3. **Review Response**
-
    - Address all comments
    - Request re-review
    - Update PR description

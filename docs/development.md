@@ -225,13 +225,11 @@ npx semantic-release --dry-run --no-ci
 ### Common Issues
 
 1. **Build Errors**
-
    - Check TypeScript version
    - Clear build cache: `npm run clean`
    - Check for type errors: `tsc --noEmit`
 
 1. **Test Failures**
-
    - Run specific test: `npm test -- -t "test name"`
    - Check test environment
    - Debug with VS Code
