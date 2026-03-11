@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Node.js 20 (LTS)
+- Node.js 22 (LTS)
 - npm
 - VS Code (recommended)
 - Git
@@ -45,9 +45,6 @@
 ```bash
 # Build project
 npm run build
-
-# Watch mode
-npm run build:watch
 
 # Clean build
 npm run build:clean
@@ -227,7 +224,7 @@ npx semantic-release --dry-run --no-ci
 1. **Build Errors**
    - Check TypeScript version
    - Clear build cache: `npm run clean`
-   - Check for type errors: `npx tsc -p tsconfig.src.json --noEmit`
+   - Check for type errors: `npm run typecheck`
 
 1. **Test Failures**
    - Run specific test: `npm test -- -t "test name"`

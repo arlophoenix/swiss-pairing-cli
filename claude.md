@@ -5,15 +5,16 @@ A CLI tool for generating Swiss-style tournament pairings. Installed globally vi
 ## Tech Stack
 
 - **Language**: TypeScript 5.6, strict mode, ESM modules (`"type": "module"`)
-- **Runtime**: Node.js 20 (see `.nvmrc`)
+- **Runtime**: Node.js 22 (see `.nvmrc`)
 - **CLI Framework**: Commander.js
 - **Testing**: Jest with ts-jest (ESM preset)
 - **Linting**: ESLint (flat config) + Prettier
-- **Build**: `tsc` (output to `dist/`)
+- **Build**: `tsc -p tsconfig.src.json` (output to `dist/`)
 
 ## Key Commands
 
 - `npm run build` — Compile TypeScript to `dist/` (`tsc -p tsconfig.src.json`)
+- `npm run typecheck` — Type-check without emitting (fast, no dist output)
 - `npm run test:unit` — Run unit tests (excludes integration/performance)
 - `npm run test:integration` — Run integration tests with snapshot fixtures
 - `npm test` — Run all tests (unit + integration + performance)
@@ -90,6 +91,8 @@ Run `npm run docs:dependencies:validate` to check.
   function generateRounds({ teams, numRounds, squadMap }: TournamentConfig): Result<Rounds>;
   ```
 
+  Exception: built-in array callbacks (`.sort()`, `.map()`, `.filter()`) may use multiple parameters with `// eslint-disable-next-line max-params`.
+
 - **Arrow functions preferred**: `prefer-arrow-callback` and `arrow-body-style` rules enforced.
 
 ### TypeScript
@@ -98,6 +101,7 @@ Run `npm run docs:dependencies:validate` to check.
 - **`as const` assertions** for constant arrays (e.g., `CLI_OPTION_ORDER`, `CLI_OPTION_FORMAT`)
 - Types derived from constants using indexed access types (e.g., `type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number]`)
 - `.js` extensions required in imports (ESM with NodeNext module resolution)
+- **Domain-specific utils**: Each domain has its own `*Utils.ts` co-located with its source (e.g., `corePipelineUtils.ts`, `processInputUtils.ts`). `src/utils/utils.ts` is for truly shared, domain-agnostic helpers only.
 
 ### Naming
 
