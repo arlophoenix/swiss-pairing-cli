@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
 set -eo pipefail
-. "$(dirname -- "$0")/_/husky.sh"
 
 npx --no -- commitlint --edit "$1"
