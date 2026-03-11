@@ -19,7 +19,7 @@
     "access": "public"
   },
   "engines": {
-    "node": "^20.17.0"
+    "node": "^22.22.0"
   },
   "config": {
     "sourceGlob": "{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}"
