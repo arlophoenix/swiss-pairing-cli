@@ -18,7 +18,7 @@ const jsConfig = {
     'functional/functional-parameters': ['error', { allowRestParameter: true, enforceParameterCount: false }],
     'functional/no-expression-statement': 'off',
     'functional/prefer-readonly-type': 'error',
-    'functional/immutable-data': 'error',
+    'functional/immutable-data': ['error', { ignoreMapsAndSets: true }],
     // Prefer arrow functions
     'prefer-arrow-callback': 'error',
     'arrow-body-style': ['error', 'as-needed'],
