@@ -67,6 +67,7 @@ describe('handleProcessInput', () => {
           ['Bob', 'B'],
         ]),
         format: 'text-markdown',
+        order: 'top-down',
       });
     }
 

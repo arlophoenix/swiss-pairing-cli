@@ -14,9 +14,11 @@
 
 import { CorePipelineCommand, CorePipelineCommandOutput } from '../commandTypes.js';
 
+import { Round } from '../../types/types.js';
 import { formatOutput } from '../../formatters/outputFormatter.js';
 import { handleGenerateRounds } from '../generateRounds/generateRoundsCommand.js';
 import { handleProcessInput } from '../processInput/processInputCommand.js';
+import { sortRoundsHighestRankFirst } from './corePipelineUtils.js';
 
 /**
  * Executes tournament generation pipeline.
@@ -44,7 +46,7 @@ export async function handleCorePipelineCommand(
   }
 
   // Extract validated configuration
-  const { teams, numRounds, startRound, matches, squadMap, format } = processInputResult.value;
+  const { teams, numRounds, startRound, matches, squadMap, format, order } = processInputResult.value;
 
   // Generate tournament rounds
   const roundsResult = handleGenerateRounds({
@@ -58,9 +60,15 @@ export async function handleCorePipelineCommand(
     return roundsResult;
   }
 
+  // For bottom-up order, sort matches so highest-ranked game appears first
+  const orderedRounds: readonly Round[] =
+    order === 'bottom-up'
+      ? sortRoundsHighestRankFirst({ rounds: roundsResult.value.rounds, orderedTeams: [...teams].reverse() })
+      : roundsResult.value.rounds;
+
   // Format output in requested format
   const formattedOutput = formatOutput({
-    results: roundsResult.value,
+    results: { ...roundsResult.value, rounds: orderedRounds },
     format,
   });
 

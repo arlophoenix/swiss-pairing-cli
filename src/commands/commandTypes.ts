@@ -13,6 +13,7 @@
  */
 import {
   CLIOptionFormat,
+  CLIOptionOrder,
   ReadonlyMatch,
   Result,
   SwissPairingOutput,
@@ -65,6 +66,7 @@ export type ProcessInputCommandOutput = Result<ProcessInputCommandOutputSuccess>
  */
 export type ProcessInputCommandOutputSuccess = GenerateRoundsCommand & {
   readonly format: CLIOptionFormat;
+  readonly order: CLIOptionOrder;
 };
 
 /**

@@ -13,7 +13,7 @@ A CLI tool for generating Swiss-style tournament pairings. Installed globally vi
 
 ## Key Commands
 
-- `npm run build` — Compile TypeScript to `dist/`
+- `npm run build` — Compile TypeScript to `dist/` (`tsc -p tsconfig.src.json`)
 - `npm run test:unit` — Run unit tests (excludes integration/performance)
 - `npm run test:integration` — Run integration tests with snapshot fixtures
 - `npm test` — Run all tests (unit + integration + performance)
@@ -32,7 +32,7 @@ src/
 ├── cli/              # CLI setup (Commander.js configuration)
 ├── commands/         # Command pattern pipeline
 │   ├── cliAction/    # Entry point, telemetry
-│   ├── corePipeline/ # Orchestrates processing → generation → formatting
+│   ├── corePipeline/ # Orchestrates processing → generation → formatting + output ordering
 │   ├── processInput/ # Input validation and normalization
 │   └── generateRounds/ # Tournament pairing generation
 ├── formatters/       # Output formatting (CSV, JSON, Markdown, plain text)

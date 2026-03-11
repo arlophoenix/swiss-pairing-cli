@@ -227,7 +227,7 @@ npx semantic-release --dry-run --no-ci
 1. **Build Errors**
    - Check TypeScript version
    - Clear build cache: `npm run clean`
-   - Check for type errors: `tsc --noEmit`
+   - Check for type errors: `npx tsc -p tsconfig.src.json --noEmit`
 
 1. **Test Failures**
    - Run specific test: `npm test -- -t "test name"`

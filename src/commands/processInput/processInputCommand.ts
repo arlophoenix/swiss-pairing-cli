@@ -77,6 +77,7 @@ export async function handleProcessInput(command: ProcessInputCommand): Promise<
       matches,
       squadMap,
       format,
+      order,
     },
   };
 }

@@ -61,22 +61,22 @@ exports[`Integration Tests CLI Output: Success Case - all-arguments.csv 1`] = `
   "message": "{
   "Round 3": [
     [
-      "Team4",
-      "Team2"
+      "Team1",
+      "Team3"
     ],
     [
-      "Team3",
-      "Team1"
+      "Team2",
+      "Team4"
     ]
   ],
   "Round 4": [
     [
-      "Team4",
-      "Team1"
+      "Team1",
+      "Team4"
     ],
     [
-      "Team3",
-      "Team2"
+      "Team2",
+      "Team3"
     ]
   ]
 }
@@ -90,22 +90,22 @@ exports[`Integration Tests CLI Output: Success Case - all-arguments.json 1`] = `
   "message": "{
   "Round 3": [
     [
-      "Team4",
-      "Team2"
+      "Team1",
+      "Team3"
     ],
     [
-      "Team3",
-      "Team1"
+      "Team2",
+      "Team4"
     ]
   ],
   "Round 4": [
     [
-      "Team4",
-      "Team1"
+      "Team1",
+      "Team4"
     ],
     [
-      "Team3",
-      "Team2"
+      "Team2",
+      "Team3"
     ]
   ]
 }
@@ -119,22 +119,22 @@ exports[`Integration Tests CLI Output: Success Case - all-arguments.txt 1`] = `
   "message": "{
   "Round 3": [
     [
-      "Team4",
-      "Team2"
+      "Team1",
+      "Team3"
     ],
     [
-      "Team3",
-      "Team1"
+      "Team2",
+      "Team4"
     ]
   ],
   "Round 4": [
     [
-      "Team4",
-      "Team1"
+      "Team1",
+      "Team4"
     ],
     [
-      "Team3",
-      "Team2"
+      "Team2",
+      "Team3"
     ]
   ]
 }
@@ -159,22 +159,22 @@ exports[`Integration Tests CLI Output: Success Case - file-csv.txt 1`] = `
   "message": "{
   "Round 3": [
     [
-      "Team4",
-      "Team2"
+      "Team1",
+      "Team3"
     ],
     [
-      "Team3",
-      "Team1"
+      "Team2",
+      "Team4"
     ]
   ],
   "Round 4": [
     [
-      "Team4",
-      "Team1"
+      "Team1",
+      "Team4"
     ],
     [
-      "Team3",
-      "Team2"
+      "Team2",
+      "Team3"
     ]
   ]
 }
@@ -198,22 +198,22 @@ exports[`Integration Tests CLI Output: Success Case - file-json.txt 1`] = `
   "message": "{
   "Round 3": [
     [
-      "Team4",
-      "Team2"
+      "Team1",
+      "Team3"
     ],
     [
-      "Team3",
-      "Team1"
+      "Team2",
+      "Team4"
     ]
   ],
   "Round 4": [
     [
-      "Team4",
-      "Team1"
+      "Team1",
+      "Team4"
     ],
     [
-      "Team3",
-      "Team2"
+      "Team2",
+      "Team3"
     ]
   ]
 }
@@ -238,15 +238,15 @@ exports[`Integration Tests CLI Output: Success Case - five-teams-three-rounds-st
 
 **Round 3**
 
-1. BYE vs Elvis
-2. David vs Bob
-3. Charlie vs Alice
+1. Alice vs Charlie
+2. Bob vs David
+3. Elvis vs BYE
 
 **Round 4**
 
-1. BYE vs David
-2. Elvis vs Alice
-3. Charlie vs Bob
+1. Alice vs Elvis
+2. Bob vs Charlie
+3. David vs BYE
 ",
   "success": true,
 }
@@ -447,8 +447,8 @@ exports[`Integration Tests CLI Output: Success Case - four-teams-bottom-up.csv 1
 {
   "message": "**Round 1**
 
-1. Team4 vs Team3
-2. Team2 vs Team1
+1. Team1 vs Team2
+2. Team3 vs Team4
 ",
   "success": true,
 }
@@ -458,8 +458,8 @@ exports[`Integration Tests CLI Output: Success Case - four-teams-bottom-up.json 
 {
   "message": "**Round 1**
 
-1. Team4 vs Team3
-2. Team2 vs Team1
+1. Team1 vs Team2
+2. Team3 vs Team4
 ",
   "success": true,
 }
@@ -469,8 +469,8 @@ exports[`Integration Tests CLI Output: Success Case - four-teams-bottom-up.txt 1
 {
   "message": "**Round 1**
 
-1. Team4 vs Team3
-2. Team2 vs Team1
+1. Team1 vs Team2
+2. Team3 vs Team4
 ",
   "success": true,
 }
@@ -513,8 +513,8 @@ exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-bo
 {
   "message": "**Round 1**
 
-1. Team4 vs Team2
-2. Team3 vs Team1
+1. Team1 vs Team3
+2. Team2 vs Team4
 ",
   "success": true,
 }
@@ -524,8 +524,8 @@ exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-bo
 {
   "message": "**Round 1**
 
-1. Team4 vs Team2
-2. Team3 vs Team1
+1. Team1 vs Team3
+2. Team2 vs Team4
 ",
   "success": true,
 }
@@ -535,8 +535,8 @@ exports[`Integration Tests CLI Output: Success Case - four-teams-with-matches-bo
 {
   "message": "**Round 1**
 
-1. Team4 vs Team2
-2. Team3 vs Team1
+1. Team1 vs Team3
+2. Team2 vs Team4
 ",
   "success": true,
 }
@@ -627,12 +627,12 @@ exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified-
 {
   "message": "**Round 6**
 
-1. LCYig vs armydan
-2. Clin vs iso.evil
-3. Colain vs Arlo
-4. GreyGhost vs Nzdaemon
-5. Pauldog vs Morgath
-6. lilme vs Saravock
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
 ",
   "success": true,
 }
@@ -642,12 +642,12 @@ exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified-
 {
   "message": "**Round 6**
 
-1. LCYig vs armydan
-2. Clin vs iso.evil
-3. Colain vs Arlo
-4. GreyGhost vs Nzdaemon
-5. Pauldog vs Morgath
-6. lilme vs Saravock
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
 ",
   "success": true,
 }
@@ -657,12 +657,12 @@ exports[`Integration Tests CLI Output: Success Case - hawbbl24S2R6-1-unmodified-
 {
   "message": "**Round 6**
 
-1. LCYig vs armydan
-2. Clin vs iso.evil
-3. Colain vs Arlo
-4. GreyGhost vs Nzdaemon
-5. Pauldog vs Morgath
-6. lilme vs Saravock
+1. Morgath vs Pauldog
+2. Nzdaemon vs GreyGhost
+3. Saravock vs lilme
+4. Arlo vs Colain
+5. armydan vs LCYig
+6. iso.evil vs Clin
 ",
   "success": true,
 }
@@ -924,8 +924,8 @@ exports[`Integration Tests CLI Output: Success Case - three-teams-bottom-up.csv 
 {
   "message": "**Round 1**
 
-1. BYE vs Team3
-2. Team2 vs Team1
+1. Team1 vs Team2
+2. Team3 vs BYE
 ",
   "success": true,
 }
@@ -935,8 +935,8 @@ exports[`Integration Tests CLI Output: Success Case - three-teams-bottom-up.json
 {
   "message": "**Round 1**
 
-1. BYE vs Team3
-2. Team2 vs Team1
+1. Team1 vs Team2
+2. Team3 vs BYE
 ",
   "success": true,
 }
@@ -946,8 +946,8 @@ exports[`Integration Tests CLI Output: Success Case - three-teams-bottom-up.txt 
 {
   "message": "**Round 1**
 
-1. BYE vs Team3
-2. Team2 vs Team1
+1. Team1 vs Team2
+2. Team3 vs BYE
 ",
   "success": true,
 }
@@ -990,8 +990,8 @@ exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-b
 {
   "message": "**Round 1**
 
-1. BYE vs Team2
-2. Team3 vs Team1
+1. Team1 vs Team3
+2. Team2 vs BYE
 ",
   "success": true,
 }
@@ -1001,8 +1001,8 @@ exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-b
 {
   "message": "**Round 1**
 
-1. BYE vs Team2
-2. Team3 vs Team1
+1. Team1 vs Team3
+2. Team2 vs BYE
 ",
   "success": true,
 }
@@ -1012,8 +1012,8 @@ exports[`Integration Tests CLI Output: Success Case - three-teams-with-matches-b
 {
   "message": "**Round 1**
 
-1. BYE vs Team2
-2. Team3 vs Team1
+1. Team1 vs Team3
+2. Team2 vs BYE
 ",
   "success": true,
 }

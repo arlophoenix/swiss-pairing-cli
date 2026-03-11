@@ -39,8 +39,8 @@ npx swisspair ...options
    >swisspair --teams "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]" --order random
    **Round 1**
 
-   1. Bob vs Charlie
-   2. Alice vs David
+   1. Bob vs David
+   2. Alice vs Charlie
    ```
 
 1. Generate swiss pairings for 4 teams without squads, on round two, with round one matches already played
@@ -70,12 +70,12 @@ npx swisspair ...options
    {
      "Round 2": [
        [
-         "David",
-         "Bob"
+         "Alice",
+         "Charlie"
        ],
        [
-         "Charlie",
-         "Alice"
+         "Bob",
+         "David"
        ]
      ]
    }
@@ -89,18 +89,18 @@ npx swisspair ...options
 
    **Round 1**
 
-   1. Alice vs David
-   2. Bob vs Charlie
+   1. David vs Charlie
+   2. Bob vs Alice
 
    **Round 2**
 
-   1. Alice vs Bob
-   2. David vs Charlie
+   1. David vs Bob
+   2. Charlie vs Alice
 
    **Round 3**
 
-   1. Alice vs Charlie
-   2. David vs Bob
+   1. David vs Alice
+   2. Charlie vs Bob
    ```
 
 <!-- CLI_EXAMPLES_END -->
