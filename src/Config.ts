@@ -25,6 +25,7 @@ export class Config {
     this.env = env;
     dotenv.config({
       path: env.NODE_ENV === 'test' ? DOTENV_TEST : DOTENV_DEV,
+      quiet: true,
     });
   }
 

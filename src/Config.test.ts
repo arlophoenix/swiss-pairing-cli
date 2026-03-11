@@ -28,6 +28,7 @@ describe('Config', () => {
       Config.getInstance();
       expect(dotenv.config).toHaveBeenCalledWith({
         path: '.env.test',
+        quiet: true,
       });
     });
 
@@ -37,6 +38,7 @@ describe('Config', () => {
       Config.getInstance();
       expect(dotenv.config).toHaveBeenCalledWith({
         path: '.env',
+        quiet: true,
       });
     });
 
