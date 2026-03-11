@@ -89,7 +89,7 @@ export function createCLI(): Command {
     .option(
       `-${ARG_MATCHES_SHORT}, --${ARG_MATCHES} <matches...>`,
       `List of pairs of team names that have already played against each other\ne.g. ${EXAMPLE_MATCHES}`,
-      // eslint-disable-next-line max-params, functional/prefer-readonly-type
+      // eslint-disable-next-line max-params, functional/prefer-readonly-type, @typescript-eslint/no-useless-default-assignment
       (value: string, previous: ReadonlyMatch[] = []) => {
         const [team1, team2] = value.split(',');
         return [...previous, [team1, team2] as Match];

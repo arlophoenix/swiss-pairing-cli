@@ -2,13 +2,13 @@ import * as detectExecutionContext from '../utils/detectExecutionContext.js';
 import * as telemetryUtils from './telemetryUtils.js';
 import * as utils from '../utils/utils.js';
 
+import { AugmentedTelemetryEvent, TelemetryEvent } from './telemetryTypes.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from '../Config.js';
 import { PostHog } from 'posthog-node';
 import type { SpyInstance } from 'jest-mock';
 import { TelemetryClient } from './TelemetryClient.js';
-import { TelemetryEvent } from './telemetryTypes.js';
 
 jest.mock('posthog-node');
 jest.mock('process');
@@ -230,8 +230,10 @@ describe('Telemetry', () => {
       expect(mockDetectExecutionContext).toHaveBeenCalled();
       expect(mockDetectEnvironment).toHaveBeenCalled();
 
-      // @ts-expect-error accessing private for tests
-      expect(instance.eventQueue[0].properties).toEqual(
+      // @ts-expect-error accessing private for test
+      const eventQueue: readonly AugmentedTelemetryEvent[] = instance.eventQueue as AugmentedTelemetryEvent;
+      const event: AugmentedTelemetryEvent = eventQueue[0];
+      expect(event.properties).toEqual(
         expect.objectContaining({
           node_version: expect.any(String),
           os_name: expect.any(String),
@@ -245,7 +247,7 @@ describe('Telemetry', () => {
     it('should debounce flushes', () => {
       const instance = TelemetryClient.getInstance();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockFlush = jest.spyOn(instance as any, 'flush').mockResolvedValue(undefined);
+      const mockFlush = jest.spyOn(instance as any, 'flush').mockReturnValue(undefined);
 
       // Record multiple events in quick succession
       instance.record({
@@ -367,7 +369,9 @@ describe('Telemetry', () => {
     });
 
     it('should handle errors during flush', async () => {
-      const mockCapture = jest.fn<() => Promise<void>>().mockRejectedValue(new Error('Flush failed'));
+      const mockCapture = jest.fn<() => void>().mockImplementation(() => {
+        throw new Error('Flush failed');
+      });
       const instance = TelemetryClient.getInstance();
 
       // Set up mock client

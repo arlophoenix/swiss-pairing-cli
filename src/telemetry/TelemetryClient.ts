@@ -134,25 +134,23 @@ export class TelemetryClient {
     }
     // eslint-disable-next-line functional/immutable-data
     this.flushTimeout = setTimeout(() => {
-      void this.flush();
+      this.flush();
     }, 100);
   }
 
-  private async flush(): Promise<void> {
+  private flush(): void {
     if (this.postHogClient === null || this.eventQueue.length === 0) {
       return;
     }
     this.log('Flushing %d events', this.eventQueue.length);
     try {
       // Send all queued events in parallel
-      await Promise.all(
-        this.eventQueue.map((event) =>
-          this.postHogClient?.capture({
-            distinctId: this.distinctId,
-            event: event.name,
-            properties: event.properties,
-          })
-        )
+      this.eventQueue.map((event) =>
+        this.postHogClient?.capture({
+          distinctId: this.distinctId,
+          event: event.name,
+          properties: event.properties,
+        })
       );
     } catch {
       // Silently fail
@@ -181,7 +179,7 @@ export class TelemetryClient {
     }
 
     // Final attempt to flush any queued events
-    await this.flush();
+    this.flush();
 
     if (this.postHogClient) {
       try {

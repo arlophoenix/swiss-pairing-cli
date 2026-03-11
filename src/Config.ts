@@ -15,10 +15,9 @@ export class Config {
   private readonly env: NodeJS.ProcessEnv;
 
   public static getInstance(): Config {
-    if (!Config.instance) {
-      // eslint-disable-next-line functional/immutable-data
-      Config.instance = new Config();
-    }
+    // eslint-disable-next-line functional/immutable-data
+    Config.instance ??= new Config();
+
     return Config.instance;
   }
 

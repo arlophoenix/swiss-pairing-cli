@@ -33,7 +33,8 @@ const tsConfig = tseslint.config({
   files: ['**/*.ts'],
   languageOptions: {
     parserOptions: {
-      project: ['./tsconfig.json', './tsconfig.test.json'],
+      project: ['./tsconfig.src.json', './tsconfig.test.json'],
+      tsconfigRootDir: import.meta.dirname,
     },
   },
   // Disabled due to too many false positives

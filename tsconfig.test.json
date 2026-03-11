@@ -1,9 +1,17 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "noEmit": true,
     "rootDir": ".",
     "types": ["node"]
   },
-  "include": ["src/**/*", "scripts/**/*", "test/**/*"],
+  "references": [{ "path": "./tsconfig.src.json" }],
+  "include": [
+    "src/**/*.test.ts",
+    "src/**/__tests__/**/*.ts",
+    "scripts/**/*.test.ts",
+    "scripts/**/__tests__/**/*.ts",
+    "test/**/*"
+  ],
   "exclude": []
 }

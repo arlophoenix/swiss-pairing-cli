@@ -154,7 +154,7 @@ export function isValidTeamString(str: string): boolean {
     return false;
   }
   const [_0, _name, _2, squad] = match;
-  return !squad || squad.trim() !== '';
+  return squad ? squad.trim() !== '' : true;
 }
 
 /**
