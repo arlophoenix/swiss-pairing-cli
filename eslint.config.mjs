@@ -33,7 +33,7 @@ const tsConfig = tseslint.config({
   files: ['**/*.ts'],
   languageOptions: {
     parserOptions: {
-      project: ['./tsconfig.src.json', './tsconfig.test.json'],
+      project: ['./tsconfig.src.json', './tsconfig.scripts.json', './tsconfig.test.json'],
       tsconfigRootDir: import.meta.dirname,
     },
   },
