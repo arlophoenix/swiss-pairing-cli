@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Integration Tests CLI Output: Failure Case - invalid-duplicate-teams.txt 1`] = `
 {

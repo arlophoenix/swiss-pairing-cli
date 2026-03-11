@@ -16,7 +16,7 @@ import {
 } from './utils.js';
 
 import { PROJECT_NAME } from '../constants.js';
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 import os from 'os';
 import path from 'path';
 
@@ -295,7 +295,7 @@ describe('utils', () => {
   });
 
   describe('detectEnvironment', () => {
-    let mockDetectExecutionContext: SpyInstance;
+    let mockDetectExecutionContext: MockInstance;
 
     beforeEach(() => {
       mockDetectExecutionContext = jest.spyOn(detectExecutionContext, 'detectExecutionContext');

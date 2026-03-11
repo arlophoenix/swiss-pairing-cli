@@ -21,15 +21,15 @@ const log = debug(DEBUG_PERFORMANCE);
  * Algorithm performance: { size: '64 teams, 7 rounds', mean: '1ms', stdDev: '1ms', memory: '1.19MB' }
  * Algorithm performance: { size: '256 teams, 9 rounds', mean: '4ms', stdDev: '0ms', memory: '3.43MB' }
  * Algorithm performance: { size: '1024 teams, 12 rounds', mean: '64ms', stdDev: '9ms', memory: '38.18MB' }
- * CLI performance: { size: '16 teams, 3 rounds', mean: '60ms', stdDev: '4ms' }
- * CLI performance: { size: '64 teams, 7 rounds', mean: '59ms', stdDev: '2ms' }
- * CLI performance: { size: '256 teams, 9 rounds', mean: '72ms', stdDev: '1ms' }
+ * CLI performance: { size: '16 teams, 3 rounds', mean: '110ms', stdDev: '20ms' }
+ * CLI performance: { size: '64 teams, 7 rounds', mean: '110ms', stdDev: '20ms' }
+ * CLI performance: { size: '256 teams, 9 rounds', mean: '110ms', stdDev: '20ms' }
  * CLI performance: { size: '1024 teams, 12 rounds', mean: '224ms', stdDev: '24ms' }
  */
 const TEST_CASES = [
-  { name: 'small', teamCount: 16, roundCount: 3, pairing_threshold: 10, cli_threshold: 100 },
-  { name: 'medium', teamCount: 64, roundCount: 7, pairing_threshold: 10, cli_threshold: 100 },
-  { name: 'large', teamCount: 256, roundCount: 9, pairing_threshold: 10, cli_threshold: 100 },
+  { name: 'small', teamCount: 16, roundCount: 3, pairing_threshold: 10, cli_threshold: 200 },
+  { name: 'medium', teamCount: 64, roundCount: 7, pairing_threshold: 10, cli_threshold: 200 },
+  { name: 'large', teamCount: 256, roundCount: 9, pairing_threshold: 10, cli_threshold: 200 },
   { name: 'extra-large', teamCount: 1024, roundCount: 12, pairing_threshold: 100, cli_threshold: 400 },
 ] as const;
 

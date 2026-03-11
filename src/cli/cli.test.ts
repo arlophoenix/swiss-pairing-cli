@@ -3,16 +3,16 @@ import * as cliActionCommand from '../commands/cliAction/cliActionCommand.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { BIN_NAME } from '../constants.js';
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 import { createCLI } from './cli.js';
 
 jest.mock('../commands/cliAction/cliActionCommand.js');
 
 describe('CLI', () => {
-  let mockHandleCLIAction: SpyInstance<typeof cliActionCommand.handleCLIAction>;
-  let mockConsoleLog: SpyInstance;
-  let mockConsoleError: SpyInstance;
-  let mockProcessExit: SpyInstance<typeof process.exit>;
+  let mockHandleCLIAction: MockInstance<typeof cliActionCommand.handleCLIAction>;
+  let mockConsoleLog: MockInstance;
+  let mockConsoleError: MockInstance;
+  let mockProcessExit: MockInstance<typeof process.exit>;
 
   beforeEach(() => {
     mockHandleCLIAction = jest

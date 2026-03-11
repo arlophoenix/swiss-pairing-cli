@@ -3,7 +3,7 @@ import * as utils from '../utils/utils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { generateDistinctID, shouldEnableTelemetryClient } from './telemetryUtils.js';
 
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -73,8 +73,8 @@ describe('telemetryUtils', () => {
 
   describe('generateDistinctID', () => {
     const originalPlatform = process.platform;
-    let mockWriteFile: SpyInstance<typeof fs.writeFileSync>;
-    let mockReadFile: SpyInstance<typeof fs.readFileSync>;
+    let mockWriteFile: MockInstance<typeof fs.writeFileSync>;
+    let mockReadFile: MockInstance<typeof fs.readFileSync>;
 
     beforeEach(() => {
       jest.spyOn(fs, 'mkdirSync');
@@ -109,7 +109,7 @@ describe('telemetryUtils', () => {
     });
 
     describe('Windows platform', () => {
-      let _mockJoin: SpyInstance<typeof path.join>;
+      let _mockJoin: MockInstance<typeof path.join>;
 
       beforeEach(() => {
         _mockJoin = jest.spyOn(path, 'join').mockImplementation((...paths) => paths.join('\\'));

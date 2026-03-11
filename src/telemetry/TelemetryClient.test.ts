@@ -7,17 +7,18 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import { Config } from '../Config.js';
 import { PostHog } from 'posthog-node';
-import type { SpyInstance } from 'jest-mock';
+import type { EventMessage } from 'posthog-node';
+import type { MockInstance } from 'jest-mock';
 import { TelemetryClient } from './TelemetryClient.js';
 
 jest.mock('posthog-node');
 jest.mock('process');
 
 describe('Telemetry', () => {
-  let mockshouldEnableTelemetryClient: SpyInstance<typeof telemetryUtils.shouldEnableTelemetryClient>;
-  let mockDetectExecutionContext: SpyInstance<typeof telemetryUtils.detectExecutionContext>;
-  let mockDetectEnvironment: SpyInstance<typeof telemetryUtils.detectEnvironment>;
-  let mockProcessOn: SpyInstance<typeof process.on>;
+  let mockshouldEnableTelemetryClient: MockInstance<typeof telemetryUtils.shouldEnableTelemetryClient>;
+  let mockDetectExecutionContext: MockInstance<typeof telemetryUtils.detectExecutionContext>;
+  let mockDetectEnvironment: MockInstance<typeof telemetryUtils.detectEnvironment>;
+  let mockProcessOn: MockInstance<typeof process.on>;
 
   beforeEach(() => {
     // Mock config to enable telemetry
@@ -317,7 +318,7 @@ describe('Telemetry', () => {
 
     it('should flush queued events and close client', async () => {
       const mockShutdown = jest.fn<() => Promise<void>>();
-      const mockCapture = jest.fn<() => Promise<void>>().mockResolvedValue();
+      const mockCapture = jest.fn<(message: EventMessage) => void>();
       const instance = TelemetryClient.getInstance();
 
       // Ensure clean state and mock setup before test
@@ -368,8 +369,16 @@ describe('Telemetry', () => {
       await expect(instance.shutdown()).resolves.toBeUndefined();
     });
 
+    it('should do nothing when postHogClient is null', async () => {
+      mockshouldEnableTelemetryClient.mockReturnValue(false);
+      const instance = TelemetryClient.getInstance();
+
+      // Should not throw when postHogClient is null (telemetry disabled)
+      await expect(instance.shutdown()).resolves.toBeUndefined();
+    });
+
     it('should handle errors during flush', async () => {
-      const mockCapture = jest.fn<() => void>().mockImplementation(() => {
+      const mockCapture = jest.fn<(message: EventMessage) => void>().mockImplementation(() => {
         throw new Error('Flush failed');
       });
       const instance = TelemetryClient.getInstance();

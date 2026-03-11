@@ -12,11 +12,11 @@ import {
 } from './processInputUtils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 
 describe('cliUtils', () => {
   describe('validateFileOptions', () => {
-    let mockParseFile: SpyInstance<typeof fileParser.parseFile>;
+    let mockParseFile: MockInstance<typeof fileParser.parseFile>;
 
     beforeEach(() => {
       const result: Result<Partial<ValidatedCLIOptions>> = {

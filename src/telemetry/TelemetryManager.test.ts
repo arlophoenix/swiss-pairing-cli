@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 import { TelemetryClient } from './TelemetryClient.js';
 import { TelemetryManager } from './TelemetryManager.js';
 
 describe('TelemetryManager', () => {
-  let mockRecord: SpyInstance<typeof TelemetryClient.prototype.record>;
-  let mockShutdown: SpyInstance<typeof TelemetryClient.prototype.shutdown>;
+  let mockRecord: MockInstance<typeof TelemetryClient.prototype.record>;
+  let mockShutdown: MockInstance<typeof TelemetryClient.prototype.shutdown>;
   let realDateNow: () => number;
 
   beforeEach(() => {

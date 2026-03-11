@@ -3,7 +3,7 @@ import * as utils from '../utils/utils.js';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
 import { Config } from '../Config.js';
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 import { TelemetryNotificationManager } from './TelemetryNotificationManager.js';
 import fs from 'fs';
 import path from 'path';
@@ -14,7 +14,7 @@ describe('TelemetryNotificationManager', () => {
   const mockConfigPath = '/mock/config/path';
   const expectedNoticePath = `${mockConfigPath}/.telemetry-notice-shown`;
 
-  let mockPathJoin: SpyInstance<typeof path.join>;
+  let mockPathJoin: MockInstance<typeof path.join>;
   let manager: TelemetryNotificationManager;
 
   beforeEach(() => {
@@ -28,10 +28,10 @@ describe('TelemetryNotificationManager', () => {
   });
 
   describe('shouldShowTelemetryNotice', () => {
-    let mockGetShowTelemetryNoticeOverride: SpyInstance<
+    let mockGetShowTelemetryNoticeOverride: MockInstance<
       typeof Config.prototype.getShowTelemetryNoticeOverride
     >;
-    let mockGetTelemetryOptOut: SpyInstance<typeof Config.prototype.getTelemetryOptOut>;
+    let mockGetTelemetryOptOut: MockInstance<typeof Config.prototype.getTelemetryOptOut>;
 
     beforeEach(() => {
       mockGetShowTelemetryNoticeOverride = jest

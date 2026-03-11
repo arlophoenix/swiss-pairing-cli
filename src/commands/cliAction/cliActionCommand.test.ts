@@ -2,7 +2,7 @@ import * as corePipelineCommand from '../corePipeline/corePipelineCommand.js';
 
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import type { SpyInstance } from 'jest-mock';
+import type { MockInstance } from 'jest-mock';
 import { TelemetryManager } from '../../telemetry/TelemetryManager.js';
 import { TelemetryNotificationManager } from '../../telemetry/TelemetryNotificationManager.js';
 import { handleCLIAction } from './cliActionCommand.js';
@@ -10,15 +10,15 @@ import { handleCLIAction } from './cliActionCommand.js';
 jest.mock('../corePipeline/corePipelineCommand.js');
 
 describe('handleCLIAction', () => {
-  let mockhandleCorePipelineCommand: SpyInstance<typeof corePipelineCommand.handleCorePipelineCommand>;
-  let mockShouldShowTelemetryNotice: SpyInstance<
+  let mockhandleCorePipelineCommand: MockInstance<typeof corePipelineCommand.handleCorePipelineCommand>;
+  let mockShouldShowTelemetryNotice: MockInstance<
     typeof TelemetryNotificationManager.prototype.shouldShowTelemetryNotice
   >;
-  let mockRecordInvocation: SpyInstance<typeof TelemetryManager.prototype.recordInvocation>;
-  let mockRecordSuccess: SpyInstance<typeof TelemetryManager.prototype.recordSuccess>;
-  let mockRecordValidationFailure: SpyInstance<typeof TelemetryManager.prototype.recordValidationFailure>;
-  let mockRecordError: SpyInstance<typeof TelemetryManager.prototype.recordError>;
-  let mockShutdown: SpyInstance;
+  let mockRecordInvocation: MockInstance<typeof TelemetryManager.prototype.recordInvocation>;
+  let mockRecordSuccess: MockInstance<typeof TelemetryManager.prototype.recordSuccess>;
+  let mockRecordValidationFailure: MockInstance<typeof TelemetryManager.prototype.recordValidationFailure>;
+  let mockRecordError: MockInstance<typeof TelemetryManager.prototype.recordError>;
+  let mockShutdown: MockInstance;
 
   beforeEach(() => {
     mockhandleCorePipelineCommand = jest

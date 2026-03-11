@@ -96,6 +96,27 @@ describe('generateRounds', () => {
     }
   });
 
+  it('should backtrack when first valid pairing leads to impossible remaining bracket', () => {
+    // p3 and p4 have already played each other, so the greedy first attempt
+    // (p1-p2, then p3-p4) will fail. The algorithm must backtrack and try p1-p3.
+    const result = generateRounds({
+      teams: ['p1', 'p2', 'p3', 'p4'],
+      numRounds: 1,
+      startRound: 1,
+      playedTeams: new Map([
+        ['p3', new Set(['p4'])],
+        ['p4', new Set(['p3'])],
+      ]),
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const matches = result.value.rounds[0].matches;
+      expect(matches).not.toContainEqual(['p3', 'p4']);
+      expect(matches).not.toContainEqual(['p4', 'p3']);
+    }
+  });
+
   it('should respect squad constraints', () => {
     const squadMap = new Map([
       ['p1', 'A'],
