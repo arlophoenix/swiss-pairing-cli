@@ -107,11 +107,11 @@
   },
   "type": "module",
   "dependencies": {
-    "commander": "^12.1.0",
+    "commander": "^14.0.3",
     "debug": "^4.3.7",
     "dotenv": "^16.4.5",
     "file-type": "^19.5.0",
     "papaparse": "^5.4.1",
-    "posthog-node": "^4.2.1"
+    "posthog-node": "^5.28.0"
   }
 }
