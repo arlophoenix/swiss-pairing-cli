@@ -112,6 +112,20 @@ describe('telemetryUtils', () => {
       expect(mockWriteFile).not.toHaveBeenCalled();
     });
 
+    it('should use XDG_CONFIG_HOME when set on Unix', () => {
+      jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
+      // eslint-disable-next-line functional/immutable-data
+      process.env.XDG_CONFIG_HOME = '/custom/config';
+      mockReadFile.mockReturnValue('existing-id');
+      const mockHomedir = jest.spyOn(os, 'homedir');
+
+      const result = generateDistinctID();
+
+      expect(result).toBe('existing-id');
+      // homedir should not be called for configDir when XDG_CONFIG_HOME is set
+      expect(mockHomedir).not.toHaveBeenCalled();
+    });
+
     describe('Windows platform', () => {
       let _mockJoin: MockInstance<typeof path.join>;
 
