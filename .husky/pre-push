@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+current_branch=$(git symbolic-ref HEAD 2>/dev/null | sed 's|refs/heads/||')
+if [ "$current_branch" = "main" ]; then
+  echo "error: direct push to main is not allowed — create a branch and open a PR"
+  exit 1
+fi
+
 npm run validate
 npm run benchmark
