@@ -2,3 +2,4 @@
 set -eo pipefail
 
 npm run validate
+npm run benchmark

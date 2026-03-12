@@ -22,6 +22,8 @@ A CLI tool for generating Swiss-style tournament pairings. Installed globally vi
 - `npm run lint:fix` — Auto-fix lint and format issues
 - `npm run unused` — Check for unused dependencies, exports, and files (knip)
 - `npm run validate` — Full validation (lint + test + dependency rules + unused check)
+- `npm run benchmark` — Run performance benchmarks; compares against local baseline and exits 1 on regression
+- `npm run benchmark:update` — Promote latest benchmark results to baseline (use after an intentional performance change)
 
 Note: `pretest` and `prestart` hooks auto-run `npm run build`, so the project builds before testing.
 
@@ -121,7 +123,7 @@ Run `npm run docs:dependencies:validate` to check.
 
 - **Co-located unit tests**: Test files sit next to source files (e.g., `swissPairing.test.ts` beside `swissPairing.ts`)
 - **Integration tests**: In `test/integration.test.ts` using snapshot fixtures from `test/fixtures/`
-- **Performance tests**: In `test/performance.test.ts`
+- **Performance benchmarks**: `npm run benchmark` (tinybench, local baseline in `benchmark/baseline.json`)
 - **100% coverage required**: All four metrics (statements, branches, functions, lines) — see `jest.config.mjs`
 - **AAA pattern**: Arrange, Act, Assert
 - **No `.only` or `.skip`**: Use `xdescribe`/`xit`/`xtest` instead (enforced by ESLint)
