@@ -137,3 +137,5 @@ type(scope): description
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
 Scopes: `cli`, `core`, `parser`, `format`, `test`, `build`, `deps`
+
+Commit messages must be minimal and focused on useful information. Do not add `Co-Authored-By` or any other metadata attributing authorship to AI tools.
