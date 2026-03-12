@@ -1,0 +1,3 @@
+# Force LF line endings on all platforms so Prettier's endOfLine: lf check
+# passes on Windows (git defaults to CRLF checkout on Windows without this).
+* text=auto eol=lf

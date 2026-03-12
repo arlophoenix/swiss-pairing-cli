@@ -81,11 +81,6 @@ function writeEnvFile({
   }
 }
 
-function createEnvFiles() {
-  createDevelopmentEnv();
-  createTestEnv();
-}
-
 function checkGraphviz() {
   try {
     execSync('dot -V', { stdio: 'ignore' });
@@ -102,5 +97,15 @@ function validateExternalDependencies() {
   }
 }
 
-createEnvFiles();
-validateExternalDependencies();
+function main() {
+  // Always create .env.test — it contains no secrets and is required for tests
+  createTestEnv();
+
+  // Skip dev env setup in CI — 1Password is unavailable
+  if (!process.env.CI) {
+    createDevelopmentEnv();
+    validateExternalDependencies();
+  }
+}
+
+main();
