@@ -1,1 +1,1 @@
---file 'test/fixtures/all-arguments.json'
+--file test/fixtures/all-arguments.json

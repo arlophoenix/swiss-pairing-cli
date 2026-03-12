@@ -83,6 +83,8 @@ describe('telemetryUtils', () => {
       jest.spyOn(os, 'homedir').mockReturnValue('/home/user');
       // eslint-disable-next-line functional/immutable-data
       delete process.env.XDG_CONFIG_HOME;
+      // eslint-disable-next-line functional/immutable-data
+      delete process.env.APPDATA;
     });
 
     afterEach(() => {

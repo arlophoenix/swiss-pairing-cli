@@ -248,6 +248,7 @@ describe('Integration Tests', () => {
       const env = {
         ...process.env,
         XDG_CONFIG_HOME: configDir,
+        APPDATA: configDir,
         SWISS_PAIRING_TELEMETRY_OPT_OUT: '',
       };
       // First run
@@ -271,6 +272,7 @@ describe('Integration Tests', () => {
       const env = {
         ...process.env,
         XDG_CONFIG_HOME: configDir,
+        APPDATA: configDir,
         SWISS_PAIRING_TELEMETRY_OPT_OUT: '1',
       };
       const result = await runCLI({ args: '--teams Alice Bob', env });

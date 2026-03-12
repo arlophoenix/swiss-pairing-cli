@@ -1,1 +1,1 @@
---file 'test/fixtures/all-arguments.csv'
+--file test/fixtures/all-arguments.csv
