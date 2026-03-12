@@ -100,7 +100,7 @@ export function generateDistinctID(): string {
       return fs.readFileSync(idPath, 'utf8');
     } catch {
       // Generate and save new ID if none exists
-      const newId = Math.random().toString(36).substring(2);
+      const newId = Math.random().toString(36).substring(2).padEnd(10, '0');
       fs.mkdirSync(path.dirname(idPath), { recursive: true });
       fs.writeFileSync(idPath, newId);
       return newId;
@@ -108,6 +108,6 @@ export function generateDistinctID(): string {
   } catch {
     // Fall back to temporary ID if file operations fail
     log('Failed to access config directory, using temporary ID');
-    return Math.random().toString(36).substring(2);
+    return Math.random().toString(36).substring(2).padEnd(10, '0');
   }
 }
