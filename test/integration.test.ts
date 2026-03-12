@@ -102,6 +102,19 @@ async function readFileContent(filePath: string): Promise<string> {
 }
 
 /**
+ * Reads a .txt fixture file and normalizes Unix shell line continuations
+ * (backslash-newline) to spaces so the full argument list is passed as a
+ * single line on all platforms, including Windows where cmd.exe does not
+ * treat backslash-newline as a continuation.
+ * @param filePath - Path to .txt fixture file
+ * @returns Normalized CLI argument string
+ */
+async function readFixtureArgs(filePath: string): Promise<string> {
+  const raw = await readFileContent(filePath);
+  return raw.replace(/ \\\r?\n/g, ' ').trim();
+}
+
+/**
  * Executes the CLI with given arguments
  * @param args - CLI arguments string
  * @param env - Optional environment variables
@@ -185,10 +198,7 @@ async function validateFixture({
 
   // text files contain arguments to be run directly in the CLI
   if (ext === '.txt') {
-    const rawInput = await readFileContent(fixturePath);
-    // Normalize Unix shell line continuations (backslash-newline → space) so
-    // the full argument list is passed as a single line on all platforms
-    const input = rawInput.replace(/ \\\r?\n/g, ' ').trim();
+    const input = await readFixtureArgs(fixturePath);
     const result = await runCLI({ args: input, useCache: true });
     validateCLIResult({ result, isErrorCase });
     // JSON or CSV files are expected to be provided as a file argument
@@ -200,7 +210,7 @@ async function validateFixture({
     const correspondingTxtFixtureName = fileName.replace(ext, '.txt');
     if (allFixtures.includes(correspondingTxtFixtureName)) {
       const correspondingTxtFixturePath = path.join(fixturesDir, correspondingTxtFixtureName);
-      const inputWithArgs = await readFileContent(correspondingTxtFixturePath);
+      const inputWithArgs = await readFixtureArgs(correspondingTxtFixturePath);
       const resultWithArgs = await runCLI({ args: inputWithArgs, useCache: true });
       expect(result).toEqual(resultWithArgs);
     }
