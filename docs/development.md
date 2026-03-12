@@ -50,6 +50,8 @@ npm run build
 npm run build:clean
 ```
 
+> **Note:** Never run plain `tsc` — the root `tsconfig.json` has `files: []` and compiles nothing. Always use `npm run build` (or `tsc -p tsconfig.src.json` directly).
+
 ### Test
 
 ```bash

@@ -8,7 +8,7 @@ Development utility scripts for automating common tasks and maintaining project 
 
 ### update-readme-examples.ts
 
-Updates README examples with live CLI output.
+Updates README examples with live CLI output. Run this after any change that affects CLI output, otherwise the README will be out of date.
 
 ```typescript
 // Update examples
