@@ -129,6 +129,10 @@ Run `npm run docs:dependencies:validate` to check.
 - **No `.only` or `.skip`**: Use `xdescribe`/`xit`/`xtest` instead (enforced by ESLint)
 - **Test behavior, not implementation**
 
+## Git Workflow
+
+All changes must be made on a branch, never directly on `main`. Open a PR to merge into `main`.
+
 ## Commit Conventions
 
 Uses [Conventional Commits](https://www.conventionalcommits.org/) enforced by commitlint + husky:
