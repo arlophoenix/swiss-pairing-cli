@@ -11,6 +11,8 @@
 
 1. **Branch**
 
+   All changes must be made on a branch — never commit directly to `main`.
+
    ```bash
    git checkout -b feature/your-feature-name   # For new features
    git checkout -b fix/bug-description        # For bug fixes
@@ -69,6 +71,12 @@
    BREAKING CHANGE: All core functions renamed for consistency"
    ```
 
+   Common commitlint failures to avoid:
+   - **Capital letters anywhere in the subject** — this includes identifiers (e.g. `XDG_CONFIG_HOME`); rephrase in kebab-case instead
+   - **Trailing period** at the end of the subject
+   - **Subject line over 100 characters**
+   - **Wrong or missing scope** — must be one of the scopes listed above
+
 1. **Push & PR**
    - Push your branch
    - Create Pull Request
@@ -81,6 +89,8 @@
 - Use readonly types for immutability
 - Handle errors with Result type
 - Write self-documenting code
+- Use `.js` extensions in all imports (ESM with NodeNext module resolution requires this even for `.ts` source files)
+- All functions must take a single destructured object parameter (`max-params` ESLint rule is set to 1)
 
 ### Type Conventions
 
