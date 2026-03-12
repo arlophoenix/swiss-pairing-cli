@@ -185,7 +185,10 @@ async function validateFixture({
 
   // text files contain arguments to be run directly in the CLI
   if (ext === '.txt') {
-    const input = await readFileContent(fixturePath);
+    const rawInput = await readFileContent(fixturePath);
+    // Normalize Unix shell line continuations (backslash-newline → space) so
+    // the full argument list is passed as a single line on all platforms
+    const input = rawInput.replace(/ \\\r?\n/g, ' ').trim();
     const result = await runCLI({ args: input, useCache: true });
     validateCLIResult({ result, isErrorCase });
     // JSON or CSV files are expected to be provided as a file argument
