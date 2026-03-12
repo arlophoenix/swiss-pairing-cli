@@ -56,9 +56,6 @@ export type CLIOptionOrder = (typeof CLI_OPTION_ORDER)[number];
 /** Valid output formats */
 export type CLIOptionFormat = (typeof CLI_OPTION_FORMAT)[number];
 
-/** Round results with team pairings */
-export type validateGenerateRoundsOutput = Record<string, readonly ReadonlyMatch[]>;
-
 /**
  * Represents a tournament team.
  * Teams must have unique names and can optionally belong to a squad.

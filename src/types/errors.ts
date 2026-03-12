@@ -41,11 +41,6 @@ export type Result<T> = { readonly success: true; readonly value: T } | FailureR
 export type BooleanResult = { readonly success: true } | FailureResult;
 
 /**
- * Categories of errors for appropriate handling.
- */
-export type ErrorType = 'InvalidInput' | 'InvalidOutput' | 'NoValidSolution';
-
-/**
  * Sources of input for error context.
  * Used to provide appropriate error messages.
  */

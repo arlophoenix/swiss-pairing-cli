@@ -11,7 +11,7 @@
  * @module constants
  */
 
-import { CLIOptionFormat, CLIOptionOrder, ValidatedCLIOptions } from './types/types.js';
+import { CLIOptionFormat, CLIOptionOrder, ReadonlyMatch, Team, ValidatedCLIOptions } from './types/types.js';
 
 /**
  * CLI argument names and shortcuts.
@@ -56,7 +56,7 @@ export const BYE_TEAM = 'BYE';
  */
 export const CLI_OPTION_ORDER_BOTOM_UP = 'bottom-up';
 export const CLI_OPTION_ORDER_RANDOM = 'random';
-export const CLI_OPTION_ORDER_TOP_DOWN = 'top-down';
+const CLI_OPTION_ORDER_TOP_DOWN = 'top-down';
 export const CLI_OPTION_ORDER = [
   CLI_OPTION_ORDER_TOP_DOWN,
   CLI_OPTION_ORDER_BOTOM_UP,
@@ -89,10 +89,10 @@ export const CLI_OPTION_FORMAT = [
  * Used when option not provided in any input.
  */
 export const CLI_OPTION_FORMAT_DEFAULT: CLIOptionFormat = CLI_OPTION_FORMAT_TEXT_MARKDOWN;
-export const CLI_OPTION_MATCHES_DEFAULT = [];
+const CLI_OPTION_MATCHES_DEFAULT: readonly ReadonlyMatch[] = [];
 export const CLI_OPTION_NUM_ROUND_DEFAULT = 1;
 export const CLI_OPTION_ORDER_DEFAULT: CLIOptionOrder = CLI_OPTION_ORDER_TOP_DOWN;
-export const CLI_OPTION_TEAMS_DEFAULT = [];
+const CLI_OPTION_TEAMS_DEFAULT: readonly Team[] = [];
 export const CLI_OPTION_START_ROUND_DEFAULT = 1;
 export const CLI_OPTION_DEFAULTS: ValidatedCLIOptions = {
   file: '',
@@ -117,14 +117,13 @@ export const SUPPORTED_FILE_TYPES = [SUPPORTED_FILE_TYPE_CSV, SUPPORTED_FILE_TYP
  */
 export const PROJECT_NAME = 'swiss-pairing-cli';
 export const BIN_NAME = 'swisspair';
-export const EXAMPLE_TEAMS_COUNT = '4';
 export const EXAMPLE_TEAMS = 'Alice Bob Charlie David';
 export const EXAMPLE_TEAMS_WITH_SQUADS = '"Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"';
 export const EXAMPLE_MATCHES = '"Alice,Bob" "Charlie,David"';
 export const EXAMPLE_FILE_CSV = 'example_data/tournament_round1.csv';
 export const EXAMPLE_FILE_JSON = 'example_data/tournament_round2.json';
 
-export const DEBUG_PREFIX = PROJECT_NAME;
+const DEBUG_PREFIX = PROJECT_NAME;
 export const DEBUG_TELEMETRY = `${DEBUG_PREFIX}:telemetry`;
 export const DEBUG_PERFORMANCE = `${DEBUG_PREFIX}:performance`;
 

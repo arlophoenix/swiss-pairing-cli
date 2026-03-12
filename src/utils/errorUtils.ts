@@ -28,7 +28,6 @@ export const enum ErrorTemplate {
   // File handling
   FILE_NOT_FOUND = 'File not found: "${path}"',
   FILE_READ_ERROR = 'Error reading file: ${error}',
-  INVALID_FILE_TYPE = 'Invalid file type: expected one of ${types}',
 
   // Parsing
   PARSE_CSV_ERROR = 'Invalid CSV: ${error}',
@@ -37,7 +36,6 @@ export const enum ErrorTemplate {
 
   // Validation
   INVALID_ARGUMENT = 'Invalid ${origin} argument "${name}": "${value}". Expected ${expected}',
-  INVALID_VALUE = 'Invalid value: "${value}". Expected one of "${options}"',
 
   // Teams
   MIN_TEAMS = 'Must have at least 2 teams',
