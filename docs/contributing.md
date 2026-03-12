@@ -81,7 +81,8 @@
 
 1. **Push & PR**
    - Push your branch
-   - Create Pull Request
+   - Create Pull Request — the PR title must follow the same conventional commit format as commit messages, since it becomes the squash commit message on `main`
+   - Merge using **squash merge** only — keeps `main` history clean with one commit per PR
    - Address review feedback
 
 ## Code Standards
