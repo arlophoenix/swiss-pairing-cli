@@ -14,7 +14,7 @@ A CLI tool for generating Swiss-style tournament pairings. Installed globally vi
 ## Key Commands
 
 - `npm run build` — Compile TypeScript to `dist/` (`tsc -p tsconfig.src.json`)
-- `npm run typecheck` — Type-check without emitting (fast, no dist output)
+- `npm run typecheck` — Type-check all files (src, scripts, test) without emitting
 - `npm run test:unit` — Run unit tests (excludes integration/performance)
 - `npm run test:integration` — Run integration tests with snapshot fixtures
 - `npm test` — Run all tests (unit + integration + performance)

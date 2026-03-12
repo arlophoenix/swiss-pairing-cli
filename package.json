@@ -28,7 +28,7 @@
     "//-----Build Scripts-----": "",
     "build": "tsc -p tsconfig.src.json",
     "build:clean": "npm run clean && npm run build",
-    "typecheck": "tsc -p tsconfig.src.json --noEmit",
+    "typecheck": "tsc -p tsconfig.src.json --noEmit && tsc -p tsconfig.scripts.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "clean": "rm -rf dist",
     "//-----Test Scripts-----": "",
     "test:env": "NODE_ENV=test sh -c",

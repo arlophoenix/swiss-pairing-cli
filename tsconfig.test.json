@@ -5,7 +5,6 @@
     "rootDir": ".",
     "types": ["node"]
   },
-  "references": [{ "path": "./tsconfig.src.json" }],
   "include": [
     "src/**/*.test.ts",
     "src/**/__tests__/**/*.ts",
