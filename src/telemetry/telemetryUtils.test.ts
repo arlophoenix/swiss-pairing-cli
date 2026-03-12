@@ -115,6 +115,8 @@ describe('telemetryUtils', () => {
     it('should use XDG_CONFIG_HOME when set on Unix', () => {
       jest.spyOn(utils, 'detectExecutionContext').mockReturnValue('global');
       // eslint-disable-next-line functional/immutable-data
+      Object.defineProperty(process, 'platform', { value: 'linux' });
+      // eslint-disable-next-line functional/immutable-data
       process.env.XDG_CONFIG_HOME = '/custom/config';
       mockReadFile.mockReturnValue('existing-id');
       const mockHomedir = jest.spyOn(os, 'homedir');
