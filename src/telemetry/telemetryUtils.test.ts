@@ -81,6 +81,8 @@ describe('telemetryUtils', () => {
       mockWriteFile = jest.spyOn(fs, 'writeFileSync');
       mockReadFile = jest.spyOn(fs, 'readFileSync') as jest.MockedFunction<typeof fs.readFileSync>;
       jest.spyOn(os, 'homedir').mockReturnValue('/home/user');
+      // eslint-disable-next-line functional/immutable-data
+      delete process.env.XDG_CONFIG_HOME;
     });
 
     afterEach(() => {
