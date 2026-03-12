@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.0...v1.0.1) (2026-03-12)
+
+
+### Bug Fixes
+
+* **build:** fix prettier glob and exclude generated changelog ([5f0be62](https://github.com/arlophoenix/swiss-pairing-cli/commit/5f0be624f1f4ff78a8e64b9b94af838e25d8b7a6))
+
 # 1.0.0 (2026-03-12)
 
 
