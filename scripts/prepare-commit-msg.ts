@@ -20,8 +20,10 @@ function addCommitlintTemplateToMessage({
   readonly msgFile: string;
   readonly source: string;
 }) {
-  // Skip for amend, merge, etc
-  if (source === 'message' || source === 'merge' || source === 'squash') {
+  // Only add template for plain interactive commits — when source is set,
+  // the message is provided programmatically (e.g. -m, --amend) and git
+  // won't strip # lines, so the template would leak into the commit body
+  if (source) {
     return;
   }
 
