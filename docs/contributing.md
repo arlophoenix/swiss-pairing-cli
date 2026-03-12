@@ -11,7 +11,9 @@
 
 1. **Branch**
 
-   All changes must be made on a branch — never commit directly to `main`.
+   All changes must be made on a branch — never commit directly to `main`. A pre-push git hook enforces this locally.
+
+   Note: the GitHub branch ruleset does not enforce "changes must be made through a pull request" — this is intentional. Semantic-release needs to push release commits (version bump + changelog) directly to `main` after CI passes. Enforcing that at GitHub level would require a GitHub App to give semantic-release a distinct bypass identity. The local hook is the enforcement mechanism instead; the GitHub ruleset still requires CI status checks to pass on all PRs.
 
    ```bash
    git checkout -b feature/your-feature-name   # For new features
