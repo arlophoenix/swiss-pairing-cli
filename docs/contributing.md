@@ -55,13 +55,13 @@
    - **chore**: General maintenance
 
    Scopes:
-   - **cli**: Command line interface
-   - **core**: Core algorithm
+   - **cli**: CLI interface and UX
+   - **core**: Swiss pairing algorithm
    - **parser**: Input parsing
    - **format**: Output formatting
-   - **test**: Testing infrastructure
-   - **build**: Build configuration
    - **deps**: Dependencies
+   - **build**: Local tooling (tsconfig, eslint, jest, scripts)
+   - **ci**: GitHub Actions workflows and release pipeline
 
    Breaking Changes:
 
