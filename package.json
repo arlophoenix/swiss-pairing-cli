@@ -21,9 +21,6 @@
   "engines": {
     "node": "^22.22.0"
   },
-  "config": {
-    "sourceGlob": "{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}"
-  },
   "scripts": {
     "//-----Build Scripts-----": "",
     "build": "tsc -p tsconfig.src.json",
@@ -49,8 +46,8 @@
     "//-----Lint and Format Scripts-----": "",
     "lint": "npm run eslint && npm run format && npm run todo",
     "lint:fix": "npm run eslint:fix && npm run format:fix",
-    "eslint": "eslint \"$npm_package_config_sourceGlob\"",
-    "eslint:fix": "eslint \"$npm_package_config_sourceGlob\" --fix",
+    "eslint": "eslint \"{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}\"",
+    "eslint:fix": "eslint \"{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}\" --fix",
     "format": "prettier --check --ignore-unknown **/*",
     "format:fix": "prettier --write --ignore-unknown **/*",
     "//-----Development Scripts-----": "",
@@ -63,8 +60,8 @@
     "docs:readme:examples": "tsx scripts/update-readme-examples.ts",
     "docs:readme:usage": "tsx scripts/update-readme-usage.ts",
     "env:setup": "tsx scripts/setup-env.ts",
-    "todo:report": "leasot -x --reporter markdown \"$npm_package_config_sourceGlob\" > LEASOT.md",
-    "todo": "leasot \"$npm_package_config_sourceGlob\"",
+    "todo:report": "leasot -x --reporter markdown \"{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}\" > LEASOT.md",
+    "todo": "leasot \"{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}\"",
     "update-nvmrc": "tsx scripts/update-nvmrc.ts",
     "usage": "npm run start -- --help",
     "unused": "knip",
