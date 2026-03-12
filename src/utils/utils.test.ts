@@ -299,6 +299,8 @@ describe('utils', () => {
 
     beforeEach(() => {
       mockDetectExecutionContext = jest.spyOn(detectExecutionContext, 'detectExecutionContext');
+      // eslint-disable-next-line functional/immutable-data
+      delete process.env.CI;
     });
 
     it('should return "ci" when CI environment variable is set', () => {
