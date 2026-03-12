@@ -24,8 +24,11 @@ A CLI tool for generating Swiss-style tournament pairings. Installed globally vi
 - `npm run validate` — Full validation (lint + test + dependency rules + unused check)
 - `npm run benchmark` — Run performance benchmarks; compares against local baseline and exits 1 on regression
 - `npm run benchmark:update` — Promote latest benchmark results to baseline (use after an intentional performance change)
+- `npm run docs:readme:examples` — Regenerate README usage examples (run after any output changes)
 
 Note: `pretest` and `prestart` hooks auto-run `npm run build`, so the project builds before testing.
+
+Note: Never run plain `tsc` — the root `tsconfig.json` has `files: []` and compiles nothing. Always use `npm run build` (or `tsc -p tsconfig.src.json`).
 
 ## Architecture
 
