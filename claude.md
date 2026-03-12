@@ -140,4 +140,12 @@ type(scope): description
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
 Scopes: `cli`, `core`, `parser`, `format`, `test`, `build`, `deps`
 
+**commitlint is enforced via a git commit-msg hook** — commits that don't match the format above will be rejected. Common failure causes:
+
+- Wrong or missing scope (must be one of the scopes listed above)
+- Capital letter anywhere in the subject — this includes identifiers like `XDG_CONFIG_HOME` or `generateDistinctID`; rephrase them (e.g., kebab-case) rather than using their original casing
+- Period at the end of the description
+- Subject line too long (max 100 characters)
+- Unsupported type
+
 Commit messages must be minimal and focused on useful information. Do not add `Co-Authored-By` or any other metadata attributing authorship to AI tools.
