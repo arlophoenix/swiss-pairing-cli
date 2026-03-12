@@ -20,7 +20,8 @@ A CLI tool for generating Swiss-style tournament pairings. Installed globally vi
 - `npm test` — Run all tests (unit + integration + performance)
 - `npm run lint` — ESLint + Prettier check + TODO check
 - `npm run lint:fix` — Auto-fix lint and format issues
-- `npm run validate` — Full validation (lint + test + dependency rules)
+- `npm run unused` — Check for unused dependencies, exports, and files (knip)
+- `npm run validate` — Full validation (lint + test + dependency rules + unused check)
 
 Note: `pretest` and `prestart` hooks auto-run `npm run build`, so the project builds before testing.
 

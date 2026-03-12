@@ -67,8 +67,8 @@
     "todo": "leasot \"$npm_package_config_sourceGlob\"",
     "update-nvmrc": "tsx scripts/update-nvmrc.ts",
     "usage": "npm run start -- --help",
-    "knip": "knip",
-    "validate": "npm run lint && npm test && npm run docs:dependencies:validate && npm run knip"
+    "unused": "knip",
+    "validate": "npm run lint && npm test && npm run docs:dependencies:validate && npm run unused"
   },
   "lint-staged": {
     "{*.{js,mjs},{scripts,src,test}/**/*.{ts,test.ts}}": "bash -c 'npm run eslint:fix'",
