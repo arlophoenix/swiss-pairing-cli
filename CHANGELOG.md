@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.1...v1.0.2) (2026-03-12)
+
+
+### Bug Fixes
+
+* **build:** pad random id to guarantee minimum 10-char length ([011d3ff](https://github.com/arlophoenix/swiss-pairing-cli/commit/011d3ffd9684d608218eea5d9055b01c880fd809))
+
 ## [1.0.1](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.0...v1.0.1) (2026-03-12)
 
 
