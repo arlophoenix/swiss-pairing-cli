@@ -20,6 +20,10 @@ import * as path from 'path';
 
 import { fileURLToPath } from 'url';
 
+if (process.env.CI) {
+  process.exit(0);
+}
+
 interface PackageJson {
   readonly engines?: {
     readonly node?: string;
