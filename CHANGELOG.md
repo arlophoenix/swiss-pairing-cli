@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.2...v1.0.3) (2026-03-13)
+
+
+### Bug Fixes
+
+* **build:** forward source argument in prepare-commit-msg hook ([#60](https://github.com/arlophoenix/swiss-pairing-cli/issues/60)) ([d7119ac](https://github.com/arlophoenix/swiss-pairing-cli/commit/d7119ac55233b1365c9cfb1f902a0c4d228eb849))
+
 ## [1.0.2](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.1...v1.0.2) (2026-03-12)
 
 
