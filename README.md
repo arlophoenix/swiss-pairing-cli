@@ -19,11 +19,50 @@ Generate Swiss-style tournament pairings from the command line.
 
 ## Install
 
+### Binary download (no Node.js required)
+
+Download the appropriate binary for your platform from the [latest release](https://github.com/arlophoenix/swiss-pairing-cli/releases/latest):
+
+| Platform              | File                        |
+| --------------------- | --------------------------- |
+| macOS (Apple Silicon) | `swisspair-macos-arm64`     |
+| Linux                 | `swisspair-linux-x64`       |
+| Windows               | `swisspair-windows-x64.exe` |
+
+**macOS setup**
+
+Open Terminal, navigate to your Downloads folder, then run:
+
+```bash
+chmod +x swisspair-macos-arm64
+xattr -dr com.apple.quarantine swisspair-macos-arm64
+./swisspair-macos-arm64 --help
+```
+
+The `xattr` step is required because macOS blocks downloaded binaries that are not signed by Apple. This is expected — run it once and the warning will not appear again.
+
+**Linux setup**
+
+```bash
+chmod +x swisspair-linux-x64
+./swisspair-linux-x64 --help
+```
+
+**Windows setup**
+
+Double-click `swisspair-windows-x64.exe` will not work — it is a command-line tool. Open Command Prompt, navigate to the folder containing the file, then run:
+
+```bat
+swisspair-windows-x64.exe --help
+```
+
+### npm (requires Node.js 22)
+
 ```bash
 npm install -g swiss-pairing-cli
 ```
 
-or you can use npx to run it directly:
+or run directly without installing:
 
 ```bash
 npx swisspair ...options
