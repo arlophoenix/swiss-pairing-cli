@@ -27,6 +27,25 @@ Updates README CLI usage documentation.
 npm run docs:readme:usage
 ```
 
+## Binary Distribution
+
+### build-binary.ts
+
+Builds a standalone executable for the current platform using Node.js SEA (Single Executable Applications). Handles the full pipeline: TypeScript compile, esbuild bundle, SEA blob generation, node binary copy, postject injection, and macOS codesign.
+
+```sh
+npm run build:binary
+# Output: dist/swisspair-<platform>-<arch>[.exe]
+# Verifies the binary by running --help at the end
+```
+
+Individual steps are also available if you need to iterate on a specific stage:
+
+```sh
+npm run build:binary:bundle  # ESM → CJS bundle via esbuild
+npm run build:binary:blob    # Generate SEA blob from sea-config.json
+```
+
 ## Environment
 
 ### setup-env.ts
@@ -56,6 +75,9 @@ npm run update-nvmrc
 ### Build Scripts
 
 - `build`: Compiles TypeScript to JavaScript
+- `build:binary`: Builds a standalone executable for the current platform (full pipeline: compile → bundle → blob → inject)
+- `build:binary:blob`: Generates the Node.js SEA blob from `sea-config.json`
+- `build:binary:bundle`: Bundles compiled output into a single CJS file for SEA
 - `build:clean`: Cleans output directory and rebuilds
 - `clean`: Removes compiled output files
 

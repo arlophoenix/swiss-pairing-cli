@@ -5,7 +5,8 @@ const config: KnipConfig = {
   project: ['src/**/*.ts', 'scripts/**/*.ts', 'test/**/*.ts'],
   ignoreBinaries: ['dot'],
   // @jest/globals and jest-mock are sub-packages bundled with jest
-  ignoreDependencies: ['@jest/globals', 'jest-mock'],
+  // postject is invoked via execSync in scripts/build-binary.ts, not imported
+  ignoreDependencies: ['@jest/globals', 'jest-mock', 'postject'],
   // Duplicate exports are intentional named aliases (e.g. CLI_OPTION_FORMAT_DEFAULT = CLI_OPTION_FORMAT_TEXT_MARKDOWN)
   exclude: ['duplicates'],
 };
