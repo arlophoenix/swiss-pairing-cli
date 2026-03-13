@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.3...v1.1.0) (2026-03-13)
+
+
+### Features
+
+* **build:** add standalone binary distribution via node.js sea ([#59](https://github.com/arlophoenix/swiss-pairing-cli/issues/59)) ([05a5f4f](https://github.com/arlophoenix/swiss-pairing-cli/commit/05a5f4fa452c2d48a4c85cbc37b41aa67901f5ee))
+
 ## [1.0.3](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.0.2...v1.0.3) (2026-03-13)
 
 
