@@ -29,7 +29,7 @@ Download the appropriate binary for your platform from the [latest release](http
 | Linux                 | `swisspair-linux-x64`       |
 | Windows               | `swisspair-windows-x64.exe` |
 
-**macOS setup**
+#### macOS setup
 
 Open Terminal, navigate to your Downloads folder, then run:
 
@@ -41,14 +41,14 @@ xattr -dr com.apple.quarantine swisspair-macos-arm64
 
 The `xattr` step is required because macOS blocks downloaded binaries that are not signed by Apple. This is expected — run it once and the warning will not appear again.
 
-**Linux setup**
+#### Linux setup
 
 ```bash
 chmod +x swisspair-linux-x64
 ./swisspair-linux-x64 --help
 ```
 
-**Windows setup**
+#### Windows setup
 
 Double-click `swisspair-windows-x64.exe` will not work — it is a command-line tool. Open Command Prompt, navigate to the folder containing the file, then run:
 
