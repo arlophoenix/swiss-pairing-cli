@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-npm run prepare-commit-msg -- "$1"
+npm run prepare-commit-msg -- "$1" "$2"
