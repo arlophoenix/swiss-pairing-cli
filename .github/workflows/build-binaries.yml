@@ -11,8 +11,6 @@ jobs:
         include:
           - runner: ubuntu-latest
             output: swisspair-linux-x64
-          - runner: macos-13
-            output: swisspair-macos-x64
           - runner: macos-14
             output: swisspair-macos-arm64
           - runner: windows-latest
