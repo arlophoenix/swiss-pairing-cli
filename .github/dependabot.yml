@@ -11,12 +11,28 @@ updates:
       typescript-eslint:
         patterns:
           - '@typescript-eslint/*'
+          - 'typescript-eslint'
       # Group test framework updates
       testing:
         patterns:
           - 'jest'
           - '@types/jest'
           - 'ts-jest'
+          - 'eslint-plugin-jest'
+      # Group semantic-release and its plugins
+      semantic-release:
+        patterns:
+          - 'semantic-release'
+          - '@semantic-release/*'
+      # Group commitlint and its configs
+      commitlint:
+        patterns:
+          - '@commitlint/*'
+      # Batch all remaining minor/patch updates into one PR
+      all-minor-patch:
+        update-types:
+          - 'minor'
+          - 'patch'
     commit-message:
       prefix: 'chore'
       include: 'scope'
