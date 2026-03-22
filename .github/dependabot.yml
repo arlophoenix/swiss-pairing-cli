@@ -46,5 +46,6 @@ updates:
       interval: 'weekly'
       day: 'monday'
     commit-message:
-      prefix: 'chore'
-      include: 'scope'
+      # github-actions has no dev/prod distinction so include: scope always
+      # produces deps. Hardcode deps-dev since Actions are CI tooling only.
+      prefix: 'chore(deps-dev)'
