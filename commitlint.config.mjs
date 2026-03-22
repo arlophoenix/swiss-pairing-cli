@@ -24,7 +24,8 @@ export default {
         'core', // Swiss pairing algorithm
         'parser', // Input parsing
         'format', // Output formatting
-        'deps', // Dependencies
+        'deps', // Production dependencies
+        'deps-dev', // Development dependencies
         'build', // Local tooling (tsconfig, eslint, jest, scripts)
         'ci', // GitHub Actions workflows and release pipeline
       ],
