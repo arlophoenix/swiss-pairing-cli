@@ -85,7 +85,7 @@
     "@semantic-release/git": "^10.0.1",
     "@types/debug": "^4.1.13",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.5.4",
+    "@types/node": "^25.5.0",
     "@types/papaparse": "^5.3.14",
     "cross-env": "^10.1.0",
     "dependency-cruiser": "^17.3.9",
