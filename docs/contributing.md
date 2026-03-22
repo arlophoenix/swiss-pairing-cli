@@ -61,7 +61,8 @@
    - **core**: Swiss pairing algorithm
    - **parser**: Input parsing
    - **format**: Output formatting
-   - **deps**: Dependencies
+   - **deps**: Production dependencies (triggers a patch release)
+   - **deps-dev**: Development dependencies (no release)
    - **build**: Local tooling (tsconfig, eslint, jest, scripts)
    - **ci**: GitHub Actions workflows and release pipeline
 

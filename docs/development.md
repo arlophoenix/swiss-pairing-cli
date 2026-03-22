@@ -209,7 +209,17 @@ test/
 
 ### Release Process
 
-Releases are handled automatically when merging to _origin/main_. To test the release process:
+Releases are handled automatically when merging to _origin/main_. semantic-release determines the version bump from commit types:
+
+| Commit type                              | Release |
+| ---------------------------------------- | ------- |
+| `feat`                                   | minor   |
+| `fix`, `perf`                            | patch   |
+| `chore(deps)`                            | patch   |
+| `chore(deps-dev)`, `chore`, `docs`, etc. | none    |
+| breaking change (`!`)                    | major   |
+
+To test the release process:
 
 ```bash
 # Dry run

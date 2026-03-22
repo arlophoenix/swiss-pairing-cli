@@ -28,6 +28,7 @@ jobs:
             parser
             format
             deps
+            deps-dev
             build
             ci
           requireScope: true
