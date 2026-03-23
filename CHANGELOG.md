@@ -1,3 +1,5 @@
+## [1.1.5](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.1.4...v1.1.5) (2026-03-23)
+
 ## [1.1.4](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.1.3...v1.1.4) (2026-03-23)
 
 ## [1.1.3](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.1.2...v1.1.3) (2026-03-22)
