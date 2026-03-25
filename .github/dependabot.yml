@@ -45,6 +45,11 @@ updates:
     schedule:
       interval: 'weekly'
       day: 'monday'
+    groups:
+      # Group all Actions updates into one PR
+      github-actions:
+        patterns:
+          - '*'
     commit-message:
       # github-actions has no dev/prod distinction so include: scope always
       # produces deps. Hardcode deps-dev since Actions are CI tooling only.
