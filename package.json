@@ -1,6 +1,6 @@
 {
   "name": "swiss-pairing-cli",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Generate Swiss-style tournament pairings from the command line.",
   "main": "dist/index.js",
   "author": "Arlo Armstrong",
