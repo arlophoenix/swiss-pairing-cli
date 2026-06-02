@@ -232,7 +232,7 @@ describe('Telemetry', () => {
       expect(mockDetectEnvironment).toHaveBeenCalled();
 
       // @ts-expect-error accessing private for test
-      const eventQueue: readonly AugmentedTelemetryEvent[] = instance.eventQueue as AugmentedTelemetryEvent;
+      const eventQueue: readonly AugmentedTelemetryEvent[] = instance.eventQueue;
       const event: AugmentedTelemetryEvent = eventQueue[0];
       expect(event.properties).toEqual(
         expect.objectContaining({
