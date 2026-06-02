@@ -19,7 +19,7 @@ import { Environment, UnvalidatedCLIOptions } from '../types/types.js';
  * System metadata included with all events.
  * Used for aggregating usage patterns.
  */
-export interface SystemContext {
+interface SystemContext {
   /** Node.js version running CLI */
   readonly node_version: string;
   /** CLI package version */
