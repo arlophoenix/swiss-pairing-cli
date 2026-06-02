@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Node from package.json on ${{ matrix.os }}
+    name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
