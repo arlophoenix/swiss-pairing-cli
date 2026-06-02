@@ -61,15 +61,6 @@ npm run env:setup
 - .env.test (testing)
 ```
 
-### update-nvmrc.ts
-
-Updates Node.js version from package.json.
-
-```typescript
-// Update .nvmrc
-npm run update-nvmrc
-```
-
 ## Package Scripts
 
 ### Build Scripts
