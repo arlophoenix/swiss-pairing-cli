@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Node.js 22 (LTS) — managed with [Volta](https://volta.sh) (recommended)
+- Node.js 24 (LTS) — managed with [Volta](https://volta.sh) (recommended)
 - npm
 - VS Code (recommended)
 - Git
