@@ -7,7 +7,7 @@ Generate Swiss-style tournament pairings from the command line.
 [![npm](https://img.shields.io/npm/v/swiss-pairing-cli)](https://www.npmjs.com/package/swiss-pairing-cli)
 [![License](https://img.shields.io/github/license/arlophoenix/swiss-pairing-cli)](LICENSE.md)
 [![Dependencies](https://img.shields.io/librariesio/github/arlophoenix/swiss-pairing-cli)](https://libraries.io/github/arlophoenix/swiss-pairing-cli)
-[![Node](https://img.shields.io/node/v/swiss-pairing-cli)](.nvmrc)
+[![Node](https://img.shields.io/node/v/swiss-pairing-cli)](package.json)
 
 ## Features
 
@@ -171,18 +171,25 @@ Usage: swisspair [options]
 A CLI tool for generating Swiss-style tournament pairings
 
 Options:
-  -t, --teams <names...>      List of team names in order from top standing to bottom, with optional squad in square brackets
-                              e.g. "Alice [Home]" "Bob [Home]" "Charlie [Away]" "David [Away]"
+  -t, --teams <names...>      List of team names in order from top standing to
+                              bottom, with optional squad in square brackets
+                              e.g. "Alice [Home]" "Bob [Home]" "Charlie [Away]"
+                              "David [Away]"
   -n, --num-rounds <number>   Number of rounds to generate
                               (default: 1)
-  -s, --start-round <number>  Name the generated rounds starting with this number
+  -s, --start-round <number>  Name the generated rounds starting with this
+                              number
                               (default: 1)
-  -o, --order <order-enum>    The sequence in which teams should be paired; one of: top-down|bottom-up|random
+  -o, --order <order-enum>    The sequence in which teams should be paired; one
+                              of: top-down|bottom-up|random
                               (default: top-down)
-  --format <format-enum>      Output format; one of: csv|json-plain|json-pretty|text-markdown|text-plain
+  --format <format-enum>      Output format; one of:
+                              csv|json-plain|json-pretty|text-markdown|text-plain
                               (default: text-markdown)
-  --file <path{.csv|.json}>   Path to input file. Options provided via cli override file contents
-  -m, --matches <matches...>  List of pairs of team names that have already played against each other
+  --file <path{.csv|.json}>   Path to input file. Options provided via cli
+                              override file contents
+  -m, --matches <matches...>  List of pairs of team names that have already
+                              played against each other
                               e.g. "Alice,Bob" "Charlie,David"
   -h, --help                  display help for command
 ```

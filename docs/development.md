@@ -4,7 +4,7 @@
 
 ### Prerequisites
 
-- Node.js 22 (LTS)
+- Node.js 22 (LTS) — managed with [Volta](https://volta.sh) (recommended)
 - npm
 - VS Code (recommended)
 - Git
@@ -15,9 +15,9 @@
 1. **Install Node.js**
 
    ```bash
-   # Using nvm (recommended)
-   nvm install
-   nvm use
+   # Install Volta, then Node is auto-selected from package.json on cd
+   curl https://get.volta.sh | bash
+   volta install node
    ```
 
 1. **Install Dependencies**

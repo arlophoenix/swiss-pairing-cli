@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Node from .nvmrc on ${{ matrix.os }}
+    name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: 'package.json'
           cache: 'npm'
 
       - name: Install dependencies

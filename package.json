@@ -21,6 +21,9 @@
   "engines": {
     "node": "^22.22.0"
   },
+  "volta": {
+    "node": "22.22.0"
+  },
   "scripts": {
     "//-----Build Scripts-----": "",
     "build": "tsc -p tsconfig.src.json",
@@ -36,7 +39,7 @@
     "test:integration": "npm run pretest && cross-env NODE_ENV=test jest integration.test.ts",
     "test:integration:update-snapshots": "npm run pretest && cross-env NODE_ENV=test jest integration.test.ts -u",
     "//-----Package Hook Scripts-----": "",
-    "prepare": "husky && npm run build && npm run update-nvmrc && npm run env:setup && npm run benchmark:setup",
+    "prepare": "husky && npm run build && npm run env:setup && npm run benchmark:setup",
     "prepublishOnly": "npm run validate",
     "prestart": "npm run build",
     "pretest": "npm run build",
@@ -66,7 +69,6 @@
     "env:setup": "tsx scripts/setup-env.ts",
     "todo:report": "leasot -x --reporter markdown \"{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}\" > LEASOT.md",
     "todo": "leasot \"{*.{js,mjs,md},{scripts,src,test}/**/*.{ts,test.ts}}\"",
-    "update-nvmrc": "tsx scripts/update-nvmrc.ts",
     "usage": "npm run start -- --help",
     "unused": "knip",
     "validate": "npm run lint && npm test && npm run docs:dependencies:validate && npm run unused"
