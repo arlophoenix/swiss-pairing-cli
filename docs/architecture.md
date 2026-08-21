@@ -59,8 +59,7 @@ Uses discriminated union Result type:
 
 ```typescript
 type Result<T> =
-  | { readonly success: true; readonly value: T }
-  | { readonly success: false; readonly message: string };
+  { readonly success: true; readonly value: T } | { readonly success: false; readonly message: string };
 ```
 
 Key aspects:
