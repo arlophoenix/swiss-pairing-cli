@@ -46,10 +46,20 @@ updates:
       interval: 'weekly'
       day: 'monday'
     groups:
-      # Group all Actions updates into one PR
+      # Split by update-type: fetch-metadata reports a group's HIGHEST bump, so a
+      # single major in a catch-all group marks the whole PR major and blocks
+      # auto-merge for every minor and patch riding along with it.
       github-actions:
         patterns:
           - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      github-actions-major:
+        patterns:
+          - '*'
+        update-types:
+          - 'major'
     commit-message:
       # github-actions has no dev/prod distinction so include: scope always
       # produces deps. Hardcode deps-dev since Actions are CI tooling only.
