@@ -104,8 +104,7 @@ type Teams = readonly string[];
 
 // Use discriminated unions
 type Result<T> =
-  | { readonly success: true; readonly value: T }
-  | { readonly success: false; readonly message: string };
+  { readonly success: true; readonly value: T } | { readonly success: false; readonly message: string };
 
 // Document complex types
 interface TournamentConfig {

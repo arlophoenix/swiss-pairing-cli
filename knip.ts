@@ -3,7 +3,8 @@ import type { KnipConfig } from 'knip';
 const config: KnipConfig = {
   entry: ['src/index.ts', 'scripts/**/*.ts'],
   project: ['src/**/*.ts', 'scripts/**/*.ts', 'test/**/*.ts'],
-  ignoreBinaries: ['dot'],
+  // dot (graphviz) and op (1Password CLI) are external tools invoked via execSync, not npm deps
+  ignoreBinaries: ['dot', 'op'],
   // @jest/globals and jest-mock are sub-packages bundled with jest
   // postject is invoked via execSync in scripts/build-binary.ts, not imported
   ignoreDependencies: ['@jest/globals', 'jest-mock', 'postject'],

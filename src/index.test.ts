@@ -10,11 +10,9 @@ interface MockProgram {
 
 // Update the mock to use the interface
 jest.mock('./cli/cli.js', () => ({
-  createCLI: jest.fn(
-    (): MockProgram => ({
-      parse: jest.fn(),
-    })
-  ),
+  createCLI: jest.fn((): MockProgram => ({
+    parse: jest.fn(),
+  })),
 }));
 
 describe('index', () => {
