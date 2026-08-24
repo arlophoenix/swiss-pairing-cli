@@ -100,7 +100,7 @@
     "jest": "^30.4.2",
     "knip": "^6.32.2",
     "leasot": "^14.4.0",
-    "lint-staged": "^16.4.0",
+    "lint-staged": "^17.3.0",
     "markdownlint-cli2": "^0.23.2",
     "postject": "^1.0.0-alpha.6",
     "prettier": "^3.9.6",
