@@ -109,7 +109,7 @@
     "ts-jest": "^29.4.15",
     "tsx": "^4.23.12",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.0"
+    "typescript-eslint": "^8.72.1"
   },
   "type": "module",
   "dependencies": {
