@@ -29,6 +29,13 @@ jobs:
       - name: Validate
         run: npm run validate
 
+      # commitlint otherwise only runs in the local commit-msg hook, so this is
+      # the only check that a dependency update has not broken it.
+      - name: Smoke test commitlint
+        shell: bash
+        run: |
+          echo 'chore(ci): smoke test' | npx --no -- commitlint
+
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         with:
