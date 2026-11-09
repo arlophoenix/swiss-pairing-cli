@@ -215,4 +215,3 @@ describe('validateTeams', () => {
 4. **Merge Requirements**
    - All checks passing
    - Approved review
-   - Up-to-date branch
