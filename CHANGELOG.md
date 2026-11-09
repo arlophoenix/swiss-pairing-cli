@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.1.7...v1.1.8) (2026-11-09)
+
+
+### Bug Fixes
+
+* **deps:** patch transitive security advisories and dep-bump lint fallout ([#116](https://github.com/arlophoenix/swiss-pairing-cli/issues/116)) ([b4255c4](https://github.com/arlophoenix/swiss-pairing-cli/commit/b4255c4de636229a9e605c091f1987206e4e55af)), closes [#113](https://github.com/arlophoenix/swiss-pairing-cli/issues/113)
+
 ## [1.1.7](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.1.6...v1.1.7) (2026-06-02)
 
 ## [1.1.6](https://github.com/arlophoenix/swiss-pairing-cli/compare/v1.1.5...v1.1.6) (2026-04-03)
