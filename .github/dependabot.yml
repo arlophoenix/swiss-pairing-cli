@@ -7,10 +7,8 @@ updates:
       day: 'monday'
     versioning-strategy: 'increase'
     groups:
-      # Every named group is minor/patch only. fetch-metadata reports a group's
-      # HIGHEST bump, so one major in a group marks the whole PR major and blocks
-      # auto-merge for the minors riding with it. Majors fall through to their own
-      # PR, which is where a breaking change wants reviewing anyway.
+      # Every named group is minor/patch only. Majors fall through to their own
+      # PR, so one that fails CI cannot hold back the minors riding with it.
       # Group typescript-eslint updates together
       typescript-eslint:
         patterns:
@@ -62,9 +60,8 @@ updates:
       interval: 'weekly'
       day: 'monday'
     groups:
-      # Split by update-type: fetch-metadata reports a group's HIGHEST bump, so a
-      # single major in a catch-all group marks the whole PR major and blocks
-      # auto-merge for every minor and patch riding along with it.
+      # Split by update-type so a major that fails CI cannot hold back the
+      # minors and patches riding along with it.
       github-actions:
         patterns:
           - '*'
